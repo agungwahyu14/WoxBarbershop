@@ -489,7 +489,7 @@
                 <div class="w-full lg:w-1/2 bg-light rounded-xl shadow-md p-6">
                     <h3 class="text-xl font-bold font-playfair mb-6">Detail Reservasi</h3>
 
-                    <form action="{{ route('booking.store') }}" method="POST" id="booking-form" class="space-y-4">
+                    {{-- <form action="{{ route('booking.store') }}" method="POST" id="booking-form" class="space-y-4">
                         @csrf
 
                         <!-- Tanggal -->
@@ -552,7 +552,7 @@
                             class="w-full bg-secondary hover:bg-primary text-white px-6 py-3 rounded-lg font-medium transition">
                             Konfirmasi Reservasi
                         </button>
-                    </form>
+                    </form> --}}
 
                 </div>
             </div>
