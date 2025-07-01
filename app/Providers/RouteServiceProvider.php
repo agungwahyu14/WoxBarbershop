@@ -19,6 +19,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/dashboard';
 
+    public static function home()
+    {
+        if (auth()->check()) {
+            if (auth()->user() && auth()->user()->role === 'admin') {
+                return '/admin/dashboard';
+            }
+        }
+        return '/dashboard';
+    }
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */

@@ -1,138 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wox's Barbershop</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1a1a1a',
-                        secondary: '#d4af37',
-                        light: '#f8f8f8',
-                        dark: '#111111',
-                    },
-                    fontFamily: {
-                        playfair: ['Playfair Display', 'serif'],
-                        roboto: ['Roboto', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 1s ease-in-out',
-                        'slide-up': 'slideUp 0.8s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': {
-                                opacity: '0'
-                            },
-                            '100%': {
-                                opacity: '1'
-                            },
-                        },
-                        slideUp: {
-                            '0%': {
-                                transform: 'translateY(20px)',
-                                opacity: '0'
-                            },
-                            '100%': {
-                                transform: 'translateY(0)',
-                                opacity: '1'
-                            },
-                        },
-                    },
-                }
-            }
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap');
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background-color: #d4af37;
-            transition: width 0.3s;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .feature-card:hover .feature-number {
-            opacity: 0.8;
-        }
-
-        .menu-item:hover .menu-img {
-            transform: scale(1.05);
-        }
-
-        .parallax {
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-    </style>
-</head>
-
-<body class="font-roboto text-gray-800 bg-light">
-    <!-- Navigation -->
-    <header class="fixed w-full bg-white bg-opacity-95 z-50 shadow-sm transition-all duration-300" id="navbar">
-        <div class="container mx-auto px-4 py-4">
-            <nav class="flex justify-between items-center">
-                <div class="text-2xl font-playfair font-bold tracking-wider">
-                    <span class="text-primary">WOX'S Barbershop</span><span class="text-secondary">.</span>
-                </div>
-
-                <div class="hidden md:flex space-x-8">
-                    <a href="#beranda"
-                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Beranda</a>
-                    <a href="#layanan"
-                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Layanan</a>
-                    <a href="#tentang"
-                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Tentang</a>
-                    <a href="#produk"
-                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Produk</a>
-                    <a href="#reservasi"
-                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Reservasi</a>
-                    <a href="#rekomendasi-gaya"
-                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Rekomendasi
-                        Gaya</a>
-                    <a href="{{ route('login') }}"
-                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Login</a>
-                </div>
-
-                <button class="md:hidden text-2xl focus:outline-none" id="mobile-menu-button">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </nav>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div class="md:hidden hidden bg-white py-4 px-4 shadow-lg" id="mobile-menu">
-            <div class="flex flex-col space-y-4">
-                <a href="#beranda" class="text-gray-800 hover:text-secondary transition-colors">Beranda</a>
-                <a href="#layanan" class="text-gray-800 hover:text-secondary transition-colors">Layanan</a>
-                <a href="#tentang" class="text-gray-800 hover:text-secondary transition-colors">Tentang</a>
-                <a href="#produk" class="text-gray-800 hover:text-secondary transition-colors">Produk</a>
-                <a href="#reservasi" class="text-gray-800 hover:text-secondary transition-colors">Reservasi</a>
-                <a href="#rekomendasi-gaya" class="text-gray-800 hover:text-secondary transition-colors">Rekomendasi
-                    Gaya</a>
-                <a href="{{ route('login') }}" class="text-gray-800 hover:text-secondary transition-colors">Login</a>
-            </div>
-        </div>
-    </header>
-    <!-- Hero Section -->
+@section('content')
     <section id="beranda" class="h-screen flex items-center justify-center text-center text-white parallax relative"
         style="background-image: url('{{ asset('images/hero.jpg') }}');">
         <div class="absolute inset-0 bg-black opacity-60"></div>
@@ -146,11 +14,11 @@
                 Pangkas rambut profesional untuk gaya yang sempurna. Rasakan pengalaman barbershop premium kami.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#reservation"
+                <a href="#reservasi"
                     class="bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 shadow-lg uppercase">
                     RESERVASI
                 </a>
-                <a href="#services"
+                <a href="#layanan"
                     class="border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 uppercase">
                     LIHAT LAYANAN
                 </a>
@@ -191,7 +59,7 @@
                     <p class="text-gray-600 mb-4">
                         Potongan rambut klasik atau modern oleh barber profesional kami dengan teknik terbaik.
                     </p>
-                    <a href="#reservation" class="text-secondary font-medium flex items-center group">
+                    <a href="#reservasi" class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
@@ -207,7 +75,7 @@
                     <p class="text-gray-600 mb-4">
                         Kami mempercayakan hanya produk-produk pilihan yang telah teruji kualitasnya.
                     </p>
-                    <a href="#reservation" class="text-secondary font-medium flex items-center group">
+                    <a href="#produk" class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
@@ -239,7 +107,7 @@
                     <p class="text-gray-600 mb-4">
                         Gratis 1x cukur setelah 10 kali kunjungan.Apresiasi kami untuk pelanggan setia!
                     </p>
-                    <a href="#reservation" class="text-secondary font-medium flex items-center group">
+                    <a href="#reservasi" class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
@@ -267,7 +135,7 @@
                         hanya menggunakan produk-produk perawatan rambut yang telah teruji dan berkualitas tinggi,
                         sehingga menjamin hasil optimal bagi setiap pelanggan.
                     </p>
-                    <a href="#reservation"
+                    <a href="#reservasi"
                         class="bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3  font-medium transition-all duration-300 inline-block transform hover:-translate-y-1 shadow-lg">
                         RESERVASI
                     </a>
@@ -565,186 +433,4 @@
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer id="contact" class="bg-dark text-white pt-20 pb-10">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-                <div>
-                    <h3 class="text-2xl font-playfair font-bold mb-6 text-secondary">WOX'S Barbershop.</h3>
-                    <p class="text-gray-400 mb-6">
-                        Memberikan pengalaman grooming terbaik dengan layanan profesional dan produk berkualitas
-                        tinggi.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-bold mb-6">Jam Buka</h4>
-                    <ul class="space-y-3 text-gray-400">
-                        <li class="flex justify-between">
-                            <span>Senin - Jumat</span>
-                            <span>09.00 - 20.00</span>
-                        </li>
-                        <li class="flex justify-between">
-                            <span>Sabtu</span>
-                            <span>09.00 - 22.00</span>
-                        </li>
-                        <li class="flex justify-between">
-                            <span>Minggu</span>
-                            <span>10.00 - 18.00</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-bold mb-6">Kontak Kami</h4>
-                    <ul class="space-y-3 text-gray-400">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-secondary"></i>
-                            <span>Jl. Barber No. 123, Jakarta Selatan</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone-alt mr-3 text-secondary"></i>
-                            <span>(021) 1234-5678</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope mr-3 text-secondary"></i>
-                            <span>info@woxsbarbershop.com</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Quick Links Section (replaced Newsletter) -->
-                <div>
-                    <h4 class="text-lg font-bold mb-6">Quick Links</h4>
-                    <ul class="space-y-3 text-gray-400">
-                        <li>
-                            <a href="#beranda"
-                                class="hover:text-secondary transition-colors duration-300 flex items-center">
-                                <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Beranda
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#layanan"
-                                class="hover:text-secondary transition-colors duration-300 flex items-center">
-                                <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Layanan
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#tentang"
-                                class="hover:text-secondary transition-colors duration-300 flex items-center">
-                                <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Tentang Kami
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#produk"
-                                class="hover:text-secondary transition-colors duration-300 flex items-center">
-                                <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Produk
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#reservasi"
-                                class="hover:text-secondary transition-colors duration-300 flex items-center">
-                                <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Reservasi
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-800 pt-6 text-center text-gray-500">
-                <p>&copy; 2023 WOX'S Barbershop. Hak cipta dilindungi.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Back to Top Button -->
-    <button id="back-to-top"
-        class="fixed bottom-8 right-8 bg-secondary text-primary p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <script>
-        // Mobile Menu Toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            mobileMenu.classList.toggle('active');
-
-            // Toggle between hamburger and close icon
-            const icon = mobileMenuButton.querySelector('i');
-            if (icon.classList.contains('fa-bars')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-        });
-
-        // Close mobile menu when clicking on a link
-        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                mobileMenu.classList.remove('active');
-                mobileMenuButton.querySelector('i').classList.remove('fa-times');
-                mobileMenuButton.querySelector('i').classList.add('fa-bars');
-            });
-        });
-
-
-        // Back to Top Button
-        const backToTopButton = document.getElementById('back-to-top');
-
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.remove('opacity-0', 'invisible');
-                backToTopButton.classList.add('opacity-100', 'visible');
-            } else {
-                backToTopButton.classList.add('opacity-0', 'invisible');
-                backToTopButton.classList.remove('opacity-100', 'visible');
-            }
-        });
-
-        backToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // Smooth scrolling for all anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80, // Adjust for fixed header
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    </script>
-</body>
-
-</html>
+@endsection
