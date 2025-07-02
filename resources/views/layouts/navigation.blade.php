@@ -53,11 +53,11 @@
 
                 <!-- Rekomendasi Gaya -->
                 @auth
-                    <a href="{{ route('dashboard') }}#rekomendasi-gaya"
+                    <a href="{{ route('rekomendasi') }}"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Rekomendasi
                         Gaya</a>
                 @else
-                    <a href="#rekomendasi-gaya"
+                    <a href="{{ route('rekomendasi') }}"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300">Rekomendasi
                         Gaya</a>
                 @endauth
@@ -176,7 +176,8 @@
             @endauth
 
             <!-- Rekomendasi Gaya -->
-            <a href="#rekomendasi-gaya" class="text-gray-800 hover:text-secondary transition-colors">Rekomendasi
+            <a href="{{ route('rekomendasi') }}"
+                class="text-gray-800 hover:text-secondary transition-colors">Rekomendasi
                 Gaya</a>
 
             @auth
