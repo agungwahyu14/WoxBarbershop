@@ -11,77 +11,67 @@
                     Manage user roles and permissions across your system
                 </p>
             </div>
-            <a href="{{ route('roles.create') }}"
-                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200">
-                <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                Create Role
-            </a>
+
         </div>
     </section>
 
-    <section class="section main-section mt-8">
+    <section class="section main-section mt-8 h-screen">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <!-- Table Header -->
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Roles & Permissions</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total roles in your system</p>
-                    </div>
+                    <a href="{{ route('roles.create') }}"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
+                        <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
+                        Create Role
+                    </a>
                     <!-- Export buttons will be inserted here by DataTables -->
                     <div id="export-buttons" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
 
             <!-- Table Content -->
-            <div class="overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table id="roles-table" class="w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-100 dark:bg-gray-800">
-                            <tr>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    <div class="flex items-center space-x-1">
-                                        <span>#</span>
-                                    </div>
-                                </th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    <div class="flex items-center space-x-1">
-                                        <i class="mdi mdi-account-key text-sm"></i>
-                                        <span>Role Name</span>
-                                    </div>
-                                </th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    <div class="flex items-center space-x-1">
-                                        <i class="mdi mdi-shield-account text-sm"></i>
-                                        <span>Permissions</span>
-                                    </div>
-                                </th>
-                                <th
-                                    class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    <div class="flex items-center justify-end space-x-1">
-                                        <i class="mdi mdi-cog text-sm"></i>
-                                        <span>Actions</span>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            <!-- Data will be populated by DataTables -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
-            <!-- Table Footer with pagination info -->
-            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div id="table-info" class="text-sm text-gray-600 dark:text-gray-400"></div>
-                    <div id="table-pagination"></div>
-                </div>
+            <div class="card-content rounded-md overflow-x-auto">
+                <table id="roles-table" class="min-w-full table-fixed divide-y  divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-100 dark:bg-gray-800 ">
+                        <tr>
+                            <th style="width: 60px"
+                                class="px-6 py-4 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
+                                <div class="flex items-center justify-center space-x-1">
+                                    <i class="mdi mdi-cog text-sm"></i>
+                                    <span>#</span>
+                                </div>
+                            </th>
+
+                            <th
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300  tracking-wider">
+                                <div class="flex items-center space-x-1">
+                                    <i class="mdi mdi-account-key text-sm"></i>
+                                    <span>Role Name</span>
+                                </div>
+                            </th>
+                            <th
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300  tracking-wider">
+                                <div class="flex items-center space-x-1">
+                                    <i class="mdi mdi-shield-account text-sm"></i>
+                                    <span>Permissions</span>
+                                </div>
+                            </th>
+                            <th
+                                class="px-6 py-4 text-center text-xs font-semibold text-gray-700 dark:text-gray-300  tracking-wider">
+                                <div class="flex items-center justify-center space-x-1">
+                                    <i class="mdi mdi-cog text-sm"></i>
+                                    <span>Actions</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Data will be populated by DataTables -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -101,24 +91,18 @@
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
-                        className: 'px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-300 whitespace-nowrap',
-                        width: '80px'
+                        className: 'px-6 py-4 text-center text-sm font-medium text-gray-900 dark:text-gray-300',
+                        width: '60px'
                     },
                     {
                         data: 'name',
                         name: 'name',
-                        className: 'px-6 py-4 whitespace-nowrap',
+                        className: 'px-6 py-4 ',
                         render: function(data, type, row) {
                             if (type === 'display') {
                                 return `<div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10">
-                                        <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                            <i class="mdi mdi-account-key text-blue-600 dark:text-blue-400"></i>
-                                        </div>
-                                    </div>
                                     <div class="ml-4">
-                                        <div class="text-sm font-semibold text-gray-900 dark:text-white">${data}</div>
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">System Role</div>
+                                        <div class="text-sm font-semibold text-gray-900 dark:text-white capitalize ">${data}</div>
                                     </div>
                                 </div>`;
                             }
@@ -162,46 +146,48 @@
                         name: 'action',
                         orderable: false,
                         searchable: false,
-                        className: 'px-6 py-4 text-right whitespace-nowrap text-sm'
+                        className: 'text-center text-sm'
                     }
                 ],
-                dom: "<'hidden'B>" + // Hide default buttons
-                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mb-4 px-6'lf>" +
+                dom: "<'hidden'B>" + // hanya sembunyikan tombol default
+                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf>" +
                     "<'overflow-x-auto't>" +
-                    "<'hidden'ip>", // Hide default info and pagination
+                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>", // tampilkan info & pagination
+                // Hide default info and pagination
                 buttons: [{
                         extend: 'copy',
                         text: '<i class="mdi mdi-content-copy mr-2"></i>Copy',
-                        className: 'inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors'
+                        className: 'dt-btn dt-btn-copy'
                     },
                     {
                         extend: 'csv',
                         text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV',
-                        className: 'inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors'
+                        className: 'dt-btn dt-btn-csv'
                     },
                     {
                         extend: 'excel',
                         text: '<i class="mdi mdi-file-excel mr-2"></i>Excel',
-                        className: 'inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors'
+                        className: 'dt-btn dt-btn-excel'
                     },
                     {
                         extend: 'pdf',
                         text: '<i class="mdi mdi-file-pdf mr-2"></i>PDF',
-                        className: 'inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors'
+                        className: 'dt-btn dt-btn-pdf'
                     },
                     {
                         extend: 'print',
                         text: '<i class="mdi mdi-printer mr-2"></i>Print',
-                        className: 'inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors'
+                        className: 'dt-btn dt-btn-print'
                     }
                 ],
                 language: {
                     search: "",
-                    searchPlaceholder: "Search roles and permissions...",
-                    lengthMenu: "_MENU_ roles per page",
+                    lengthMenu: "_MENU_ ",
                     info: "Showing _START_ to _END_ of _TOTAL_ roles",
                     infoEmpty: "No roles found",
                     infoFiltered: "(filtered from _MAX_ total roles)",
+
+                    searchPlaceholder: "Search roles...",
                     zeroRecords: "No matching roles found",
                     emptyTable: "No roles available",
                     loadingRecords: "Loading roles...",
@@ -228,40 +214,9 @@
                     // Move export buttons to custom location
                     $('.dt-buttons').appendTo('#export-buttons');
 
-                    // Custom search styling
-                    $('.dataTables_filter input').addClass(
-                        'pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white'
-                        );
-                    $('.dataTables_filter').prepend(
-                        '<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="mdi mdi-magnify text-gray-400"></i></div>'
-                        ).addClass('relative');
-
-                    // Custom length menu styling
-                    $('.dataTables_length select').addClass(
-                        'border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500'
-                        );
-
-                    // Move info and pagination to custom locations
-                    $('.dataTables_info').appendTo('#table-info');
-                    $('.dataTables_paginate').appendTo('#table-pagination');
-
-                    // Style pagination buttons
-                    $('.dataTables_paginate .paginate_button').addClass(
-                        'px-3 py-2 mx-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors'
-                        );
-                    $('.dataTables_paginate .paginate_button.current').addClass(
-                        'bg-blue-600 text-white border-blue-600 hover:bg-blue-700');
-                    $('.dataTables_paginate .paginate_button.disabled').addClass(
-                        'opacity-50 cursor-not-allowed');
                 }
             });
 
-            // Custom row hover effects
-            $('#roles-table tbody').on('mouseenter', 'tr', function() {
-                $(this).addClass('bg-gray-50 dark:bg-gray-700/50');
-            }).on('mouseleave', 'tr', function() {
-                $(this).removeClass('bg-gray-50 dark:bg-gray-700/50');
-            });
 
             // Refresh table data
             setInterval(function() {
@@ -273,65 +228,85 @@
 
 @push('styles')
     <style>
-        /* Custom DataTables styling */
-        .dataTables_wrapper .dataTables_length,
-        .dataTables_wrapper .dataTables_filter {
-            margin-bottom: 0;
+        /* Styling untuk tombol DataTable dengan warna yang lebih modern */
+        .dt-buttons .dt-button.dt-btn-copy {
+            background-color: #e0e7ff !important;
+            /* Indigo soft */
+            color: #312e81 !important;
+            /* Indigo dark untuk kontras */
         }
 
-        .dataTables_wrapper .dataTables_length label,
-        .dataTables_wrapper .dataTables_filter label {
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 0;
+        .dt-buttons .dt-button.dt-btn-copy:hover {
+            background-color: #c7d2fe !important;
+            /* Indigo lebih terang saat hover */
         }
 
-        .dark .dataTables_wrapper .dataTables_length label,
-        .dark .dataTables_wrapper .dataTables_filter label {
-            color: #d1d5db;
+        .dt-buttons .dt-button.dt-btn-csv {
+            background-color: #34d399 !important;
+            /* Emerald green */
+            color: #ffffff !important;
+            /* Putih untuk kontras */
         }
 
-        /* Loading animation */
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+        .dt-buttons .dt-button.dt-btn-csv:hover {
+            background-color: #6ee7b7 !important;
+            /* Emerald lebih terang saat hover */
         }
 
-        .animate-spin {
-            animation: spin 1s linear infinite;
+        .dt-buttons .dt-button.dt-btn-excel {
+            background-color: #10b981 !important;
+            /* Green untuk Excel */
+            color: #ffffff !important;
+            /* Putih untuk kontras */
         }
 
-        /* Smooth transitions */
-        #roles-table tbody tr {
-            transition: background-color 0.2s ease;
+        .dt-buttons .dt-button.dt-btn-excel:hover {
+            background-color: #34d399 !important;
+            /* Green lebih terang saat hover */
         }
 
-        /* Responsive table */
-        @media (max-width: 768px) {
+        .dt-buttons .dt-button.dt-btn-pdf {
+            background-color: #f87171 !important;
+            /* Red soft untuk PDF */
+            color: #ffffff !important;
+            /* Putih untuk kontras */
+        }
 
-            .dataTables_wrapper .dataTables_length,
-            .dataTables_wrapper .dataTables_filter {
-                margin-bottom: 1rem;
-            }
+        .dt-buttons .dt-button.dt-btn-pdf:hover {
+            background-color: #fca5a5 !important;
+            /* Red lebih terang saat hover */
+        }
 
-            #export-buttons {
-                order: 3;
-                width: 100%;
-            }
+        .dt-buttons .dt-button.dt-btn-print {
+            background-color: #60a5fa !important;
+            /* Blue soft untuk print */
+            color: #ffffff !important;
+            /* Putih untuk kontras */
+        }
 
-            #export-buttons .dt-buttons {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                width: 100%;
-            }
+        .dt-buttons .dt-button.dt-btn-print:hover {
+            background-color: #93c5fd !important;
+            /* Blue lebih terang saat hover */
+        }
 
-            #export-buttons .dt-button {
-                flex: 1;
-                min-width: 0;
-                justify-content: center;
-            }
+        /* Styling umum untuk tombol */
+        .dt-buttons .dt-button {
+            border-radius: 0.375rem !important;
+            padding: 0.5rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            transition: background-color 0.2s ease-in-out !important;
+        }
+
+
+
+        /* Styling untuk tabel */
+        #roles-table {
+            width: 100% !important;
+            table-layout: auto !important;
         }
     </style>
 @endpush
