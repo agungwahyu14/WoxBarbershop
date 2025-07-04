@@ -16,27 +16,23 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Role::with('permissions')->get();
+            $data = Role::all();
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('permissions', function ($row) {
-                    // Gabungkan permission jadi string (misal koma)
-                    $permissions = $row->permissions->pluck('name')->toArray();
-                    return implode(', ', $permissions);
-                })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('roles.edit', $row->id);
                     $deleteUrl = route('roles.destroy', $row->id);
 
                     return '
-    <a href="' . $editUrl . '" class="inline-block text-blue-500 hover:text-blue-700 transition" title="Edit">
-        <i class="fas fa-pen hover:scale-125 transform transition-transform"></i>
-    </a>
-    <button type="button" class="inline-block text-red-500 hover:text-red-700 transition deleteBtn ml-2" data-id="' . $row->id . '" title="Delete" style="background: none; border: none; padding: 0;">
-        <i class="fas fa-trash hover:scale-125 transform transition-transform"></i>
-    </button>
+<a href="' . $editUrl . '" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition" title="Edit">
+    <i class="fas fa-pen"></i>
+</a>
+<button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition ml-2 deleteBtn" data-id="' . $row->id . '" title="Delete">
+    <i class="fas fa-trash"></i>
+</button>
 ';
+
                 })
                 ->rawColumns(['permissions', 'action'])
                 ->make(true);
@@ -51,8 +47,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all();
-        return view('admin.roles.create', compact('permissions'));
+        // $permissions = Permission::all();
+        return view('admin.roles.create');
     }
 
     /**
@@ -67,11 +63,6 @@ class RoleController extends Controller
 
         $role = Role::create(['name' => $request->name]);
 
-        if ($request->has('permissions')) {
-            // Ambil nama permission dari ID yang dikirim form
-            $permissionNames = Permission::whereIn('id', $request->permissions)->pluck('name');
-            $role->syncPermissions($permissionNames);
-        }
 
         return redirect()->route('roles.index')->with('success', 'Role created successfully.');
     }
@@ -89,9 +80,8 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $permissions = Permission::all();
-        $rolePermissions = $role->permissions->pluck('name')->toArray();
-        return view('admin.roles.edit', compact('role', 'permissions', 'rolePermissions'));
+
+        return view('admin.roles.edit', compact('role'));
     }
 
     /**
@@ -107,9 +97,7 @@ class RoleController extends Controller
         $role->name = $request->name;
         $role->save();
 
-        if ($request->has('permissions')) {
-            $role->syncPermissions($request->permissions);
-        }
+        
 
         return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
     }

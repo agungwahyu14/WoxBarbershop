@@ -34,6 +34,7 @@
             <!-- Table Content -->
 
             <div class="card-content rounded-md overflow-x-auto">
+
                 <table id="roles-table" class="min-w-full table-fixed divide-y  divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-100 dark:bg-gray-800 ">
                         <tr>
@@ -52,13 +53,7 @@
                                     <span>Role Name</span>
                                 </div>
                             </th>
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300  tracking-wider">
-                                <div class="flex items-center space-x-1">
-                                    <i class="mdi mdi-shield-account text-sm"></i>
-                                    <span>Permissions</span>
-                                </div>
-                            </th>
+
                             <th
                                 class="px-6 py-4 text-center text-xs font-semibold text-gray-700 dark:text-gray-300  tracking-wider">
                                 <div class="flex items-center justify-center space-x-1">
@@ -109,38 +104,7 @@
                             return data;
                         }
                     },
-                    {
-                        data: 'permissions',
-                        name: 'permissions',
-                        className: 'px-6 py-4',
-                        render: function(data, type, row) {
-                            if (type === 'display') {
-                                if (data && data.length > 0) {
-                                    const perms = data.split(', ');
-                                    let html = '<div class="flex flex-wrap gap-1">';
 
-                                    // Show first 3 permissions as badges
-                                    const displayPerms = perms.slice(0, 3);
-                                    displayPerms.forEach(perm => {
-                                        html +=
-                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">${perm.trim()}</span>`;
-                                    });
-
-                                    // Show "+X more" if there are more permissions
-                                    if (perms.length > 3) {
-                                        html +=
-                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="${data}">+${perms.length - 3} more</span>`;
-                                    }
-
-                                    html += '</div>';
-                                    return html;
-                                } else {
-                                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">No permissions</span>';
-                                }
-                            }
-                            return data;
-                        }
-                    },
                     {
                         data: 'action',
                         name: 'action',
@@ -218,11 +182,105 @@
             });
 
 
-            // Refresh table data
-            setInterval(function() {
-                table.ajax.reload(null, false);
-            }, 30000); // Refresh every 30 seconds
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            @endif
+
+            $(document).on('click', '.deleteBtn', function() {
+                const roleId = $(this).data('id');
+                const deleteUrl = '{{ route('roles.destroy', ':id') }}'.replace(':id', roleId);
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: response.message,
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    });
+                                    $('#roles-table').DataTable().ajax.reload();
+                                }
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: xhr.responseJSON?.message ||
+                                        'Something went wrong!',
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Handle form submissions via AJAX (for create/update)
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                const formData = form.serialize();
+                const url = form.attr('action');
+                const method = form.attr('method');
+
+                $.ajax({
+                    url: url,
+                    type: method,
+                    data: formData,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.message,
+                            timer: 3000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '{{ route('roles.index') }}';
+                        });
+                    },
+                    error: function(xhr) {
+                        let errorMessage = xhr.responseJSON?.message || 'An error occurred.';
+                        if (xhr.responseJSON?.errors) {
+                            errorMessage = Object.values(xhr.responseJSON.errors).join('<br>');
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                        });
+                    }
+                });
+            });
         });
+
+
+        // Refresh table data
+        setInterval(function() {
+            table.ajax.reload(null, false);
+        }, 30000); // Refresh every 30 seconds
     </script>
 @endpush
 

@@ -25,9 +25,7 @@
                     <span class="icon"><i class="mdi mdi-plus"></i></span>
                 </a>
                 <ul>
-                    <li><a href="users.html"><span>Users</span></a></li>
-                    <li><a href="roles.html"><span>Roles</span></a></li>
-                    <li><a href="permissions.html"><span>Permissions</span></a></li>
+                    <li><a href="{{ route('users.index') }}"><span>Users</span></a></li>
                 </ul>
             </li>
 
