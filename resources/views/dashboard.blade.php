@@ -332,18 +332,19 @@
                 </div>
 
                 <!-- Right Column - Booking Form -->
-                <div class="w-full lg:w-1/2 bg-white shadow-xl  p-8">
-
-
-                    <form action="" method="POST" id="booking-form" class="space-y-6">
+                <div class="w-full lg:w-1/2 bg-white shadow-xl p-8">
+                    <form action="{{ route('bookings.store') }}" method="POST" id="booking-form" class="space-y-6">
                         @csrf
 
                         <!-- Nama -->
                         <div>
                             <label for="name"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">NAMA</label>
-                            <input type="text" id="name" name="name"
+                            <input type="text" id="name" name="name" value="{{ old('name') }}"
                                 class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
+                            @error('name')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Layanan -->
@@ -353,40 +354,58 @@
                             <select id="service_id" name="service_id"
                                 class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
                                 <option value="">Pilih Layanan</option>
-                                <option value="dewasa">Dewasa - RP 40.000</option>
-                                <option value="anak">Anak-anak - RP 30.000</option>
-                                <option value="cukur">Cukur Leher & Jenggot - RP 25.000</option>
+                                @foreach ($services as $service)
+                                    <option value="{{ $service->id }}"
+                                        {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                                        {{ $service->name }} - Rp {{ number_format($service->price, 0, ',', '.') }}
+                                    </option>
+                                @endforeach
                             </select>
+                            @error('service_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Gaya Rambut & Tanggal -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="hairstyle_id"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">GAYA
-                                    RAMBUT</label>
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">GAYA RAMBUT</label>
                                 <select id="hairstyle_id" name="hairstyle_id"
                                     class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
                                     <option value="">Pilih Gaya</option>
-                                    <option value="pendek">Pendek</option>
-                                    <option value="panjang">Panjang</option>
-                                    <option value="undercut">Undercut</option>
+                                    @foreach ($hairstyles as $hairstyle)
+                                        <option value="{{ $hairstyle->id }}"
+                                            {{ old('hairstyle_id') == $hairstyle->id ? 'selected' : '' }}>
+                                            {{ $hairstyle->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
+                                @error('hairstyle_id')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
+
                             <div>
                                 <label for="date"
                                     class="block text-primary mb-2 font-bold font-playfair text-xl">TANGGAL</label>
-                                <input type="date" id="date" name="date"
+                                <input type="date" id="date_time" name="date_time" value="{{ old('date_time') }}"
                                     class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
+                                @error('date')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
                         <!-- Deskripsi -->
                         <div>
-                            <label for="notes"
+                            <label for="description"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">DESKRIPSI</label>
-                            <textarea id="notes" name="notes" rows="3"
-                                class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent"></textarea>
+                            <textarea id="description" name="description" rows="3"
+                                class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">{{ old('description') }}</textarea>
+                            @error('description')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Submit Button -->
@@ -396,6 +415,7 @@
                         </button>
                     </form>
                 </div>
+
             </div>
         </div>
     </section>
@@ -434,3 +454,25 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 2500
+            });
+        @elseif (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '{{ session('error') }}',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        @endif
+    </script>
+@endpush

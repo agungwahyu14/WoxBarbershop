@@ -2,64 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Service;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Service;
+use Yajra\DataTables\DataTables;
 
 class ServiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $data = Service::latest()->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('price', fn($row) => 'Rp ' . number_format($row->price, 0, ',', '.'))
+                ->addColumn('action', function ($row) {
+                    $editUrl = route('services.edit', $row->id);
+                    $deleteUrl = route('services.destroy', $row->id);
+
+                    return '
+<div class="flex justify-center items-center gap-2">
+    <a href="' . $editUrl . '" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition" title="Edit">
+        <i class="fas fa-pen"></i>
+    </a>
+    <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition deleteBtn" data-id="' . $row->id . '" title="Delete">
+        <i class="fas fa-trash"></i>
+    </button>
+</div>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('admin.services.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.services.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0'
+        ]);
+
+        Service::create($request->only('name', 'description', 'price'));
+
+        return redirect()->route('services.index')->with('success', 'Layanan berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Service $service)
+    public function edit($id)
     {
-        //
+        $service = Service::findOrFail($id);
+        return view('admin.services.edit', compact('service'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Service $service)
+    public function update(Request $request, $id)
     {
-        //
+        $service = Service::findOrFail($id);
+
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0'
+        ]);
+
+        $service->update($request->only('name', 'description', 'price'));
+
+        return redirect()->route('services.index')->with('success', 'Layanan berhasil diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Service $service)
+    public function destroy($id)
     {
-        //
-    }
+        $service = Service::findOrFail($id);
+        $service->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Service $service)
-    {
-        //
+        return response()->json(['success' => true, 'message' => 'Layanan berhasil dihapus.']);
     }
 }
+

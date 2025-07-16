@@ -14,7 +14,7 @@
         </div>
     </section>
 
-    <section class="section main-section mt-8 h-screen">
+    <section class="section main-section">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="card-content rounded-md overflow-x-auto">

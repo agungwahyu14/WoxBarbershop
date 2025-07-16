@@ -33,7 +33,7 @@
     @stack('styles')
 </head>
 
-<body>
+<body class="min-h-screen flex flex-col">
     <div id="app">
         @include('admin.partials.navbar')
         @include('admin.layouts.sidebar')

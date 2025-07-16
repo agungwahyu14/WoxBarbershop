@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Dashboard;
 use Illuminate\Http\Request;
+use App\Models\Service;
+use App\Models\Hairstyle;
+use App\Models\User;
+
 
 class DashboardController extends Controller
 {
@@ -12,8 +16,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+    $services = Service::all();
+    $hairstyles = Hairstyle::all();
+    $users = User::all();
+
+    return view('dashboard', compact('services', 'hairstyles', 'users'));
     }
+
 
     /**
      * Show the form for creating a new resource.

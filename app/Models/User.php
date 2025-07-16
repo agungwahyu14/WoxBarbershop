@@ -52,4 +52,10 @@ class User extends Authenticatable
             $user->assignRole('pelanggan');
         });
     }
+
+    public function bookings()
+    {
+    return $this->hasMany(Booking::class);
+    }
+
 }

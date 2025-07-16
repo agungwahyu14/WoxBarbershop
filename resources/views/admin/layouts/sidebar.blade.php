@@ -36,9 +36,9 @@
                     <span class="icon"><i class="mdi mdi-plus"></i></span>
                 </a>
                 <ul>
-                    <li><a href="services.html"><span>Services</span></a></li>
-                    <li><a href="hairstyles.html"><span>Hairstyles</span></a></li>
-                    <li><a href="recommendations.html"><span>Recommendations</span></a></li>
+                    <li><a href="{{ route('services.index') }}"><span>Services</span></a></li>
+                    <li><a href="{{ route('hairstyles.index') }}"><span>Hairstyles</span></a></li>
+                    {{-- <li><a href="{{ route('recommendations.index') }}"><span>Recommendations</span></a></li> --}}
                 </ul>
             </li>
 
