@@ -49,8 +49,8 @@
                     <span class="icon"><i class="mdi mdi-plus"></i></span>
                 </a>
                 <ul>
-                    <li><a href="bookings.html"><span>Bookings</span></a></li>
-                    <li><a href="transactions.html"><span>Transactions</span></a></li>
+                    <li><a href="{{ route('bookings.index') }}"><span>Bookings</span></a></li>
+                    <li><a href="{{ route('transactions.index') }}"><span>Transactions</span></a></li>
                 </ul>
             </li>
 
