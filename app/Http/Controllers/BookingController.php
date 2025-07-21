@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Hairstyle;
@@ -92,9 +93,6 @@ class BookingController extends Controller
     }
 }
 
-
-
-
     public function create()
 {
     $services = Service::all();
@@ -156,21 +154,25 @@ public function store(Request $request)
         return view('bookings.show', compact('booking'));
     }
 
-   public function edit(Booking $booking)
-{
+   public function edit($id)
+{   
+     $users = User::all();
+      $booking = Booking::findOrFail($id);
     $services = Service::all();
     $hairstyles = Hairstyle::all();
-    return view('bookings.edit', compact('booking', 'services', 'hairstyles'));
+    return view('admin.bookings.edit', compact('users', 'booking', 'services', 'hairstyles'));
 }
 
-public function update(Request $request, Booking $booking)
+public function update(Request $request, $id)
 {
+    $booking = Booking::findOrFail($id);
+
     $request->validate([
         'name' => 'required|string|max:255',
         'service_id' => 'required|exists:services,id',
         'hairstyle_id' => 'required|exists:hairstyles,id',
         'date_time' => 'required|date',
-        'notes' => 'nullable|string|max:1000',
+        'description' => 'nullable|string|max:1000',
         'status' => 'required|in:pending,confirmed,cancelled,completed',
     ]);
 
@@ -179,7 +181,7 @@ public function update(Request $request, Booking $booking)
         'service_id' => $request->service_id,
         'hairstyle_id' => $request->hairstyle_id,
         'date_time' => $request->date_time,
-        'notes' => $request->notes,
+        'description' => $request->description,
         'status' => $request->status,
     ]);
 
@@ -187,10 +189,18 @@ public function update(Request $request, Booking $booking)
 }
 
 
-    public function destroy(Booking $booking)
-    {
-        $booking->delete();
-        return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully.');
+   public function destroy(Booking $booking)
+{
+    $booking->delete();
+
+    if (request()->ajax()) {
+        return response()->json([
+            'message' => 'Booking deleted successfully.'
+        ]);
     }
+
+    return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully.');
+}
+
 }
 

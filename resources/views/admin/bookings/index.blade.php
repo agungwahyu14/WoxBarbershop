@@ -180,14 +180,14 @@
             });
         @endif
 
-        // Delete User
+        // Delete Booking
         $(document).on('click', '.deleteBtn', function() {
-            const userId = $(this).data('id');
-            const deleteUrl = '{{ route('users.destroy', ':id') }}'.replace(':id', userId);
+            const bookingId = $(this).data('id');
+            const deleteUrl = '{{ route('bookings.destroy', ':id') }}'.replace(':id', bookingId);
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "This will permanently delete the user.",
+                text: "This will permanently delete the booking.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

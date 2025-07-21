@@ -18,10 +18,12 @@ class HairstyleController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('image', function ($row) {
+    $url = asset('storage/' . $row->image);
     return $row->image
-        ? '<img src="' . asset('storage/hairstyles/' . $row->image) . '" width="120" class="rounded" />'
+        ? "<img src='{$url}' width='120' class='rounded' alt='image' onerror=\"this.src='/img/placeholder.jpg'; console.log('not found: {$url}')\" />"
         : '-';
 })
+
                 ->addColumn('action', function ($row) {
                     $editUrl = route('hairstyles.edit', $row->id);
                     $deleteUrl = route('hairstyles.destroy', $row->id);

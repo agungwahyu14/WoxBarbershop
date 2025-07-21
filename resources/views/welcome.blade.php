@@ -374,10 +374,14 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="date"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">TANGGAL</label>
-                                <input type="date" id="date" name="date"
+                                <label for="date_time"
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">TANGGAL & WAKTU</label>
+                                <input type="datetime-local" id="date_time" name="date_time"
+                                    value="{{ old('date_time') }}"
                                     class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
+                                @error('date_time')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
@@ -390,10 +394,17 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit"
-                            class="w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition transform hover:scale-105 shadow-md">
-                            RESERVASI
-                        </button>
+                        @auth
+                            <button type="submit"
+                                class="w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition transform hover:scale-105 shadow-md">
+                                RESERVASI
+                            </button>
+                        @else
+                            <a href="{{ route('login') }}"
+                                class="block text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition transform hover:scale-105 shadow-md">
+                                LOGIN UNTUK RESERVASI
+                            </a>
+                        @endauth
                     </form>
                 </div>
             </div>

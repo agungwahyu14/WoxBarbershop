@@ -333,6 +333,7 @@
 
                 <!-- Right Column - Booking Form -->
                 <div class="w-full lg:w-1/2 bg-white shadow-xl p-8">
+                    <p>Form action: {{ route('bookings.store') }}</p>
                     <form action="{{ route('bookings.store') }}" method="POST" id="booking-form" class="space-y-6">
                         @csrf
 
@@ -411,10 +412,17 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit"
-                            class="w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition transform hover:scale-105 shadow-md">
-                            RESERVASI
-                        </button>
+                        @auth
+                            <button type="submit"
+                                class="w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition transform hover:scale-105 shadow-md">
+                                RESERVASI
+                            </button>
+                        @else
+                            <a href="{{ route('login') }}"
+                                class="block text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition transform hover:scale-105 shadow-md">
+                                LOGIN UNTUK RESERVASI
+                            </a>
+                        @endauth
                     </form>
                 </div>
 

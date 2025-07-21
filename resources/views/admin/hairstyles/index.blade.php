@@ -159,12 +159,12 @@
 
         // Delete User
         $(document).on('click', '.deleteBtn', function() {
-            const userId = $(this).data('id');
-            const deleteUrl = '{{ route('users.destroy', ':id') }}'.replace(':id', userId);
+            const hairstyleId = $(this).data('id');
+            const deleteUrl = '{{ route('hairstyles.destroy', ':id') }}'.replace(':id', hairstyleId);
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "This will permanently delete the user.",
+                text: "This will permanently delete the hairstyle.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
