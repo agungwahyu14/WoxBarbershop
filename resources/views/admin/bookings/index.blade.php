@@ -19,11 +19,11 @@
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <a href="{{ route('bookings.create') }}"
+                    {{-- <a href="{{ route('bookings.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                         <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
                         Create Booking
-                    </a>
+                    </a> --}}
                     <div id="export-buttons" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
