@@ -39,9 +39,6 @@
                                 Name
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                Email
-                            </th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
                                 No Telepon
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
@@ -49,6 +46,12 @@
                             </th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
                                 Permissions
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Status
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Created Date
                             </th>
                             <th class="text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
                                 Actions
@@ -80,18 +83,16 @@
                         name: 'name'
                     },
                     {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
                         data: 'no_telepon',
                         name: 'no_telepon',
                     },
                     {
                         data: 'roles',
                         name: 'roles',
-                        className: 'capitalize',
+                        className: 'px-6 py-4',
+
                     },
+
                     {
                         data: 'permissions',
                         name: 'permissions',
@@ -106,7 +107,7 @@
                                     const displayPerms = perms.slice(0, 3);
                                     displayPerms.forEach(perm => {
                                         html +=
-                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">${perm.trim()}</span>`;
+                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 capitalize">${perm.trim()}</span>`;
                                     });
 
                                     // Show "+X more" if there are more permissions
@@ -123,6 +124,16 @@
                             }
                             return data;
                         }
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        className: 'px-6 py-4'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at',
+                        className: 'px-6 py-4'
                     },
                     {
                         data: 'action',

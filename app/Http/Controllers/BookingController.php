@@ -6,6 +6,10 @@ use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Hairstyle;
 use App\Models\Transaction;
+use App\Http\Requests\BookingRequest;
+use App\Services\BookingService;
+use App\Services\QueueService;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log; 
@@ -13,220 +17,606 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
-use Illuminate\Support\Facades\DB; //
-
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
-  public function index(Request $request)
-{
-    if (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('pegawai')) {
-        return redirect()->action([DashboardController::class, 'index']);
+    protected $bookingService;
+    protected $queueService;
+    protected $cacheService;
+
+    public function __construct(
+        BookingService $bookingService,
+        QueueService $queueService,
+        CacheService $cacheService
+    ) {
+        $this->bookingService = $bookingService;
+        $this->queueService = $queueService;
+        $this->cacheService = $cacheService;
+        
+        $this->middleware('auth');
     }
 
-    Log::info('BookingController@index accessed', [
-        'is_ajax' => $request->ajax(),
-        'user_id' => auth()->id(),
-        'ip' => $request->ip(),
-        'user_agent' => $request->userAgent()
-    ]);
+    public function index(Request $request)
+    {
+        if (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('pegawai')) {
+            return redirect()->action([DashboardController::class, 'index']);
+        }
 
-    if ($request->ajax()) {
-        Log::info('Processing AJAX request for bookings datatable');
+        Log::info('BookingController@index accessed', [
+            'is_ajax' => $request->ajax(),
+            'user_id' => auth()->id(),
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        ]);
 
-        try {
-            $query = Booking::with(['user', 'service', 'hairstyle']);
+        if ($request->ajax()) {
+            Log::info('Processing AJAX request for bookings datatable');
 
-            $data = $query->get();
+            try {
+                $query = Booking::with(['user', 'service', 'hairstyle']);
 
-            Log::info('Bookings data retrieved successfully', [
-                'total_records' => $data->count()
-            ]);
+                $data = $query->get();
 
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->editColumn('user_id', fn($row) => $row->user->name ?? '-')
-                ->editColumn('service_id', fn($row) => $row->service->name ?? '-')
-                ->editColumn('hairstyle_id', fn($row) => $row->hairstyle->name ?? '-')
-                ->editColumn('date_time', fn($row) => \Carbon\Carbon::parse($row->date_time)->format('d M Y H:i'))
-                ->editColumn('status', function ($row) {
-                    $status = strtolower($row->status);
-                    $color = match ($status) {
-                        'pending' => 'bg-yellow-100 text-yellow-800',
-                        'cancelled' => 'bg-red-100 text-red-800',
-                        'confirmed' => 'bg-green-100 text-green-800',
-                        default => 'bg-gray-100 text-gray-800',
-                    };
+                Log::info('Bookings data retrieved successfully', [
+                    'total_records' => $data->count()
+                ]);
 
-                    return '<span class="px-2 py-1 rounded-full text-xs font-semibold ' . $color . '">' . ucfirst($status) . '</span>';
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                ->addColumn('customer_info', function($row) {
+                    return $row->user ? 
+                        '<div class="flex items-center space-x-3">
+                         
+                            <div>
+                                <div class="font-medium text-gray-900">' . $row->user->name . '</div>
+                                <div class="text-sm text-gray-500">' . $row->user->email . '</div>
+                            </div>
+                        </div>' : '<span class="text-gray-400">No customer</span>';
                 })
-                ->addColumn('action', function ($row) {
-                    $editUrl = route('bookings.edit', $row->id);
-                    $deleteUrl = route('bookings.destroy', $row->id);
-
-                    return '
-                        <div class="flex justify-center items-center gap-2">
-                            <a href="' . $editUrl . '" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition" title="Edit">
-                                <i class="fas fa-pen"></i>
-                            </a>
-                            <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition deleteBtn" data-id="' . $row->id . '" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    ';
+                ->addColumn('contact_info', function($row) {
+                    return $row->user && $row->user->no_telepon ? 
+                        '<div class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-green-600"></i>
+                            <span class="font-medium">' . $row->user->no_telepon . '</span>
+                        </div>' : '<span class="text-gray-400">No contact</span>';
                 })
-                ->rawColumns(['action', 'status'])
+                ->addColumn('service_info', function($row) {
+                    if ($row->service) {
+                        $icon = $this->getServiceIcon($row->service->name);
+                        return '<div class="flex items-center space-x-2">
+                            <i class="' . $icon . ' text-green-600"></i>
+                            <div>
+                                <div class="font-medium text-gray-900">' . $row->service->name . '</div>
+                                <div class="text-sm text-gray-500">Rp ' . number_format($row->service->price, 0, ',', '.') . '</div>
+                            </div>
+                        </div>';
+                    }
+                    return '<span class="text-gray-400">No service</span>';
+                })
+                ->addColumn('hairstyle_info', function($row) {
+                    if ($row->hairstyle) {
+                        return '<div class="flex items-center space-x-2">
+                            <i class="fas fa-cut text-purple-600"></i>
+                            <div>
+                                <div class="font-medium text-gray-900">' . $row->hairstyle->name . '</div>
+                                <div class="text-sm text-gray-500">' . ($row->hairstyle->description ?? 'Classic style') . '</div>
+                            </div>
+                        </div>';
+                    }
+                    return '<span class="text-gray-400">No hairstyle</span>';
+                })
+                ->addColumn('datetime_formatted', function($row) {
+                    $date = \Carbon\Carbon::parse($row->date_time);
+                    return '<div class="text-center">
+                        <div class="font-medium text-gray-900">' . $date->format('M d, Y') . '</div>
+                        <div class="text-sm text-gray-500">' . $date->format('H:i A') . '</div>
+                        <div class="text-xs text-gray-400">' . $date->diffForHumans() . '</div>
+                    </div>';
+                })
+                ->addColumn('queue_display', function($row) {
+                    return '<div class="text-center">
+                        <span class="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-800 rounded-full font-semibold">
+                            ' . ($row->queue_number ?? 0) . '
+                        </span>
+                    </div>';
+                })
+                ->addColumn('status_badge', function($row) {
+                    $colors = [
+                        'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                        'confirmed' => 'bg-blue-100 text-blue-800 border-blue-200',
+                        'in_progress' => 'bg-orange-100 text-orange-800 border-orange-200',
+                        'completed' => 'bg-green-100 text-green-800 border-green-200',
+                        'cancelled' => 'bg-red-100 text-red-800 border-red-200'
+                    ];
+                    $icons = [
+                        'pending' => 'fas fa-clock',
+                        'confirmed' => 'fas fa-check',
+                        'in_progress' => 'fas fa-cut',
+                        'completed' => 'fas fa-check-circle',
+                        'cancelled' => 'fas fa-times-circle'
+                    ];
+                    
+                    $color = $colors[$row->status] ?? 'bg-gray-100 text-gray-800 border-gray-200';
+                    $icon = $icons[$row->status] ?? 'fas fa-question-circle';
+                    
+                    return '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ' . $color . '">
+                        <i class="' . $icon . ' mr-1"></i>
+                        ' . ucfirst(str_replace('_', ' ', $row->status)) . '
+                    </span>';
+                })
+                ->addColumn('actions', function ($row) {
+                     $showUrl = route('bookings.show', $row->id);
+                     $confirmUrl = route('bookings.update', $row->id);
+                     $cancelUrl = route('bookings.destroy', $row->id);
+                    $actions = '<div class="flex justify-center items-center space-x-2">';
+                    
+                    // View details button
+                    $actions .=  '<a href="' . $showUrl . '" 
+                  class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
+                  title="View Details">
+                <i class="fas fa-eye text-sm"></i>
+            </a>';
+                    
+                    // Status-specific actions
+                    switch($row->status) {
+                        case 'pending':
+                            $actions .= '<button onclick="confirmBooking(' . $row->id . ')" 
+                                               class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-colors duration-200" 
+                                               title="Confirm Booking">
+                                            <i class="fas fa-check text-sm"></i>
+                                        </button>';
+                            break;
+                        case 'confirmed':
+                            $actions .= '<button onclick="startService(' . $row->id . ')" 
+                                               class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-600 transition-colors duration-200" 
+                                               title="Start Service">
+                                            <i class="fas fa-play text-sm"></i>
+                                        </button>';
+                            break;
+                        case 'in_progress':
+                            $actions .= '<button onclick="completeService(' . $row->id . ')" 
+                                               class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-600 transition-colors duration-200" 
+                                               title="Complete Service">
+                                            <i class="fas fa-flag-checkered text-sm"></i>
+                                        </button>';
+                            break;
+                    }
+                    
+                    // Cancel/Delete button (only for non-completed bookings)
+                    if ($row->status !== 'completed') {
+                        $actions .= '<button onclick="cancelBooking(' . $row->id . ')" 
+                                           class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200" 
+                                           title="Cancel Booking">
+                                        <i class="fas fa-times text-sm"></i>
+                                    </button>';
+                    }
+                    
+                    $actions .= '</div>';
+                    return $actions;
+                })
+                ->rawColumns(['customer_info', 'contact_info', 'service_info', 'hairstyle_info', 'datetime_formatted', 'queue_display', 'status_badge', 'actions'])
                 ->make(true);
 
-        } catch (\Exception $e) {
-            Log::error('Error processing AJAX request for bookings', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
+            } catch (\Exception $e) {
+                Log::error('Error in BookingController@index AJAX', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
 
-            return response()->json([
-                'error' => 'Failed to load bookings data'
-            ], 500);
+                return response()->json([
+                    'error' => 'Failed to retrieve bookings data'
+                ], 500);
+            }
         }
+
+        $services = $this->cacheService->getActiveServices();
+        $hairstyles = $this->cacheService->getActiveHairstyles();
+
+        return view('admin.bookings.index', compact('services', 'hairstyles'));
     }
 
-    Log::info('Returning bookings index view');
-    return view('admin.bookings.index');
-}
+    private function getServiceIcon($serviceName)
+    {
+        $serviceName = strtolower($serviceName);
+        
+        $icons = [
+            'potong rambut' => 'fas fa-cut',
+            'hair cut' => 'fas fa-cut',
+            'cukur' => 'fas fa-cut',
+            'shampoo' => 'fas fa-soap',
+            'cuci rambut' => 'fas fa-soap',
+            'styling' => 'fas fa-magic',
+            'hair styling' => 'fas fa-magic',
+            'pewarnaan' => 'fas fa-palette',
+            'hair color' => 'fas fa-palette',
+            'coloring' => 'fas fa-palette',
+            'creambath' => 'fas fa-bath',
+            'treatment' => 'fas fa-spa',
+            'facial' => 'fas fa-user-circle',
+            'massage' => 'fas fa-hand-sparkles',
+            'keratin' => 'fas fa-fire',
+            'smoothing' => 'fas fa-wind',
+            'perm' => 'fas fa-snowflake',
+        ];
 
+        foreach ($icons as $keyword => $icon) {
+            if (strpos($serviceName, $keyword) !== false) {
+                return $icon;
+            }
+        }
+
+        return 'fas fa-scissors'; // Default barber icon
+    }
 
     public function create()
-{
-    $services = Service::all();
-    $hairstyles = Hairstyle::all();
-    return view('bookings.create', compact('services', 'hairstyles'));
-}
+    {
+        $services = $this->cacheService->getActiveServices();
+        $hairstyles = $this->cacheService->getActiveHairstyles();
 
-
-
-public function store(Request $request)
-{
-    try {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'service_id' => 'required|exists:services,id',
-            'hairstyle_id' => 'required|exists:hairstyles,id',
-            'date_time' => 'required|date',
-            'description' => 'nullable|string',
-        ]);
-
-        DB::beginTransaction(); // mulai transaksi database
-
-        $date = date('Y-m-d', strtotime($request->date_time));
-        $currentCount = Booking::whereDate('date_time', $date)->count();
-        $queueNumber = ($currentCount % 20) + 1;
-
-        $booking = Booking::create([
-            'user_id' => Auth::id(),
-            'name' => $request->name,
-            'service_id' => $request->service_id,
-            'hairstyle_id' => $request->hairstyle_id,
-            'date_time' => $request->date_time,
-            'description' => $request->description,
-            'queue_number' => $queueNumber,
-            'status' => 'pending',
-        ]);
-
-        $service = Service::findOrFail($request->service_id);
-
-        $transaction = Transaction::create([
-            'booking_id' => $booking->id,
-            'user_id' => Auth::id(),
-            'service_id' => $request->service_id,
-            'total_amount' => $service->price,
-            'payment_method' => null,
-            'payment_status' => 'pending',
-        ]);
-
-        if (!$transaction) {
-            Log::error('Gagal membuat transaksi.', [
-                'booking_id' => $booking->id,
-                'user_id' => Auth::id(),
-            ]);
-            DB::rollBack();
-            return redirect()->back()->withInput()->with('error', 'Gagal membuat transaksi.');
-        }
-
-        DB::commit();
-
-        Log::info('Booking & Transaction berhasil dibuat.', [
-            'booking_id' => $booking->id,
-            'transaction_id' => $transaction->id,
-            'user_id' => Auth::id(),
-        ]);
-
-        return redirect()->route('bookings.index')->with('success', 'Booking berhasil dibuat!');
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        Log::error('Gagal membuat booking dan transaksi.', [
-            'error' => $e->getMessage(),
-            'user_id' => Auth::id(),
-            'request' => $request->all()
-        ]);
-
-        return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat memproses booking.');
+        return view('bookings.create', compact('services', 'hairstyles'));
     }
-}
 
+    public function store(BookingRequest $request)
+    {
+
+        Log::info('Masuk ke BookingController@store', [
+        'user_id' => auth()->id(),
+        'request_data' => $request->all()
+    ]);
+        try {
+            DB::beginTransaction();
+
+            $booking = $this->bookingService->createBooking($request->validated());
+
+            // Clear relevant caches
+            $this->cacheService->clearBookingCaches($booking->date_time);
+            $this->cacheService->clearDashboardStats();
+
+            DB::commit();
+
+            Log::info('Booking created successfully', [
+                'booking_id' => $booking->id,
+                'user_id' => auth()->id(),
+                'date_time' => $booking->date_time,
+                'service_id' => $booking->service_id
+            ]);
+
+            return redirect()->route('bookings.show', $booking)
+                ->with('success', 'Booking berhasil dibuat! Nomor antrian Anda: ' . $booking->queue_number);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            Log::error('Error creating booking', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'request_data' => $request->validated()
+            ]);
+
+
+            return back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
+    }
 
     public function show(Booking $booking)
     {
-        return view('bookings.show', compact('booking'));
-    }
+        try {
+            // Authorization check
+            $user = auth()->user();
+            
+            // Admin and pegawai can view all bookings, customers can only view their own
+            if (!$user->hasAnyRole(['admin', 'pegawai']) && $booking->user_id !== $user->id) {
+                abort(403, 'Unauthorized access to booking.');
+            }
 
-   public function edit($id)
-{   
-     $users = User::all();
-      $booking = Booking::findOrFail($id);
-    $services = Service::all();
-    $hairstyles = Hairstyle::all();
-    return view('admin.bookings.edit', compact('users', 'booking', 'services', 'hairstyles'));
-}
-
-public function update(Request $request, $id)
-{
-    $booking = Booking::findOrFail($id);
-
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'service_id' => 'required|exists:services,id',
-        'hairstyle_id' => 'required|exists:hairstyles,id',
-        'date_time' => 'required|date',
-        'description' => 'nullable|string|max:1000',
-        'status' => 'required|in:pending,confirmed,cancelled,completed',
-    ]);
-
-    $booking->update([
-        'name' => $request->name,
-        'service_id' => $request->service_id,
-        'hairstyle_id' => $request->hairstyle_id,
-        'date_time' => $request->date_time,
-        'description' => $request->description,
-        'status' => $request->status,
-    ]);
-
-    return redirect()->route('bookings.index')->with('success', 'Booking updated successfully.');
-}
-
-
-   public function destroy(Booking $booking)
-{
-    $booking->delete();
-
-    if (request()->ajax()) {
-        return response()->json([
-            'message' => 'Booking deleted successfully.'
+            // Load all necessary relationships
+            $booking->load([
+            'user' => function($query) {
+                $query->select('id', 'name', 'email', 'no_telepon');
+            },
+            'service' => function($query) {
+                $query->select('id', 'name', 'description', 'price', 'duration', 'is_active');
+            },
+            'hairstyle' => function($query) {
+                $query->latest()->with(['user' => function($subQuery) {
+                    $subQuery->select('id', 'name');
+                }]);
+            }
         ]);
+            
+            // Get queue information
+            $queueStatus = null;
+            $queuePosition = null;
+            $estimatedWaitTime = null;
+            
+            try {
+                $queueStatus = $this->cacheService->getQueueStatus($booking->date_time);
+                $queuePosition = $this->queueService->getQueuePosition($booking);
+                
+                // Calculate estimated wait time (assuming 45 minutes per booking on average)
+                if ($queuePosition && $queuePosition > 1) {
+                    $estimatedWaitTime = ($queuePosition - 1) * 45; // minutes
+                }
+            } catch (\Exception $e) {
+                Log::warning('Failed to get queue information', [
+                    'booking_id' => $booking->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+
+            // Get booking statistics for this customer
+            $customerStats = null;
+            if ($booking->user) {
+                $customerStats = [
+                    'total_bookings' => Booking::where('user_id', $booking->user_id)->count(),
+                    'completed_bookings' => Booking::where('user_id', $booking->user_id)
+                        ->where('status', 'completed')->count(),
+                    'total_spent' => Transaction::where('user_id', $booking->user_id)
+                        ->where('payment_status', 'paid')->sum('total_amount'),
+                    'last_booking' => Booking::where('user_id', $booking->user_id)
+                        ->where('id', '!=', $booking->id)
+                        ->latest('date_time')->first()?->date_time,
+                ];
+            }
+
+            // Get available time slots for rescheduling (next 7 days)
+            $availableSlots = [];
+            if (in_array($booking->status, ['pending', 'confirmed'])) {
+                try {
+                    $availableSlots = $this->bookingService->getAvailableTimeSlots(
+                        now()->toDateString(),
+                        now()->addDays(7)->toDateString(),
+                        $booking->service_id
+                    );
+                } catch (\Exception $e) {
+                    Log::warning('Failed to get available slots', [
+                        'booking_id' => $booking->id,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+
+            // Check if booking can be modified
+            $canModify = in_array($booking->status, ['pending', 'confirmed']) && 
+                        ($user->hasAnyRole(['admin', 'pegawai']) || $booking->user_id === $user->id);
+
+            // Check if booking can be cancelled
+            $canCancel = $booking->status !== 'completed' && $booking->status !== 'cancelled' &&
+                        ($user->hasAnyRole(['admin', 'pegawai']) || $booking->user_id === $user->id);
+
+            // Get service recommendations based on this booking
+            $recommendations = [];
+            if ($booking->service && $booking->hairstyle) {
+                try {
+                    $recommendations = $this->getServiceRecommendations($booking);
+                } catch (\Exception $e) {
+                    Log::warning('Failed to get recommendations', [
+                        'booking_id' => $booking->id,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+
+            // Log the view access
+            Log::info('Booking details viewed', [
+                'booking_id' => $booking->id,
+                'viewed_by' => $user->id,
+                'user_role' => $user->roles->pluck('name')->implode(','),
+                'booking_status' => $booking->status
+            ]);
+
+            // Prepare data for view
+            $viewData = compact(
+                'booking',
+                'queueStatus',
+                'queuePosition',
+                'estimatedWaitTime',
+                'customerStats',
+                'availableSlots',
+                'canModify',
+                'canCancel',
+                'recommendations'
+            );
+
+            // Return different views based on user role
+            if ($user->hasAnyRole(['admin', 'pegawai'])) {
+                return view('admin.bookings.show', $viewData);
+            } else {
+                return view('bookings.show', $viewData);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Error in BookingController@show', [
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id()
+            ]);
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat memuat detail booking.');
+        }
     }
 
-    return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully.');
-}
+    /**
+     * Get service recommendations based on current booking
+     */
+    private function getServiceRecommendations(Booking $booking)
+    {
+        // Get services that are commonly booked together
+        $relatedServices = Service::where('is_active', true)
+            ->where('id', '!=', $booking->service_id)
+            ->whereIn('id', function($query) use ($booking) {
+                $query->select('service_id')
+                      ->from('bookings')
+                      ->whereIn('user_id', function($subQuery) use ($booking) {
+                          $subQuery->select('user_id')
+                                   ->from('bookings')
+                                   ->where('service_id', $booking->service_id);
+                      })
+                      ->groupBy('service_id')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->limit(3)
+            ->get(['id', 'name', 'description', 'price', 'duration']);
 
-}
+        // If no related services found, get popular services
+        if ($relatedServices->isEmpty()) {
+            $relatedServices = Service::where('is_active', true)
+                ->where('id', '!=', $booking->service_id)
+                ->withCount('bookings')
+                ->orderBy('bookings_count', 'desc')
+                ->limit(3)
+                ->get(['id', 'name', 'description', 'price', 'duration']);
+        }
 
+        return $relatedServices;
+    }
+
+    public function edit(Booking $booking)
+    {
+        $this->authorize('update', $booking);
+
+        if (!in_array($booking->status, ['pending', 'confirmed'])) {
+            return redirect()->route('bookings.show', $booking)
+                ->with('error', 'Booking tidak dapat diubah karena sudah ' . $booking->status);
+        }
+
+        $services = $this->cacheService->getActiveServices();
+        $hairstyles = $this->cacheService->getActiveHairstyles();
+
+        return view('bookings.edit', compact('booking', 'services', 'hairstyles'));
+    }
+
+    public function update(BookingRequest $request, Booking $booking)
+    {
+        $this->authorize('update', $booking);
+
+        if (!in_array($booking->status, ['pending', 'confirmed'])) {
+            return back()->with('error', 'Booking tidak dapat diubah karena sudah ' . $booking->status);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $oldDateTime = $booking->date_time;
+            
+            // Update booking with new data
+            $validatedData = $request->validated();
+            
+            // Recalculate price if service changed
+            if ($booking->service_id !== $validatedData['service_id']) {
+                $validatedData['total_price'] = $this->bookingService->calculatePrice(new Booking($validatedData));
+            }
+
+            $booking->update($validatedData);
+
+            // Clear caches for both old and new dates
+            $this->cacheService->clearBookingCaches($oldDateTime);
+            $this->cacheService->clearBookingCaches($booking->date_time);
+            $this->cacheService->clearDashboardStats();
+
+            DB::commit();
+
+            Log::info('Booking updated successfully', [
+                'booking_id' => $booking->id,
+                'user_id' => auth()->id(),
+                'changes' => $booking->getChanges()
+            ]);
+
+            return redirect()->route('bookings.show', $booking)
+                ->with('success', 'Booking berhasil diperbarui');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            Log::error('Error updating booking', [
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id()
+            ]);
+
+            return back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
+    }
+
+    public function destroy(Booking $booking)
+    {
+        $this->authorize('delete', $booking);
+
+        if (!in_array($booking->status, ['pending', 'confirmed'])) {
+            return back()->with('error', 'Booking tidak dapat dibatalkan karena sudah ' . $booking->status);
+        }
+
+        try {
+            $booking->update(['status' => 'cancelled']);
+
+            // Clear caches
+            $this->cacheService->clearBookingCaches($booking->date_time);
+            $this->cacheService->clearDashboardStats();
+
+            Log::info('Booking cancelled', [
+                'booking_id' => $booking->id,
+                'user_id' => auth()->id()
+            ]);
+
+            return redirect()->route('dashboard')
+                ->with('success', 'Booking berhasil dibatalkan');
+
+        } catch (\Exception $e) {
+            Log::error('Error cancelling booking', [
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id()
+            ]);
+
+            return back()->with('error', 'Gagal membatalkan booking');
+        }
+    }
+
+    /**
+     * Update booking status (for admin/staff)
+     */
+    public function updateStatus(Request $request, Booking $booking)
+    {
+        $this->authorize('updateStatus', $booking);
+
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,in_progress,completed,cancelled'
+        ]);
+
+        try {
+            $this->bookingService->updateBookingStatus($booking, $request->status);
+
+            // Clear caches
+            $this->cacheService->clearBookingCaches($booking->date_time);
+            $this->cacheService->clearDashboardStats();
+
+            Log::info('Booking status updated', [
+                'booking_id' => $booking->id,
+                'old_status' => $booking->status,
+                'new_status' => $request->status,
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status booking berhasil diperbarui',
+                'new_status' => $request->status
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error updating booking status', [
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 422);
+        }
+    }
+}

@@ -17,28 +17,141 @@ class HairstyleController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->editColumn('name', function($row) {
+                    $icon = $this->getHairstyleIcon($row->name);
+                    return '<div class="flex items-center gap-2">
+                        <i class="' . $icon . ' text-lg text-purple-600"></i>
+                        <span>' . $row->name . '</span>
+                    </div>';
+                })
+                ->editColumn('bentuk_kepala', function($row) {
+                    $icon = $this->getFaceShapeIcon($row->bentuk_kepala);
+                    return '<div class="flex items-center gap-2">
+                        <i class="' . $icon . ' text-sm text-gray-600"></i>
+                        <span class="capitalize">' . $row->bentuk_kepala . '</span>
+                    </div>';
+                })
+                ->editColumn('tipe_rambut', function($row) {
+                    $icon = $this->getHairTypeIcon($row->tipe_rambut);
+                    return '<div class="flex items-center gap-2">
+                        <i class="' . $icon . ' text-sm text-gray-600"></i>
+                        <span class="capitalize">' . $row->tipe_rambut . '</span>
+                    </div>';
+                })
+                ->editColumn('description', function($row) {
+                    return $row->description ? '<div class="max-w-xs truncate" title="' . $row->description . '">' . $row->description . '</div>' : '-';
+                })
                 ->addColumn('image', function ($row) {
-    $url = asset('storage/' . $row->image);
-    return $row->image
-        ? "<img src='{$url}' width='120' class='rounded' alt='image' onerror=\"this.src='/img/placeholder.jpg'; console.log('not found: {$url}')\" />"
-        : '-';
-})
-
+                    if ($row->image) {
+                        $url = asset('storage/' . $row->image);
+                        return '<div class="flex justify-center">
+                            <img src="' . $url . '" 
+                                 class="w-16 h-16 object-cover rounded-lg shadow-sm border border-gray-200" 
+                                 alt="' . $row->name . '" 
+                                 onerror="this.src=\'/img/placeholder.svg\'; this.classList.add(\'opacity-50\')" />
+                        </div>';
+                    }
+                    return '<div class="flex justify-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400"></i>
+                        </div>
+                    </div>';
+                })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('hairstyles.edit', $row->id);
-                    $deleteUrl = route('hairstyles.destroy', $row->id);
 
                     return '
-                        <div class="flex justify-center gap-2">
-                            <a href="'.$editUrl.'" class="text-blue-600 hover:text-blue-800"><i class="fas fa-pen"></i></a>
-                            <button class="deleteBtn text-red-600 hover:text-red-800" data-id="'.$row->id.'"><i class="fas fa-trash"></i></button>
+                        <div class="flex justify-center items-center gap-2">
+                            <a href="' . $editUrl . '" 
+                               class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
+                               title="Edit Hairstyle">
+                                <i class="fas fa-edit text-sm"></i>
+                            </a>
+                            <button type="button" 
+                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200 deleteBtn" 
+                                    data-id="' . $row->id . '" 
+                                    title="Delete Hairstyle">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
                         </div>';
                 })
-                ->rawColumns(['image', 'action'])
+                ->rawColumns(['name', 'bentuk_kepala', 'tipe_rambut', 'description', 'image', 'action'])
                 ->make(true);
         }
 
         return view('admin.hairstyles.index');
+    }
+
+    private function getHairstyleIcon($hairstyleName)
+    {
+        $hairstyleName = strtolower($hairstyleName);
+        
+        $icons = [
+            'buzz cut' => 'fas fa-cut',
+            'crew cut' => 'fas fa-cut',
+            'fade' => 'fas fa-cut',
+            'undercut' => 'fas fa-cut',
+            'pompadour' => 'fas fa-crown',
+            'quiff' => 'fas fa-crown',
+            'slick back' => 'fas fa-arrow-right',
+            'side part' => 'fas fa-divide',
+            'textured' => 'fas fa-grip-lines',
+            'messy' => 'fas fa-wind',
+            'wavy' => 'fas fa-water',
+            'curly' => 'fas fa-circle-notch',
+            'straight' => 'fas fa-minus',
+            'spiky' => 'fas fa-mountain',
+            'mohawk' => 'fas fa-fire',
+            'comb over' => 'fas fa-exchange-alt',
+        ];
+
+        foreach ($icons as $keyword => $icon) {
+            if (strpos($hairstyleName, $keyword) !== false) {
+                return $icon;
+            }
+        }
+
+        return 'fas fa-cut'; // Default hairstyle icon
+    }
+
+    private function getFaceShapeIcon($faceShape)
+    {
+        $faceShape = strtolower($faceShape);
+        
+        $icons = [
+            'bulat' => 'fas fa-circle',
+            'round' => 'fas fa-circle',
+            'oval' => 'fas fa-egg',
+            'persegi' => 'fas fa-square',
+            'square' => 'fas fa-square',
+            'heart' => 'fas fa-heart',
+            'diamond' => 'fas fa-gem',
+            'oblong' => 'fas fa-rectangle',
+            'long' => 'fas fa-rectangle',
+        ];
+
+        return $icons[$faceShape] ?? 'fas fa-user';
+    }
+
+    private function getHairTypeIcon($hairType)
+    {
+        $hairType = strtolower($hairType);
+        
+        $icons = [
+            'lurus' => 'fas fa-minus',
+            'straight' => 'fas fa-minus',
+            'bergelombang' => 'fas fa-wave-square',
+            'wavy' => 'fas fa-wave-square',
+            'keriting' => 'fas fa-circle-notch',
+            'curly' => 'fas fa-circle-notch',
+            'ikal' => 'fas fa-sync',
+            'tebal' => 'fas fa-align-justify',
+            'thick' => 'fas fa-align-justify',
+            'tipis' => 'fas fa-align-left',
+            'thin' => 'fas fa-align-left',
+        ];
+
+        return $icons[$hairType] ?? 'fas fa-cut';
     }
 
     public function create()

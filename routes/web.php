@@ -10,6 +10,7 @@ use App\Http\Controllers\HairstyleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,11 +64,22 @@ Route::middleware('auth')->group(function () {
     
 
     Route::resource('bookings', BookingController::class);
+    Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
     Route::resource('transactions', TransactionController::class);
+    
+    // Payment routes
+    Route::post('/payment/process', [App\Http\Controllers\PaymentController::class, 'processPayment'])->name('payment.process');
+    Route::get('/payment/{transaction}', [App\Http\Controllers\PaymentController::class, 'show'])->name('payment.show');
+    
+    // Payment callback routes
+    Route::get('/payment/success', [App\Http\Controllers\PaymentController::class, 'paymentSuccess'])->name('payment.success');
+    Route::get('/payment/error', [App\Http\Controllers\PaymentController::class, 'paymentError'])->name('payment.error');
+    Route::get('/payment/pending', [App\Http\Controllers\PaymentController::class, 'paymentPending'])->name('payment.pending');
+    
     // End of Profile Routes
 });
 
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'role:admin|pegawai'])->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
@@ -78,7 +90,23 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('services', ServiceController::class);
     Route::resource('hairstyles', HairstyleController::class);
 
+    // Enhanced User Management Routes
+    Route::post('/users/{user}/resend-verification', [UserController::class, 'resendVerification'])->name('admin.users.resend-verification');
+    Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.reset-password');
+    Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('admin.users.toggle-status');
+    Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
+
     // Tambahkan route admin lainnya di sini
 });
+
+// Verification Routes (outside admin group)
+Route::post('/verification/resend', function(Request $request) {
+    $user = \App\Models\User::findOrFail($request->user_id);
+    if ($user->hasVerifiedEmail()) {
+        return response()->json(['success' => false, 'message' => 'Email already verified']);
+    }
+    $user->sendEmailVerificationNotification();
+    return response()->json(['success' => true, 'message' => 'Verification email sent']);
+})->name('verification.resend')->middleware('auth');
 
 require __DIR__ . '/auth.php';

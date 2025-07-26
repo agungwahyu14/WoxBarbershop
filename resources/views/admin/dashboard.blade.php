@@ -7,19 +7,25 @@
                 <li>Admin</li>
                 <li>Dashboard</li>
             </ul>
-            <a href="https://justboil.me/" onclick="alert('Coming soon'); return false" target="_blank" class="button blue">
-                <span class="icon"><i class="mdi mdi-credit-card-outline"></i></span>
-                <span>Premium Demo</span>
-            </a>
+            <div class="text-sm text-gray-600">
+                Selamat datang, {{ Auth::user()->name }} 
+                @if(Auth::user()->hasRole('admin'))
+                    (Administrator)
+                @elseif(Auth::user()->hasRole('pegawai'))
+                    (Pegawai)
+                @endif
+            </div>
         </div>
     </section>
 
     <section class="is-hero-bar">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
             <h1 class="title">
-                Dashboard
+                Dashboard WOX Barbershop
             </h1>
-            <button class="button light">Button</button>
+            <div class="text-sm text-gray-500">
+                {{ now()->format('d M Y, H:i') }}
+            </div>
         </div>
     </section>
 
@@ -30,10 +36,10 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3>
-                                Clients
+                                Total Customers
                             </h3>
                             <h1>
-                                512
+                                {{ \App\Models\User::role('customer')->count() }}
                             </h1>
                         </div>
                         <span class="icon widget-icon text-green-500"><i
@@ -46,10 +52,10 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3>
-                                Sales
+                                Total Revenue
                             </h3>
                             <h1>
-                                $7,770
+                                Rp{{ number_format(\App\Models\Transaction::where('payment_status', 'settlement')->sum('total_amount'), 0, ',', '.') }}
                             </h1>
                         </div>
                         <span class="icon widget-icon text-blue-500"><i class="mdi mdi-cart-outline mdi-48px"></i></span>
@@ -62,61 +68,73 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3>
-                                Performance
+                                Total Bookings
                             </h3>
                             <h1>
-                                256%
+                                {{ \App\Models\Booking::count() }}
                             </h1>
                         </div>
-                        <span class="icon widget-icon text-red-500"><i class="mdi mdi-finance mdi-48px"></i></span>
+                        <span class="icon widget-icon text-red-500"><i class="mdi mdi-calendar-check mdi-48px"></i></span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card mb-6">
-            <header class="card-header">
-                <p class="card-header-title">
-                    <span class="icon"><i class="mdi mdi-finance"></i></span>
-                    Performance
-                </p>
-                <a href="#" class="card-header-icon">
-                    <span class="icon"><i class="mdi mdi-reload"></i></span>
-                </a>
-            </header>
-            <div class="card-content">
-                <div class="chart-area">
-                    <div class="h-full">
-                        <div class="chartjs-size-monitor">
-                            <div class="chartjs-size-monitor-expand">
-                                <div></div>
-                            </div>
-                            <div class="chartjs-size-monitor-shrink">
-                                <div></div>
-                            </div>
+        <div class="grid gap-6 grid-cols-1 md:grid-cols-2 mb-6">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-trending-up"></i></span>
+                        Booking Status
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="space-y-2">
+                        @php
+                            $bookingStats = \App\Models\Booking::selectRaw('status, COUNT(*) as count')
+                                ->groupBy('status')
+                                ->get();
+                        @endphp
+                        @foreach($bookingStats as $stat)
+                        <div class="flex justify-between items-center">
+                            <span class="capitalize">{{ $stat->status }}</span>
+                            <span class="font-semibold">{{ $stat->count }}</span>
                         </div>
-                        <canvas id="big-line-chart" width="2992" height="1000" class="chartjs-render-monitor block"
-                            style="height: 400px; width: 1197px;"></canvas>
+                        @endforeach
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="notification blue">
-            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-                <div>
-                    <span class="icon"><i class="mdi mdi-buffer"></i></span>
-                    <b>Responsive table</b>
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-cash"></i></span>
+                        Payment Status
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="space-y-2">
+                        @php
+                            $paymentStats = \App\Models\Transaction::selectRaw('payment_status, COUNT(*) as count')
+                                ->groupBy('payment_status')
+                                ->get();
+                        @endphp
+                        @foreach($paymentStats as $stat)
+                        <div class="flex justify-between items-center">
+                            <span class="capitalize">{{ $stat->payment_status }}</span>
+                            <span class="font-semibold">{{ $stat->count }}</span>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
-                <button type="button" class="button small textual --jb-notification-dismiss">Dismiss</button>
             </div>
         </div>
 
         <div class="card has-table">
             <header class="card-header">
                 <p class="card-header-title">
-                    <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-                    Clients
+                    <span class="icon"><i class="mdi mdi-calendar-today"></i></span>
+                    Recent Bookings
                 </p>
                 <a href="#" class="card-header-icon">
                     <span class="icon"><i class="mdi mdi-reload"></i></span>
@@ -126,317 +144,58 @@
                 <table>
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Company</th>
-                            <th>City</th>
-                            <th>Progress</th>
-                            <th>Created</th>
-                            <th></th>
+                            <th>Customer</th>
+                            <th>Service</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $recentBookings = \App\Models\Booking::with(['user', 'service'])
+                                ->orderBy('created_at', 'desc')
+                                ->limit(10)
+                                ->get();
+                        @endphp
+                        @foreach($recentBookings as $booking)
                         <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/rebecca-bauch.svg"
-                                        class="rounded-full">
-                                </div>
+                            <td data-label="Customer">{{ $booking->user->name ?? 'N/A' }}</td>
+                            <td data-label="Service">{{ $booking->service->name ?? 'N/A' }}</td>
+                            <td data-label="Date & Time">
+                                {{ $booking->booking_date ? \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') : 'N/A' }}<br>
+                                <small class="text-gray-500">{{ $booking->booking_time ?? 'N/A' }}</small>
                             </td>
-                            <td data-label="Name">Rebecca Bauch</td>
-                            <td data-label="Company">Daugherty-Daniel</td>
-                            <td data-label="City">South Cory</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="79">79</progress>
+                            <td data-label="Status">
+                                <span class="px-2 py-1 rounded text-xs
+                                    @if($booking->status === 'completed') bg-green-100 text-green-800
+                                    @elseif($booking->status === 'confirmed') bg-blue-100 text-blue-800
+                                    @elseif($booking->status === 'pending') bg-yellow-100 text-yellow-800
+                                    @elseif($booking->status === 'cancelled') bg-red-100 text-red-800
+                                    @else bg-gray-100 text-gray-800 @endif">
+                                    {{ ucfirst($booking->status) }}
+                                </span>
                             </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Oct 25, 2021">Oct 25, 2021</small>
+                            <td data-label="Amount">
+                                Rp{{ number_format($booking->service->price ?? 0, 0, ',', '.') }}
                             </td>
                             <td class="actions-cell">
                                 <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
+                                    <button class="button small green" type="button">
                                         <span class="icon"><i class="mdi mdi-eye"></i></span>
                                     </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal" type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                                    @if(Auth::user()->hasRole('admin'))
+                                    <button class="button small blue" type="button">
+                                        <span class="icon"><i class="mdi mdi-pencil"></i></span>
                                     </button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/felicita-yundt.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Felicita Yundt</td>
-                            <td data-label="Company">Johns-Weissnat</td>
-                            <td data-label="City">East Ariel</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="67">67</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Jan 8, 2021">Jan 8, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/mr-larry-satterfield-v.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Mr. Larry Satterfield V</td>
-                            <td data-label="Company">Hyatt Ltd</td>
-                            <td data-label="City">Windlerburgh</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="16">16</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Dec 18, 2021">Dec 18, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/mr-broderick-kub.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Mr. Broderick Kub</td>
-                            <td data-label="Company">Kshlerin, Bauch and Ernser</td>
-                            <td data-label="City">New Kirstenport</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="71">71</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Sep 13, 2021">Sep 13, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/barry-weber.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Barry Weber</td>
-                            <td data-label="Company">Schulist, Mosciski and Heidenreich</td>
-                            <td data-label="City">East Violettestad</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="80">80</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Jul 24, 2021">Jul 24, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/bert-kautzer-md.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Bert Kautzer MD</td>
-                            <td data-label="Company">Gerhold and Sons</td>
-                            <td data-label="City">Mayeport</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="62">62</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Mar 30, 2021">Mar 30, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/lonzo-steuber.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Lonzo Steuber</td>
-                            <td data-label="Company">Skiles Ltd</td>
-                            <td data-label="City">Marilouville</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="17">17</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Feb 12, 2021">Feb 12, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/jonathon-hahn.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Jonathon Hahn</td>
-                            <td data-label="Company">Flatley Ltd</td>
-                            <td data-label="City">Billiemouth</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="74">74</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Dec 30, 2021">Dec 30, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/ryley-wuckert.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Ryley Wuckert</td>
-                            <td data-label="Company">Heller-Little</td>
-                            <td data-label="City">Emeraldtown</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="54">54</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Jun 28, 2021">Jun 28, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="image-cell">
-                                <div class="image">
-                                    <img src="https://avatars.dicebear.com/v2/initials/sienna-hayes.svg"
-                                        class="rounded-full">
-                                </div>
-                            </td>
-                            <td data-label="Name">Sienna Hayes</td>
-                            <td data-label="Company">Conn, Jerde and Douglas</td>
-                            <td data-label="City">Jonathanfort</td>
-                            <td data-label="Progress" class="progress-cell">
-                                <progress max="100" value="55">55</progress>
-                            </td>
-                            <td data-label="Created">
-                                <small class="text-gray-500" title="Mar 7, 2021">Mar 7, 2021</small>
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green --jb-modal" data-target="sample-modal-2"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    <button class="button small red --jb-modal" data-target="sample-modal"
-                                        type="button">
-                                        <span class="icon"><i class="mdi mdi-trash-can"></i></span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
-                <div class="table-pagination">
-                    <div class="flex items-center justify-between">
-                        <div class="buttons">
-                            <button type="button" class="button active">1</button>
-                            <button type="button" class="button">2</button>
-                            <button type="button" class="button">3</button>
-                        </div>
-                        <small>Page 1 of 3</small>
-                    </div>
-                </div>
             </div>
         </div>
     </section>

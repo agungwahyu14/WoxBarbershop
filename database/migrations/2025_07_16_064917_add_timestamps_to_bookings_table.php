@@ -12,7 +12,9 @@ return new class extends Migration
     public function up()
 {
     Schema::table('bookings', function (Blueprint $table) {
-        $table->timestamps(); // ini akan menambahkan created_at dan updated_at
+        if (!Schema::hasColumn('bookings', 'created_at')) {
+            $table->timestamps(); // ini akan menambahkan created_at dan updated_at
+        }
     });
 }
 

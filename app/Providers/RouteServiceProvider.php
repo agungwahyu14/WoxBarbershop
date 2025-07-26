@@ -22,7 +22,7 @@ class RouteServiceProvider extends ServiceProvider
     public static function home()
     {
         if (auth()->check()) {
-            if (auth()->user() && auth()->user()->role === 'admin') {
+            if (auth()->user() && auth()->user()->hasRole(['admin', 'pegawai'])) {
                 return '/admin/dashboard';
             }
         }

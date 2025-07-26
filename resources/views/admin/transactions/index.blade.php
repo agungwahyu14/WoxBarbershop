@@ -1,18 +1,91 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Transaction Management')
+@section('meta_description', 'Comprehensive transaction management system for WOX Barbershop')
+
 @section('content')
-    <section class="is-hero-bar">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+
+    <div class="is-hero-bar">
+
+        <div class="flex flex-col md:flex-row justify-between items-center">
             <div>
-                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    Transaction 
+                <h1 class="text-4xl font-bold mb-2">
+                    <i class="fas fa-calendar-check mr-3"></i>Transaction Management
                 </h1>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage transactions for Wox’s Barbershop
+                <p class="text-blacktext-lg">
+                    Monitor all payment transactions and financial activities
                 </p>
             </div>
+            <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                <div class="glass-effect px-4 py-2 rounded-lg">
+                    <i class="fas fa-coins mr-2"></i>
+                    <span class="font-semibold">Total Revenue: Rp
+                        {{ number_format(\App\Models\Transaction::where('payment_status', 'settlement')->sum('total_amount'), 0, ',', '.') }}</span>
+                </div>
+            </div>
         </div>
-    </section>
+
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="mx-auto px-6 pt-12 -mt-8 mb-8">
+        <div class="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Today's Revenue</p>
+                        <p class="text-2xl font-bold text-green-600">Rp
+                            {{ number_format(\App\Models\Transaction::whereDate('created_at', today())->where('payment_status', 'settlement')->sum('total_amount'), 0, ',', '.') }}
+                        </p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Pending Payments</p>
+                        <p class="text-2xl font-bold text-yellow-600">
+                            {{ \App\Models\Transaction::where('payment_status', 'pending')->count() }}</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-hourglass-half text-yellow-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Completed Today</p>
+                        <p class="text-2xl font-bold text-blue-600">
+                            {{ \App\Models\Transaction::whereDate('created_at', today())->where('payment_status', 'settlement')->count() }}
+                        </p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Failed Payments</p>
+                        <p class="text-2xl font-bold text-red-600">
+                            {{ \App\Models\Transaction::where('payment_status', 'failed')->count() }}</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <section class="section main-section">
         <div
@@ -28,87 +101,129 @@
                 <table id="transactions-table" class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="w-12 px-6 py-4 text-center text-xs font-semibold">#</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">User</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">User Booking</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Service</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Total Amount</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Payment Status</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Payment Method</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Transaction Date</th>
-                            <th class="text-center text-xs font-semibold">Actions</th>
+                            <th class="w-12 px-6 py-4 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                #
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Customer
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Booking
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Service
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Amount
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Payment Method
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Status
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Transaction Date
+                            </th>
+                            <th class="text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     </tbody>
                 </table>
             </div>
-
         </div>
     </section>
+
+
+    <!-- Enhanced Transaction Detail Modal -->
+    <div id="transaction-detail-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-screen overflow-y-auto">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-bold text-gray-900">Transaction Details</h3>
+                        <button type="button" class="text-gray-400 hover:text-gray-600" onclick="closeTransactionModal()">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="transaction-detail-content" class="p-6">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
     <script>
-        let table;
-
         $(document).ready(function() {
-            table = $('#transactions-table').DataTable({
+            // Enhanced DataTable configuration
+            const table = $('#transactions-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('transactions.index') }}',
+                responsive: true,
+                ajax: {
+                    url: '{{ route('transactions.index') }}',
+                    data: function(d) {
+                        d.payment_method_filter = $('#payment-method-filter').val();
+                        d.status_filter = $('#status-filter').val();
+                    }
+                },
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
                         searchable: false,
-                        className: 'text-start'
+                        className: 'text-center'
                     },
                     {
-                        data: 'user_id',
-                        name: 'user_id',
-                        className: 'text-start'
+                        data: 'customer_info',
+                        name: 'user.name',
+                        className: 'text-left'
                     },
                     {
-                        data: 'booking_id',
-                        name: 'booking_id',
-                        className: 'text-start'
+                        data: 'booking_info',
+                        name: 'booking.id',
+                        className: 'text-left'
                     },
                     {
-                        data: 'service_id',
-                        name: 'service_id',
-                        className: 'text-start'
+                        data: 'service_info',
+                        name: 'service.name',
+                        className: 'text-left'
                     },
                     {
-                        data: 'total_amount',
+                        data: 'amount_formatted',
                         name: 'total_amount',
-                        className: 'text-start'
+                        className: 'text-right'
                     },
                     {
-                        data: 'payment_status',
-                        name: 'payment_status',
-                        className: 'text-start capitalize'
-                    },
-                    {
-                        data: 'payment_method',
+                        data: 'payment_method_display',
                         name: 'payment_method',
-                        className: 'text-start'
+                        className: 'text-left'
                     },
                     {
-                        data: 'created_at',
+                        data: 'status_badge',
+                        name: 'payment_status',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'transaction_date',
                         name: 'created_at',
-                        className: 'text-start'
+                        className: 'text-left'
                     },
                     {
-                        data: 'action',
-                        name: 'action',
+                        data: 'actions',
+                        name: 'actions',
                         orderable: false,
                         searchable: false,
                         className: 'text-center'
-                    },
+                    }
                 ],
-
-                dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
+                dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-6'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-6'ip>",
                 buttons: [{
                         extend: 'copy',
                         className: 'dt-btn dt-btn-copy',
@@ -133,93 +248,153 @@
                         extend: 'print',
                         className: 'dt-btn dt-btn-print',
                         text: '<i class="mdi mdi-printer mr-2"></i>Print'
-                    }
+                    },
                 ],
-
                 language: {
-                    searchPlaceholder: "Cari transaksi...",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ transaksi",
-                    infoEmpty: "Tidak ada transaksi ditemukan",
-                    zeroRecords: "Tidak ada transaksi yang cocok",
-                    emptyTable: "Belum ada transaksi",
-                    processing: `<div class="flex items-center justify-center py-4">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
-            </div>`,
+                    searchPlaceholder: "Search transactions...",
+                    info: "Showing _START_ to _END_ of _TOTAL_ transactions",
+                    infoEmpty: "No transactions found",
+                    zeroRecords: "No matching transactions found",
+                    emptyTable: "No transactions available",
+                    processing: `
+                <div class="flex items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+                    <span class="ml-4 text-gray-600 text-lg">Loading transactions...</span>
+                </div>
+            `,
                     paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i>',
-                        next: '<i class="mdi mdi-chevron-right"></i>'
+                        previous: '<i class="fas fa-chevron-left"></i>',
+                        next: '<i class="fas fa-chevron-right"></i>'
                     }
                 },
-
-                responsive: true,
-                pageLength: 10,
-                order: [
-                    [1, 'asc']
+                pageLength: 25,
+                lengthMenu: [
+                    [10, 25, 50, 100],
+                    [10, 25, 50, 100]
                 ],
+                order: [
+                    [7, 'desc']
+                ], // Order by transaction date descending
                 initComplete: function() {
                     $('.dt-buttons').appendTo('#export-buttons');
                 }
             });
-        });
 
-        // Success popup
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '{{ session('success') }}',
-                timer: 3000,
-                showConfirmButton: false
+            // Filter change events
+            $('#payment-method-filter, #status-filter').on('change', function() {
+                table.draw();
             });
-        @endif
 
-        // Delete Transaction
-        $(document).on('click', '.deleteBtn', function() {
-            const id = $(this).data('id');
-            const url = '{{ route('transactions.destroy', ':id') }}'.replace(':id', id);
+            // Refresh button
+            $('#refresh-table').on('click', function() {
+                showNotification('info', 'Refreshing', 'Updating transaction data...');
+                table.ajax.reload();
+                updateStats();
+            });
 
-            Swal.fire({
-                title: 'Yakin ingin menghapus?',
-                text: "Transaksi akan dihapus permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil!',
-                                text: response.message,
-                                timer: 3000,
-                                showConfirmButton: false
-                            });
-                            table.ajax.reload();
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal!',
-                                text: xhr.responseJSON?.message || 'Terjadi kesalahan.'
-                            });
-                        }
+            // Update statistics
+            function updateStats() {
+                // This would typically fetch updated stats via AJAX
+                // For now, we'll just refresh the page stats
+            }
+
+            // Auto-refresh every 30 seconds
+            setInterval(function() {
+                table.ajax.reload(null, false);
+                updateStats();
+            }, 30000);
+
+            // Modal functions
+            window.openTransactionDetail = function(transactionId) {
+                showLoading();
+                // Fetch transaction details via AJAX
+                $.get(`/admin/transactions/${transactionId}/detail`)
+                    .done(function(response) {
+                        $('#transaction-detail-content').html(response);
+                        $('#transaction-detail-modal').removeClass('hidden');
+                        hideLoading();
+                    })
+                    .fail(function() {
+                        hideLoading();
+                        showNotification('error', 'Error', 'Failed to load transaction details');
                     });
-                }
-            });
-        });
+            };
 
-        // Optional: Auto refresh table every 30s
-        setInterval(() => table?.ajax?.reload(null, false), 30000);
+            window.closeTransactionModal = function() {
+                $('#transaction-detail-modal').addClass('hidden');
+            };
+
+            // Transaction actions
+            window.processRefund = function(transactionId) {
+                Swal.fire({
+                    title: 'Process Refund',
+                    text: 'Are you sure you want to process a refund for this transaction?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#f59e0b',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Yes, process refund',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        showLoading();
+                        $.post(`/admin/transactions/${transactionId}/refund`, {
+                                _token: '{{ csrf_token() }}'
+                            })
+                            .done(function(response) {
+                                hideLoading();
+                                showNotification('success', 'Success', response.message);
+                                table.ajax.reload();
+                            })
+                            .fail(function(xhr) {
+                                hideLoading();
+                                showNotification('error', 'Error', xhr.responseJSON?.message ||
+                                    'Failed to process refund');
+                            });
+                    }
+                });
+            };
+
+            window.markAsSettled = function(transactionId) {
+                Swal.fire({
+                    title: 'Mark as Settled',
+                    text: 'Mark this transaction as settled/completed?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#10b981',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Yes, mark as settled',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        showLoading();
+                        $.post(`/admin/transactions/${transactionId}/settle`, {
+                                _token: '{{ csrf_token() }}'
+                            })
+                            .done(function(response) {
+                                hideLoading();
+                                showNotification('success', 'Success', response.message);
+                                table.ajax.reload();
+                            })
+                            .fail(function(xhr) {
+                                hideLoading();
+                                showNotification('error', 'Error', xhr.responseJSON?.message ||
+                                    'Failed to mark as settled');
+                            });
+                    }
+                });
+            };
+
+            // Success notification
+            @if (session('success'))
+                showNotification('success', 'Success!', '{{ session('success') }}');
+            @endif
+
+            // Error notification
+            @if (session('error'))
+                showNotification('error', 'Error!', '{{ session('error') }}');
+            @endif
+        });
     </script>
 @endpush
 
@@ -306,12 +481,6 @@
             transition: background-color 0.2s ease-in-out !important;
         }
 
-
-
         /* Styling untuk tabel */
-        #roles-table {
-            width: 100% !important;
-            table-layout: auto !important;
-        }
     </style>
 @endpush

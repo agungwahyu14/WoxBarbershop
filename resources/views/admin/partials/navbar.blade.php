@@ -22,14 +22,6 @@
                         <span class="icon"><i class="mdi mdi-account"></i></span>
                         <span>My Profile</span>
                     </a>
-                    <a href="#" class="navbar-item">
-                        <span class="icon"><i class="mdi mdi-settings"></i></span>
-                        <span>Settings</span>
-                    </a>
-                    <a href="#" class="navbar-item">
-                        <span class="icon"><i class="mdi mdi-email"></i></span>
-                        <span>Messages</span>
-                    </a>
                     <hr class="navbar-divider">
                     <!-- Form Logout Breeze -->
                     <form method="POST" action="{{ route('logout') }}">

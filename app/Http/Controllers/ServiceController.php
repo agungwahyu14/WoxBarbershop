@@ -16,26 +16,75 @@ class ServiceController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('price', fn($row) => 'Rp ' . number_format($row->price, 0, ',', '.'))
+                ->editColumn('name', function($row) {
+                    $icon = $this->getServiceIcon($row->name);
+                    return '<div class="flex items-center gap-2">
+                        <i class="' . $icon . ' text-lg text-blue-600"></i>
+                        <span>' . $row->name . '</span>
+                    </div>';
+                })
+                ->editColumn('price', function($row) {
+                    return '<span class="font-semibold text-green-600">Rp ' . number_format($row->price, 0, ',', '.') . '</span>';
+                })
+                ->editColumn('description', function($row) {
+                    return $row->description ? '<div class="max-w-xs truncate" title="' . $row->description . '">' . $row->description . '</div>' : '-';
+                })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('services.edit', $row->id);
-                    $deleteUrl = route('services.destroy', $row->id);
 
                     return '
-<div class="flex justify-center items-center gap-2">
-    <a href="' . $editUrl . '" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition" title="Edit">
-        <i class="fas fa-pen"></i>
-    </a>
-    <button type="button" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition deleteBtn" data-id="' . $row->id . '" title="Delete">
-        <i class="fas fa-trash"></i>
-    </button>
-</div>';
+                        <div class="flex justify-center items-center gap-2">
+                            <a href="' . $editUrl . '" 
+                               class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
+                               title="Edit Service">
+                                <i class="fas fa-edit text-sm"></i>
+                            </a>
+                            <button type="button" 
+                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200 deleteBtn" 
+                                    data-id="' . $row->id . '" 
+                                    title="Delete Service">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>';
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['name', 'price', 'description', 'action'])
                 ->make(true);
         }
 
         return view('admin.services.index');
+    }
+
+    private function getServiceIcon($serviceName)
+    {
+        $serviceName = strtolower($serviceName);
+        
+        $icons = [
+            'potong rambut' => 'fas fa-cut',
+            'hair cut' => 'fas fa-cut',
+            'cukur' => 'fas fa-cut',
+            'shampoo' => 'fas fa-soap',
+            'cuci rambut' => 'fas fa-soap',
+            'styling' => 'fas fa-magic',
+            'hair styling' => 'fas fa-magic',
+            'pewarnaan' => 'fas fa-palette',
+            'hair color' => 'fas fa-palette',
+            'coloring' => 'fas fa-palette',
+            'creambath' => 'fas fa-bath',
+            'treatment' => 'fas fa-spa',
+            'facial' => 'fas fa-user-circle',
+            'massage' => 'fas fa-hand-sparkles',
+            'keratin' => 'fas fa-fire',
+            'smoothing' => 'fas fa-wind',
+            'perm' => 'fas fa-snowflake',
+        ];
+
+        foreach ($icons as $keyword => $icon) {
+            if (strpos($serviceName, $keyword) !== false) {
+                return $icon;
+            }
+        }
+
+        return 'fas fa-scissors'; // Default barber icon
     }
 
     public function create()
@@ -85,4 +134,3 @@ class ServiceController extends Controller
         return response()->json(['success' => true, 'message' => 'Layanan berhasil dihapus.']);
     }
 }
-

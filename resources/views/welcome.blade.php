@@ -276,13 +276,13 @@
                                 </div>
                                 <!-- Teks Layanan -->
                                 <div>
-                                    <h4 class="font-bold text-xl font-playfair">DEWASA</h4>
+                                    <h4 class="font-bold text-xl font-playfair">Dewasa</h4>
                                     <p class="text-gray-600 mt-2">Nulla egestas sapien integer mi fermentum telius
                                         tristique consequatoim pulvinar sagittis Lorem ipsum dolor sit amet consectetur
                                         adipisicing elit. Esse optio fugit modi labore sit numquam ut incidunt
                                         reiciendis minima ex, rerum eligendi dignissimos mollitia maxime magni atque,
                                         nam nisi enim?</p>
-                                    <span class="font-bold text-lg font-playfair ">RP 24.000</span>
+                                    <span class="font-bold text-lg font-playfair ">Rp 24.000</span>
                                 </div>
                             </div>
                         </div>
@@ -297,13 +297,13 @@
                                 </div>
                                 <!-- Teks Layanan -->
                                 <div>
-                                    <h4 class="font-bold text-xl font-playfair uppercase">Anak Anak</h4>
+                                    <h4 class="font-bold text-xl font-playfair ">Anak - Anak</h4>
                                     <p class="text-gray-600 mt-2">Nulla egestas sapien integer mi fermentum telius
                                         tristique consequatoim pulvinar sagittis Lorem ipsum dolor sit amet consectetur
                                         adipisicing elit. Quo, quibusdam perspiciatis laboriosam, officiis earum illo,
                                         animi quasi ex consectetur vitae magnam aperiam quidem accusamus! Accusamus
                                         tempora odio fugit corporis corrupti.</p>
-                                    <span class="font-bold text-lg font-playfair">RP 30.000</span>
+                                    <span class="font-bold text-lg font-playfair">Rp 30.000</span>
                                 </div>
                             </div>
                         </div>
@@ -318,13 +318,13 @@
                                 </div>
                                 <!-- Teks Layanan -->
                                 <div>
-                                    <h4 class="font-bold text-xl font-playfair uppercase">Cukur Jenggot dan Kumis</h4>
+                                    <h4 class="font-bold text-xl font-playfair ">Cukur Jenggot dan Kumis</h4>
                                     <p class="text-gray-600 mt-2">Nulla egestas sapien integer mi fermentum telius
                                         tristique consequatoim pulvinar sagittis Lorem ipsum dolor, sit amet consectetur
                                         adipisicing elit. Libero dicta cum eos similique velit voluptate eveniet facilis
                                         quae quod excepturi, explicabo non ad nulla maiores consectetur nisi error odit?
                                         Quae.</p>
-                                    <span class="font-bold text-lg font-playfair">RP 25.000</span>
+                                    <span class="font-bold text-lg font-playfair">Rp 25.000</span>
                                 </div>
                             </div>
                         </div>
@@ -332,50 +332,65 @@
                 </div>
 
                 <!-- Right Column - Booking Form -->
-                <div class="w-full lg:w-1/2 bg-white shadow-xl  p-8">
-
-
-                    <form action="" method="POST" id="booking-form" class="space-y-6">
+                <div class="w-full lg:w-1/2 bg-white shadow-xl p-6">
+                    <form action="{{ route('bookings.store') }}" method="POST" id="booking-form" class="space-y-6">
                         @csrf
 
                         <!-- Nama -->
                         <div>
                             <label for="name"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">NAMA</label>
-                            <input type="text" id="name" name="name"
+                                class="block text-primary mb-2 font-bold font-playfair text-xl">Nama</label>
+                            <input type="text" id="name" name="name" value="{{ old('name') }}"
                                 class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
+                            @error('name')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Layanan -->
                         <div>
                             <label for="service_id"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">LAYANAN</label>
+                                class="block text-primary mb-2 font-bold font-playfair text-xl">Layanan</label>
                             <select id="service_id" name="service_id"
                                 class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
                                 <option value="">Pilih Layanan</option>
-                                <option value="dewasa">Dewasa - RP 40.000</option>
-                                <option value="anak">Anak-anak - RP 30.000</option>
-                                <option value="cukur">Cukur Leher & Jenggot - RP 25.000</option>
+                                {{-- @foreach ($services as $service)
+                                    <option value="{{ $service->id }}"
+                                        {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                                        {{ $service->name }} - Rp {{ number_format($service->price, 0, ',', '.') }}
+                                    </option>
+                                @endforeach --}}
                             </select>
+                            @error('service_id')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Gaya Rambut & Tanggal -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="hairstyle_id"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">GAYA
-                                    RAMBUT</label>
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Pilih Gaya
+                                    Rambut</label>
                                 <select id="hairstyle_id" name="hairstyle_id"
                                     class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
                                     <option value="">Pilih Gaya</option>
-                                    <option value="pendek">Pendek</option>
-                                    <option value="panjang">Panjang</option>
-                                    <option value="undercut">Undercut</option>
+                                    {{-- @foreach ($hairstyles as $hairstyle)
+                                        <option value="{{ $hairstyle->id }}"
+                                            {{ old('hairstyle_id') == $hairstyle->id ? 'selected' : '' }}>
+                                            {{ $hairstyle->name }}
+                                        </option>
+                                    @endforeach --}}
                                 </select>
+                                @error('hairstyle_id')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
+
                             <div>
                                 <label for="date_time"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">TANGGAL & WAKTU</label>
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Tanggal &
+                                    Waktu</label>
                                 <input type="datetime-local" id="date_time" name="date_time"
                                     value="{{ old('date_time') }}"
                                     class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
@@ -383,14 +398,18 @@
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+
                         </div>
 
                         <!-- Deskripsi -->
                         <div>
-                            <label for="notes"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">DESKRIPSI</label>
-                            <textarea id="notes" name="notes" rows="3"
-                                class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent"></textarea>
+                            <label for="description"
+                                class="block text-primary mb-2 font-bold font-playfair text-xl">Deskripsi</label>
+                            <textarea id="description" name="description" rows="3"
+                                class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">{{ old('description') }}</textarea>
+                            @error('description')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <!-- Submit Button -->
@@ -407,6 +426,7 @@
                         @endauth
                     </form>
                 </div>
+
             </div>
         </div>
     </section>

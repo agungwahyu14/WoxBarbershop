@@ -1,29 +1,95 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Booking Management')
+@section('meta_description', 'Comprehensive booking management system for WOX Barbershop')
+
 @section('content')
-    <section class="is-hero-bar">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+    <!-- Enhanced Page Header -->
+    <div class="is-hero-bar">
+
+        <div class="flex flex-col md:flex-row justify-between items-center">
             <div>
-                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    Bookings Management
+                <h1 class="text-4xl font-bold mb-2">
+                    <i class="fas fa-calendar-check mr-3"></i>Booking Management
                 </h1>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage Bookings recommendations for Wox’s Barbershop
+                <p class="text-blacktext-lg">
+                    Manage all customer appointments and reservations
                 </p>
             </div>
+            <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                <div class="glass-effect px-4 py-2 rounded-lg">
+                    <i class="fas fa-clock mr-2"></i>
+                    <span id="current-time"></span>
+                </div>
+            </div>
         </div>
-    </section>
+
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class=" mx-auto px-6 pt-12 -mt-8 mb-8">
+        <div class="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Today's Bookings</p>
+                        <p class="text-3xl font-bold text-blue-600" id="today-bookings">
+                            {{ \App\Models\Booking::whereDate('date_time', today())->count() }}</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-calendar-day text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Pending Approval</p>
+                        <p class="text-3xl font-bold text-yellow-600" id="pending-bookings">
+                            {{ \App\Models\Booking::where('status', 'pending')->count() }}</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">In Progress</p>
+                        <p class="text-3xl font-bold text-orange-600" id="progress-bookings">
+                            {{ \App\Models\Booking::where('status', 'in_progress')->count() }}</p>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-full">
+                        <i class="fas fa-cut text-orange-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Completed Today</p>
+                        <p class="text-3xl font-bold text-green-600" id="completed-bookings">
+                            {{ \App\Models\Booking::where('status', 'completed')->whereDate('date_time', today())->count() }}
+                        </p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="section main-section">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    {{-- <a href="{{ route('bookings.create') }}"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
-                        <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                        Create Booking
-                    </a> --}}
+
                     <div id="export-buttons" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
@@ -32,16 +98,33 @@
                 <table id="bookings-table" class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-100 dark:bg-gray-800">
                         <tr>
-                            <th class="w-12 px-6 py-4 text-center text-xs font-semibold">#</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">User</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Name</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Service</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Hairstyle</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Date & Time</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Description</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Queue Number</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Status</th>
-                            <th class="text-center text-xs font-semibold">Actions</th>
+                            <th class="w-12 px-6 py-4 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                #
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Customer
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Contact
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Service
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Hairstyle
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Date & Time
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Queue
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Status
+                            </th>
+                            <th class="text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -50,72 +133,76 @@
             </div>
         </div>
     </section>
+
+
+
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Enhanced DataTable configuration
             const table = $('#bookings-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('bookings.index') }}',
+                responsive: true,
+                ajax: {
+                    url: '{{ route('bookings.index') }}',
+                    data: function(d) {
+                        d.status_filter = $('#status-filter').val();
+                    }
+                },
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         orderable: false,
                         searchable: false,
-                        className: 'text-start'
+                        className: 'text-center'
                     },
                     {
-                        data: 'user_id',
-                        name: 'user_id',
-                        className: 'text-start'
+                        data: 'customer_info',
+                        name: 'user.name',
+                        className: 'text-left'
                     },
                     {
-                        data: 'name',
-                        name: 'name',
-                        className: 'text-start'
+                        data: 'contact_info',
+                        name: 'user.no_telepon',
+                        className: 'text-left'
                     },
                     {
-                        data: 'service_id',
-                        name: 'service_id',
-                        className: 'text-start'
+                        data: 'service_info',
+                        name: 'service.name',
+                        className: 'text-left'
                     },
                     {
-                        data: 'hairstyle_id',
-                        name: 'hairstyle_id',
-                        className: 'text-start'
+                        data: 'hairstyle_info',
+                        name: 'hairstyle.name',
+                        className: 'text-left'
                     },
                     {
-                        data: 'date_time',
+                        data: 'datetime_formatted',
                         name: 'date_time',
-                        className: 'text-start'
+                        className: 'text-left'
                     },
                     {
-                        data: 'description',
-                        name: 'description',
-                        className: 'text-start'
-                    },
-                    {
-                        data: 'queue_number',
+                        data: 'queue_display',
                         name: 'queue_number',
-                        className: 'text-start'
+                        className: 'text-center'
                     },
                     {
-                        data: 'status',
+                        data: 'status_badge',
                         name: 'status',
-                        className: 'text-start capitalize',
+                        className: 'text-center'
                     },
                     {
-                        data: 'action',
-                        name: 'action',
+                        data: 'actions',
+                        name: 'actions',
                         orderable: false,
                         searchable: false,
-                        className: 'text-start'
+                        className: 'text-center '
                     }
                 ],
-
-                dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
+                dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-6'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-6'ip>",
                 buttons: [{
                         extend: 'copy',
                         className: 'dt-btn dt-btn-copy',
@@ -143,92 +230,153 @@
                     },
                 ],
                 language: {
-                    searchPlaceholder: "Search hairstyles...",
-                    info: "Showing _START_ to _END_ of _TOTAL_ hairstyles",
-                    infoEmpty: "No hairstyles found",
-                    zeroRecords: "No matching hairstyles",
-                    emptyTable: "No hairstyles available",
-                    processing: `<div class="flex items-center justify-center py-4">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
-        </div>`,
+                    searchPlaceholder: "Search bookings...",
+                    info: "Showing _START_ to _END_ of _TOTAL_ bookings",
+                    infoEmpty: "No bookings found",
+                    zeroRecords: "No matching bookings found",
+                    emptyTable: "No bookings available",
+                    processing: `
+                <div class="flex items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <span class="ml-4 text-gray-600 text-lg">Loading bookings...</span>
+                </div>
+            `,
                     paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i>',
-                        next: '<i class="mdi mdi-chevron-right"></i>'
+                        previous: '<i class="fas fa-chevron-left"></i>',
+                        next: '<i class="fas fa-chevron-right"></i>'
                     }
                 },
-                responsive: true,
-                pageLength: 10,
-                order: [
-                    [1, 'asc']
+                pageLength: 25,
+                lengthMenu: [
+                    [10, 25, 50, 100],
+                    [10, 25, 50, 100]
                 ],
+                order: [
+                    [5, 'desc']
+                ], // Order by date_time descending
                 initComplete: function() {
                     $('.dt-buttons').appendTo('#export-buttons');
                 }
             });
 
-        });
-
-        // Success popup
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '{{ session('success') }}',
-                timer: 3000,
-                showConfirmButton: false
+            // Status filter change event
+            $('#status-filter').on('change', function() {
+                table.draw();
             });
-        @endif
 
-        // Delete Booking
-        $(document).on('click', '.deleteBtn', function() {
-            const bookingId = $(this).data('id');
-            const deleteUrl = '{{ route('bookings.destroy', ':id') }}'.replace(':id', bookingId);
+            // Refresh button
+            $('#refresh-table').on('click', function() {
+                showNotification('info', 'Refreshing', 'Updating booking data...');
+                table.ajax.reload();
+                updateStats();
+            });
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "This will permanently delete the booking.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: deleteUrl,
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Deleted!',
-                                text: response.message,
-                                timer: 3000,
-                                showConfirmButton: false
-                            });
-                            table.ajax.reload();
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: xhr.responseJSON?.message ||
-                                    'Something went wrong.',
-                            });
-                        }
+            // Real-time clock
+            function updateClock() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', {
+                    hour12: true,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                $('#current-time').text(timeString);
+            }
+
+            setInterval(updateClock, 1000);
+            updateClock();
+
+            // Update statistics
+            function updateStats() {
+                // This would typically fetch updated stats via AJAX
+                // For now, we'll just refresh the page stats
+            }
+
+            // Auto-refresh every 30 seconds
+            setInterval(function() {
+                table.ajax.reload(null, false);
+                updateStats();
+            }, 30000);
+
+            // Modal functions
+            window.openBookingDetail = function(bookingId) {
+                showLoading();
+                // Fetch booking details via AJAX
+                $.get(`/admin/bookings/${bookingId}/detail`)
+                    .done(function(response) {
+                        $('#booking-detail-content').html(response);
+                        $('#booking-detail-modal').removeClass('hidden');
+                        hideLoading();
+                    })
+                    .fail(function() {
+                        hideLoading();
+                        showNotification('error', 'Error', 'Failed to load booking details');
                     });
-                }
-            });
+            };
+
+            window.closeModal = function() {
+                $('#booking-detail-modal').addClass('hidden');
+            };
+
+            // Success notification
+            @if (session('success'))
+                showNotification('success', 'Success!', '{{ session('success') }}');
+            @endif
+
+            // Error notification
+            @if (session('error'))
+                showNotification('error', 'Error!', '{{ session('error') }}');
+            @endif
         });
 
-        // Auto reload
-        setInterval(() => table.ajax.reload(null, false), 30000);
-        // });
+        // Booking status update functions
+        function confirmBooking(bookingId) {
+            updateBookingStatus(bookingId, 'confirmed', 'confirm this booking');
+        }
+
+        function startService(bookingId) {
+            updateBookingStatus(bookingId, 'in_progress', 'start the service for this booking');
+        }
+
+        function completeService(bookingId) {
+            updateBookingStatus(bookingId, 'completed', 'mark this booking as completed');
+        }
+
+        function cancelBooking(bookingId) {
+            updateBookingStatus(bookingId, 'cancelled', 'cancel this booking');
+        }
+
+        function updateBookingStatus(bookingId, status, action) {
+            if (confirm(`Are you sure you want to ${action}?`)) {
+                fetch(`/bookings/${bookingId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        status: status
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('success', 'Success!', data.message);
+                        // Refresh the DataTable
+                        $('#bookings-table').DataTable().ajax.reload();
+                    } else {
+                        showNotification('error', 'Error!', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('error', 'Error!', 'An error occurred while updating the booking status.');
+                });
+            }
+        }
     </script>
 @endpush
+
 @push('styles')
     <style>
         th.text-center {
@@ -312,12 +460,6 @@
             transition: background-color 0.2s ease-in-out !important;
         }
 
-
-
         /* Styling untuk tabel */
-        #roles-table {
-            width: 100% !important;
-            table-layout: auto !important;
-        }
     </style>
 @endpush

@@ -9,7 +9,7 @@
         <p class="menu-label">General</p>
         <ul class="menu-list">
             <li class="active">
-                <a href="index.html">
+                <a href="{{ route('admin.dashboard') }}">
                     <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
                     <span class="menu-item-label">Dashboard</span>
                 </a>
