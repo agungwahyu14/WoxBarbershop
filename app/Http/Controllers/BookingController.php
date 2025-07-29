@@ -35,13 +35,21 @@ class BookingController extends Controller
         $this->cacheService = $cacheService;
         
         $this->middleware('auth');
+
     }
 
     public function index(Request $request)
     {
-        if (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('pegawai')) {
-            return redirect()->action([DashboardController::class, 'index']);
-        }
+       if (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('pegawai')) {
+    $user = auth()->user(); // ✅ Tambahkan ini
+
+    $bookings = Booking::with(['service', 'hairstyle'])
+        ->where('user_id', $user->id)
+        ->orderByDesc('id')
+        ->get();
+
+    return view('bookings.index', compact('bookings'));
+}
 
         Log::info('BookingController@index accessed', [
             'is_ajax' => $request->ajax(),
@@ -249,55 +257,63 @@ class BookingController extends Controller
         return 'fas fa-scissors'; // Default barber icon
     }
 
-    public function create()
-    {
-        $services = $this->cacheService->getActiveServices();
-        $hairstyles = $this->cacheService->getActiveHairstyles();
+    // public function create()
+    // {
+    //     $services = $this->cacheService->getActiveServices();
+    //     $hairstyles = $this->cacheService->getActiveHairstyles();
 
-        return view('bookings.create', compact('services', 'hairstyles'));
-    }
+    //     return view('bookings.create', compact('services', 'hairstyles'));
+    // }
 
     public function store(BookingRequest $request)
-    {
+{
 
-        Log::info('Masuk ke BookingController@store', [
-        'user_id' => auth()->id(),
-        'request_data' => $request->all()
-    ]);
-        try {
-            DB::beginTransaction();
+    // dd(gettype($request), get_class($request));
+    try {
+        DB::beginTransaction();
 
-            $booking = $this->bookingService->createBooking($request->validated());
+        // Simpan booking dari data tervalidasi
+        $validated = $request->validated();
+        $booking = $this->bookingService->createBooking($validated);
 
-            // Clear relevant caches
-            $this->cacheService->clearBookingCaches($booking->date_time);
-            $this->cacheService->clearDashboardStats();
+        // Clear cache terkait booking dan dashboard
+        $this->cacheService->clearBookingCaches($booking->date_time);
+        $this->cacheService->clearDashboardStats();
 
-            DB::commit();
+        DB::commit();
 
-            Log::info('Booking created successfully', [
-                'booking_id' => $booking->id,
-                'user_id' => auth()->id(),
-                'date_time' => $booking->date_time,
-                'service_id' => $booking->service_id
+        // Log sukses
+        Log::info('Booking created successfully', [
+            'booking_id' => $booking->id,
+            'user_id' => auth()->id(),
+            'date_time' => $booking->date_time,
+            'service_id' => $booking->service_id
+        ]);
+
+        // Redirect ke halaman booking dengan pesan sukses
+        return redirect()->route('bookings.index')
+            ->with('booking_success', [
+                'name' => $booking->name,
+                'queue_number' => $booking->queue_number
             ]);
 
-            return redirect()->route('bookings.show', $booking)
-                ->with('success', 'Booking berhasil dibuat! Nomor antrian Anda: ' . $booking->queue_number);
+    } catch (\Exception $e) {
+        DB::rollback();
 
-        } catch (\Exception $e) {
-            DB::rollback();
-            
-            Log::error('Error creating booking', [
-                'error' => $e->getMessage(),
-                'user_id' => auth()->id(),
-                'request_data' => $request->validated()
-            ]);
+        // Log error
+        Log::error('Error creating booking', [
+            'error' => $e->getMessage(),
+            'user_id' => auth()->id(),
+            'request_data' => $request->all()
+        ]);
 
+        // Kembalikan ke halaman sebelumnya dengan pesan error
+       return back()
+    ->with('booking_error', $e->getMessage())
+    ->withInput();
 
-            return back()->withErrors(['error' => $e->getMessage()])->withInput();
-        }
     }
+}
 
     public function show(Booking $booking)
     {
@@ -561,7 +577,7 @@ class BookingController extends Controller
                 'user_id' => auth()->id()
             ]);
 
-            return redirect()->route('dashboard')
+            return redirect()->route('bookings.index')
                 ->with('success', 'Booking berhasil dibatalkan');
 
         } catch (\Exception $e) {

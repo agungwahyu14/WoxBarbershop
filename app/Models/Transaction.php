@@ -13,12 +13,12 @@ class Transaction extends Model
 
     protected $fillable = [
         'booking_id',
-        'user_id',
         'service_id',
-        'total_amount',
+        'user_id',
         'price',
-        'payment_method',
+        'total_amount',
         'payment_status',
+        'payment_method',
     ];
 
     protected $casts = [

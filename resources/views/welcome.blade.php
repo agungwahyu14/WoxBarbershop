@@ -14,19 +14,19 @@
                 Pangkas rambut profesional untuk gaya yang sempurna. Rasakan pengalaman barbershop premium kami.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#reservasi"
-                    class="bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 shadow-lg uppercase">
+                <a href="{{ route('dashboard') }}#reservasi"
+                    class="rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 shadow-lg uppercase">
                     RESERVASI
                 </a>
-                <a href="#layanan"
-                    class="border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 uppercase">
+                <a href="{{ route('dashboard') }}#layanan"
+                    class="rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 uppercase">
                     LIHAT LAYANAN
                 </a>
             </div>
         </div>
 
         <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
-            <a href="#about" class="text-white text-2xl">
+            <a href="#layanan" class="text-white text-2xl">
                 <i class="fas fa-chevron-down"></i>
             </a>
         </div>
@@ -51,7 +51,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Service 1 -->
                 <div
-                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 rounded-lg ">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         01</div>
@@ -59,7 +59,7 @@
                     <p class="text-gray-600 mb-4">
                         Potongan rambut klasik atau modern oleh barber profesional kami dengan teknik terbaik.
                     </p>
-                    <a href="#reservasi" class="text-secondary font-medium flex items-center group">
+                    <a href="{{ route('dashboard') }}#reservasi" class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
@@ -67,7 +67,7 @@
 
                 <!-- Service 2 -->
                 <div
-                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 rounded-lg">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         02</div>
@@ -75,7 +75,7 @@
                     <p class="text-gray-600 mb-4">
                         Kami mempercayakan hanya produk-produk pilihan yang telah teruji kualitasnya.
                     </p>
-                    <a href="#produk" class="text-secondary font-medium flex items-center group">
+                    <a href="{{ route('dashboard') }}#produk" class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
@@ -83,7 +83,7 @@
 
                 <!-- Service 3 -->
                 <div
-                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 rounded-lg">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         03</div>
@@ -91,7 +91,7 @@
                     <p class="text-gray-600 mb-4">
                         Rekomendasi gaya rambut berdasarkan wajah, tren sesuai dengan keinginan.
                     </p>
-                    <a href="#reservation" class="text-secondary font-medium flex items-center group">
+                    <a href="{{ route('rekomendasi') }}" class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
@@ -99,7 +99,7 @@
 
                 <!-- Service 4 -->
                 <div
-                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 rounded-lg">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         04</div>
@@ -107,7 +107,7 @@
                     <p class="text-gray-600 mb-4">
                         Gratis 1x cukur setelah 10 kali kunjungan.Apresiasi kami untuk pelanggan setia!
                     </p>
-                    <a href="#reservasi" class="text-secondary font-medium flex items-center group">
+                    <a href="{{ route('dashboard') }}#reservasi" class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
@@ -135,14 +135,14 @@
                         hanya menggunakan produk-produk perawatan rambut yang telah teruji dan berkualitas tinggi,
                         sehingga menjamin hasil optimal bagi setiap pelanggan.
                     </p>
-                    <a href="#reservasi"
-                        class="bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3  font-medium transition-all duration-300 inline-block transform hover:-translate-y-1 shadow-lg">
+                    <a href="{{ route('dashboard') }}#reservasi"
+                        class="rounded-lg bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3  font-medium transition-all duration-300 inline-block transform hover:-translate-y-1 shadow-lg">
                         RESERVASI
                     </a>
                 </div>
-                <div class="lg:w-1/2 relative animate-fade-in">
+                <div class="lg:w-1/2 relative animate-fade-in ">
                     <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
-                        alt="Barbershop interior" class=" shadow-xl w-full h-auto">
+                        alt="Barbershop interior" class=" shadow-xl w-full h-auto rounded-lg">
                 </div>
             </div>
         </div>
@@ -160,7 +160,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Product 1 -->
-                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
+                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg">
                     <div class="relative h-64 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
                             alt="Hair Product" class="w-full h-full object-cover">
@@ -176,7 +176,7 @@
                 </div>
 
                 <!-- Product 2 -->
-                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
+                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg">
                     <div class="relative h-64 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
                             alt="Hair Styling" class="w-full h-full object-cover">
@@ -190,7 +190,7 @@
                 </div>
 
                 <!-- Product 3 -->
-                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
+                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg">
                     <div class="relative h-64 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
                             alt="Hair Styling" class="w-full h-full object-cover">
@@ -218,7 +218,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Testimonial 1 -->
-                <div class="bg-white p-8  shadow-md">
+                <div class="bg-white p-8  shadow-md rounded-lg">
 
                     <p class="text-gray-600 italic mb-6">
                         "Pengalaman cukur terbaik yang pernah saya dapatkan. Barber sangat profesional dan hasilnya
@@ -229,7 +229,7 @@
                 </div>
 
                 <!-- Testimonial 2 -->
-                <div class="bg-white p-8  shadow-md">
+                <div class="bg-white p-8  shadow-md rounded-lg">
 
                     <p class="text-gray-600 italic mb-6">
                         "Produk perawatan jenggot mereka sangat bagus. Jenggot saya jadi lebih sehat dan mudah
@@ -240,7 +240,7 @@
                 </div>
 
                 <!-- Testimonial 3 -->
-                <div class="bg-white p-8  shadow-md">
+                <div class="bg-white p-8  shadow-md rounded-lg">
 
                     <p class="text-gray-600 italic mb-6">
                         "Atmosfernya sangat nyaman dan stafnya ramah. Potongan rambutnya selalu sesuai permintaan."
@@ -265,7 +265,7 @@
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Left Column - Services -->
                 <div class="w-full lg:w-1/2">
-                    <div class=" shadow-md">
+                    <div class=" shadow-md rounded-lg">
                         <!-- Dewasa -->
                         <div class=" p-6 ">
                             <div class="flex items-center gap-6">
@@ -332,7 +332,7 @@
                 </div>
 
                 <!-- Right Column - Booking Form -->
-                <div class="w-full lg:w-1/2 bg-white shadow-xl p-6">
+                <div class="w-full lg:w-1/2 bg-white shadow-xl p-6 rounded-lg">
                     <form action="{{ route('bookings.store') }}" method="POST" id="booking-form" class="space-y-6">
                         @csrf
 
@@ -341,7 +341,7 @@
                             <label for="name"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">Nama</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
-                                class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
+                                class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                             @error('name')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -352,7 +352,7 @@
                             <label for="service_id"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">Layanan</label>
                             <select id="service_id" name="service_id"
-                                class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
+                                class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                 <option value="">Pilih Layanan</option>
                                 {{-- @foreach ($services as $service)
                                     <option value="{{ $service->id }}"
@@ -373,7 +373,7 @@
                                     class="block text-primary mb-2 font-bold font-playfair text-xl">Pilih Gaya
                                     Rambut</label>
                                 <select id="hairstyle_id" name="hairstyle_id"
-                                    class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
+                                    class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">Pilih Gaya</option>
                                     {{-- @foreach ($hairstyles as $hairstyle)
                                         <option value="{{ $hairstyle->id }}"
@@ -393,7 +393,7 @@
                                     Waktu</label>
                                 <input type="datetime-local" id="date_time" name="date_time"
                                     value="{{ old('date_time') }}"
-                                    class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">
+                                    class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                 @error('date_time')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -406,7 +406,7 @@
                             <label for="description"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">Deskripsi</label>
                             <textarea id="description" name="description" rows="3"
-                                class="w-full px-4 py-3 border-b-4 border-primary focus:outline-none focus:border-secondary bg-transparent">{{ old('description') }}</textarea>
+                                class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -415,12 +415,12 @@
                         <!-- Submit Button -->
                         @auth
                             <button type="submit"
-                                class="w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition transform hover:scale-105 shadow-md">
+                                class="rounded-lg w-full bg-secondary hover:bg-primary text-black hover:text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1">
                                 RESERVASI
                             </button>
                         @else
                             <a href="{{ route('login') }}"
-                                class="block text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition transform hover:scale-105 shadow-md">
+                                class="  text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1 rounded-lg">
                                 LOGIN UNTUK RESERVASI
                             </a>
                         @endauth
@@ -441,25 +441,25 @@
                     class="gallery-item overflow-hidden  shadow-md hover:shadow-xl transition-all duration-300">
                     <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
                         alt="Barber at work"
-                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500">
+                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500 rounded-lg ">
                 </a>
                 <a href="#"
                     class="gallery-item overflow-hidden  shadow-md hover:shadow-xl transition-all duration-300">
                     <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
                         alt="Haircut"
-                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500">
+                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500 rounded-lg">
                 </a>
                 <a href="#"
                     class="gallery-item overflow-hidden  shadow-md hover:shadow-xl transition-all duration-300">
                     <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
                         alt="Beard trim"
-                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500">
+                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500 rounded-lg">
                 </a>
                 <a href="#"
                     class="gallery-item overflow-hidden  shadow-md hover:shadow-xl transition-all duration-300">
                     <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
                         alt="Barbershop interior"
-                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500">
+                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500 rounded-lg">
                 </a>
             </div>
         </div>

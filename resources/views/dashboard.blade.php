@@ -426,7 +426,6 @@
                         @endauth
                     </form>
                 </div>
-
             </div>
         </div>
     </section>
@@ -466,24 +465,17 @@
     </section>
 @endsection
 
+
 @push('scripts')
-    <script>
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: '{{ session('success') }}',
-                showConfirmButton: false,
-                timer: 2500
-            });
-        @elseif (session('error'))
+    @if (session('booking_error'))
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
             Swal.fire({
                 icon: 'error',
-                title: 'Gagal!',
-                text: '{{ session('error') }}',
-                showConfirmButton: false,
-                timer: 3000
+                title: 'Booking Gagal!',
+                text: '{{ session('booking_error') }}',
+                confirmButtonColor: '#d33',
             });
-        @endif
-    </script>
+        </script>
+    @endif
 @endpush

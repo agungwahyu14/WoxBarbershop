@@ -67,14 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
     Route::resource('transactions', TransactionController::class);
     
-    // Payment routes
-    Route::post('/payment/process', [App\Http\Controllers\PaymentController::class, 'processPayment'])->name('payment.process');
-    Route::get('/payment/{transaction}', [App\Http\Controllers\PaymentController::class, 'show'])->name('payment.show');
-    
-    // Payment callback routes
-    Route::get('/payment/success', [App\Http\Controllers\PaymentController::class, 'paymentSuccess'])->name('payment.success');
-    Route::get('/payment/error', [App\Http\Controllers\PaymentController::class, 'paymentError'])->name('payment.error');
-    Route::get('/payment/pending', [App\Http\Controllers\PaymentController::class, 'paymentPending'])->name('payment.pending');
+
     
     // End of Profile Routes
 });

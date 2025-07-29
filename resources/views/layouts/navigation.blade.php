@@ -108,11 +108,11 @@
                                             d="M9 17v-2h6v2m-7 4h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14l2-2 2 2 2-2 2 2 2-2" />
                                     </svg>
 
-                                    Transaksi
+                                    Riwayat Transaksi
                                 </div>
                             </a>
 
-                            <a href="{{ route('transactions.index') }}"
+                            <a href="{{ route('bookings.index') }}"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors">
                                 <div class="flex items-center">
                                     <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor"
@@ -122,7 +122,7 @@
                                     </svg>
 
 
-                                    Riwayat Transaksi
+                                    Riwayat Booking
                                 </div>
                             </a>
 

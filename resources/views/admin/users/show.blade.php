@@ -225,7 +225,7 @@
                     <div class="p-6">
                         @if ($user->bookings && $user->bookings->count() > 0)
                             <div class="space-y-4">
-                                @foreach ($user->bookings->take(5) as $booking)
+                                @foreach ($user->bookings->sortByDesc('id')->take(5) as $booking)
                                     <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                                         <div class="bg-blue-100 p-3 rounded-lg">
                                             <i class="fas fa-calendar-check text-blue-600"></i>
@@ -233,7 +233,7 @@
                                         <div class="flex-1">
                                             <p class="font-medium text-gray-900">Booking #{{ $booking->id }}</p>
                                             <p class="text-sm text-gray-600">
-                                                {{ $booking->tanggal_booking->format('M d, Y g:i A') }}</p>
+                                                {{ $booking->date_time->format('M d, Y g:i A') }}</p>
                                         </div>
                                         <span
                                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 

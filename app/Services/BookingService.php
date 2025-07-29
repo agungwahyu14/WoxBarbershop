@@ -98,53 +98,56 @@ class BookingService
      * Create booking with business logic validation
      */
     public function createBooking(array $data): Booking
-    {
-        DB::beginTransaction();
-        
-        try {
-            $dateTime = Carbon::parse($data['date_time']);
-            $service = Service::findOrFail($data['service_id']);
-            
-            // Validate business rules
-            if (!$this->isWithinBusinessHours($dateTime)) {
-                throw new \Exception('Booking hanya dapat dilakukan antara jam 09:00 - 21:00');
-            }
-            
-            if (!$this->isBusinessDay($dateTime)) {
-                throw new \Exception('Maaf, kami tutup pada hari Minggu');
-            }
-            
-            if (!$this->isTimeSlotAvailable($dateTime, $service->duration)) {
-                $nextAvailable = $this->findNextAvailableSlot($dateTime, $service->duration);
-                throw new \Exception('Slot waktu tidak tersedia. Slot terdekat: ' . $nextAvailable->format('d/m/Y H:i'));
-            }
-            
-            // Generate queue number
-            $queueService = new QueueService();
-            $queueNumber = $queueService->generateQueueNumber($dateTime);
-            
-            // Create booking
-            $booking = Booking::create([
-                'user_id' => auth()->id(),
-                'name' => $data['name'],
-                'service_id' => $data['service_id'],
-                'hairstyle_id' => $data['hairstyle_id'],
-                'date_time' => $dateTime,
-                'queue_number' => $queueNumber,
-                'description' => $data['description'] ?? null,
-                'status' => 'pending',
-                'total_price' => $this->calculatePrice(new Booking($data)),
-                'payment_status' => 'unpaid'
-            ]);
-            
-            DB::commit();
-            return $booking;
-            
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw $e;
+{
+    DB::beginTransaction();
+
+    try {
+        $dateTime = Carbon::parse($data['date_time']);
+        $service = Service::findOrFail($data['service_id']);
+
+        // Validasi jam operasional
+        if (!$this->isWithinBusinessHours($dateTime)) {
+            throw new \Exception('Booking hanya dapat dilakukan antara jam 09:00 - 21:00');
         }
+
+        // Validasi hari kerja
+        if (!$this->isBusinessDay($dateTime)) {
+            throw new \Exception('Maaf, kami tutup pada hari Minggu');
+        }
+
+        // Validasi ketersediaan slot waktu
+        if (!$this->isTimeSlotAvailable($dateTime, $service->duration)) {
+            $nextAvailable = $this->findNextAvailableSlot($dateTime, $service->duration);
+            throw new \Exception('Slot waktu tidak tersedia. Slot terdekat: ' . $nextAvailable->format('d/m/Y H:i'));
+        }
+
+        // Generate nomor antrian
+        $queueService = new QueueService();
+        $queueNumber = $queueService->generateQueueNumber($dateTime);
+
+        // Simpan booking
+        $booking = Booking::create([
+            'user_id' => auth()->id(),
+            'name' => $data['name'],
+            'service_id' => $data['service_id'],
+            'hairstyle_id' => $data['hairstyle_id'],
+            'date_time' => $dateTime,
+            'queue_number' => $queueNumber,
+            'description' => $data['description'] ?? null,
+            'status' => 'pending',
+            'total_price' => $this->calculatePrice(new Booking($data)),
+            'payment_status' => 'unpaid'
+        ]);
+
+        DB::commit();
+        return $booking;
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        throw $e;
     }
+}
+
 
     /**
      * Update booking status with validation
