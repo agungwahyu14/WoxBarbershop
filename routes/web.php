@@ -9,6 +9,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\HairstyleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\MidtransController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -57,6 +59,15 @@ Route::middleware('auth')->group(function () {
         return view('rekomendasi');
     })->name('rekomendasi');
 
+    Route::get('/midtrans', [MidtransController::class, 'index'])->name('midtrans.index');
+Route::get('/transaction/va/{orderId}', [PaymentController::class, 'showVA']);
+Route::get('/transaction/download/{orderId}', [PaymentController::class, 'downloadReceipt'])->name('transaction.download');
+   Route::get('/payment/{id}', [PaymentController::class, 'pay'])->name('payment.pay');
+
+
+
+
+
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -66,6 +77,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('bookings', BookingController::class);
     Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
     Route::resource('transactions', TransactionController::class);
+
+ 
+
+    
+    // Payment Routes
+    // Route::post('/bookings/{booking}/payment', [PaymentController::class, 'createPayment'])->name('payment.create');
+    // Route::get('/bookings/{booking}/payment/status', [PaymentController::class, 'checkStatus'])->name('payment.status');
+    // Route::post('/bookings/{booking}/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+    // Route::get('/payment/finish', [PaymentController::class, 'finish'])->name('payment.finish');
+    // Route::get('/payment/error', [PaymentController::class, 'error'])->name('payment.error');
+    // Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
     
 
     
@@ -103,3 +125,6 @@ Route::post('/verification/resend', function(Request $request) {
 })->name('verification.resend')->middleware('auth');
 
 require __DIR__ . '/auth.php';
+
+// Midtrans notification callback (no auth required)
+Route::post('/payment/notification', [PaymentController::class, 'notification'])->name('payment.notification');

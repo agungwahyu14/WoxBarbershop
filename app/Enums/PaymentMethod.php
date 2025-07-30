@@ -4,22 +4,26 @@ namespace App\Enums;
 
 enum PaymentMethod: string
 {
-    case CASH = 'cash';
     case BANK_TRANSFER = 'bank_transfer';
-    case E_WALLET = 'e_wallet';
-    case CREDIT_CARD = 'credit_card';
+    case BCA = 'echannel';
     case QRIS = 'qris';
-    case TRANSFER = 'transfer';
+    case GOPAY = 'gopay';
+    case SHOPEEPAY = 'shopeepay';
+    case CREDIT_CARD = 'credit_card';
+    case AKULAKU = 'akulaku';
+    case KREDIVO = 'kredivo';
 
     public function label(): string
     {
         return match($this) {
-            self::CASH => 'Cash',
             self::BANK_TRANSFER => 'Bank Transfer',
-            self::E_WALLET => 'E-Wallet',
-            self::CREDIT_CARD => 'Credit Card',
+            self::BCA => 'BCA Virtual Account',
             self::QRIS => 'QRIS',
-            self::TRANSFER => 'Transfer',
+            self::GOPAY => 'GoPay',
+            self::SHOPEEPAY => 'ShopeePay',
+            self::CREDIT_CARD => 'Credit Card',
+            self::AKULAKU => 'Akulaku',
+            self::KREDIVO => 'Kredivo',
         };
     }
 }

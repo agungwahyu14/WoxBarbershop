@@ -238,14 +238,41 @@
                         </script>
 
 
-                        {{-- Payment Button (only if booking is confirmed/pending and not paid) --}}
-                        @if (in_array($booking->status, ['pending', 'confirmed']) && in_array($booking->payment_status, ['unpaid', 'failed']))
-                            <a href="{{ route('transactions.create', ['booking_id' => $booking->id]) }}"
-                                class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                                <i class="fas fa-credit-card mr-2"></i>
-                                Bayar Sekarang
-                            </a>
-                        @endif
+                        <button type="button" id="pay-button-{{ $booking->id }}"
+                            onclick="initiatePayment({{ $booking->id }})"
+                            class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                            <i class="fas fa-credit-card mr-2"></i>
+                            Bayar Sekarang
+                        </button>
+
+                        <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+                            data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+
+                        <script>
+                            function initiatePayment(bookingId) {
+                                fetch(`/payment/${bookingId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        snap.pay(data.snapToken, {
+                                            onSuccess: function(result) {
+                                                console.log("Sukses", result);
+                                                location.reload();
+                                            },
+                                            onPending: function(result) {
+                                                console.log("Pending", result);
+                                                location.reload();
+                                            },
+                                            onError: function(result) {
+                                                console.error("Error", result);
+                                            },
+                                            onClose: function() {
+                                                alert('Pembayaran dibatalkan.');
+                                            }
+                                        });
+                                    });
+                            }
+                        </script>
+
 
                         {{-- Print Receipt (if completed) --}}
                         @if ($booking->status === 'completed')
@@ -270,6 +297,14 @@
         </div>
     </section>
 
+
+
+@endsection
+
+
+
+
+@push('scripts')
 
     {{-- Success/Error Messages --}}
     @if (session('success'))
@@ -305,6 +340,4 @@
     @endif
 
 
-
-
-@endsection
+@endpush

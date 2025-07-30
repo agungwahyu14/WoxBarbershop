@@ -185,7 +185,7 @@ class TransactionController extends Controller
             if ($user->hasRole('pelanggan')) {
                 $transactions = Transaction::where('user_id', auth()->id())
                     ->with(['booking.service', 'service'])
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('id', 'desc')
                     ->get();
 
                 return view('transactions.index', compact('transactions'));
