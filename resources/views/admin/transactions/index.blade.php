@@ -70,6 +70,7 @@
                         className: 'text-center'
                     },
                     {
+<<<<<<< HEAD
                         data: 'name',
                         name: 'name'
                     },
@@ -99,6 +100,29 @@
                         name: 'gross_amount'
                     },
                     {
+=======
+                        data: 'transaction_time',
+                        name: 'transaction_time'
+                    },
+                    {
+                        data: 'order_id',
+                        name: 'order_id'
+                    },
+
+                    {
+                        data: 'payment_type',
+                        name: 'payment_type'
+                    },
+                    {
+                        data: 'transaction_status',
+                        name: 'transaction_status'
+                    },
+                    {
+                        data: 'gross_amount',
+                        name: 'gross_amount'
+                    },
+                    {
+>>>>>>> 2bbbde22104aaa0c95a51976a928fcf7f5b43daf
                         data: 'action',
                         name: 'action',
                         orderable: false,
