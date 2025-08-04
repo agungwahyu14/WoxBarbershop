@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use App\Services\MidtransService;
 use Midtrans\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Midtrans\Snap;
+use Midtrans\Config;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 
 class PaymentController extends Controller
 {
@@ -31,7 +36,7 @@ class PaymentController extends Controller
         if (!$snapToken) {
             return response()->json(['message' => 'Gagal membuat transaksi.'], 500);
         }
-
+        // Simpan data transaksi awal ke database
         return response()->json([
             'snapToken' => $snapToken,
         ]);
@@ -46,24 +51,21 @@ class PaymentController extends Controller
             $vaNumber = $status->va_numbers[0]->va_number ?? null;
             $bank = strtoupper($status->va_numbers[0]->bank ?? 'unknown');
 
-            return response()->json([
+            return view('payment.va_detail', [
                 'va_number' => $vaNumber,
                 'bank' => $bank,
                 'payment_type' => $status->payment_type,
+                'order_id' => $orderId,
             ]);
         }
 
-        return response()->json([
-            'message' => 'Bukan metode bank transfer',
-        ], 400);
+        return back()->with('error', 'Bukan metode bank transfer');
 
     } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'Gagal mengambil status transaksi',
-            'details' => $e->getMessage(),
-        ], 500);
+        return back()->with('error', 'Gagal mengambil status transaksi: ' . $e->getMessage());
     }
 }
+
 
 public function downloadReceipt($orderId)
 {
@@ -76,6 +78,188 @@ public function downloadReceipt($orderId)
         return back()->with('error', 'Gagal mengambil data transaksi');
     }
 }
+
+public function index()
+    {
+        try {
+            $user = auth()->user();
+
+            if (!$user) {
+                return redirect()->route('login');
+            }
+
+            // Ambil semua booking milik user
+            $bookings = Booking::where('user_id', $user->id)
+                    ->orderByDesc('id')
+                    ->get();
+
+            $serverKey = config('services.midtrans.server_key');
+            $baseUrl = config('services.midtrans.is_production') ? 
+                'https://api.midtrans.com/v2/' : 
+                'https://api.sandbox.midtrans.com/v2/';
+
+            $transactions = [];
+
+            foreach ($bookings as $booking) {
+    $orderId = $booking->id;
+
+    try {
+        $response = Http::withBasicAuth($serverKey, '')
+            ->timeout(10)
+            ->get($baseUrl . $orderId . '/status');
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            $transactions[] = [
+                'order_id' => $orderId,
+                'amount' => $data['gross_amount'] ?? $booking->total_price,
+                'status' => $data['transaction_status'] ?? 'unknown',
+                'payment_type' => $data['payment_type'] ?? '-',
+                'channel' => $data['channel'] ?? '-', // Tambahkan channel
+                'email' => $booking->user->email ?? '-', // Tambahkan email
+                'transaction_time' => $data['transaction_time'] ?? $booking->created_at,
+                'booking' => $booking,
+                'formatted_payment_type' => $this->formatPaymentMethod($data['payment_type'] ?? '-'),
+                'formatted_status' => $this->formatStatus($data['transaction_status'] ?? 'unknown'),
+            ];
+        } else {
+            // Jika API gagal
+            $transactions[] = [
+                'order_id' => $orderId,
+                'amount' => $booking->total_price,
+                'status' => 'unknown',
+                'payment_type' => '-',
+                'channel' => '-', // Channel default jika error
+                'email' => $booking->user->email ?? '-', // Tetap ambil email dari relasi
+                'transaction_time' => $booking->created_at,
+                'booking' => $booking,
+                'formatted_payment_type' => '-',
+                'formatted_status' => 'Status Tidak Diketahui',
+            ];
+        }
+    } catch (\Exception $e) {
+        Log::error('Midtrans API error for booking ' . $orderId . ': ' . $e->getMessage());
+
+        // Jika terjadi exception
+        $transactions[] = [
+            'order_id' => $orderId,
+            'amount' => $booking->total_price,
+            'status' => 'unknown',
+            'payment_type' => '-',
+            'channel' => '-', // Channel default jika exception
+            'email' => $booking->user->email ?? '-', // Tetap ambil email dari relasi
+            'transaction_time' => $booking->created_at,
+            'booking' => $booking,
+            'formatted_payment_type' => '-',
+            'formatted_status' => 'Status Tidak Diketahui',
+        ];
+    }
+}
+
+
+            return view('transactions.index', compact('transactions'));
+
+        } catch (\Exception $e) {
+            Log::error('Transaction index error: ' . $e->getMessage());
+            return view('transactions.index', ['transactions' => []]);
+        }
+    }
+    
+
+    /**
+     * Generate ulang snap token untuk pembayaran pending
+     */
+   
+
+    private function formatPaymentMethod($paymentType)
+    {
+        $paymentMethods = [
+            'bank_transfer' => 'Bank Transfer',
+            'credit_card' => 'Credit Card',
+            'debit_card' => 'Debit Card',
+            'gopay' => 'GoPay',
+            'shopeepay' => 'ShopeePay',
+            'dana' => 'DANA',
+            'linkaja' => 'LinkAja',
+            'ovo' => 'OVO',
+            'qris' => 'QRIS',
+            'bca_va' => 'BCA Virtual Account',
+            'bni_va' => 'BNI Virtual Account',
+            'bri_va' => 'BRI Virtual Account',
+            'mandiri_va' => 'Mandiri Virtual Account',
+            'permata_va' => 'Permata Virtual Account',
+            'cstore' => 'Convenience Store',
+            'akulaku' => 'Akulaku',
+            'kredivo' => 'Kredivo',
+            'echannel' => 'Mandiri Bill Payment',
+            'bca_klikbca' => 'BCA KlikBCA',
+            'bca_klikpay' => 'BCA KlikPay',
+            'cimb_clicks' => 'CIMB Clicks',
+            'danamon_online' => 'Danamon Online Banking',
+            'indomaret' => 'Indomaret',
+            'alfamart' => 'Alfamart',
+        ];
+
+        return $paymentMethods[$paymentType] ?? ucfirst(str_replace('_', ' ', $paymentType));
+    }
+
+    private function formatStatus($status)
+    {
+        $statusMap = [
+            'pending' => 'Menunggu Pembayaran',
+            'settlement' => 'Berhasil',
+            'capture' => 'Berhasil',
+            'deny' => 'Ditolak',
+            'cancel' => 'Dibatalkan',
+            'expire' => 'Kedaluwarsa',
+            'failure' => 'Gagal',
+            'refund' => 'Dikembalikan',
+            'partial_refund' => 'Dikembalikan Sebagian',
+            'authorize' => 'Diotorisasi',
+            'unknown' => 'Status Tidak Diketahui',
+        ];
+
+        return $statusMap[$status] ?? ucfirst($status);
+    }
+
+    public function show($orderId)
+{
+    try {
+        // Ambil data booking terkait
+        $booking = Booking::with('user')->findOrFail($orderId);
+
+        // Ambil status transaksi dari Midtrans
+        $status = \Midtrans\Transaction::status($orderId);
+
+        // Cek dan ambil data VA jika ada
+        $vaNumber = null;
+        $bank = null;
+
+        if ($status->payment_type === 'bank_transfer' && isset($status->va_numbers[0])) {
+            $vaNumber = $status->va_numbers[0]->va_number;
+            $bank = strtoupper($status->va_numbers[0]->bank);
+        }
+
+        $data = [
+            'order_id' => $status->order_id,
+            'transaction_status' => $this->formatStatus($status->transaction_status),
+            'payment_type' => $this->formatPaymentMethod($status->payment_type),
+            'transaction_time' => $status->transaction_time,
+            'amount' => $status->gross_amount,
+            'va_number' => $vaNumber,
+            'bank' => $bank,
+            'booking' => $booking,
+        ];
+
+        return view('transactions.show', compact('data'));
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal mengambil detail transaksi: ' . $e->getMessage());
+    }
+
+    
+}
+
 
 
 }

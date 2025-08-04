@@ -28,7 +28,7 @@ class MidtransService
         $params = [
             'transaction_details' => [
                 'order_id' => $booking->id,
-                'gross_amount' => (int) $booking->total_price, // contoh
+                'gross_amount' => (int) $booking->total_price,
             ],
             'customer_details' => [
                 'first_name' => $booking->name,
@@ -36,6 +36,19 @@ class MidtransService
                 'phone' => $booking->user->no_telepon,
             ]
         ];
+
+        \App\Models\Transaction::updateOrCreate(
+        ['order_id' => $booking->id],
+        [
+            'transaction_status' => 'pending',
+            'payment_type' => null,
+            'gross_amount' => $booking->total_price,
+            'transaction_time' => now(),
+            'bank' => null,
+            'va_number' => null,
+        ]
+    );
+
 
         // Snap token akan digunakan di JavaScript
         $snapToken = Snap::getSnapToken($params);

@@ -60,7 +60,7 @@
                                                     ? 'bg-yellow-100 text-yellow-700'
                                                     : 'bg-red-100 text-red-700') }}">
                                             <i class="fas fa-money-bill-wave mr-1 text-xs"></i>
-                                            {{ $booking->payment_status === 'unpaid' ? 'Belum Bayar' : ucfirst($booking->payment_status) }}
+                                            {{-- {{ $booking->payment_status === 'unpaid' ? 'Belum Bayar' : ucfirst($booking->payment_status) }} --}}
                                         </span>
                                     @endif
                                 </div>

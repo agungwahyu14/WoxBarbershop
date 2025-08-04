@@ -19,18 +19,11 @@ class Booking extends Model
     'description',
     'status',
     'total_price',
-    'payment_status',
-    'order_id',
-    'snap_token',
-    'payment_expired_at',
-    'midtrans_response',
+   
 ];
-
-
+    
     protected $casts = [
         'date_time' => 'datetime',
-        'payment_expired_at' => 'datetime',
-        'midtrans_response' => 'array',
     ];
 
     // Relasi ke User

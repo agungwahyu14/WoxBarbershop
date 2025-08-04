@@ -8,8 +8,8 @@
                 <li>Dashboard</li>
             </ul>
             <div class="text-sm text-gray-600">
-                Selamat datang, {{ Auth::user()->name }} 
-                @if(Auth::user()->hasRole('admin'))
+                Selamat datang, {{ Auth::user()->name }}
+                @if (Auth::user()->hasRole('admin'))
                     (Administrator)
                 @elseif(Auth::user()->hasRole('pegawai'))
                     (Pegawai)
@@ -55,7 +55,7 @@
                                 Total Revenue
                             </h3>
                             <h1>
-                                Rp{{ number_format(\App\Models\Transaction::where('payment_status', 'settlement')->sum('total_amount'), 0, ',', '.') }}
+                                {{-- Rp{{ number_format(\App\Models\Transaction::where('payment_status', 'settlement')->sum('total_amount'), 0, ',', '.') }} --}}
                             </h1>
                         </div>
                         <span class="icon widget-icon text-blue-500"><i class="mdi mdi-cart-outline mdi-48px"></i></span>
@@ -95,11 +95,11 @@
                                 ->groupBy('status')
                                 ->get();
                         @endphp
-                        @foreach($bookingStats as $stat)
-                        <div class="flex justify-between items-center">
-                            <span class="capitalize">{{ $stat->status }}</span>
-                            <span class="font-semibold">{{ $stat->count }}</span>
-                        </div>
+                        @foreach ($bookingStats as $stat)
+                            <div class="flex justify-between items-center">
+                                <span class="capitalize">{{ $stat->status }}</span>
+                                <span class="font-semibold">{{ $stat->count }}</span>
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -114,88 +114,19 @@
                 </header>
                 <div class="card-content">
                     <div class="space-y-2">
-                        @php
+                        {{-- @php
                             $paymentStats = \App\Models\Transaction::selectRaw('payment_status, COUNT(*) as count')
                                 ->groupBy('payment_status')
                                 ->get();
-                        @endphp
-                        @foreach($paymentStats as $stat)
+                        @endphp --}}
+                        {{-- @foreach ($paymentStats as $stat)
                         <div class="flex justify-between items-center">
                             <span class="capitalize">{{ $stat->payment_status }}</span>
                             <span class="font-semibold">{{ $stat->count }}</span>
                         </div>
-                        @endforeach
+                        @endforeach --}}
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="card has-table">
-            <header class="card-header">
-                <p class="card-header-title">
-                    <span class="icon"><i class="mdi mdi-calendar-today"></i></span>
-                    Recent Bookings
-                </p>
-                <a href="#" class="card-header-icon">
-                    <span class="icon"><i class="mdi mdi-reload"></i></span>
-                </a>
-            </header>
-            <div class="card-content">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Service</th>
-                            <th>Date & Time</th>
-                            <th>Status</th>
-                            <th>Amount</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $recentBookings = \App\Models\Booking::with(['user', 'service'])
-                                ->orderBy('created_at', 'desc')
-                                ->limit(10)
-                                ->get();
-                        @endphp
-                        @foreach($recentBookings as $booking)
-                        <tr>
-                            <td data-label="Customer">{{ $booking->user->name ?? 'N/A' }}</td>
-                            <td data-label="Service">{{ $booking->service->name ?? 'N/A' }}</td>
-                            <td data-label="Date & Time">
-                                {{ $booking->booking_date ? \Carbon\Carbon::parse($booking->booking_date)->format('d M Y') : 'N/A' }}<br>
-                                <small class="text-gray-500">{{ $booking->booking_time ?? 'N/A' }}</small>
-                            </td>
-                            <td data-label="Status">
-                                <span class="px-2 py-1 rounded text-xs
-                                    @if($booking->status === 'completed') bg-green-100 text-green-800
-                                    @elseif($booking->status === 'confirmed') bg-blue-100 text-blue-800
-                                    @elseif($booking->status === 'pending') bg-yellow-100 text-yellow-800
-                                    @elseif($booking->status === 'cancelled') bg-red-100 text-red-800
-                                    @else bg-gray-100 text-gray-800 @endif">
-                                    {{ ucfirst($booking->status) }}
-                                </span>
-                            </td>
-                            <td data-label="Amount">
-                                Rp{{ number_format($booking->service->price ?? 0, 0, ',', '.') }}
-                            </td>
-                            <td class="actions-cell">
-                                <div class="buttons right nowrap">
-                                    <button class="button small green" type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                    @if(Auth::user()->hasRole('admin'))
-                                    <button class="button small blue" type="button">
-                                        <span class="icon"><i class="mdi mdi-pencil"></i></span>
-                                    </button>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
     </section>

@@ -1,0 +1,97 @@
+@extends('layouts.app')
+
+@section('content')
+    <section class="py-20">
+        <div class="container mx-auto px-4">
+
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="p-6 space-y-6">
+
+                    {{-- Header --}}
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-credit-card mr-2 text-blue-600"></i> Detail Transaksi Pembayaran
+                    </h2>
+
+                    {{-- Informasi Transaksi --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                        {{-- Order ID --}}
+                        <div>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">Order ID</h4>
+                            <p class="text-lg font-semibold text-gray-800">{{ $data['order_id'] }}</p>
+                        </div>
+
+                        {{-- Status Pembayaran --}}
+                        <div>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">Status Pembayaran</h4>
+                            <span
+                                class="inline-block px-3 py-1 rounded-full text-sm font-medium
+                            @switch($data['transaction_status'])
+                                @case('pending')
+                                    bg-yellow-100 text-yellow-700
+                                    @break
+                                @case('settlement')
+                                @case('capture')
+                                    bg-green-100 text-green-700
+                                    @break
+                                @case('expire')
+                                @case('cancel')
+                                @case('deny')
+                                    bg-red-100 text-red-700
+                                    @break
+                                @default
+                                    bg-gray-100 text-gray-600
+                            @endswitch">
+                                {{ ucfirst($data['transaction_status']) }}
+                            </span>
+                        </div>
+
+                        {{-- Waktu Transaksi --}}
+                        <div>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">Waktu Transaksi</h4>
+                            <p class="text-lg font-semibold text-gray-800">
+                                {{ \Carbon\Carbon::parse($data['transaction_time'])->format('d M Y H:i') }}
+                            </p>
+                        </div>
+
+                        {{-- Metode Pembayaran --}}
+                        <div>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">Metode Pembayaran</h4>
+                            <p class="text-lg font-semibold text-gray-800">{{ strtoupper($data['payment_type']) }}</p>
+                        </div>
+
+                        {{-- Nomor Virtual Account (jika ada) --}}
+                        @if (!empty($data['va_number']))
+                            <div>
+                                <h4 class="text-sm text-gray-500 uppercase mb-1">Bank</h4>
+                                <p class="text-lg font-semibold text-gray-800">{{ strtoupper($data['bank']) }}</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm text-gray-500 uppercase mb-1">Virtual Account</h4>
+                                <p class="text-lg font-mono text-blue-600">{{ $data['va_number'] }}</p>
+                            </div>
+                        @endif
+
+                        {{-- Total Pembayaran --}}
+                        <div>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">Total Pembayaran</h4>
+                            <p class="text-lg font-bold text-gray-800">
+                                Rp {{ number_format($data['amount'], 0, ',', '.') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Tombol Aksi --}}
+                    <div class="pt-6 border-t flex justify-between items-center">
+                        <a href="{{ route('payment.index') }}"
+                            class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                            <i class="fas fa-arrow-left mr-2"></i> Kembali
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+@endsection
