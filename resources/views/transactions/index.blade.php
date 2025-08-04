@@ -84,7 +84,7 @@
                                 {{-- Action Buttons --}}
                                 <div class="pt-4 border-t border-gray-100 space-y-2">
                                     {{-- View Detail Button --}}
-                                    <a href=""
+                                    <a href="{{ route('payment.show', $tx['order_id']) }}"
                                         class="w-full inline-flex justify-center items-center px-4 py-2 hover:bg-blue-600 bg-blue-500 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                                         <i class="fas fa-eye mr-2"></i>
                                         Lihat Detail
@@ -141,17 +141,17 @@
                     fetch(`/transaction/va/${orderId}`)
                         .then(res => res.json())
                         .then(data => {
-                            if (data.va_number) {
+                            if (data.payment_type === 'bank_transfer' && data.va_number) {
                                 Swal.fire({
                                     title: 'Pembayaran Virtual Account',
                                     html: `
-                                <p class="mb-2">Silakan transfer ke rekening berikut:</p>
-                                <div style="background-color:#f1f1f1;padding:10px;border-radius:8px;margin-bottom:10px">
-                                    <strong>Bank:</strong> ${data.bank}<br>
-                                    <strong>Nomor VA:</strong><br>
-                                    <span style="font-size:1.5em;font-weight:bold;">${data.va_number}</span>
-                                </div>
-                            `,
+            <p class="mb-2">Silakan transfer ke rekening berikut:</p>
+            <div style="background-color:#f1f1f1;padding:10px;border-radius:8px;margin-bottom:10px">
+                <strong>Bank:</strong> ${data.bank}<br>
+                <strong>Nomor VA:</strong><br>
+                <span style="font-size:1.5em;font-weight:bold;">${data.va_number}</span>
+            </div>
+        `,
                                     icon: 'info',
                                     confirmButtonText: 'Tutup',
                                     customClass: {
@@ -160,8 +160,45 @@
                                     },
                                     buttonsStyling: false
                                 });
+                            } else if (data.payment_type === 'qris' && data.qr_url) {
+                                Swal.fire({
+                                    title: 'Pembayaran QRIS',
+                                    html: `
+            <p class="mb-2">Scan kode QR berikut menggunakan aplikasi e-wallet Anda:</p>
+            <img src="${data.qr_url}" alt="QRIS" class="mx-auto rounded shadow-md" style="max-width: 250px;">
+        `,
+                                    icon: 'info',
+                                    confirmButtonText: 'Tutup',
+                                    customClass: {
+                                        popup: 'rounded-lg',
+                                        confirmButton: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+                                    },
+                                    buttonsStyling: false
+                                });
+                            } else if (['gopay', 'shopeepay', 'other_e_wallets'].includes(data
+                                    .payment_type) && data.redirect_url) {
+                                Swal.fire({
+                                    title: 'Lanjut ke Pembayaran',
+                                    html: `<p>Klik tombol di bawah untuk menyelesaikan pembayaran melalui ${data.payment_type.toUpperCase()}.</p>`,
+                                    icon: 'info',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Bayar Sekarang',
+                                    cancelButtonText: 'Batal',
+                                    customClass: {
+                                        popup: 'rounded-lg',
+                                        confirmButton: 'bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600',
+                                        cancelButton: 'px-4 py-2 rounded border border-gray-300'
+                                    },
+                                    buttonsStyling: false
+                                }).then(result => {
+                                    if (result.isConfirmed) {
+                                        window.open(data.redirect_url, '_blank');
+                                    }
+                                });
                             } else {
-                                Swal.fire('Gagal', 'Data VA tidak ditemukan', 'error');
+                                Swal.fire('Info',
+                                    'Metode pembayaran tidak didukung atau tidak ditemukan.',
+                                    'info');
                             }
                         })
                         .catch(err => {

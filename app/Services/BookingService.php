@@ -58,16 +58,7 @@ class BookingService
     /**
      * Calculate booking price including any surcharges
      */
-    public function calculatePrice(Booking $booking): float
-{
-    $service = Service::find($booking->service_id);
-    
-    if (!$service) {
-        throw new \Exception('Layanan tidak ditemukan');
-    }
 
-    return $service->price;
-}
 
 
     /**
@@ -135,8 +126,7 @@ class BookingService
             'queue_number' => $queueNumber,
             'description' => $data['description'] ?? null,
             'status' => 'pending',
-            'total_price' => $this->calculatePrice(new Booking($data)),
-            'payment_status' => 'unpaid'
+            'total_price' => $service->price,
         ]);
 
         DB::commit();

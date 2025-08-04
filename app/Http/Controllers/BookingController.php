@@ -85,7 +85,7 @@ class BookingController extends Controller
                 ->addColumn('contact_info', function($row) {
                     return $row->user && $row->user->no_telepon ? 
                         '<div class="flex items-center space-x-2">
-                            <i class="fas fa-phone text-green-600"></i>
+                        
                             <span class="font-medium">' . $row->user->no_telepon . '</span>
                         </div>' : '<span class="text-gray-400">No contact</span>';
                 })
@@ -93,7 +93,7 @@ class BookingController extends Controller
                     if ($row->service) {
                         $icon = $this->getServiceIcon($row->service->name);
                         return '<div class="flex items-center space-x-2">
-                            <i class="' . $icon . ' text-green-600"></i>
+                            
                             <div>
                                 <div class="font-medium text-gray-900">' . $row->service->name . '</div>
                                 <div class="text-sm text-gray-500">Rp ' . number_format($row->service->price, 0, ',', '.') . '</div>
@@ -105,7 +105,7 @@ class BookingController extends Controller
                 ->addColumn('hairstyle_info', function($row) {
                     if ($row->hairstyle) {
                         return '<div class="flex items-center space-x-2">
-                            <i class="fas fa-cut text-purple-600"></i>
+
                             <div>
                                 <div class="font-medium text-gray-900">' . $row->hairstyle->name . '</div>
                                 <div class="text-sm text-gray-500">' . ($row->hairstyle->description ?? 'Classic style') . '</div>
@@ -161,7 +161,7 @@ class BookingController extends Controller
                     
                     // View details button
                     $actions .=  '<a href="' . $showUrl . '" 
-                  class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
+                  class=" inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
                   title="View Details">
                 <i class="fas fa-eye text-sm"></i>
             </a>';
@@ -363,18 +363,18 @@ class BookingController extends Controller
 
             // Get booking statistics for this customer
             $customerStats = null;
-            if ($booking->user) {
-                $customerStats = [
-                    'total_bookings' => Booking::where('user_id', $booking->user_id)->count(),
-                    'completed_bookings' => Booking::where('user_id', $booking->user_id)
-                        ->where('status', 'completed')->count(),
-                    'total_spent' => Transaction::where('user_id', $booking->user_id)
-                        ->where('payment_status', 'paid')->sum('total_amount'),
-                    'last_booking' => Booking::where('user_id', $booking->user_id)
-                        ->where('id', '!=', $booking->id)
-                        ->latest('date_time')->first()?->date_time,
-                ];
-            }
+            // if ($booking->user) {
+            //     $customerStats = [
+            //         'total_bookings' => Booking::where('user_id', $booking->user_id)->count(),
+            //         'completed_bookings' => Booking::where('user_id', $booking->user_id)
+            //             ->where('status', 'completed')->count(),
+            //         'total_spent' => Transaction::where('user_id', $booking->user_id)
+            //             ->where('payment_status', 'paid')->sum('total_amount'),
+            //         'last_booking' => Booking::where('user_id', $booking->user_id)
+            //             ->where('id', '!=', $booking->id)
+            //             ->latest('date_time')->first()?->date_time,
+            //     ];
+            // }
 
             // Get available time slots for rescheduling (next 7 days)
             $availableSlots = [];

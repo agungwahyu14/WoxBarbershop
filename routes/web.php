@@ -8,11 +8,12 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\HairstyleController;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MidtransController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\MidtransCallbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,10 +60,12 @@ Route::middleware('auth')->group(function () {
         return view('rekomendasi');
     })->name('rekomendasi');
 
-    Route::get('/midtrans', [MidtransController::class, 'index'])->name('midtrans.index');
-Route::get('/transaction/va/{orderId}', [PaymentController::class, 'showVA']);
-Route::get('/transaction/download/{orderId}', [PaymentController::class, 'downloadReceipt'])->name('transaction.download');
-   Route::get('/payment/{id}', [PaymentController::class, 'pay'])->name('payment.pay');
+    Route::get('/transaction', [PaymentController::class, 'index'])->name('payment.index');
+    Route::get('/transaction/{orderId}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::get('/transaction/va/{orderId}', [PaymentController::class, 'showVA']);
+    Route::get('/transaction/download/{orderId}', [PaymentController::class, 'downloadReceipt'])->name('transaction.download');
+    Route::get('/payment/{id}', [PaymentController::class, 'pay'])->name('payment.pay');
+
 
 
 
@@ -76,22 +79,7 @@ Route::get('/transaction/download/{orderId}', [PaymentController::class, 'downlo
 
     Route::resource('bookings', BookingController::class);
     Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
-    Route::resource('transactions', TransactionController::class);
-
- 
-
-    
-    // Payment Routes
-    // Route::post('/bookings/{booking}/payment', [PaymentController::class, 'createPayment'])->name('payment.create');
-    // Route::get('/bookings/{booking}/payment/status', [PaymentController::class, 'checkStatus'])->name('payment.status');
-    // Route::post('/bookings/{booking}/payment/cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
-    // Route::get('/payment/finish', [PaymentController::class, 'finish'])->name('payment.finish');
-    // Route::get('/payment/error', [PaymentController::class, 'error'])->name('payment.error');
-    // Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
-    
-
-    
-    // End of Profile Routes
+   
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:admin|pegawai'])->group(function () {
@@ -104,12 +92,16 @@ Route::prefix('admin')->middleware(['auth', 'role:admin|pegawai'])->group(functi
     Route::resource('users', UserController::class);
     Route::resource('services', ServiceController::class);
     Route::resource('hairstyles', HairstyleController::class);
+    Route::resource('transactions', TransactionController::class);
+
 
     // Enhanced User Management Routes
     Route::post('/users/{user}/resend-verification', [UserController::class, 'resendVerification'])->name('admin.users.resend-verification');
     Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.reset-password');
     Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('admin.users.toggle-status');
     Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
+
+
 
     // Tambahkan route admin lainnya di sini
 });

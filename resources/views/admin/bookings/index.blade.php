@@ -199,7 +199,7 @@
                         name: 'actions',
                         orderable: false,
                         searchable: false,
-                        className: 'text-center '
+                        className: 'text-center space-x-2'
                     }
                 ],
                 dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-6'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-6'ip>",
@@ -349,29 +349,29 @@
         function updateBookingStatus(bookingId, status, action) {
             if (confirm(`Are you sure you want to ${action}?`)) {
                 fetch(`/bookings/${bookingId}/status`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        status: status
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            status: status
+                        })
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showNotification('success', 'Success!', data.message);
-                        // Refresh the DataTable
-                        $('#bookings-table').DataTable().ajax.reload();
-                    } else {
-                        showNotification('error', 'Error!', data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('error', 'Error!', 'An error occurred while updating the booking status.');
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showNotification('success', 'Success!', data.message);
+                            // Refresh the DataTable
+                            $('#bookings-table').DataTable().ajax.reload();
+                        } else {
+                            showNotification('error', 'Error!', data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('error', 'Error!', 'An error occurred while updating the booking status.');
+                    });
             }
         }
     </script>
