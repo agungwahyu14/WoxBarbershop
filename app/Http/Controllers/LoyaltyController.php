@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Loyalty;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class LoyaltyController extends Controller
 {
@@ -23,9 +24,17 @@ class LoyaltyController extends Controller
             ->addColumn('user_name', function ($row) {
                 return $row->user->name ?? '-';
             })
-            ->addColumn('action', function ($row) {
-                return '<a href="' . route('loyalties.show', $row->id) . '" class="btn btn-sm btn-info">Lihat</a>';
-            })
+           ->addColumn('action', function ($row) {
+    $showUrl = route('loyalties.show', $row->id);
+
+    return '<a href="' . $showUrl . '" 
+               class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-green-600 transition-all duration-200 group" 
+               title="View Details">
+                <i class="fas fa-eye text-xs group-hover:scale-110 transition-transform"></i>
+            </a>';
+})
+
+
             ->rawColumns(['points', 'user_name', 'action'])
             ->make(true);
     }
@@ -53,9 +62,12 @@ class LoyaltyController extends Controller
      * Display the specified resource.
      */
     public function show(Loyalty $loyalty)
-    {
-        //
-    }
+{
+    $loyalty->load('user'); // agar relasi user ikut dimuat
+
+    return view('admin.loyalty.show', compact('loyalty'));
+}
+
 
     /**
      * Show the form for editing the specified resource.
