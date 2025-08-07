@@ -299,24 +299,6 @@
             }, 30000);
 
             // Modal functions
-            window.openBookingDetail = function(bookingId) {
-                showLoading();
-                // Fetch booking details via AJAX
-                $.get(`/admin/bookings/${bookingId}/detail`)
-                    .done(function(response) {
-                        $('#booking-detail-content').html(response);
-                        $('#booking-detail-modal').removeClass('hidden');
-                        hideLoading();
-                    })
-                    .fail(function() {
-                        hideLoading();
-                        showNotification('error', 'Error', 'Failed to load booking details');
-                    });
-            };
-
-            window.closeModal = function() {
-                $('#booking-detail-modal').addClass('hidden');
-            };
 
             // Success notification
             @if (session('success'))
@@ -347,32 +329,43 @@
         }
 
         function updateBookingStatus(bookingId, status, action) {
-            if (confirm(`Are you sure you want to ${action}?`)) {
-                fetch(`/bookings/${bookingId}/status`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            status: status
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: action,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#d4af37',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Ya, lanjutkan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/bookings/${bookingId}/status`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                status: status
+                            })
                         })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            showNotification('success', 'Success!', data.message);
-                            // Refresh the DataTable
-                            $('#bookings-table').DataTable().ajax.reload();
-                        } else {
-                            showNotification('error', 'Error!', data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showNotification('error', 'Error!', 'An error occurred while updating the booking status.');
-                    });
-            }
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showNotification('success', 'Success!', data.message);
+                                location.reload();
+                            } else {
+                                showNotification('error', 'Error!', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showNotification('error', 'Error!',
+                            'Terjadi kesalahan saat update status booking.');
+                        });
+                }
+            });
         }
     </script>
 @endpush

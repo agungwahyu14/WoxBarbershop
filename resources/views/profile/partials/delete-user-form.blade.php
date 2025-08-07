@@ -10,7 +10,7 @@
     </header>
 
     <button type="button"
-        class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent  font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150"
+        class="rounded-lg inline-flex items-center px-4 py-2 bg-red-600 border border-transparent  font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150"
         x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')">
         {{ __('Delete Account') }}
     </button>
@@ -50,7 +50,7 @@
                     <div class="mt-6">
                         <label for="password" class="sr-only">{{ __('Password') }}</label>
                         <input id="password" name="password" type="password"
-                            class="mt-1 block w-3/4  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            class="rounded-lg mt-1 block w-3/4  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                             placeholder="{{ __('Password') }}" />
 
                         @if ($errors->userDeletion->get('password'))
@@ -62,12 +62,12 @@
 
                     <div class="mt-6 flex justify-end">
                         <button type="button" x-on:click="$dispatch('close')"
-                            class="inline-flex items-center px-4 py-2 bg-white border border-gray-300  font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                            class="rounded-lg inline-flex items-center px-4 py-2 bg-white border border-gray-300  font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
                             {{ __('Cancel') }}
                         </button>
 
                         <button type="submit"
-                            class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent  font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 ms-3">
+                            class="rounded-lg  inline-flex items-center px-4 py-2 bg-red-600 border border-transparent  font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 ms-3">
                             {{ __('Delete Account') }}
                         </button>
                     </div>

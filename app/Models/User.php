@@ -85,10 +85,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Transaction::class);
     }
 
-    public function loyalties()
-    {
-        return $this->hasMany(Loyalty::class);
-    }
+
+public function loyalty()
+{
+    return $this->hasOne(Loyalty::class);
+}
 
     /**
      * Scope for active users

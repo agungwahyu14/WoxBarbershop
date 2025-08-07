@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\DB;
+use App\Models\Loyalty;
 
 class BookingController extends Controller
 {
@@ -361,20 +362,7 @@ class BookingController extends Controller
                 ]);
             }
 
-            // Get booking statistics for this customer
-            $customerStats = null;
-            // if ($booking->user) {
-            //     $customerStats = [
-            //         'total_bookings' => Booking::where('user_id', $booking->user_id)->count(),
-            //         'completed_bookings' => Booking::where('user_id', $booking->user_id)
-            //             ->where('status', 'completed')->count(),
-            //         'total_spent' => Transaction::where('user_id', $booking->user_id)
-            //             ->where('payment_status', 'paid')->sum('total_amount'),
-            //         'last_booking' => Booking::where('user_id', $booking->user_id)
-            //             ->where('id', '!=', $booking->id)
-            //             ->latest('date_time')->first()?->date_time,
-            //     ];
-            // }
+            
 
             // Get available time slots for rescheduling (next 7 days)
             $availableSlots = [];
@@ -428,7 +416,6 @@ class BookingController extends Controller
                 'queueStatus',
                 'queuePosition',
                 'estimatedWaitTime',
-                'customerStats',
                 'availableSlots',
                 'canModify',
                 'canCancel',
@@ -595,44 +582,119 @@ class BookingController extends Controller
      * Update booking status (for admin/staff)
      */
     public function updateStatus(Request $request, Booking $booking)
-    {
-        $this->authorize('updateStatus', $booking);
+{
+    $this->authorize('updateStatus', $booking);
 
-        $request->validate([
-            'status' => 'required|in:pending,confirmed,in_progress,completed,cancelled'
+    $request->validate([
+        'status' => 'required|in:pending,confirmed,in_progress,completed,cancelled'
+    ]);
+
+    try {
+        $this->bookingService->updateBookingStatus($booking, $request->status);
+
+        // ✅ Tambahkan ini jika status = completed
+        if ($request->status === 'completed') {
+            $this->completeBooking($booking->id);
+            Log::info('Loyalty berhasil di tambahkan', [
+                'booking_id' => $booking->id,
+            ]);
+        }
+
+        // Clear caches
+        $this->cacheService->clearBookingCaches($booking->date_time);
+        $this->cacheService->clearDashboardStats();
+
+        Log::info('Booking status updated', [
+            'booking_id' => $booking->id,
+            'new_status' => $request->status,
+            'user_id' => auth()->id()
         ]);
 
-        try {
-            $this->bookingService->updateBookingStatus($booking, $request->status);
+        return response()->json([
+            'success' => true,
+            'message' => 'Status booking berhasil diperbarui',
+            'new_status' => $request->status
+        ]);
 
-            // Clear caches
-            $this->cacheService->clearBookingCaches($booking->date_time);
-            $this->cacheService->clearDashboardStats();
+    } catch (\Exception $e) {
+        Log::error('Error updating booking status', [
+            'booking_id' => $booking->id,
+            'error' => $e->getMessage(),
+            'user_id' => auth()->id()
+        ]);
 
-            Log::info('Booking status updated', [
-                'booking_id' => $booking->id,
-                'old_status' => $booking->status,
-                'new_status' => $request->status,
-                'user_id' => auth()->id()
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Status booking berhasil diperbarui',
-                'new_status' => $request->status
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Error updating booking status', [
-                'booking_id' => $booking->id,
-                'error' => $e->getMessage(),
-                'user_id' => auth()->id()
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 422);
-        }
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 422);
     }
+}
+
+
+    
+
+public function completeBooking($bookingId)
+{
+    Log::info('Fungsi completeBooking dipanggil', [
+        'booking_id' => $bookingId,
+        'waktu' => now()->toDateTimeString()
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        $booking = Booking::findOrFail($bookingId);
+
+        if ($booking->status === 'completed') {
+            Log::warning('Booking sudah completed sebelumnya', [
+                'booking_id' => $booking->id
+            ]);
+            return back()->with('warning', 'Booking sudah selesai sebelumnya.');
+        }
+
+        $booking->status = 'completed';
+        $booking->save();
+
+        Log::info('Status booking diubah menjadi completed', [
+            'booking_id' => $booking->id
+        ]);
+
+        $user = $booking->user;
+        $loyalty = $user->loyalty;
+
+        if (!$loyalty) {
+            Log::info('Loyalty baru dibuat untuk user', ['user_id' => $user->id]);
+
+            Loyalty::create([
+                'user_id' => $user->id,
+                'points' => 1,
+            ]);
+        } else {
+            Log::info('Loyalty ditemukan, point sebelumnya: ' . $loyalty->points, ['user_id' => $user->id]);
+
+            $loyalty->points += 1;
+
+            if ($loyalty->points >= 10) {
+                Log::info('Point mencapai 10, reset ke 0 dan berikan reward (jika ada)', ['user_id' => $user->id]);
+                $loyalty->points = 0;
+            }
+
+            $loyalty->save();
+
+            Log::info('Loyalty diupdate, point sekarang: ' . $loyalty->points, ['user_id' => $user->id]);
+        }
+
+        DB::commit();
+
+        return back()->with('success', 'Booking selesai dan loyalty diupdate!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Gagal menyelesaikan booking', [
+            'booking_id' => $bookingId,
+            'error' => $e->getMessage()
+        ]);
+        return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
+}
+
 }

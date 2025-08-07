@@ -55,7 +55,7 @@
             </li>
 
             <li>
-                <a href="loyalty.html">
+                <a href="{{ route('loyalties.index') }}">
                     <span class="icon"><i class="mdi mdi-star-circle"></i></span>
                     <span class="menu-item-label">Loyalty Program</span>
                 </a>

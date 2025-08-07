@@ -10,6 +10,7 @@ use App\Http\Controllers\HairstyleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\LoyaltyController;
 use App\Http\Controllers\MidtransController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -93,6 +94,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin|pegawai'])->group(functi
     Route::resource('services', ServiceController::class);
     Route::resource('hairstyles', HairstyleController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::resource('loyalties', LoyaltyController::class);
 
 
     // Enhanced User Management Routes

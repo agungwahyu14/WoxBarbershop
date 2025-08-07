@@ -19,10 +19,8 @@ class TransactionController extends Controller
     public function index(Request $request)
 {
     if ($request->ajax()) {
-        $query = Transaction::whereNotNull('name')
-            ->whereNotNull('email')
-            ->orderByDesc('transaction_time')
-            ->get();
+        $query = Transaction::
+            all();
 
         return DataTables::of($query)
             ->addIndexColumn()
@@ -44,15 +42,23 @@ class TransactionController extends Controller
             })
 
             ->editColumn('transaction_status', function($row) {
-                $badgeColor = match($row->transaction_status) {
-                    'pending' => 'bg-yellow-100 text-yellow-800',
-                    'settlement' => 'bg-green-100 text-green-800',
-                    'cancel' => 'bg-red-100 text-red-800',
-                    default => 'bg-gray-100 text-gray-800'
-                };
+    $badgeColor = match($row->transaction_status) {
+        'pending' => 'bg-yellow-100 text-yellow-800',
+        'settlement' => 'bg-green-100 text-green-800',
+        'cancel' => 'bg-red-100 text-red-800',
+        default => 'bg-gray-100 text-gray-800'
+    };
 
-                return '<span class="px-2 py-1 rounded-full text-xs font-medium ' . $badgeColor . '">' . ucfirst($row->transaction_status) . '</span>';
-            })
+    $statusLabel = match($row->transaction_status) {
+        'pending' => 'Menunggu',
+        'settlement' => 'Sukses',
+        'cancel' => 'Gagal',
+        default => ucfirst($row->transaction_status)
+    };
+
+    return '<span class="px-2 py-1 rounded-full text-xs font-medium ' . $badgeColor . '">' . $statusLabel . '</span>';
+})
+
 
             ->addColumn('action', function ($row) {
                 return '<div class="flex justify-center space-x-2">

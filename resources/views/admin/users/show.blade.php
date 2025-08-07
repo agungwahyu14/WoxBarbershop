@@ -23,11 +23,11 @@
                         </button>
                     @endif
                     <a href="{{ route('users.edit', $user) }}"
-                        class="glass-effect px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all">
+                        class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-edit mr-2"></i>Edit User
                     </a>
                     <a href="{{ route('users.index') }}"
-                        class="glass-effect px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all">
+                        class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-arrow-left mr-2"></i>Back to Users
                     </a>
                 </div>
