@@ -14,6 +14,7 @@ class Hairstyle extends Model
         'description',
         'bentuk_kepala',
         'tipe_rambut',
+        'style_preference', // Added field for style preference
         'image',
     ];
 
@@ -26,5 +27,11 @@ public function user()
 {
     return $this->belongsTo(User::class);
 }
+
+public function scores()
+{
+    return $this->hasMany(HairstyleScore::class);
+}
+
 
 }

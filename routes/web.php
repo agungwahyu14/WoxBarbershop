@@ -11,6 +11,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\LoyaltyController;
+use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\MidtransController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -57,10 +58,8 @@ Route::middleware('auth')->group(function () {
     // End of Dashboard Routes
 
     // Recccommendation Routes
-    Route::get('/rekomendasi', function () {
-        return view('rekomendasi');
-    })->name('rekomendasi');
-
+     Route::resource('rekomendasi', RecommendationController::class);
+    
     Route::get('/transaction', [PaymentController::class, 'index'])->name('payment.index');
     Route::get('/transaction/{orderId}', [PaymentController::class, 'show'])->name('payment.show');
     Route::get('/transaction/va/{orderId}', [PaymentController::class, 'showVA']);

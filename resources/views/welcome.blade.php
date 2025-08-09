@@ -91,7 +91,7 @@
                     <p class="text-gray-600 mb-4">
                         Rekomendasi gaya rambut berdasarkan wajah, tren sesuai dengan keinginan.
                     </p>
-                    <a href="{{ route('rekomendasi') }}" class="text-secondary font-medium flex items-center group">
+                    <a href="{{ route('login') }}" class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>

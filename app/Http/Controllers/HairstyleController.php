@@ -220,4 +220,43 @@ class HairstyleController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Hairstyle deleted successfully.']);
     }
+
+    public function rekomendasi(Request $request)
+{
+    $faceShape = $request->input('face_shape');
+    $hairType = $request->input('hair_type');
+    $stylePref = $request->input('style_preference');
+
+    $hairstyles = Hairstyle::all();
+
+    // Bobot AHP - bisa kamu ubah sesuai preferensi
+    $bobot = [
+        'bentuk_kepala' => 0.4,
+        'tipe_rambut' => 0.3,
+        'preferensi_gaya' => 0.3,
+    ];
+
+    $hasil = $hairstyles->map(function ($item) use ($faceShape, $hairType, $stylePref, $bobot) {
+        $score = 0;
+
+        // Skor berdasarkan kemiripan
+        $skorBentuk = strtolower($item->bentuk_kepala) == strtolower($faceShape) ? 1 : 0;
+        $skorRambut = strtolower($item->tipe_rambut) == strtolower($hairType) ? 1 : 0;
+
+        // Tambahkan preferensi gaya jika ada di field description (optional logic)
+        $skorGaya = Str::contains(strtolower($item->description), strtolower($stylePref)) ? 1 : 0;
+
+        $score = ($skorBentuk * $bobot['bentuk_kepala']) +
+                 ($skorRambut * $bobot['tipe_rambut']) +
+                 ($skorGaya * $bobot['preferensi_gaya']);
+
+        $item->score = $score;
+        return $item;
+    });
+
+    $rekomendasi = $hasil->sortByDesc('score')->values();
+
+    return view('hairstyles.rekomendasi', compact('rekomendasi', 'faceShape', 'hairType', 'stylePref'));
+}
+
 }
