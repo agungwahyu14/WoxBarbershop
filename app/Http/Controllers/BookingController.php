@@ -219,8 +219,10 @@ class BookingController extends Controller
             }
         }
 
-        $services = $this->cacheService->getActiveServices();
-        $hairstyles = $this->cacheService->getActiveHairstyles();
+        $services = \App\Models\Service::all();
+$hairstyles = \App\Models\Hairstyle::all();
+
+        // $hairstyles = $this->cacheService->getActiveHairstyles();
 
         return view('admin.bookings.index', compact('services', 'hairstyles'));
     }
@@ -445,37 +447,37 @@ class BookingController extends Controller
     /**
      * Get service recommendations based on current booking
      */
-    private function getServiceRecommendations(Booking $booking)
-    {
-        // Get services that are commonly booked together
-        $relatedServices = Service::where('is_active', true)
-            ->where('id', '!=', $booking->service_id)
-            ->whereIn('id', function($query) use ($booking) {
-                $query->select('service_id')
-                      ->from('bookings')
-                      ->whereIn('user_id', function($subQuery) use ($booking) {
-                          $subQuery->select('user_id')
-                                   ->from('bookings')
-                                   ->where('service_id', $booking->service_id);
-                      })
-                      ->groupBy('service_id')
-                      ->havingRaw('COUNT(*) > 1');
-            })
-            ->limit(3)
-            ->get(['id', 'name', 'description', 'price', 'duration']);
+    // private function getServiceRecommendations(Booking $booking)
+    // {
+    //     // Get services that are commonly booked together
+    //     $relatedServices = Service::where('is_active', true)
+    //         ->where('id', '!=', $booking->service_id)
+    //         ->whereIn('id', function($query) use ($booking) {
+    //             $query->select('service_id')
+    //                   ->from('bookings')
+    //                   ->whereIn('user_id', function($subQuery) use ($booking) {
+    //                       $subQuery->select('user_id')
+    //                                ->from('bookings')
+    //                                ->where('service_id', $booking->service_id);
+    //                   })
+    //                   ->groupBy('service_id')
+    //                   ->havingRaw('COUNT(*) > 1');
+    //         })
+    //         ->limit(3)
+    //         ->get(['id', 'name', 'description', 'price', 'duration']);
 
-        // If no related services found, get popular services
-        if ($relatedServices->isEmpty()) {
-            $relatedServices = Service::where('is_active', true)
-                ->where('id', '!=', $booking->service_id)
-                ->withCount('bookings')
-                ->orderBy('bookings_count', 'desc')
-                ->limit(3)
-                ->get(['id', 'name', 'description', 'price', 'duration']);
-        }
+    //     // If no related services found, get popular services
+    //     if ($relatedServices->isEmpty()) {
+    //         $relatedServices = Service::where('is_active', true)
+    //             ->where('id', '!=', $booking->service_id)
+    //             ->withCount('bookings')
+    //             ->orderBy('bookings_count', 'desc')
+    //             ->limit(3)
+    //             ->get(['id', 'name', 'description', 'price', 'duration']);
+    //     }
 
-        return $relatedServices;
-    }
+    //     return $relatedServices;
+    // }
 
     public function edit(Booking $booking)
     {
@@ -487,7 +489,7 @@ class BookingController extends Controller
         }
 
         $services = $this->cacheService->getActiveServices();
-        $hairstyles = $this->cacheService->getActiveHairstyles();
+        // $hairstyles = $this->cacheService->getActiveHairstyles();
 
         return view('bookings.edit', compact('booking', 'services', 'hairstyles'));
     }
@@ -633,68 +635,81 @@ class BookingController extends Controller
 
     
 
-public function completeBooking($bookingId)
-{
-    Log::info('Fungsi completeBooking dipanggil', [
-        'booking_id' => $bookingId,
-        'waktu' => now()->toDateTimeString()
-    ]);
-
-    DB::beginTransaction();
-
-    try {
-        $booking = Booking::findOrFail($bookingId);
-
-        if ($booking->status === 'completed') {
-            Log::warning('Booking sudah completed sebelumnya', [
-                'booking_id' => $booking->id
-            ]);
-            return back()->with('warning', 'Booking sudah selesai sebelumnya.');
-        }
-
-        $booking->status = 'completed';
-        $booking->save();
-
-        Log::info('Status booking diubah menjadi completed', [
-            'booking_id' => $booking->id
+    public function completeBooking($bookingId)
+    {
+        Log::info('Fungsi completeBooking dipanggil', [
+            'booking_id' => $bookingId,
+            'waktu' => now()->toDateTimeString()
         ]);
 
-        $user = $booking->user;
-        $loyalty = $user->loyalty;
+        DB::beginTransaction();
 
-        if (!$loyalty) {
-            Log::info('Loyalty baru dibuat untuk user', ['user_id' => $user->id]);
+        try {
+            $booking = Booking::findOrFail($bookingId);
 
-            Loyalty::create([
-                'user_id' => $user->id,
-                'points' => 1,
-            ]);
-        } else {
-            Log::info('Loyalty ditemukan, point sebelumnya: ' . $loyalty->points, ['user_id' => $user->id]);
-
-            $loyalty->points += 1;
-
-            if ($loyalty->points >= 10) {
-                Log::info('Point mencapai 10, reset ke 0 dan berikan reward (jika ada)', ['user_id' => $user->id]);
-                $loyalty->points = 0;
+            if ($booking->status === 'completed') {
+                Log::warning('Booking sudah completed sebelumnya', [
+                    'booking_id' => $booking->id
+                ]);
+                // return back()->with('warning', 'Booking sudah selesai sebelumnya.');
             }
 
-            $loyalty->save();
+            $booking->status = 'completed';
+            $booking->save();
 
-            Log::info('Loyalty diupdate, point sekarang: ' . $loyalty->points, ['user_id' => $user->id]);
+            Log::info('Status booking diubah menjadi completed', [
+                'booking_id' => $booking->id
+            ]);
+
+            $user = $booking->user;
+
+            // Tambahan log sebelum cek loyalty
+            if ($user->loyalty) {
+                Log::info('User sudah memiliki loyalty', [
+                    'user_id' => $user->id,
+                    'points' => $user->loyalty->points
+                ]);
+            } else {
+                Log::info('User belum memiliki loyalty', [
+                    'user_id' => $user->id
+                ]);
+            }
+
+            $loyalty = $user->loyalty;
+
+            if (!$loyalty) {
+                Log::info('Loyalty baru dibuat untuk user', ['user_id' => $user->id]);
+
+                Loyalty::create([
+                    'user_id' => $user->id,
+                    'points' => 1,
+                ]);
+            } else {
+                Log::info('Loyalty ditemukan, point sebelumnya: ' . $loyalty->points, ['user_id' => $user->id]);
+
+                $loyalty->points = ($loyalty->points ?? 0) + 1;
+
+                if ($loyalty->points >= 10) {
+                    Log::info('Point mencapai 10, reset ke 0 dan berikan reward (jika ada)', ['user_id' => $user->id]);
+                    $loyalty->points = 0;
+                }
+
+                $loyalty->save();
+
+                Log::info('Loyalty diupdate, point sekarang: ' . $loyalty->points, ['user_id' => $user->id]);
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Booking selesai dan loyalty diupdate!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Gagal menyelesaikan booking', [
+                'booking_id' => $bookingId,
+                'error' => $e->getMessage()
+            ]);
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        DB::commit();
-
-        return back()->with('success', 'Booking selesai dan loyalty diupdate!');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Gagal menyelesaikan booking', [
-            'booking_id' => $bookingId,
-            'error' => $e->getMessage()
-        ]);
-        return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
-}
 
 }

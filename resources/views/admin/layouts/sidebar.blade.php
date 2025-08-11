@@ -79,21 +79,5 @@
 
 
         </ul>
-
-        <p class="menu-label">Reports</p>
-        <ul class="menu-list">
-            <li>
-                <a href="reports.html">
-                    <span class="icon"><i class="mdi mdi-file-chart"></i></span>
-                    <span class="menu-item-label">Reports</span>
-                </a>
-            </li>
-            <li>
-                <a href="analytics.html">
-                    <span class="icon"><i class="mdi mdi-chart-bar"></i></span>
-                    <span class="menu-item-label">Analytics</span>
-                </a>
-            </li>
-        </ul>
     </div>
 </aside>

@@ -18,16 +18,19 @@ class ProfileController extends Controller
 {
     $user = $request->user();
 
-    if ($user->hasRole('admin, pegawai')) {
+    if ($user->hasRole(['admin', 'pegawai'])) {
         return view('admin.profile.edit', [
+            'user' => $user,
+        ]);
+    } elseif ($user->hasRole(['pelanggan', 'customer'])) {
+        return view('profile.edit', [
             'user' => $user,
         ]);
     }
 
-    return view('profile.edit', [
-        'user' => $user,
-    ]);
+    abort(403, 'Unauthorized action.');
 }
+
 
 
     /**
