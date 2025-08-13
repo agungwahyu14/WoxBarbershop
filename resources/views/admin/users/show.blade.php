@@ -16,12 +16,12 @@
                     </p>
                 </div>
                 <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                    @if (!$user->hasVerifiedEmail())
+                    {{-- @if (!$user->hasVerifiedEmail())
                         <button type="button" id="resend-verification"
                             class="glass-effect px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all">
                             <i class="fas fa-envelope mr-2"></i>Resend Verification
                         </button>
-                    @endif
+                    @endif --}}
                     <a href="{{ route('users.edit', $user) }}"
                         class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-edit mr-2"></i>Edit User
@@ -155,7 +155,7 @@
                 <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                     <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-900 flex items-center">
-                            <i class="fas fa-shield-alt mr-3 text-blue-600"></i>Roles & Permissions
+                            <i class="fas fa-shield-alt mr-3 text-blue-600"></i>Roles
                         </h3>
                     </div>
                     <div class="p-6">
@@ -190,7 +190,7 @@
                             </div>
 
                             <!-- Permissions -->
-                            <div>
+                            {{-- <div>
                                 <h4 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
                                     <i class="fas fa-key mr-2 text-green-500"></i>All Permissions
                                 </h4>
@@ -210,7 +210,7 @@
                                         </div>
                                     @endforelse
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -299,12 +299,12 @@
                             class="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                             <i class="fas fa-edit mr-2"></i>Edit User Details
                         </a>
-                        @if (!$user->hasVerifiedEmail())
+                        {{-- @if (!$user->hasVerifiedEmail())
                             <button type="button" id="resend-verification-sidebar"
                                 class="w-full inline-flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                                 <i class="fas fa-envelope mr-2"></i>Send Verification Email
                             </button>
-                        @endif
+                        @endif --}}
                         <button type="button" onclick="resetUserPassword()"
                             class="w-full inline-flex items-center justify-center px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
                             <i class="fas fa-key mr-2"></i>Reset Password
@@ -365,31 +365,6 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            // Resend verification email handlers
-            $('#resend-verification, #resend-verification-sidebar').on('click', function() {
-                const button = $(this);
-                const originalText = button.html();
-
-                button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Sending...');
-
-                $.post('{{ route('verification.resend') }}', {
-                        _token: '{{ csrf_token() }}',
-                        user_id: {{ $user->id }}
-                    })
-                    .done(function(response) {
-                        showNotification('success', 'Email Sent',
-                            'Verification email has been sent successfully');
-                    })
-                    .fail(function() {
-                        showNotification('error', 'Error', 'Failed to send verification email');
-                    })
-                    .always(function() {
-                        button.prop('disabled', false).html(originalText);
-                    });
-            });
-        });
-
         function resetUserPassword() {
             Swal.fire({
                 title: 'Reset Password?',

@@ -101,6 +101,19 @@
                         </div>
                     </div>
 
+                    <!-- Password Confirmation Field -->
+                    <div>
+                        <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-blue-600"></i>Confirm Password
+                        </label>
+                        <input type="password" name="password_confirmation" id="password_confirmation"
+                            class="form-control w-full @error('password_confirmation') border-red-500 @enderror"
+                            placeholder="Confirm password" required>
+                        @error('password_confirmation')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Roles Section -->
                     <div class="border-t border-gray-200 pt-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
@@ -126,7 +139,7 @@
                     </div>
 
                     <!-- Permissions Section -->
-                    <div class="border-t border-gray-200 pt-6">
+                    {{-- <div class="border-t border-gray-200 pt-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
                             <i class="fas fa-shield-alt mr-2 text-blue-600"></i>Assign Permissions
                         </h3>
@@ -147,7 +160,7 @@
                         @error('permissions')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <!-- Action Buttons -->
                     <div class="border-t border-gray-200 pt-6">

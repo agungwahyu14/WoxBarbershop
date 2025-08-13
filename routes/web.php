@@ -28,96 +28,96 @@ use App\Http\Controllers\MidtransCallbackController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn () => view('welcome'))->name('home');
 
 
 
 Route::middleware('auth')->group(function () {
 
-    // Dashboard Routes
+    /** ===================== DASHBOARD ===================== */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/beranda', function () {
-        return redirect('/#beranda');
-    })->name('beranda');
-    Route::get('/layanan', function () {
-        return redirect('/#layanan');
-    })->name('layanan');
-    Route::get('/tentang', function () {
-        return redirect('/#tentang');
-    })->name('tentang');
-    Route::get('/produk', function () {
-        return redirect('/#produk');
-    })->name('produk');
-    Route::get('/reservasi', function () {
-        return redirect('/#reservasi');
-    })->name('reservasi');
+    /** ===================== MENU SCROLL ===================== */
+    Route::redirect('/beranda', '/#beranda')->name('beranda');
+    Route::redirect('/layanan', '/#layanan')->name('layanan');
+    Route::redirect('/tentang', '/#tentang')->name('tentang');
+    Route::redirect('/produk', '/#produk')->name('produk');
+    Route::redirect('/reservasi', '/#reservasi')->name('reservasi');
 
-    // End of Dashboard Routes
-
-    // Recccommendation Routes
-     Route::resource('rekomendasi', RecommendationController::class);
-    
-    Route::get('/transaction', [PaymentController::class, 'index'])->name('payment.index');
-    Route::get('/transaction/{orderId}', [PaymentController::class, 'show'])->name('payment.show');
-    Route::get('/transaction/va/{orderId}', [PaymentController::class, 'showVA']);
-    Route::get('/transaction/download/{orderId}', [PaymentController::class, 'downloadReceipt'])->name('transaction.download');
-    Route::get('/payment/{id}', [PaymentController::class, 'pay'])->name('payment.pay');
-
-
-
-
-
-
-    // Profile Routes
+    /** ===================== PROFILE ===================== */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
 
-    Route::resource('bookings', BookingController::class);
-    Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.updateStatus');
-   
+    /*
+    |--------------------------------------------------------------------------
+    | Pelanggan Routes
+    |--------------------------------------------------------------------------
+    | Role: pelanggan
+    */
+    Route::middleware('role:pelanggan')->group(function () {
+        // Booking
+        Route::resource('bookings', BookingController::class);
+      
+
+        // Payment
+        Route::get('/transaction', [PaymentController::class, 'index'])->name('payment.index');
+        Route::get('/transaction/{orderId}', [PaymentController::class, 'show'])->name('payment.show');
+        Route::get('/transaction/va/{orderId}', [PaymentController::class, 'showVA']);
+        Route::get('/transaction/download/{orderId}', [PaymentController::class, 'downloadReceipt'])->name('transaction.download');
+        Route::get('/payment/{id}', [PaymentController::class, 'pay'])->name('payment.pay');
+
+        // Recommendation
+        Route::resource('rekomendasi', RecommendationController::class);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pegawai & Admin Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin')->middleware(['role:admin|pegawai'])->group(function () {
+        Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
+        Route::resource('bookings', BookingController::class);
+        Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])
+            ->name('bookings.updateStatus');
+
+        // Common resources for pegawai & admin
+        Route::resource('services', ServiceController::class);
+        Route::resource('hairstyles', HairstyleController::class);
+        Route::resource('transactions', TransactionController::class);
+        Route::resource('loyalties', LoyaltyController::class);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Only Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin')->middleware('role:admin')->group(function () {
+        Route::resource('roles', RoleController::class);
+        // Route::resource('permissions', PermissionController::class);
+        Route::resource('users', UserController::class);
+
+        // User management extras
+        Route::post('/users/{user}/resend-verification', [UserController::class, 'resendVerification'])
+            ->name('admin.users.resend-verification');
+        Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])
+            ->name('admin.users.reset-password');
+        Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
+            ->name('admin.users.toggle-status');
+        Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Verification Resend
+    |--------------------------------------------------------------------------
+    */
+
 });
-
-Route::prefix('admin')->middleware(['auth', 'role:admin|pegawai'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-
-    Route::resource('roles', RoleController::class);
-    Route::resource('permissions', PermissionController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('services', ServiceController::class);
-    Route::resource('hairstyles', HairstyleController::class);
-    Route::resource('transactions', TransactionController::class);
-    Route::resource('loyalties', LoyaltyController::class);
-
-
-    // Enhanced User Management Routes
-    Route::post('/users/{user}/resend-verification', [UserController::class, 'resendVerification'])->name('admin.users.resend-verification');
-    Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.reset-password');
-    Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('admin.users.toggle-status');
-    Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
-
-
-
-    // Tambahkan route admin lainnya di sini
-});
-
-// Verification Routes (outside admin group)
-Route::post('/verification/resend', function(Request $request) {
-    $user = \App\Models\User::findOrFail($request->user_id);
-    if ($user->hasVerifiedEmail()) {
-        return response()->json(['success' => false, 'message' => 'Email already verified']);
-    }
-    $user->sendEmailVerificationNotification();
-    return response()->json(['success' => true, 'message' => 'Verification email sent']);
-})->name('verification.resend')->middleware('auth');
 
 require __DIR__ . '/auth.php';
 
-// Midtrans notification callback (no auth required)
-Route::post('/payment/notification', [PaymentController::class, 'notification'])->name('payment.notification');
+
+

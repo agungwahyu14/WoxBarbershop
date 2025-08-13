@@ -44,9 +44,9 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
                                 Roles
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            {{-- <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
                                 Permissions
-                            </th>
+                            </th> --}}
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
                                 Status
                             </th>
@@ -93,38 +93,38 @@
 
                     },
 
-                    {
-                        data: 'permissions',
-                        name: 'permissions',
-                        className: 'px-6 py-4',
-                        render: function(data, type, row) {
-                            if (type === 'display') {
-                                if (data && data.length > 0) {
-                                    const perms = data.split(', ');
-                                    let html = '<div class="flex flex-wrap gap-1">';
+                    // {
+                    //     data: 'permissions',
+                    //     name: 'permissions',
+                    //     className: 'px-6 py-4',
+                    //     render: function(data, type, row) {
+                    //         if (type === 'display') {
+                    //             if (data && data.length > 0) {
+                    //                 const perms = data.split(', ');
+                    //                 let html = '<div class="flex flex-wrap gap-1">';
 
-                                    // Show first 3 permissions as badges
-                                    const displayPerms = perms.slice(0, 3);
-                                    displayPerms.forEach(perm => {
-                                        html +=
-                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 capitalize">${perm.trim()}</span>`;
-                                    });
+                    //                 // Show first 3 permissions as badges
+                    //                 const displayPerms = perms.slice(0, 3);
+                    //                 displayPerms.forEach(perm => {
+                    //                     html +=
+                    //                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 capitalize">${perm.trim()}</span>`;
+                    //                 });
 
-                                    // Show "+X more" if there are more permissions
-                                    if (perms.length > 3) {
-                                        html +=
-                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="${data}">+${perms.length - 3} more</span>`;
-                                    }
+                    //                 // Show "+X more" if there are more permissions
+                    //                 if (perms.length > 3) {
+                    //                     html +=
+                    //                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="${data}">+${perms.length - 3} more</span>`;
+                    //                 }
 
-                                    html += '</div>';
-                                    return html;
-                                } else {
-                                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">No permissions</span>';
-                                }
-                            }
-                            return data;
-                        }
-                    },
+                    //                 html += '</div>';
+                    //                 return html;
+                    //             } else {
+                    //                 return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">No permissions</span>';
+                    //             }
+                    //         }
+                    //         return data;
+                    //     }
+                    // },
                     {
                         data: 'status',
                         name: 'status',

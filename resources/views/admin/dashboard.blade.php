@@ -37,13 +37,13 @@
     <section class="section main-section">
         <!-- Stats Cards -->
         <div class="grid gap-6 grid-cols-1 md:grid-cols-4 mb-8">
-            <!-- Total Customers -->
+            <!-- Total Pelanggan -->
             <div class="card card-hover transition-all duration-300 bg-gradient-to-br from-blue-500 to-blue-600 text-white">
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class="text-blue-100 text-sm font-medium mb-2">Total Customers</h3>
-                            <h1 class="text-3xl font-bold">{{ \App\Models\User::role('customer')->count() }}</h1>
+                            <h3 class="text-blue-100 text-sm font-medium mb-2">Total Pelanggan</h3>
+                            <h1 class="text-3xl font-bold">{{ \App\Models\User::role('pelanggan')->count() }}</h1>
                             <p class="text-blue-200 text-xs mt-1">+12% dari bulan lalu</p>
                         </div>
                         <div class="bg-blue-400 bg-opacity-30 p-3 rounded-full">
@@ -308,7 +308,7 @@
                     <a href="{{ route('users.index') }}"
                         class="bg-green-500 hover:bg-green-600 text-white text-center py-3 px-4 rounded-lg transition-all duration-200 hover:transform hover:scale-105">
                         <i class="mdi mdi-account-plus mr-2"></i>
-                        Add Customer
+                        Add Pelanggan
                     </a>
                     <a href="{{ route('services.index') }}"
                         class="bg-purple-500 hover:bg-purple-600 text-white text-center py-3 px-4 rounded-lg transition-all duration-200 hover:transform hover:scale-105">

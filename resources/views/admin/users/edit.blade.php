@@ -116,6 +116,21 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <div>
+                            <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-lock mr-2 text-blue-600"></i>Confirm Password
+                            </label>
+                            <input type="password" name="password_confirmation" id="password_confirmation"
+                                class="form-control w-full @error('password_confirmation') border-red-500 @enderror"
+                                placeholder="Confirm password">
+                            <p class="mt-1 text-xs text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i>Leave empty to keep the current password
+                            </p>
+                            @error('password_confirmation')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <!-- Account Status Section -->
@@ -171,7 +186,7 @@
                                     @endforelse
                                 </div>
                             </div>
-                            <div class="bg-green-50 p-4 rounded-lg">
+                            {{-- <div class="bg-green-50 p-4 rounded-lg">
                                 <h4 class="font-medium text-green-900 mb-2">Current Permissions</h4>
                                 <div class="flex flex-wrap gap-2">
                                     @forelse($user->getAllPermissions()->take(5) as $permission)
@@ -189,7 +204,7 @@
                                         </span>
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
@@ -218,7 +233,7 @@
                         @enderror
                     </div>
 
-                    <!-- Permissions Section -->
+                    {{-- <!-- Permissions Section -->
                     <div class="border-t border-gray-200 pt-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
                             <i class="fas fa-shield-alt mr-2 text-blue-600"></i>Assign Permissions
@@ -227,10 +242,10 @@
                             @forelse($permissions as $permission)
                                 <label
                                     class="flex items-center p-3 border border-gray-300 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors cursor-pointer
-                                    {{ $user->hasPermissionTo($permission->name) ? 'border-green-500 bg-green-50' : '' }}">
+        {{ $user->hasPermissionTo($permission->name) ? 'border-green-500 bg-green-50' : '' }}">
                                     <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
                                         class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                                        {{ in_array($permission->id, old('permissions', $user->getDirectPermissions()->pluck('id')->toArray())) ? 'checked' : '' }}>
+                                        {{ in_array($permission->id, old('permissions', $user->getAllPermissions()->pluck('id')->toArray())) ? 'checked' : '' }}>
                                     <span
                                         class="ml-3 text-sm font-medium text-gray-700 capitalize">{{ str_replace('_', ' ', $permission->name) }}</span>
                                 </label>
@@ -241,7 +256,7 @@
                         @error('permissions')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <!-- Action Buttons -->
                     <div class="border-t border-gray-200 pt-6">
@@ -257,12 +272,12 @@
                                 </a>
                             </div>
                             <div class="flex space-x-4">
-                                @if (!$user->hasVerifiedEmail())
+                                {{-- @if (!$user->hasVerifiedEmail())
                                     <button type="button" id="resend-verification"
                                         class="inline-flex items-center px-6 py-3 border border-blue-300 shadow-sm text-sm font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                         <i class="fas fa-envelope mr-2"></i>Resend Verification
                                     </button>
-                                @endif
+                                @endif --}}
                                 <button type="submit"
                                     class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                     <i class="fas fa-save mr-2"></i>Update User
@@ -291,9 +306,9 @@
                 roles: $('input[name="roles[]"]:checked').map(function() {
                     return this.value;
                 }).get(),
-                permissions: $('input[name="permissions[]"]:checked').map(function() {
-                    return this.value;
-                }).get()
+                // permissions: $('input[name="permissions[]"]:checked').map(function() {
+                //     return this.value;
+                // }).get()
             };
 
             // Real-time validation
@@ -367,28 +382,7 @@
             $('input, select, textarea').on('input change', detectChanges);
             detectChanges(); // Initial check
 
-            // Resend verification email
-            $('#resend-verification').on('click', function() {
-                const button = $(this);
-                const originalText = button.html();
-
-                button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Sending...');
-
-                $.post('{{ route('verification.resend') }}', {
-                        _token: '{{ csrf_token() }}',
-                        user_id: {{ $user->id }}
-                    })
-                    .done(function(response) {
-                        showNotification('success', 'Email Sent',
-                            'Verification email has been sent successfully');
-                    })
-                    .fail(function() {
-                        showNotification('error', 'Error', 'Failed to send verification email');
-                    })
-                    .always(function() {
-                        button.prop('disabled', false).html(originalText);
-                    });
-            });
+            
 
             // Form submission
             form.on('submit', function(e) {

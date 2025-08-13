@@ -111,24 +111,24 @@ class UserController extends Controller
                         </span>';
                     })->implode(' ');
                 })
-                ->editColumn('permissions', function ($row) {
-                    $allPermissions = $row->getAllPermissions();
+                // ->editColumn('permissions', function ($row) {
+                //     $allPermissions = $row->getAllPermissions();
                     
-                    if ($allPermissions->isEmpty()) {
-                        return '<span class="text-gray-500 text-sm">No permissions</span>';
-                    }
+                //     if ($allPermissions->isEmpty()) {
+                //         return '<span class="text-gray-500 text-sm">No permissions</span>';
+                //     }
                     
-                    $count = $allPermissions->count();
-                    $first = $allPermissions->first()->name;
+                //     $count = $allPermissions->count();
+                //     $first = $allPermissions->first()->name;
                     
-                    return '<div class="flex items-center space-x-2">
-                        <i class="fas fa-shield-alt text-purple-600"></i>
-                        <span class="text-sm text-gray-700">' . 
-                        str_replace('_', ' ', ucfirst($first)) . 
-                        ($count > 1 ? ' +' . ($count - 1) . ' more' : '') . 
-                        '</span>
-                    </div>';
-                })
+                //     return '<div class="flex items-center space-x-2">
+                //         <i class="fas fa-shield-alt text-purple-600"></i>
+                //         <span class="text-sm text-gray-700">' . 
+                //         str_replace('_', ' ', ucfirst($first)) . 
+                //         ($count > 1 ? ' +' . ($count - 1) . ' more' : '') . 
+                //         '</span>
+                //     </div>';
+                // })
                 ->editColumn('created_at', function($row) {
                     return '<div class="text-sm">
                         <div class="font-medium text-gray-900 dark:text-white">' . $row->created_at->format('M d, Y') . '</div>
@@ -216,7 +216,7 @@ class UserController extends Controller
                     
                     return $actions;
                 })
-                ->rawColumns(['name', 'no_telepon', 'roles', 'permissions', 'created_at', 'status', 'stats', 'action'])
+                ->rawColumns(['name', 'no_telepon', 'roles', 'created_at', 'status', 'stats', 'action'])
                 ->make(true);
         }
 
@@ -255,7 +255,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => ['required', 'confirmed'],
             'no_telepon' => 'required|string|max:20',
             'roles' => 'required|array|min:1',
             'roles.*' => 'exists:roles,id',
@@ -271,7 +271,7 @@ class UserController extends Controller
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
+                'password' => Hash::make($request->password),
                 'no_telepon' => $validated['no_telepon'],
                 'email_verified_at' => $request->boolean('email_verified') ? now() : null,
                 'is_active' => $request->boolean('is_active', true),
@@ -283,16 +283,16 @@ class UserController extends Controller
                 $user->assignRole($roles);
             }
 
-            // Assign direct permissions
-            if (!empty($validated['permissions'])) {
-                $permissions = Permission::whereIn('id', $validated['permissions'])->get();
-                $user->givePermissionTo($permissions);
-            }
+            // // Assign direct permissions
+            // if (!empty($validated['permissions'])) {
+            //     $permissions = Permission::whereIn('id', $validated['permissions'])->get();
+            //     $user->givePermissionTo($permissions);
+            // }
 
             // Send verification email if not manually verified
-            if (!$request->boolean('email_verified')) {
-                event(new Registered($user));
-            }
+            // if (!$request->boolean('email_verified')) {
+            //     event(new Registered($user));
+            // }
 
             DB::commit();
 
@@ -318,6 +318,11 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        Log::info('Update function called', [
+            'user_id' => $user->id,
+            'request_data' => $request->all()
+        ]);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -332,8 +337,13 @@ class UserController extends Controller
         ]);
 
         DB::beginTransaction();
-        
+
         try {
+            Log::info('Updating user details', [
+                'user_id' => $user->id,
+                'validated_data' => $validated
+            ]);
+
             $user->update([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -343,6 +353,7 @@ class UserController extends Controller
 
             // Update password if provided
             if ($request->filled('password')) {
+                Log::info('Updating user password', ['user_id' => $user->id]);
                 $user->update([
                     'password' => Hash::make($validated['password'])
                 ]);
@@ -350,37 +361,54 @@ class UserController extends Controller
 
             // Update email verification status
             if ($request->boolean('email_verified') && !$user->hasVerifiedEmail()) {
+                Log::info('Marking email as verified', ['user_id' => $user->id]);
                 $user->markEmailAsVerified();
             } elseif (!$request->boolean('email_verified') && $user->hasVerifiedEmail()) {
+                Log::info('Unmarking email as verified', ['user_id' => $user->id]);
                 $user->email_verified_at = null;
                 $user->save();
             }
 
             // Sync roles
             if (!empty($validated['roles'])) {
+                Log::info('Syncing roles', [
+                    'user_id' => $user->id,
+                    'roles' => $validated['roles']
+                ]);
                 $roles = Role::whereIn('id', $validated['roles'])->get();
                 $user->syncRoles($roles);
             } else {
+                Log::info('Removing all roles', ['user_id' => $user->id]);
                 $user->syncRoles([]);
             }
 
-            // Sync direct permissions
-            if (!empty($validated['permissions'])) {
-                $permissions = Permission::whereIn('id', $validated['permissions'])->get();
-                $user->syncPermissions($permissions);
-            } else {
-                $user->syncPermissions([]);
-            }
+            // // Sync permissions
+            // if (!empty($validated['permissions'])) {
+            //     Log::info('Syncing permissions', [
+            //         'user_id' => $user->id,
+            //         'permissions' => $validated['permissions']
+            //     ]);
+            //     $permissions = Permission::whereIn('id', $validated['permissions'])->get();
+            //     $user->syncPermissions($permissions);
+            // } else {
+            //     Log::info('Removing all permissions', ['user_id' => $user->id]);
+            //     $user->syncPermissions([]);
+            // }
 
             DB::commit();
+
+            Log::info('User updated successfully', ['user_id' => $user->id]);
 
             return redirect()->route('users.index')
                            ->with('success', 'User updated successfully!');
                            
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('User update failed: ' . $e->getMessage());
-            
+            Log::error('User update failed', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+
             return back()->withInput()
                         ->with('error', 'Failed to update user. Please try again.');
         }
@@ -557,4 +585,5 @@ class UserController extends Controller
             ], 500);
         }
     }
+
 }

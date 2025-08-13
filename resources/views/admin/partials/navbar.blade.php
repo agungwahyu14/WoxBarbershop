@@ -26,12 +26,14 @@
                     <!-- Form Logout Breeze -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <a href="{{ route('logout') }}" class="navbar-item"
-                            onclick="event.preventDefault(); this.closest('form').submit();">
+                        <button type="submit" class="navbar-item"
+                            style="background: none; border: none; cursor: pointer;">
                             <span class="icon"><i class="mdi mdi-logout"></i></span>
                             <span>Log Out</span>
-                        </a>
+                        </button>
                     </form>
+
+
                 </div>
             </div>
         </div>
