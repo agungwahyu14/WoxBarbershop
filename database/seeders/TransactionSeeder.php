@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Transaction;
 use App\Models\Booking;
-use App\Models\User;
-use App\Models\Service;
+use App\Models\Transaction;
+use Illuminate\Database\Seeder;
 
 class TransactionSeeder extends Seeder
 {
@@ -20,6 +17,7 @@ class TransactionSeeder extends Seeder
 
         if ($bookings->isEmpty()) {
             $this->command->warn('Please run BookingSeeder first');
+
             return;
         }
 
@@ -29,7 +27,7 @@ class TransactionSeeder extends Seeder
         foreach ($bookings as $booking) {
             // Create a transaction for each booking
             $paymentMethod = $paymentMethods[array_rand($paymentMethods)];
-            
+
             // Determine payment status based on booking status
             $paymentStatus = match ($booking->status) {
                 'completed' => 'settlement',
@@ -58,6 +56,6 @@ class TransactionSeeder extends Seeder
             Transaction::insert($batch);
         }
 
-        $this->command->info('Created ' . count($transactions) . ' transactions');
+        $this->command->info('Created '.count($transactions).' transactions');
     }
 }

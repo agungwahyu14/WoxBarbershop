@@ -10,13 +10,12 @@ class PairwiseComparison extends Model
     use HasFactory;
 
     public function criterion1()
-{
-    return $this->belongsTo(Criteria::class, 'criterion_id_1');
-}
+    {
+        return $this->belongsTo(Criteria::class, 'criterion_id_1');
+    }
 
-public function criterion2()
-{
-    return $this->belongsTo(Criteria::class, 'criterion_id_2');
-}
-
+    public function criterion2()
+    {
+        return $this->belongsTo(Criteria::class, 'criterion_id_2');
+    }
 }

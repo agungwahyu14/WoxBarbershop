@@ -14,9 +14,9 @@ class ServiceRequest extends FormRequest
     public function rules(): array
     {
         $serviceId = $this->route('service');
-        
+
         return [
-            'name' => 'required|string|min:3|max:100|unique:services,name,' . $serviceId,
+            'name' => 'required|string|min:3|max:100|unique:services,name,'.$serviceId,
             'description' => 'required|string|min:10|max:1000',
             'price' => 'required|numeric|min:0|max:1000000',
             'duration' => 'required|integer|min:15|max:300', // 15 minutes to 5 hours

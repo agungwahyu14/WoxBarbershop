@@ -36,7 +36,7 @@ return new class extends Migration
                 'total_redeemed',
                 'last_transaction_date',
                 'tier',
-                'tier_benefits'
+                'tier_benefits',
             ]);
         });
     }

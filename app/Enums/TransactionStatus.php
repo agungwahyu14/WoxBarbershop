@@ -1,5 +1,7 @@
 <?php
+
 // app/Enums/TransactionStatus.php
+
 namespace App\Enums;
 
 enum TransactionStatus: string
@@ -9,7 +11,7 @@ enum TransactionStatus: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::PENDING => 'Pending',
             self::SUCCESS => 'Success',
         };
@@ -17,7 +19,7 @@ enum TransactionStatus: string
 
     public function color(): string
     {
-        return match($this) {
+        return match ($this) {
             self::PENDING => 'bg-yellow-100 text-yellow-800',
             self::SUCCESS => 'bg-green-100 text-green-800',
         };

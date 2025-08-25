@@ -14,13 +14,12 @@ class Criteria extends Model
     protected $fillable = ['name'];
 
     public function comparisonsFrom()
-{
-    return $this->hasMany(PairwiseComparison::class, 'criterion_id_1');
-}
+    {
+        return $this->hasMany(PairwiseComparison::class, 'criterion_id_1');
+    }
 
-public function comparisonsTo()
-{
-    return $this->hasMany(PairwiseComparison::class, 'criterion_id_2');
-}
-    
+    public function comparisonsTo()
+    {
+        return $this->hasMany(PairwiseComparison::class, 'criterion_id_2');
+    }
 }

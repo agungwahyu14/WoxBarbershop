@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('hairstyles', function (Blueprint $table) {
-            if (!Schema::hasColumn('hairstyles', 'is_active')) {
+            if (! Schema::hasColumn('hairstyles', 'is_active')) {
                 $table->boolean('is_active')->default(true)->after('image');
             }
         });

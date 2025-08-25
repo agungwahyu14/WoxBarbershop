@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Booking;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Services\MidtransService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Mockery;
+use Tests\TestCase;
 
 class PaymentTest extends TestCase
 {
@@ -18,12 +18,12 @@ class PaymentTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
         $this->booking = Booking::factory()->create([
             'user_id' => $this->user->id,
             'total_price' => 50000,
-            'payment_status' => 'unpaid'
+            'payment_status' => 'unpaid',
         ]);
     }
 
@@ -35,26 +35,26 @@ class PaymentTest extends TestCase
         $mockResponse = [
             'success' => true,
             'snap_token' => 'fake-snap-token',
-            'redirect_url' => 'https://app.sandbox.midtrans.com/snap/v2/vtweb/fake-token'
+            'redirect_url' => 'https://app.sandbox.midtrans.com/snap/v2/vtweb/fake-token',
         ];
 
         $mockService = Mockery::mock(MidtransService::class);
         $mockService->shouldReceive('createSnapToken')
-                   ->once()
-                   ->with($this->booking)
-                   ->andReturn($mockResponse);
+            ->once()
+            ->with($this->booking)
+            ->andReturn($mockResponse);
 
         $this->app->instance(MidtransService::class, $mockService);
 
         $response = $this->post(route('payment.create'), [
-            'booking_id' => $this->booking->id
+            'booking_id' => $this->booking->id,
         ]);
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'success',
             'snap_token',
-            'redirect_url'
+            'redirect_url',
         ]);
     }
 
@@ -62,27 +62,27 @@ class PaymentTest extends TestCase
     {
         $transaction = Transaction::factory()->create([
             'booking_id' => $this->booking->id,
-            'order_id' => 'BKG-' . $this->booking->id . '-' . time(),
-            'status' => 'pending'
+            'order_id' => 'BKG-'.$this->booking->id.'-'.time(),
+            'status' => 'pending',
         ]);
 
         $notification = [
             'order_id' => $transaction->order_id,
             'status_code' => '200',
             'gross_amount' => '50000.00',
-            'signature_key' => hash('sha512', $transaction->order_id . '200' . '50000.00' . config('midtrans.server_key')),
+            'signature_key' => hash('sha512', $transaction->order_id.'200'.'50000.00'.config('midtrans.server_key')),
             'transaction_status' => 'settlement',
             'payment_type' => 'bank_transfer',
-            'transaction_id' => 'test-transaction-id'
+            'transaction_id' => 'test-transaction-id',
         ];
 
         $response = $this->post('/api/midtrans/notification', $notification);
 
         $response->assertStatus(200);
-        
+
         $transaction->refresh();
         $this->assertEquals('paid', $transaction->status);
-        
+
         $this->booking->refresh();
         $this->assertEquals('paid', $this->booking->payment_status);
     }
@@ -91,8 +91,8 @@ class PaymentTest extends TestCase
     {
         $transaction = Transaction::factory()->create([
             'booking_id' => $this->booking->id,
-            'order_id' => 'BKG-' . $this->booking->id . '-' . time(),
-            'status' => 'pending'
+            'order_id' => 'BKG-'.$this->booking->id.'-'.time(),
+            'status' => 'pending',
         ]);
 
         $notification = [
@@ -101,13 +101,13 @@ class PaymentTest extends TestCase
             'gross_amount' => '50000.00',
             'signature_key' => 'invalid-signature',
             'transaction_status' => 'settlement',
-            'payment_type' => 'bank_transfer'
+            'payment_type' => 'bank_transfer',
         ];
 
         $response = $this->post('/api/midtrans/notification', $notification);
 
         $response->assertStatus(400);
-        
+
         $transaction->refresh();
         $this->assertEquals('pending', $transaction->status);
     }
@@ -116,13 +116,13 @@ class PaymentTest extends TestCase
     {
         $transaction = Transaction::factory()->create([
             'booking_id' => $this->booking->id,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         // Test successful payment
         $transaction->update(['status' => 'paid']);
         $this->booking->refresh();
-        
+
         // Booking should be updated
         $this->assertEquals('paid', $this->booking->payment_status);
     }
@@ -132,16 +132,16 @@ class PaymentTest extends TestCase
         $transaction = Transaction::factory()->create([
             'booking_id' => $this->booking->id,
             'status' => 'pending',
-            'created_at' => now()->subHours(25) // Expired
+            'created_at' => now()->subHours(25), // Expired
         ]);
 
         $response = $this->post('/api/payment/check-expired');
 
         $response->assertStatus(200);
-        
+
         $transaction->refresh();
         $this->booking->refresh();
-        
+
         $this->assertEquals('failed', $transaction->status);
         $this->assertEquals('failed', $this->booking->payment_status);
     }
@@ -153,11 +153,11 @@ class PaymentTest extends TestCase
         // Test minimum amount
         $smallBooking = Booking::factory()->create([
             'user_id' => $this->user->id,
-            'total_price' => 5000 // Below minimum
+            'total_price' => 5000, // Below minimum
         ]);
 
         $response = $this->post(route('payment.create'), [
-            'booking_id' => $smallBooking->id
+            'booking_id' => $smallBooking->id,
         ]);
 
         $response->assertStatus(422);
@@ -171,17 +171,17 @@ class PaymentTest extends TestCase
         // Create existing transaction
         Transaction::factory()->create([
             'booking_id' => $this->booking->id,
-            'status' => 'paid'
+            'status' => 'paid',
         ]);
 
         $response = $this->post(route('payment.create'), [
-            'booking_id' => $this->booking->id
+            'booking_id' => $this->booking->id,
         ]);
 
         $response->assertStatus(422);
         $response->assertJson([
             'success' => false,
-            'message' => 'Booking sudah dibayar'
+            'message' => 'Booking sudah dibayar',
         ]);
     }
 

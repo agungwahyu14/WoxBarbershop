@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -15,7 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Create admin user
-        if (!User::where('email', 'admin@woxbarbershop.com')->exists()) {
+        if (! User::where('email', 'admin@woxbarbershop.com')->exists()) {
             $admin = User::create([
                 'name' => 'Super Admin',
                 'email' => 'admin@woxbarbershop.com',
@@ -27,7 +26,7 @@ class UserSeeder extends Seeder
         }
 
         // Create staff/pegawai users
-        if (!User::where('email', 'ahmad@woxbarbershop.com')->exists()) {
+        if (! User::where('email', 'ahmad@woxbarbershop.com')->exists()) {
             $staff1 = User::create([
                 'name' => 'Barber Ahmad',
                 'email' => 'ahmad@woxbarbershop.com',
@@ -38,7 +37,7 @@ class UserSeeder extends Seeder
             $staff1->assignRole('pegawai');
         }
 
-        if (!User::where('email', 'budi@woxbarbershop.com')->exists()) {
+        if (! User::where('email', 'budi@woxbarbershop.com')->exists()) {
             $staff2 = User::create([
                 'name' => 'Barber Budi',
                 'email' => 'budi@woxbarbershop.com',
@@ -110,11 +109,11 @@ class UserSeeder extends Seeder
                 'email' => 'jennifer@example.com',
                 'no_telepon' => '089876543219',
                 'password' => Hash::make('customer123'),
-            ]
+            ],
         ];
 
         foreach ($customers as $customerData) {
-            if (!User::where('email', $customerData['email'])->exists()) {
+            if (! User::where('email', $customerData['email'])->exists()) {
                 $customerData['email_verified_at'] = now();
                 $customer = User::create($customerData);
                 $customer->assignRole('customer');

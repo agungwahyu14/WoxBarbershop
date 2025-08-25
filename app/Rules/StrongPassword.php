@@ -7,10 +7,15 @@ use Illuminate\Contracts\Validation\Rule;
 class StrongPassword implements Rule
 {
     protected $minLength;
+
     protected $requireUppercase;
+
     protected $requireLowercase;
+
     protected $requireNumbers;
+
     protected $requireSpecialChars;
+
     protected $errors = [];
 
     public function __construct(
@@ -37,23 +42,23 @@ class StrongPassword implements Rule
         }
 
         // Check uppercase letter
-        if ($this->requireUppercase && !preg_match('/[A-Z]/', $value)) {
-            $this->errors[] = "minimal 1 huruf besar";
+        if ($this->requireUppercase && ! preg_match('/[A-Z]/', $value)) {
+            $this->errors[] = 'minimal 1 huruf besar';
         }
 
         // Check lowercase letter
-        if ($this->requireLowercase && !preg_match('/[a-z]/', $value)) {
-            $this->errors[] = "minimal 1 huruf kecil";
+        if ($this->requireLowercase && ! preg_match('/[a-z]/', $value)) {
+            $this->errors[] = 'minimal 1 huruf kecil';
         }
 
         // Check numbers
-        if ($this->requireNumbers && !preg_match('/[0-9]/', $value)) {
-            $this->errors[] = "minimal 1 angka";
+        if ($this->requireNumbers && ! preg_match('/[0-9]/', $value)) {
+            $this->errors[] = 'minimal 1 angka';
         }
 
         // Check special characters
-        if ($this->requireSpecialChars && !preg_match('/[^A-Za-z0-9]/', $value)) {
-            $this->errors[] = "minimal 1 karakter khusus (!@#$%^&*)";
+        if ($this->requireSpecialChars && ! preg_match('/[^A-Za-z0-9]/', $value)) {
+            $this->errors[] = 'minimal 1 karakter khusus (!@#$%^&*)';
         }
 
         // Check for common weak patterns
@@ -65,7 +70,7 @@ class StrongPassword implements Rule
 
         foreach ($weakPatterns as $pattern) {
             if (preg_match($pattern, $value)) {
-                $this->errors[] = "tidak boleh menggunakan pola yang mudah ditebak";
+                $this->errors[] = 'tidak boleh menggunakan pola yang mudah ditebak';
                 break;
             }
         }
@@ -76,6 +81,7 @@ class StrongPassword implements Rule
     public function message(): string
     {
         $baseMessage = 'Password harus memenuhi kriteria: ';
-        return $baseMessage . implode(', ', $this->errors) . '.';
+
+        return $baseMessage.implode(', ', $this->errors).'.';
     }
 }

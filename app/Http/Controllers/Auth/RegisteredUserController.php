@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,28 +27,29 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-        public function store(Request $request): RedirectResponse
-        {
-            $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-                'no_telepon' => ['required', 'string', 'max:15', 'unique:' . User::class], // Tambahkan validasi untuk no_telepon
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            ]);
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'no_telepon' => ['required', 'string', 'max:15', 'unique:'.User::class], // Tambahkan validasi untuk no_telepon
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'no_telepon' => $request->no_telepon,
-                'password' => Hash::make($request->password),
-            ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'no_telepon' => $request->no_telepon,
+            'password' => Hash::make($request->password),
+        ]);
 
-            $user->assignRole('pelanggan');
+        $user->assignRole('pelanggan');
 
-            event(new Registered($user));
+        event(new Registered($user));
 
-            Auth::login($user);
-            // $request->session()->regenerate();
-            return redirect()->route('verification.notice');
-        }
+        Auth::login($user);
+
+        // $request->session()->regenerate();
+        return redirect()->route('verification.notice');
+    }
 }

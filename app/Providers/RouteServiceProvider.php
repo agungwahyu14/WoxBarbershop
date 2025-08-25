@@ -21,13 +21,9 @@ class RouteServiceProvider extends ServiceProvider
 
     public static function home()
     {
-        if (auth()->check()) {
-            if (auth()->user() && auth()->user()->hasRole(['admin', 'pegawai'])) {
-                return '/admin/dashboard';
-            }
-        }
-        return '/dashboard';
+        return route('dashboard'); // route default
     }
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */

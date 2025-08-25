@@ -12,19 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('hairstyles', function (Blueprint $table) {
-            if (!Schema::hasColumn('hairstyles', 'name')) {
+            if (! Schema::hasColumn('hairstyles', 'name')) {
                 $table->string('name')->after('id');
             }
-            if (!Schema::hasColumn('hairstyles', 'description')) {
+            if (! Schema::hasColumn('hairstyles', 'description')) {
                 $table->text('description')->nullable()->after('name');
             }
-            if (!Schema::hasColumn('hairstyles', 'bentuk_kepala')) {
+            if (! Schema::hasColumn('hairstyles', 'bentuk_kepala')) {
                 $table->string('bentuk_kepala')->after('description');
             }
-            if (!Schema::hasColumn('hairstyles', 'tipe_rambut')) {
+            if (! Schema::hasColumn('hairstyles', 'tipe_rambut')) {
                 $table->string('tipe_rambut')->after('bentuk_kepala');
             }
-            if (!Schema::hasColumn('hairstyles', 'image')) {
+            if (! Schema::hasColumn('hairstyles', 'image')) {
                 $table->string('image')->nullable()->after('tipe_rambut');
             }
         });

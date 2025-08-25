@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\Booking;
 use App\Models\Loyalty;
 use App\Models\User;
-use App\Models\Booking;
+use Illuminate\Database\Seeder;
 
 class LoyaltySeeder extends Seeder
 {
@@ -19,6 +18,7 @@ class LoyaltySeeder extends Seeder
 
         if ($customers->isEmpty()) {
             $this->command->warn('Please run UserSeeder first');
+
             return;
         }
 
@@ -50,7 +50,7 @@ class LoyaltySeeder extends Seeder
             $tierBenefits = [
                 'discount_percentage' => 0,
                 'free_services' => 0,
-                'priority_booking' => false
+                'priority_booking' => false,
             ];
 
             if ($totalEarned >= 1000) {
@@ -58,25 +58,25 @@ class LoyaltySeeder extends Seeder
                 $tierBenefits = [
                     'discount_percentage' => 15,
                     'free_services' => 2,
-                    'priority_booking' => true
+                    'priority_booking' => true,
                 ];
             } elseif ($totalEarned >= 500) {
                 $tier = 'gold';
                 $tierBenefits = [
                     'discount_percentage' => 10,
                     'free_services' => 1,
-                    'priority_booking' => true
+                    'priority_booking' => true,
                 ];
             } elseif ($totalEarned >= 250) {
                 $tier = 'silver';
                 $tierBenefits = [
                     'discount_percentage' => 5,
                     'free_services' => 0,
-                    'priority_booking' => false
+                    'priority_booking' => false,
                 ];
             }
 
-            $lastTransactionDate = $completedBookings->isNotEmpty() 
+            $lastTransactionDate = $completedBookings->isNotEmpty()
                 ? $completedBookings->sortByDesc('created_at')->first()->created_at->toDateString()
                 : null;
 
@@ -91,6 +91,6 @@ class LoyaltySeeder extends Seeder
             ]);
         }
 
-        $this->command->info('Created loyalty records for ' . $customers->count() . ' customers');
+        $this->command->info('Created loyalty records for '.$customers->count().' customers');
     }
 }

@@ -4,10 +4,9 @@ namespace App\Services;
 
 use App\Models\Booking;
 use App\Models\Transaction;
-use App\Models\User;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationService
 {
@@ -19,24 +18,24 @@ class NotificationService
         try {
             // Send email notification
             $emailSent = $this->sendBookingConfirmationEmail($booking);
-            
+
             // Send SMS notification
             $smsSent = $this->sendBookingConfirmationSMS($booking);
-            
+
             Log::info('Booking confirmation sent', [
                 'booking_id' => $booking->id,
                 'email_sent' => $emailSent,
-                'sms_sent' => $smsSent
+                'sms_sent' => $smsSent,
             ]);
-            
+
             return $emailSent || $smsSent;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending booking confirmation', [
                 'booking_id' => $booking->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -48,28 +47,28 @@ class NotificationService
     {
         try {
             $booking = $transaction->booking;
-            
+
             // Send email notification
             $emailSent = $this->sendPaymentConfirmationEmail($transaction);
-            
+
             // Send SMS notification
             $smsSent = $this->sendPaymentConfirmationSMS($transaction);
-            
+
             Log::info('Payment confirmation sent', [
                 'transaction_id' => $transaction->id,
                 'booking_id' => $booking->id,
                 'email_sent' => $emailSent,
-                'sms_sent' => $smsSent
+                'sms_sent' => $smsSent,
             ]);
-            
+
             return $emailSent || $smsSent;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending payment confirmation', [
                 'transaction_id' => $transaction->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -82,24 +81,24 @@ class NotificationService
         try {
             // Send email reminder
             $emailSent = $this->sendBookingReminderEmail($booking);
-            
+
             // Send SMS reminder
             $smsSent = $this->sendBookingReminderSMS($booking);
-            
+
             Log::info('Booking reminder sent', [
                 'booking_id' => $booking->id,
                 'email_sent' => $emailSent,
-                'sms_sent' => $smsSent
+                'sms_sent' => $smsSent,
             ]);
-            
+
             return $emailSent || $smsSent;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending booking reminder', [
                 'booking_id' => $booking->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -112,26 +111,26 @@ class NotificationService
         try {
             // Send email notification
             $emailSent = $this->sendStatusUpdateEmail($booking, $oldStatus, $newStatus);
-            
+
             // Send SMS notification
             $smsSent = $this->sendStatusUpdateSMS($booking, $oldStatus, $newStatus);
-            
+
             Log::info('Booking status update sent', [
                 'booking_id' => $booking->id,
                 'old_status' => $oldStatus,
                 'new_status' => $newStatus,
                 'email_sent' => $emailSent,
-                'sms_sent' => $smsSent
+                'sms_sent' => $smsSent,
             ]);
-            
+
             return $emailSent || $smsSent;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending status update', [
                 'booking_id' => $booking->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -144,17 +143,17 @@ class NotificationService
         try {
             Mail::send('emails.booking-confirmation', compact('booking'), function ($message) use ($booking) {
                 $message->to($booking->user->email, $booking->user->name)
-                        ->subject('Konfirmasi Booking - ' . config('app.name'));
+                    ->subject('Konfirmasi Booking - '.config('app.name'));
             });
-            
+
             return true;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending booking confirmation email', [
                 'booking_id' => $booking->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -166,20 +165,20 @@ class NotificationService
     {
         try {
             $booking = $transaction->booking;
-            
+
             Mail::send('emails.payment-confirmation', compact('transaction', 'booking'), function ($message) use ($booking) {
                 $message->to($booking->user->email, $booking->user->name)
-                        ->subject('Konfirmasi Pembayaran - ' . config('app.name'));
+                    ->subject('Konfirmasi Pembayaran - '.config('app.name'));
             });
-            
+
             return true;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending payment confirmation email', [
                 'transaction_id' => $transaction->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -192,17 +191,17 @@ class NotificationService
         try {
             Mail::send('emails.booking-reminder', compact('booking'), function ($message) use ($booking) {
                 $message->to($booking->user->email, $booking->user->name)
-                        ->subject('Reminder Booking - ' . config('app.name'));
+                    ->subject('Reminder Booking - '.config('app.name'));
             });
-            
+
             return true;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending booking reminder email', [
                 'booking_id' => $booking->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -215,17 +214,17 @@ class NotificationService
         try {
             Mail::send('emails.status-update', compact('booking', 'oldStatus', 'newStatus'), function ($message) use ($booking) {
                 $message->to($booking->user->email, $booking->user->name)
-                        ->subject('Update Status Booking - ' . config('app.name'));
+                    ->subject('Update Status Booking - '.config('app.name'));
             });
-            
+
             return true;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending status update email', [
                 'booking_id' => $booking->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -238,7 +237,7 @@ class NotificationService
         try {
             // Example using Twilio or local SMS gateway
             $smsProvider = config('notifications.sms_provider');
-            
+
             if ($smsProvider === 'twilio') {
                 return $this->sendTwilioSMS($phoneNumber, $message);
             } elseif ($smsProvider === 'nexmo') {
@@ -246,15 +245,15 @@ class NotificationService
             } elseif ($smsProvider === 'local') {
                 return $this->sendLocalSMS($phoneNumber, $message);
             }
-            
+
             return false;
-            
+
         } catch (\Exception $e) {
             Log::error('Error sending SMS', [
                 'phone' => $phoneNumber,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }
@@ -268,8 +267,8 @@ class NotificationService
         $message .= "Layanan: {$booking->service->name}\n";
         $message .= "Tanggal: {$booking->date_time->format('d/m/Y H:i')}\n";
         $message .= "Antrian: {$booking->queue_number}\n";
-        $message .= "Total: Rp " . number_format($booking->total_price, 0, ',', '.');
-        
+        $message .= 'Total: Rp '.number_format($booking->total_price, 0, ',', '.');
+
         return $this->sendSMS($booking->user->no_telepon, $message);
     }
 
@@ -279,12 +278,12 @@ class NotificationService
     private function sendPaymentConfirmationSMS(Transaction $transaction): bool
     {
         $booking = $transaction->booking;
-        
+
         $message = "Pembayaran berhasil!\n";
         $message .= "Order ID: {$transaction->order_id}\n";
-        $message .= "Total: Rp " . number_format($transaction->total_amount, 0, ',', '.');
+        $message .= 'Total: Rp '.number_format($transaction->total_amount, 0, ',', '.');
         $message .= "\nBooking Anda telah dikonfirmasi.";
-        
+
         return $this->sendSMS($booking->user->no_telepon, $message);
     }
 
@@ -296,8 +295,8 @@ class NotificationService
         $message = "Reminder: Booking Anda 1 jam lagi!\n";
         $message .= "Layanan: {$booking->service->name}\n";
         $message .= "Waktu: {$booking->date_time->format('d/m/Y H:i')}\n";
-        $message .= "Jangan terlambat ya!";
-        
+        $message .= 'Jangan terlambat ya!';
+
         return $this->sendSMS($booking->user->no_telepon, $message);
     }
 
@@ -310,15 +309,15 @@ class NotificationService
             'confirmed' => 'dikonfirmasi',
             'in_progress' => 'sedang berlangsung',
             'completed' => 'selesai',
-            'cancelled' => 'dibatalkan'
+            'cancelled' => 'dibatalkan',
         ];
-        
+
         $statusText = $statusMessages[$newStatus] ?? $newStatus;
-        
+
         $message = "Status booking Anda telah {$statusText}.\n";
         $message .= "Layanan: {$booking->service->name}\n";
         $message .= "Tanggal: {$booking->date_time->format('d/m/Y H:i')}";
-        
+
         return $this->sendSMS($booking->user->no_telepon, $message);
     }
 
@@ -332,17 +331,17 @@ class NotificationService
             $response = Http::post(config('notifications.local_sms_api'), [
                 'phone' => $phoneNumber,
                 'message' => $message,
-                'api_key' => config('notifications.local_sms_key')
+                'api_key' => config('notifications.local_sms_key'),
             ]);
-            
+
             return $response->successful();
-            
+
         } catch (\Exception $e) {
             Log::error('Local SMS sending failed', [
                 'phone' => $phoneNumber,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return false;
         }
     }

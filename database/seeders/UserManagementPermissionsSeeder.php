@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserManagementPermissionsSeeder extends Seeder
 {
@@ -26,7 +26,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'import users',
             'view user profiles',
             'edit user profiles',
-            'view user activity logs'
+            'view user activity logs',
         ];
 
         // Role & Permission Management
@@ -42,7 +42,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'edit permissions',
             'delete permissions',
             'assign permissions',
-            'revoke permissions'
+            'revoke permissions',
         ];
 
         // Booking Management Permissions
@@ -56,7 +56,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'cancel bookings',
             'complete bookings',
             'view booking history',
-            'export bookings'
+            'export bookings',
         ];
 
         // Service Management Permissions
@@ -68,7 +68,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'activate services',
             'deactivate services',
             'manage service pricing',
-            'view service analytics'
+            'view service analytics',
         ];
 
         // Transaction & Payment Permissions
@@ -81,7 +81,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'refund payments',
             'view payment history',
             'export transactions',
-            'manage payment methods'
+            'manage payment methods',
         ];
 
         // Dashboard & Analytics Permissions
@@ -92,7 +92,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'export reports',
             'view admin dashboard',
             'view staff dashboard',
-            'view customer dashboard'
+            'view customer dashboard',
         ];
 
         // System Management Permissions
@@ -103,7 +103,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'system maintenance',
             'clear cache',
             'manage notifications',
-            'manage email templates'
+            'manage email templates',
         ];
 
         // Combine all permissions
@@ -138,7 +138,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'edit users',
             'view user profiles',
             'verify user emails',
-            
+
             // Booking permissions (full operational)
             'view bookings',
             'create bookings',
@@ -147,24 +147,24 @@ class UserManagementPermissionsSeeder extends Seeder
             'cancel bookings',
             'complete bookings',
             'view booking history',
-            
+
             // Service permissions (read-only)
             'view services',
             'view service analytics',
-            
+
             // Transaction permissions (operational)
             'view transactions',
             'create transactions',
             'process payments',
             'view payment history',
-            
+
             // Dashboard permissions (staff level)
             'view dashboard',
             'view analytics',
             'view staff dashboard',
-            
+
             // Limited system access
-            'view system logs'
+            'view system logs',
         ]);
 
         // Assign customer permissions to customer role
@@ -178,7 +178,7 @@ class UserManagementPermissionsSeeder extends Seeder
             'view services',
             'view transactions',
             'view dashboard',
-            'view customer dashboard'
+            'view customer dashboard',
         ]);
 
         // Assign same permissions to pelanggan role as customer
@@ -192,11 +192,11 @@ class UserManagementPermissionsSeeder extends Seeder
             'view services',
             'view transactions',
             'view dashboard',
-            'view customer dashboard'
+            'view customer dashboard',
         ]);
 
         $this->command->info('Comprehensive user management permissions seeded successfully!');
-        $this->command->info('Total permissions created: ' . count($allPermissions));
+        $this->command->info('Total permissions created: '.count($allPermissions));
         $this->command->info('Admin role has full access to all permissions');
         $this->command->info('Pegawai role has operational access');
         $this->command->info('Customer/Pelanggan roles have limited customer access');

@@ -1,9 +1,8 @@
 <?php
 
+use App\Http\Controllers\MidtransCallbackController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\MidtransCallbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
 Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle']);
-
-
-

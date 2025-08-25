@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hairstyle_scores', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('hairstyle_id')->constrained()->onDelete('cascade');
-    $table->foreignId('criterion_id')->constrained()->onDelete('cascade');
-    $table->float('score'); // skor alternatif pada kriteria
-    $table->timestamps();
-});
+            $table->id();
+            $table->foreignId('hairstyle_id')->constrained()->onDelete('cascade');
+            $table->foreignId('criterion_id')->constrained()->onDelete('cascade');
+            $table->float('score'); // skor alternatif pada kriteria
+            $table->timestamps();
+        });
 
     }
 

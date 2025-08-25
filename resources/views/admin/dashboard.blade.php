@@ -36,15 +36,15 @@
 
     <section class="section main-section">
         <!-- Stats Cards -->
-        <div class="grid gap-6 grid-cols-1 md:grid-cols-4 mb-8">
+        <div class="grid gap-6 grid-cols-4 md:grid-cols-4 mb-8">
             <!-- Total Pelanggan -->
             <div class="card card-hover transition-all duration-300 bg-gradient-to-br from-blue-500 to-blue-600 text-white">
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class="text-blue-100 text-sm font-medium mb-2">Total Pelanggan</h3>
-                            <h1 class="text-3xl font-bold">{{ \App\Models\User::role('pelanggan')->count() }}</h1>
-                            <p class="text-blue-200 text-xs mt-1">+12% dari bulan lalu</p>
+                            <h3 class=" text-sm font-medium mb-2">Total Pelanggan</h3>
+                            <h1 class="text-3xl font-bold">{{ $totalCustomers }}</h1>
+
                         </div>
                         <div class="bg-blue-400 bg-opacity-30 p-3 rounded-full">
                             <i class="mdi mdi-account-multiple text-2xl"></i>
@@ -61,13 +61,9 @@
                         <div class="widget-label">
                             <h3 class="text-green-100 text-sm font-medium mb-2">Total Revenue</h3>
                             <h1 class="text-3xl font-bold">
-                                @php
-                                    $totalRevenue =
-                                        \App\Models\Booking::where('status', 'completed')->sum('total_price') ?? 0;
-                                @endphp
                                 Rp{{ number_format($totalRevenue, 0, ',', '.') }}
                             </h1>
-                            <p class="text-green-200 text-xs mt-1">+8% dari bulan lalu</p>
+
                         </div>
                         <div class="bg-green-400 bg-opacity-30 p-3 rounded-full">
                             <i class="mdi mdi-cash-multiple text-2xl"></i>
@@ -76,22 +72,6 @@
                 </div>
             </div>
 
-            <!-- Total Bookings -->
-            <div
-                class="card card-hover transition-all duration-300 bg-gradient-to-br from-purple-500 to-purple-600 text-white">
-                <div class="card-content p-6">
-                    <div class="flex items-center justify-between">
-                        <div class="widget-label">
-                            <h3 class="text-purple-100 text-sm font-medium mb-2">Total Bookings</h3>
-                            <h1 class="text-3xl font-bold">{{ \App\Models\Booking::count() }}</h1>
-                            <p class="text-purple-200 text-xs mt-1">+15% dari minggu lalu</p>
-                        </div>
-                        <div class="bg-purple-400 bg-opacity-30 p-3 rounded-full">
-                            <i class="mdi mdi-calendar-check text-2xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Today's Bookings -->
             <div
@@ -101,11 +81,10 @@
                         <div class="widget-label">
                             <h3 class="text-orange-100 text-sm font-medium mb-2">Today's Bookings</h3>
                             <h1 class="text-3xl font-bold">
-                                {{ \App\Models\Booking::whereDate('date_time', today())->count() }}
+                                {{ $todayBookings }}
                             </h1>
                             <p class="text-orange-200 text-xs mt-1">
-                                {{ \App\Models\Booking::whereDate('date_time', today())->where('status', 'pending')->count() }}
-                                pending</p>
+                                {{ $pendingBookings }} pending</p>
                         </div>
                         <div class="bg-orange-400 bg-opacity-30 p-3 rounded-full">
                             <i class="mdi mdi-calendar-today text-2xl"></i>
@@ -113,93 +92,128 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Charts Row -->
-        <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
-            <!-- Booking Status Chart -->
-            <div class="card">
-                <header class="card-header bg-gradient-to-r from-blue-50 to-indigo-50">
-                    <p class="card-header-title text-gray-800">
-                        <span class="icon text-blue-600"><i class="mdi mdi-chart-donut"></i></span>
-                        Booking Status Distribution
-                    </p>
-                    <div class="card-header-icon">
-                        <button class="button is-small is-white" onclick="refreshBookingChart()">
-                            <i class="mdi mdi-refresh"></i>
-                        </button>
+            <!-- Most Popular Service -->
+
+            <div class="card card-hover transition-all duration-300 bg-gradient-to-br from-pink-500 to-pink-600 text-white">
+                <div class="card-content p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="widget-label">
+                            <h3 class="text-pink-100 text-sm font-medium mb-2">Most Popular Service</h3>
+                            <h1 class="text-3xl font-bold text-white">{{ $popularServiceName }}</h1>
+
+                        </div>
+                        <div class="bg-pink-400 bg-opacity-30 p-3 rounded-full">
+                            <i class="mdi mdi-star-outline text-2xl"></i>
+                        </div>
                     </div>
-                </header>
-                <div class="card-content">
-                    <canvas id="bookingStatusChart" width="400" height="200"></canvas>
                 </div>
             </div>
 
-            <!-- Monthly Revenue Chart -->
-            <div class="card">
-                <header class="card-header bg-gradient-to-r from-green-50 to-emerald-50">
-                    <p class="card-header-title text-gray-800">
-                        <span class="icon text-green-600"><i class="mdi mdi-chart-line"></i></span>
-                        Monthly Revenue Trend
-                    </p>
-                    <div class="card-header-icon">
-                        <button class="button is-small is-white" onclick="refreshRevenueChart()">
-                            <i class="mdi mdi-refresh"></i>
-                        </button>
+        </div>
+        @role('admin')
+            <!-- Charts Row -->
+            <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
+                <!-- Booking Status Chart -->
+                <div class="card">
+                    <header class="card-header bg-gradient-to-r from-blue-50 to-indigo-50">
+                        <p class="card-header-title text-gray-800">
+                            <span class="icon text-blue-600"><i class="mdi mdi-chart-donut"></i></span>
+                            Booking Status Distribution
+                        </p>
+                        <div class="card-header-icon">
+                            <button class="button is-small is-white" onclick="refreshBookingChart()">
+                                <i class="mdi mdi-refresh"></i>
+                            </button>
+                        </div>
+                    </header>
+                    <div class="card-content">
+                        <canvas id="bookingStatusChart" width="400" height="200"></canvas>
                     </div>
-                </header>
-                <div class="card-content">
-                    <canvas id="revenueChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- Monthly Revenue Chart -->
+                <div class="card">
+                    <header class="card-header bg-gradient-to-r from-green-50 to-emerald-50">
+                        <p class="card-header-title text-gray-800">
+                            <span class="icon text-green-600"><i class="mdi mdi-chart-line"></i></span>
+                            Monthly Revenue Trend
+                        </p>
+                        <div class="card-header-icon">
+                            <button class="button is-small is-white" onclick="refreshRevenueChart()">
+                                <i class="mdi mdi-refresh"></i>
+                            </button>
+                        </div>
+                    </header>
+                    <div class="card-content">
+                        <canvas id="revenueChart" width="400" height="200"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
+                <!-- Booking Status Chart -->
+                <div class="card">
+                    <header class="card-header bg-gradient-to-r from-purple-50 to-purple-100">
+                        <p class="card-header-title text-gray-800">
+                            <span class="icon text-purple-600"><i class="mdi mdi-chart-bar"></i></span>
+                            User Activity (Monthly)
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <canvas id="userActivityChart" height="400"></canvas>
+                    </div>
+                </div>
+
+                <!-- Monthly Revenue Chart -->
+                <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            <span class="icon text-blue-600"><i class="mdi mdi-trending-up"></i></span>
+                            Booking Status
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <div class="space-y-4">
+                            @php
+                                $bookingStats = \App\Models\Booking::selectRaw('status, COUNT(*) as count')
+                                    ->groupBy('status')
+                                    ->get();
+                                $total = $bookingStats->sum('count');
+
+                                $statusColors = [
+                                    'pending' => 'bg-yellow-100 text-yellow-800',
+                                    'confirmed' => 'bg-blue-100 text-blue-800',
+                                    'completed' => 'bg-green-100 text-green-800',
+                                    'cancelled' => 'bg-red-100 text-red-800',
+                                ];
+                            @endphp
+                            @foreach ($bookingStats as $stat)
+                                @php
+                                    $percentage = $total > 0 ? round(($stat->count / $total) * 100, 1) : 0;
+                                @endphp
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <span
+                                            class="px-3 py-1 rounded-full text-xs font-medium {{ $statusColors[$stat->status] ?? 'bg-gray-100 text-gray-800' }}">
+                                            {{ ucfirst($stat->status) }}
+                                        </span>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-semibold text-gray-800">{{ $stat->count }}</div>
+                                        <div class="text-xs text-gray-500">{{ $percentage }}%</div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endrole
 
         <!-- Statistics and Recent Activity -->
         <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-6">
             <!-- Booking Status Details -->
-            <div class="card">
-                <header class="card-header">
-                    <p class="card-header-title">
-                        <span class="icon text-blue-600"><i class="mdi mdi-trending-up"></i></span>
-                        Booking Status
-                    </p>
-                </header>
-                <div class="card-content">
-                    <div class="space-y-4">
-                        @php
-                            $bookingStats = \App\Models\Booking::selectRaw('status, COUNT(*) as count')
-                                ->groupBy('status')
-                                ->get();
-                            $total = $bookingStats->sum('count');
-
-                            $statusColors = [
-                                'pending' => 'bg-yellow-100 text-yellow-800',
-                                'confirmed' => 'bg-blue-100 text-blue-800',
-                                'completed' => 'bg-green-100 text-green-800',
-                                'cancelled' => 'bg-red-100 text-red-800',
-                            ];
-                        @endphp
-                        @foreach ($bookingStats as $stat)
-                            @php
-                                $percentage = $total > 0 ? round(($stat->count / $total) * 100, 1) : 0;
-                            @endphp
-                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center">
-                                    <span
-                                        class="px-3 py-1 rounded-full text-xs font-medium {{ $statusColors[$stat->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                        {{ ucfirst($stat->status) }}
-                                    </span>
-                                </div>
-                                <div class="text-right">
-                                    <div class="font-semibold text-gray-800">{{ $stat->count }}</div>
-                                    <div class="text-xs text-gray-500">{{ $percentage }}%</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
             <!-- Popular Services -->
             <div class="card">
                 <header class="card-header">
@@ -244,240 +258,211 @@
                 </div>
             </div>
 
-            <!-- Recent Activity -->
-            @php
-                $recentBookings = \App\Models\Booking::with(['user', 'service'])
-                    ->orderBy('created_at', 'desc')
-                    ->limit(5)
-                    ->get();
-            @endphp
-
-            <div class="card">
-                <header class="card-header">
-                    <p class="card-header-title">
-                        <span class="icon text-green-600"><i class="mdi mdi-clock-outline"></i></span>
-                        Recent Activity
-                    </p>
-                </header>
-                <div class="card-content">
-                    <div class="space-y-4">
-                        @foreach ($recentBookings as $booking)
-                            <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                                <div
-                                    class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-500 text-white rounded-full flex items-center justify-center font-bold mr-3">
-                                    {{ substr($booking->user->name ?? 'U', 0, 1) }}
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="font-medium text-gray-800 truncate">
-                                        {{ $booking->user->name ?? 'Unknown' }}
-                                    </div>
-                                    <div class="text-sm text-gray-500 truncate">
-                                        {{ $booking->service->name ?? 'Service' }} -
-                                        <span
-                                            class="px-2 py-1 rounded-full text-xs {{ $statusColors[$booking->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                            {{ $booking->status }}
-                                        </span>
-                                    </div>
-                                    <div class="text-xs text-gray-400">
-                                        {{ $booking->created_at->diffForHumans() }}
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        <!-- Quick Actions -->
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
-                    <span class="icon text-indigo-600"><i class="mdi mdi-flash"></i></span>
-                    Quick Actions
-                </p>
-            </header>
-            <div class="card-content">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <a href="{{ route('bookings.create') }}"
-                        class="btn-primary text-center py-3 px-4 rounded-lg transition-all duration-200 hover:transform hover:scale-105">
-                        <i class="mdi mdi-plus-circle mr-2"></i>
-                        New Booking
-                    </a>
-                    <a href="{{ route('users.index') }}"
-                        class="bg-green-500 hover:bg-green-600 text-white text-center py-3 px-4 rounded-lg transition-all duration-200 hover:transform hover:scale-105">
-                        <i class="mdi mdi-account-plus mr-2"></i>
-                        Add Pelanggan
-                    </a>
-                    <a href="{{ route('services.index') }}"
-                        class="bg-purple-500 hover:bg-purple-600 text-white text-center py-3 px-4 rounded-lg transition-all duration-200 hover:transform hover:scale-105">
-                        <i class="mdi mdi-scissors-cutting mr-2"></i>
-                        Manage Services
-                    </a>
-                    <a href="{{ route('transactions.index') }}"
-                        class="bg-orange-500 hover:bg-orange-600 text-white text-center py-3 px-4 rounded-lg transition-all duration-200 hover:transform hover:scale-105">
-                        <i class="mdi mdi-chart-box mr-2"></i>
-                        View Transactions
-                    </a>
-                </div>
-            </div>
-        </div>
     </section>
 @endsection
 
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Booking Status Donut Chart
-            const bookingCtx = document.getElementById('bookingStatusChart').getContext('2d');
-            const bookingStatusChart = new Chart(bookingCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: [
-                        @foreach ($bookingStats as $stat)
-                            '{{ ucfirst($stat->status) }}',
-                        @endforeach
-                    ],
-                    datasets: [{
-                        data: [
-                            @foreach ($bookingStats as $stat)
-                                {{ $stat->count }},
-                            @endforeach
-                        ],
-                        backgroundColor: [
-                            '#FCD34D', // Yellow for pending
-                            '#60A5FA', // Blue for confirmed
-                            '#34D399', // Green for completed
-                            '#F87171' // Red for cancelled
-                        ],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.parsed;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ${value} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    },
-                    cutout: '60%'
-                }
-            });
-
-            // Monthly Revenue Line Chart
-            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-
-            // Generate sample data for the last 6 months
-            const monthNames = [];
-            const revenueData = [];
-
-            for (let i = 5; i >= 0; i--) {
-                const date = new Date();
-                date.setMonth(date.getMonth() - i);
-                monthNames.push(date.toLocaleDateString('id-ID', {
-                    month: 'short',
-                    year: '2-digit'
-                }));
-
-                // Sample revenue data (replace with actual data from database)
-                revenueData.push(Math.floor(Math.random() * 5000000) + 2000000);
+            // Helper function to safely get canvas context
+            function getCanvasContext(id) {
+                const canvas = document.getElementById(id);
+                return canvas ? canvas.getContext('2d') : null;
             }
 
-            const revenueChart = new Chart(revenueCtx, {
-                type: 'line',
-                data: {
-                    labels: monthNames,
-                    datasets: [{
-                        label: 'Revenue (Rp)',
-                        data: revenueData,
-                        borderColor: '#10B981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#10B981',
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointRadius: 6,
-                        pointHoverRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
+            // Booking Status Donut Chart
+            const bookingCtx = getCanvasContext('bookingStatusChart');
+            if (bookingCtx) {
+                const bookingStatusChart = new Chart(bookingCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            @foreach ($bookingStats as $stat)
+                                '{{ ucfirst($stat->status) }}',
+                            @endforeach
+                        ],
+                        datasets: [{
+                            data: [
+                                @foreach ($bookingStats as $stat)
+                                    {{ $stat->count }},
+                                @endforeach
+                            ],
+                            backgroundColor: [
+                                '#FCD34D', // Yellow for pending
+                                '#60A5FA', // Blue for confirmed
+                                '#34D399', // Green for completed
+                                '#F87171' // Red for cancelled
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
                     },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Revenue: Rp' + context.parsed.y.toLocaleString('id-ID');
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return 'Rp' + (value / 1000000).toFixed(1) + 'M';
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true,
+                                    font: {
+                                        size: 12
+                                    }
                                 }
                             },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)'
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
                             }
                         },
-                        x: {
-                            grid: {
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            // Monthly Revenue Line Chart
+            const revenueCtx = getCanvasContext('revenueChart');
+            if (revenueCtx) {
+                const revenueChart = new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: @json($monthLabels ?? []),
+                        datasets: [{
+                            label: 'Revenue (Rp)',
+                            data: @json($revenueData ?? []),
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
                                 display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'Rp' + value.toLocaleString('id-ID');
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
+
+            // Popular Service Chart (only if canvas exists)
+            const serviceCtx = getCanvasContext('popularServiceChart');
+            if (serviceCtx) {
+                const serviceChart = new Chart(serviceCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            @foreach ($popularServices as $service)
+                                '{{ $service->service->name }}',
+                            @endforeach
+                        ],
+                        datasets: [{
+                            data: [
+                                @foreach ($popularServices as $service)
+                                    {{ $service->count }},
+                                @endforeach
+                            ],
+                            backgroundColor: ['#F87171', '#60A5FA', '#34D399', '#FBBF24', '#A78BFA']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // User Activity Bar Chart
+            const userCtx = getCanvasContext('userActivityChart');
+            if (userCtx) {
+                const userChart = new Chart(userCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: {!! json_encode($userActivity->pluck('month') ?? []) !!},
+                        datasets: [{
+                            label: 'New Users',
+                            data: {!! json_encode($userActivity->pluck('count') ?? []) !!},
+                            backgroundColor: '#8B5CF6'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
 
             // Refresh functions
             window.refreshBookingChart = function() {
-                // Add refresh logic here
-                showNotification('info', 'Info', 'Chart data refreshed!');
+                Swal.fire({
+                    title: 'Booking Chart',
+                    text: 'Data booking berhasil di-refresh!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                // Di sini bisa tambahkan logic refresh chart sebenarnya
+                // fetchBookingData().then(data => updateChart(bookingStatusChart, data));
             };
 
             window.refreshRevenueChart = function() {
-                // Add refresh logic here
-                showNotification('info', 'Info', 'Revenue chart refreshed!');
+                Swal.fire({
+                    title: 'Revenue Chart',
+                    text: 'Data pendapatan berhasil di-refresh!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                // Di sini bisa tambahkan logic refresh chart sebenarnya
+                // fetchRevenueData().then(data => updateChart(revenueChart, data));
             };
 
-            // Auto-refresh data every 5 minutes
+            // Auto-refresh data every 5 minutes (optional)
             setInterval(function() {
-                // Add auto-refresh logic here
                 console.log('Auto-refreshing dashboard data...');
+                // Add your auto-refresh logic here
+                // You could make AJAX calls to update the charts with fresh data
             }, 300000);
         });
     </script>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('date')->after('metric_type');
             $table->string('period')->default('daily')->after('date'); // daily, weekly, monthly, yearly
             $table->json('additional_data')->nullable()->after('period');
-            
+
             $table->unique(['metric_name', 'date', 'period']);
         });
     }
@@ -36,7 +36,7 @@ return new class extends Migration
                 'metric_type',
                 'date',
                 'period',
-                'additional_data'
+                'additional_data',
             ]);
         });
     }

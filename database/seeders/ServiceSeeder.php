@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Service;
+use Illuminate\Database\Seeder;
 
 class ServiceSeeder extends Seeder
 {
@@ -69,7 +68,7 @@ class ServiceSeeder extends Seeder
                 'price' => 30000,
                 'duration' => 35,
                 'is_active' => true,
-            ]
+            ],
         ];
 
         foreach ($services as $service) {

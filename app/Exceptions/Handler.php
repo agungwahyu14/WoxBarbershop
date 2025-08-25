@@ -5,8 +5,8 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
         } elseif ($exception instanceof HttpException) {
             $level = $exception->getStatusCode() >= 500 ? 'error' : 'warning';
             Log::log($level, 'HTTP exception', array_merge($context, [
-                'status_code' => $exception->getStatusCode()
+                'status_code' => $exception->getStatusCode(),
             ]));
         } else {
             Log::error('Unhandled exception', $context);
@@ -119,7 +119,7 @@ class Handler extends ExceptionHandler
             'status_code' => $status,
         ];
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $response['errors'] = $errors;
         }
 
@@ -142,9 +142,9 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         // Custom error pages for web requests
-        if ($exception instanceof HttpException && !$request->expectsJson()) {
+        if ($exception instanceof HttpException && ! $request->expectsJson()) {
             $status = $exception->getStatusCode();
-            
+
             if (view()->exists("errors.{$status}")) {
                 return response()->view("errors.{$status}", [], $status);
             }

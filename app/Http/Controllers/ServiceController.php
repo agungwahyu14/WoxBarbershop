@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Service;
+use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 class ServiceController extends Controller
@@ -16,32 +15,33 @@ class ServiceController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('name', function($row) {
+                ->editColumn('name', function ($row) {
                     $icon = $this->getServiceIcon($row->name);
+
                     return '<div class="flex items-center gap-2">
-                        <i class="' . $icon . ' text-lg text-blue-600"></i>
-                        <span>' . $row->name . '</span>
+                        <i class="'.$icon.' text-lg text-blue-600"></i>
+                        <span>'.$row->name.'</span>
                     </div>';
                 })
-                ->editColumn('price', function($row) {
-                    return '<span class="font-semibold text-green-600">Rp ' . number_format($row->price, 0, ',', '.') . '</span>';
+                ->editColumn('price', function ($row) {
+                    return '<span class="font-semibold text-green-600">Rp '.number_format($row->price, 0, ',', '.').'</span>';
                 })
-                ->editColumn('description', function($row) {
-                    return $row->description ? '<div class="max-w-xs truncate" title="' . $row->description . '">' . $row->description . '</div>' : '-';
+                ->editColumn('description', function ($row) {
+                    return $row->description ? '<div class="max-w-xs truncate" title="'.$row->description.'">'.$row->description.'</div>' : '-';
                 })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('services.edit', $row->id);
 
                     return '
                         <div class="flex justify-center items-center gap-2">
-                            <a href="' . $editUrl . '" 
+                            <a href="'.$editUrl.'" 
                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
                                title="Edit Service">
                                 <i class="fas fa-edit text-sm"></i>
                             </a>
                             <button type="button" 
                                     class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200 deleteBtn" 
-                                    data-id="' . $row->id . '" 
+                                    data-id="'.$row->id.'" 
                                     title="Delete Service">
                                 <i class="fas fa-trash text-sm"></i>
                             </button>
@@ -57,7 +57,7 @@ class ServiceController extends Controller
     private function getServiceIcon($serviceName)
     {
         $serviceName = strtolower($serviceName);
-        
+
         $icons = [
             'potong rambut' => 'fas fa-cut',
             'hair cut' => 'fas fa-cut',
@@ -95,9 +95,9 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:0'
+            'price' => 'required|numeric|min:0',
         ]);
 
         Service::create($request->only('name', 'description', 'price'));
@@ -108,6 +108,7 @@ class ServiceController extends Controller
     public function edit($id)
     {
         $service = Service::findOrFail($id);
+
         return view('admin.services.edit', compact('service'));
     }
 
@@ -116,9 +117,9 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
 
         $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:0'
+            'price' => 'required|numeric|min:0',
         ]);
 
         $service->update($request->only('name', 'description', 'price'));

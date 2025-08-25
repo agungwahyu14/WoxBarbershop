@@ -15,26 +15,26 @@ class Dashboard extends Model
         'metric_type',
         'date',
         'period',
-        'additional_data'
+        'additional_data',
     ];
 
     protected $casts = [
         'date' => 'date',
-        'additional_data' => 'array'
+        'additional_data' => 'array',
     ];
 
-    public static function recordMetric(string $metricName, $value, string $type = 'count', string $period = 'daily', array $additionalData = null): void
+    public static function recordMetric(string $metricName, $value, string $type = 'count', string $period = 'daily', ?array $additionalData = null): void
     {
         self::updateOrCreate(
             [
                 'metric_name' => $metricName,
                 'date' => today(),
-                'period' => $period
+                'period' => $period,
             ],
             [
                 'metric_value' => $value,
                 'metric_type' => $type,
-                'additional_data' => $additionalData
+                'additional_data' => $additionalData,
             ]
         );
     }

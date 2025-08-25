@@ -2,11 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
@@ -24,6 +22,7 @@ class RedirectIfAuthenticated
                 if (Auth::user()->hasRole('admin')) {
                     return redirect()->route('admin.dashboard');
                 }
+
                 return redirect()->route('dashboard');
             }
         }

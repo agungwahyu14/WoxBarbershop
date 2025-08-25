@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -47,10 +47,10 @@ return new class extends Migration
 
         Schema::table('users', function (Blueprint $table) {
             // Add indexes - these should exist
-            if (Schema::hasColumn('users', 'email') && !$this->indexExists('users', 'users_email_index')) {
+            if (Schema::hasColumn('users', 'email') && ! $this->indexExists('users', 'users_email_index')) {
                 $table->index('email');
             }
-            if (Schema::hasColumn('users', 'no_telepon') && !$this->indexExists('users', 'users_no_telepon_index')) {
+            if (Schema::hasColumn('users', 'no_telepon') && ! $this->indexExists('users', 'users_no_telepon_index')) {
                 $table->index('no_telepon');
             }
         });
@@ -58,13 +58,13 @@ return new class extends Migration
 
     private function indexExists($table, $index)
     {
-        $result = DB::select("
+        $result = DB::select('
             SELECT INDEX_NAME 
             FROM information_schema.STATISTICS 
             WHERE TABLE_NAME = ? AND INDEX_NAME = ? AND TABLE_SCHEMA = ?
-        ", [$table, $index, config('database.connections.mysql.database')]);
-        
-        return !empty($result);
+        ', [$table, $index, config('database.connections.mysql.database')]);
+
+        return ! empty($result);
     }
 
     /**

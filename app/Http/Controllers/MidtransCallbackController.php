@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\Transaction;
 
 class MidtransCallbackController extends Controller
 {

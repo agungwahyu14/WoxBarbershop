@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Hairstyle;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\DataTables;
 
 class HairstyleController extends Controller
 {
@@ -17,40 +16,45 @@ class HairstyleController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('name', function($row) {
+                ->editColumn('name', function ($row) {
                     $icon = $this->getHairstyleIcon($row->name);
+
                     return '<div class="flex items-center gap-2">
-                        <i class="' . $icon . ' text-lg text-purple-600"></i>
-                        <span>' . $row->name . '</span>
+                        <i class="'.$icon.' text-lg text-purple-600"></i>
+                        <span>'.$row->name.'</span>
                     </div>';
                 })
-                ->editColumn('bentuk_kepala', function($row) {
+                ->editColumn('bentuk_kepala', function ($row) {
                     $icon = $this->getFaceShapeIcon($row->bentuk_kepala);
+
                     return '<div class="flex items-center gap-2">
-                        <i class="' . $icon . ' text-sm text-gray-600"></i>
-                        <span class="capitalize">' . $row->bentuk_kepala . '</span>
+                        <i class="'.$icon.' text-sm text-gray-600"></i>
+                        <span class="capitalize">'.$row->bentuk_kepala.'</span>
                     </div>';
                 })
-                ->editColumn('tipe_rambut', function($row) {
+                ->editColumn('tipe_rambut', function ($row) {
                     $icon = $this->getHairTypeIcon($row->tipe_rambut);
+
                     return '<div class="flex items-center gap-2">
-                        <i class="' . $icon . ' text-sm text-gray-600"></i>
-                        <span class="capitalize">' . $row->tipe_rambut . '</span>
+                        <i class="'.$icon.' text-sm text-gray-600"></i>
+                        <span class="capitalize">'.$row->tipe_rambut.'</span>
                     </div>';
                 })
-                ->editColumn('description', function($row) {
-                    return $row->description ? '<div class="max-w-xs truncate" title="' . $row->description . '">' . $row->description . '</div>' : '-';
+                ->editColumn('description', function ($row) {
+                    return $row->description ? '<div class="max-w-xs truncate" title="'.$row->description.'">'.$row->description.'</div>' : '-';
                 })
                 ->addColumn('image', function ($row) {
                     if ($row->image) {
-                        $url = asset('storage/' . $row->image);
+                        $url = asset('storage/'.$row->image);
+
                         return '<div class="flex justify-center">
-                            <img src="' . $url . '" 
+                            <img src="'.$url.'" 
                                  class="w-16 h-16 object-cover rounded-lg shadow-sm border border-gray-200" 
-                                 alt="' . $row->name . '" 
+                                 alt="'.$row->name.'" 
                                  onerror="this.src=\'/img/placeholder.svg\'; this.classList.add(\'opacity-50\')" />
                         </div>';
                     }
+
                     return '<div class="flex justify-center">
                         <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-image text-gray-400"></i>
@@ -62,14 +66,14 @@ class HairstyleController extends Controller
 
                     return '
                         <div class="flex justify-center items-center gap-2">
-                            <a href="' . $editUrl . '" 
+                            <a href="'.$editUrl.'" 
                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
                                title="Edit Hairstyle">
                                 <i class="fas fa-edit text-sm"></i>
                             </a>
                             <button type="button" 
                                     class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200 deleteBtn" 
-                                    data-id="' . $row->id . '" 
+                                    data-id="'.$row->id.'" 
                                     title="Delete Hairstyle">
                                 <i class="fas fa-trash text-sm"></i>
                             </button>
@@ -85,7 +89,7 @@ class HairstyleController extends Controller
     private function getHairstyleIcon($hairstyleName)
     {
         $hairstyleName = strtolower($hairstyleName);
-        
+
         $icons = [
             'buzz cut' => 'fas fa-cut',
             'crew cut' => 'fas fa-cut',
@@ -117,7 +121,7 @@ class HairstyleController extends Controller
     private function getFaceShapeIcon($faceShape)
     {
         $faceShape = strtolower($faceShape);
-        
+
         $icons = [
             'bulat' => 'fas fa-circle',
             'round' => 'fas fa-circle',
@@ -136,7 +140,7 @@ class HairstyleController extends Controller
     private function getHairTypeIcon($hairType)
     {
         $hairType = strtolower($hairType);
-        
+
         $icons = [
             'lurus' => 'fas fa-minus',
             'straight' => 'fas fa-minus',
@@ -162,11 +166,11 @@ class HairstyleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'description'    => 'nullable|string',
-            'bentuk_kepala'  => 'required|string|max:255',
-            'tipe_rambut'    => 'required|string|max:255',
-            'image'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'bentuk_kepala' => 'required|string|max:255',
+            'tipe_rambut' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $data = $request->only(['name', 'description', 'bentuk_kepala', 'tipe_rambut']);
@@ -188,11 +192,11 @@ class HairstyleController extends Controller
     public function update(Request $request, Hairstyle $hairstyle)
     {
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'description'    => 'nullable|string',
-            'bentuk_kepala'  => 'required|string|max:255',
-            'tipe_rambut'    => 'required|string|max:255',
-            'image'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'bentuk_kepala' => 'required|string|max:255',
+            'tipe_rambut' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $data = $request->only(['name', 'description', 'bentuk_kepala', 'tipe_rambut']);
@@ -220,6 +224,4 @@ class HairstyleController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Hairstyle deleted successfully.']);
     }
-
-
 }

@@ -14,10 +14,10 @@ class QueueService
     public function generateQueueNumber(Carbon $date): int
     {
         $dateString = $date->format('Y-m-d');
-        
+
         $lastQueueNumber = Booking::whereDate('date_time', $dateString)
             ->max('queue_number') ?? 0;
-            
+
         return $lastQueueNumber + 1;
     }
 
@@ -27,19 +27,19 @@ class QueueService
     public function getQueueStatus(Carbon $date): array
     {
         $dateString = $date->format('Y-m-d');
-        
+
         $totalBookings = Booking::whereDate('date_time', $dateString)
             ->whereIn('status', ['pending', 'confirmed', 'in_progress', 'completed'])
             ->count();
-            
+
         $completedBookings = Booking::whereDate('date_time', $dateString)
             ->where('status', 'completed')
             ->count();
-            
+
         $currentQueue = Booking::whereDate('date_time', $dateString)
             ->where('status', 'in_progress')
             ->first();
-            
+
         $waitingBookings = Booking::whereDate('date_time', $dateString)
             ->whereIn('status', ['pending', 'confirmed'])
             ->orderBy('queue_number')
@@ -51,7 +51,7 @@ class QueueService
             'current_queue' => $currentQueue?->queue_number,
             'waiting_count' => $waitingBookings->count(),
             'waiting_bookings' => $waitingBookings,
-            'estimated_wait_time' => $this->calculateEstimatedWaitTime($waitingBookings)
+            'estimated_wait_time' => $this->calculateEstimatedWaitTime($waitingBookings),
         ];
     }
 
@@ -61,11 +61,11 @@ class QueueService
     private function calculateEstimatedWaitTime($waitingBookings): int
     {
         $totalMinutes = 0;
-        
+
         foreach ($waitingBookings as $booking) {
             $totalMinutes += $booking->service->duration ?? 60; // Default 60 minutes
         }
-        
+
         return $totalMinutes;
     }
 
@@ -86,31 +86,31 @@ class QueueService
     public function advanceQueue(Carbon $date): array
     {
         DB::beginTransaction();
-        
+
         try {
             // Mark current in-progress booking as completed
             $currentBooking = Booking::whereDate('date_time', $date->format('Y-m-d'))
                 ->where('status', 'in_progress')
                 ->first();
-                
+
             if ($currentBooking) {
                 $currentBooking->update(['status' => 'completed']);
             }
-            
+
             // Get next in queue and mark as in-progress
             $nextBooking = $this->getNextInQueue($date);
             if ($nextBooking) {
                 $nextBooking->update(['status' => 'in_progress']);
             }
-            
+
             DB::commit();
-            
+
             return [
                 'completed_booking' => $currentBooking,
                 'next_booking' => $nextBooking,
-                'queue_status' => $this->getQueueStatus($date)
+                'queue_status' => $this->getQueueStatus($date),
             ];
-            
+
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -123,7 +123,7 @@ class QueueService
     public function resetQueue(Carbon $date): bool
     {
         $dateString = $date->format('Y-m-d');
-        
+
         return Booking::whereDate('date_time', $dateString)
             ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
             ->update(['status' => 'pending']);

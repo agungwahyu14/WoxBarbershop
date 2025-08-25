@@ -1,29 +1,26 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Booking;
-use App\Models\Service;
-use App\Models\Hairstyle;
-use App\Models\Transaction;
 use App\Http\Requests\BookingRequest;
-use App\Services\BookingService;
-use App\Services\QueueService;
-use App\Services\CacheService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log; 
-use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\DashboardController;
-use Illuminate\Support\Facades\DB;
+use App\Models\Booking;
 use App\Models\Loyalty;
+use App\Models\Service;
+use App\Models\User;
+use App\Services\BookingService;
+use App\Services\CacheService;
+use App\Services\QueueService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\DataTables;
 
 class BookingController extends Controller
 {
     protected $bookingService;
+
     protected $queueService;
+
     protected $cacheService;
 
     public function __construct(
@@ -34,29 +31,29 @@ class BookingController extends Controller
         $this->bookingService = $bookingService;
         $this->queueService = $queueService;
         $this->cacheService = $cacheService;
-        
+
         $this->middleware('auth');
 
     }
 
     public function index(Request $request)
     {
-       if (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('pegawai')) {
-    $user = auth()->user(); // ✅ Tambahkan ini
+        if (! auth()->user()->hasRole('admin') && ! auth()->user()->hasRole('pegawai')) {
+            $user = auth()->user(); // ✅ Tambahkan ini
 
-    $bookings = Booking::with(['service', 'hairstyle'])
-        ->where('user_id', $user->id)
-        ->orderByDesc('id')
-        ->get();
+            $bookings = Booking::with(['service', 'hairstyle'])
+                ->where('user_id', $user->id)
+                ->orderByDesc('id')
+                ->get();
 
-    return view('bookings.index', compact('bookings'));
-}
+            return view('bookings.index', compact('bookings'));
+        }
 
         Log::info('BookingController@index accessed', [
             'is_ajax' => $request->ajax(),
             'user_id' => auth()->id(),
             'ip' => $request->ip(),
-            'user_agent' => $request->userAgent()
+            'user_agent' => $request->userAgent(),
         ]);
 
         if ($request->ajax()) {
@@ -68,159 +65,164 @@ class BookingController extends Controller
                 $data = $query->get();
 
                 Log::info('Bookings data retrieved successfully', [
-                    'total_records' => $data->count()
+                    'total_records' => $data->count(),
                 ]);
 
                 return DataTables::of($data)
                     ->addIndexColumn()
-                ->addColumn('customer_info', function($row) {
-                    return $row->user ? 
-                        '<div class="flex items-center space-x-3">
+                    ->addColumn('customer_info', function ($row) {
+                        return $row->user ?
+                            '<div class="flex items-center space-x-3">
                          
                             <div>
-                                <div class="font-medium text-gray-900">' . $row->user->name . '</div>
-                                <div class="text-sm text-gray-500">' . $row->user->email . '</div>
+                                <div class="font-medium text-gray-900">'.$row->user->name.'</div>
+                                <div class="text-sm text-gray-500">'.$row->user->email.'</div>
                             </div>
                         </div>' : '<span class="text-gray-400">No customer</span>';
-                })
-                ->addColumn('contact_info', function($row) {
-                    return $row->user && $row->user->no_telepon ? 
-                        '<div class="flex items-center space-x-2">
+                    })
+                    ->addColumn('contact_info', function ($row) {
+                        return $row->user && $row->user->no_telepon ?
+                            '<div class="flex items-center space-x-2">
                         
-                            <span class="font-medium">' . $row->user->no_telepon . '</span>
+                            <span class="font-medium">'.$row->user->no_telepon.'</span>
                         </div>' : '<span class="text-gray-400">No contact</span>';
-                })
-                ->addColumn('service_info', function($row) {
-                    if ($row->service) {
-                        $icon = $this->getServiceIcon($row->service->name);
-                        return '<div class="flex items-center space-x-2">
+                    })
+                    ->addColumn('service_info', function ($row) {
+                        if ($row->service) {
+                            $icon = $this->getServiceIcon($row->service->name);
+
+                            return '<div class="flex items-center space-x-2">
                             
                             <div>
-                                <div class="font-medium text-gray-900">' . $row->service->name . '</div>
-                                <div class="text-sm text-gray-500">Rp ' . number_format($row->service->price, 0, ',', '.') . '</div>
+                                <div class="font-medium text-gray-900">'.$row->service->name.'</div>
+                                <div class="text-sm text-gray-500">Rp '.number_format($row->service->price, 0, ',', '.').'</div>
                             </div>
                         </div>';
-                    }
-                    return '<span class="text-gray-400">No service</span>';
-                })
-                ->addColumn('hairstyle_info', function($row) {
-                    if ($row->hairstyle) {
-                        return '<div class="flex items-center space-x-2">
+                        }
+
+                        return '<span class="text-gray-400">No service</span>';
+                    })
+                    ->addColumn('hairstyle_info', function ($row) {
+                        if ($row->hairstyle) {
+                            return '<div class="flex items-center space-x-2">
 
                             <div>
-                                <div class="font-medium text-gray-900">' . $row->hairstyle->name . '</div>
-                                <div class="text-sm text-gray-500">' . ($row->hairstyle->description ?? 'Classic style') . '</div>
+                                <div class="font-medium text-gray-900">'.$row->hairstyle->name.'</div>
+                                <div class="text-sm text-gray-500">'.($row->hairstyle->description ?? 'Classic style').'</div>
                             </div>
                         </div>';
-                    }
-                    return '<span class="text-gray-400">No hairstyle</span>';
-                })
-                ->addColumn('datetime_formatted', function($row) {
-                    $date = \Carbon\Carbon::parse($row->date_time);
-                    return '<div class="text-center">
-                        <div class="font-medium text-gray-900">' . $date->format('M d, Y') . '</div>
-                        <div class="text-sm text-gray-500">' . $date->format('H:i A') . '</div>
-                        <div class="text-xs text-gray-400">' . $date->diffForHumans() . '</div>
+                        }
+
+                        return '<span class="text-gray-400">No hairstyle</span>';
+                    })
+                    ->addColumn('datetime_formatted', function ($row) {
+                        $date = \Carbon\Carbon::parse($row->date_time);
+
+                        return '<div class="text-center">
+                        <div class="font-medium text-gray-900">'.$date->format('M d, Y').'</div>
+                        <div class="text-sm text-gray-500">'.$date->format('H:i A').'</div>
+                        <div class="text-xs text-gray-400">'.$date->diffForHumans().'</div>
                     </div>';
-                })
-                ->addColumn('queue_display', function($row) {
-                    return '<div class="text-center">
+                    })
+                    ->addColumn('queue_display', function ($row) {
+                        return '<div class="text-center">
                         <span class="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-800 rounded-full font-semibold">
-                            ' . ($row->queue_number ?? 0) . '
+                            '.($row->queue_number ?? 0).'
                         </span>
                     </div>';
-                })
-                ->addColumn('status_badge', function($row) {
-                    $colors = [
-                        'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                        'confirmed' => 'bg-blue-100 text-blue-800 border-blue-200',
-                        'in_progress' => 'bg-orange-100 text-orange-800 border-orange-200',
-                        'completed' => 'bg-green-100 text-green-800 border-green-200',
-                        'cancelled' => 'bg-red-100 text-red-800 border-red-200'
-                    ];
-                    $icons = [
-                        'pending' => 'fas fa-clock',
-                        'confirmed' => 'fas fa-check',
-                        'in_progress' => 'fas fa-cut',
-                        'completed' => 'fas fa-check-circle',
-                        'cancelled' => 'fas fa-times-circle'
-                    ];
-                    
-                    $color = $colors[$row->status] ?? 'bg-gray-100 text-gray-800 border-gray-200';
-                    $icon = $icons[$row->status] ?? 'fas fa-question-circle';
-                    
-                    return '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ' . $color . '">
-                        <i class="' . $icon . ' mr-1"></i>
-                        ' . ucfirst(str_replace('_', ' ', $row->status)) . '
+                    })
+                    ->addColumn('status_badge', function ($row) {
+                        $colors = [
+                            'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                            'confirmed' => 'bg-blue-100 text-blue-800 border-blue-200',
+                            'in_progress' => 'bg-orange-100 text-orange-800 border-orange-200',
+                            'completed' => 'bg-green-100 text-green-800 border-green-200',
+                            'cancelled' => 'bg-red-100 text-red-800 border-red-200',
+                        ];
+                        $icons = [
+                            'pending' => 'fas fa-clock',
+                            'confirmed' => 'fas fa-check',
+                            'in_progress' => 'fas fa-cut',
+                            'completed' => 'fas fa-check-circle',
+                            'cancelled' => 'fas fa-times-circle',
+                        ];
+
+                        $color = $colors[$row->status] ?? 'bg-gray-100 text-gray-800 border-gray-200';
+                        $icon = $icons[$row->status] ?? 'fas fa-question-circle';
+
+                        return '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border '.$color.'">
+                        <i class="'.$icon.' mr-1"></i>
+                        '.ucfirst(str_replace('_', ' ', $row->status)).'
                     </span>';
-                })
-                ->addColumn('actions', function ($row) {
-                     $showUrl = route('bookings.show', $row->id);
-                     $confirmUrl = route('bookings.update', $row->id);
-                     $cancelUrl = route('bookings.destroy', $row->id);
-                    $actions = '<div class="flex justify-center items-center space-x-2">';
-                    
-                    // View details button
-                    $actions .=  '<a href="' . $showUrl . '" 
+                    })
+                    ->addColumn('actions', function ($row) {
+                        $showUrl = route('bookings.show', $row->id);
+                        $confirmUrl = route('bookings.update', $row->id);
+                        $cancelUrl = route('bookings.destroy', $row->id);
+                        $actions = '<div class="flex justify-center items-center space-x-2">';
+
+                        // View details button
+                        $actions .= '<a href="'.$showUrl.'" 
                   class=" inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
                   title="View Details">
                 <i class="fas fa-eye text-sm"></i>
             </a>';
-                    
-                    // Status-specific actions
-                    switch($row->status) {
-                        case 'pending':
-                            $actions .= '<button onclick="confirmBooking(' . $row->id . ')" 
+
+                        // Status-specific actions
+                        switch ($row->status) {
+                            case 'pending':
+                                $actions .= '<button onclick="confirmBooking('.$row->id.')" 
                                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-colors duration-200" 
                                                title="Confirm Booking">
                                             <i class="fas fa-check text-sm"></i>
                                         </button>';
-                            break;
-                        case 'confirmed':
-                            $actions .= '<button onclick="startService(' . $row->id . ')" 
+                                break;
+                            case 'confirmed':
+                                $actions .= '<button onclick="startService('.$row->id.')" 
                                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-600 transition-colors duration-200" 
                                                title="Start Service">
                                             <i class="fas fa-play text-sm"></i>
                                         </button>';
-                            break;
-                        case 'in_progress':
-                            $actions .= '<button onclick="completeService(' . $row->id . ')" 
+                                break;
+                            case 'in_progress':
+                                $actions .= '<button onclick="completeService('.$row->id.')" 
                                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-600 transition-colors duration-200" 
                                                title="Complete Service">
                                             <i class="fas fa-flag-checkered text-sm"></i>
                                         </button>';
-                            break;
-                    }
-                    
-                    // Cancel/Delete button (only for non-completed bookings)
-                    if ($row->status !== 'completed') {
-                        $actions .= '<button onclick="cancelBooking(' . $row->id . ')" 
+                                break;
+                        }
+
+                        // Cancel/Delete button (only for non-completed bookings)
+                        if ($row->status !== 'completed') {
+                            $actions .= '<button onclick="cancelBooking('.$row->id.')" 
                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200" 
                                            title="Cancel Booking">
                                         <i class="fas fa-times text-sm"></i>
                                     </button>';
-                    }
-                    
-                    $actions .= '</div>';
-                    return $actions;
-                })
-                ->rawColumns(['customer_info', 'contact_info', 'service_info', 'hairstyle_info', 'datetime_formatted', 'queue_display', 'status_badge', 'actions'])
-                ->make(true);
+                        }
+
+                        $actions .= '</div>';
+
+                        return $actions;
+                    })
+                    ->rawColumns(['customer_info', 'contact_info', 'service_info', 'hairstyle_info', 'datetime_formatted', 'queue_display', 'status_badge', 'actions'])
+                    ->make(true);
 
             } catch (\Exception $e) {
                 Log::error('Error in BookingController@index AJAX', [
                     'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
+                    'trace' => $e->getTraceAsString(),
                 ]);
 
                 return response()->json([
-                    'error' => 'Failed to retrieve bookings data'
+                    'error' => 'Failed to retrieve bookings data',
                 ], 500);
             }
         }
 
         $services = \App\Models\Service::all();
-$hairstyles = \App\Models\Hairstyle::all();
+        $hairstyles = \App\Models\Hairstyle::all();
 
         // $hairstyles = $this->cacheService->getActiveHairstyles();
 
@@ -230,7 +232,7 @@ $hairstyles = \App\Models\Hairstyle::all();
     private function getServiceIcon($serviceName)
     {
         $serviceName = strtolower($serviceName);
-        
+
         $icons = [
             'potong rambut' => 'fas fa-cut',
             'hair cut' => 'fas fa-cut',
@@ -269,90 +271,90 @@ $hairstyles = \App\Models\Hairstyle::all();
     // }
 
     public function store(BookingRequest $request)
-{
+    {
 
-    // dd(gettype($request), get_class($request));
-    try {
-        DB::beginTransaction();
+        // dd(gettype($request), get_class($request));
+        try {
+            DB::beginTransaction();
 
-        // Simpan booking dari data tervalidasi
-        $validated = $request->validated();
-        $booking = $this->bookingService->createBooking($validated);
+            // Simpan booking dari data tervalidasi
+            $validated = $request->validated();
+            $booking = $this->bookingService->createBooking($validated);
 
-        // Clear cache terkait booking dan dashboard
-        $this->cacheService->clearBookingCaches($booking->date_time);
-        $this->cacheService->clearDashboardStats();
+            // Clear cache terkait booking dan dashboard
+            $this->cacheService->clearBookingCaches($booking->date_time);
+            $this->cacheService->clearDashboardStats();
 
-        DB::commit();
+            DB::commit();
 
-        // Log sukses
-        Log::info('Booking created successfully', [
-            'booking_id' => $booking->id,
-            'user_id' => auth()->id(),
-            'date_time' => $booking->date_time,
-            'service_id' => $booking->service_id
-        ]);
-
-        // Redirect ke halaman booking dengan pesan sukses
-        return redirect()->route('bookings.index')
-            ->with('booking_success', [
-                'name' => $booking->name,
-                'queue_number' => $booking->queue_number
+            // Log sukses
+            Log::info('Booking created successfully', [
+                'booking_id' => $booking->id,
+                'user_id' => auth()->id(),
+                'date_time' => $booking->date_time,
+                'service_id' => $booking->service_id,
             ]);
 
-    } catch (\Exception $e) {
-        DB::rollback();
+            // Redirect ke halaman booking dengan pesan sukses
+            return redirect()->route('bookings.index')
+                ->with('booking_success', [
+                    'name' => $booking->name,
+                    'queue_number' => $booking->queue_number,
+                ]);
 
-        // Log error
-        Log::error('Error creating booking', [
-            'error' => $e->getMessage(),
-            'user_id' => auth()->id(),
-            'request_data' => $request->all()
-        ]);
+        } catch (\Exception $e) {
+            DB::rollback();
 
-        // Kembalikan ke halaman sebelumnya dengan pesan error
-       return back()
-    ->with('booking_error', $e->getMessage())
-    ->withInput();
+            // Log error
+            Log::error('Error creating booking', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'request_data' => $request->all(),
+            ]);
 
+            // Kembalikan ke halaman sebelumnya dengan pesan error
+            return back()
+                ->with('booking_error', $e->getMessage())
+                ->withInput();
+
+        }
     }
-}
 
     public function show(Booking $booking)
     {
         try {
             // Authorization check
             $user = auth()->user();
-            
+
             // Admin and pegawai can view all bookings, customers can only view their own
-            if (!$user->hasAnyRole(['admin', 'pegawai']) && $booking->user_id !== $user->id) {
+            if (! $user->hasAnyRole(['admin', 'pegawai']) && $booking->user_id !== $user->id) {
                 abort(403, 'Unauthorized access to booking.');
             }
 
             // Load all necessary relationships
             $booking->load([
-            'user' => function($query) {
-                $query->select('id', 'name', 'email', 'no_telepon');
-            },
-            'service' => function($query) {
-                $query->select('id', 'name', 'description', 'price', 'duration', 'is_active');
-            },
-            'hairstyle' => function($query) {
-                $query->latest()->with(['user' => function($subQuery) {
-                    $subQuery->select('id', 'name');
-                }]);
-            }
-        ]);
-            
+                'user' => function ($query) {
+                    $query->select('id', 'name', 'email', 'no_telepon');
+                },
+                'service' => function ($query) {
+                    $query->select('id', 'name', 'description', 'price', 'duration', 'is_active');
+                },
+                'hairstyle' => function ($query) {
+                    $query->latest()->with(['user' => function ($subQuery) {
+                        $subQuery->select('id', 'name');
+                    }]);
+                },
+            ]);
+
             // Get queue information
             $queueStatus = null;
             $queuePosition = null;
             $estimatedWaitTime = null;
-            
+
             try {
                 $queueStatus = $this->cacheService->getQueueStatus($booking->date_time);
                 $queuePosition = $this->queueService->getQueuePosition($booking);
-                
+
                 // Calculate estimated wait time (assuming 45 minutes per booking on average)
                 if ($queuePosition && $queuePosition > 1) {
                     $estimatedWaitTime = ($queuePosition - 1) * 45; // minutes
@@ -360,11 +362,9 @@ $hairstyles = \App\Models\Hairstyle::all();
             } catch (\Exception $e) {
                 Log::warning('Failed to get queue information', [
                     'booking_id' => $booking->id,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
-
-            
 
             // Get available time slots for rescheduling (next 7 days)
             $availableSlots = [];
@@ -378,13 +378,13 @@ $hairstyles = \App\Models\Hairstyle::all();
                 } catch (\Exception $e) {
                     Log::warning('Failed to get available slots', [
                         'booking_id' => $booking->id,
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ]);
                 }
             }
 
             // Check if booking can be modified
-            $canModify = in_array($booking->status, ['pending', 'confirmed']) && 
+            $canModify = in_array($booking->status, ['pending', 'confirmed']) &&
                         ($user->hasAnyRole(['admin', 'pegawai']) || $booking->user_id === $user->id);
 
             // Check if booking can be cancelled
@@ -399,7 +399,7 @@ $hairstyles = \App\Models\Hairstyle::all();
                 } catch (\Exception $e) {
                     Log::warning('Failed to get recommendations', [
                         'booking_id' => $booking->id,
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ]);
                 }
             }
@@ -409,7 +409,7 @@ $hairstyles = \App\Models\Hairstyle::all();
                 'booking_id' => $booking->id,
                 'viewed_by' => $user->id,
                 'user_role' => $user->roles->pluck('name')->implode(','),
-                'booking_status' => $booking->status
+                'booking_status' => $booking->status,
             ]);
 
             // Prepare data for view
@@ -436,7 +436,7 @@ $hairstyles = \App\Models\Hairstyle::all();
                 'booking_id' => $booking->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             return redirect()->back()
@@ -483,9 +483,9 @@ $hairstyles = \App\Models\Hairstyle::all();
     {
         $this->authorize('update', $booking);
 
-        if (!in_array($booking->status, ['pending', 'confirmed'])) {
+        if (! in_array($booking->status, ['pending', 'confirmed'])) {
             return redirect()->route('bookings.show', $booking)
-                ->with('error', 'Booking tidak dapat diubah karena sudah ' . $booking->status);
+                ->with('error', 'Booking tidak dapat diubah karena sudah '.$booking->status);
         }
 
         $services = $this->cacheService->getActiveServices();
@@ -498,18 +498,18 @@ $hairstyles = \App\Models\Hairstyle::all();
     {
         $this->authorize('update', $booking);
 
-        if (!in_array($booking->status, ['pending', 'confirmed'])) {
-            return back()->with('error', 'Booking tidak dapat diubah karena sudah ' . $booking->status);
+        if (! in_array($booking->status, ['pending', 'confirmed'])) {
+            return back()->with('error', 'Booking tidak dapat diubah karena sudah '.$booking->status);
         }
 
         try {
             DB::beginTransaction();
 
             $oldDateTime = $booking->date_time;
-            
+
             // Update booking with new data
             $validatedData = $request->validated();
-            
+
             // Recalculate price if service changed
             if ($booking->service_id !== $validatedData['service_id']) {
                 $validatedData['total_price'] = $this->bookingService->calculatePrice(new Booking($validatedData));
@@ -527,7 +527,7 @@ $hairstyles = \App\Models\Hairstyle::all();
             Log::info('Booking updated successfully', [
                 'booking_id' => $booking->id,
                 'user_id' => auth()->id(),
-                'changes' => $booking->getChanges()
+                'changes' => $booking->getChanges(),
             ]);
 
             return redirect()->route('bookings.show', $booking)
@@ -535,11 +535,11 @@ $hairstyles = \App\Models\Hairstyle::all();
 
         } catch (\Exception $e) {
             DB::rollback();
-            
+
             Log::error('Error updating booking', [
                 'booking_id' => $booking->id,
                 'error' => $e->getMessage(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             return back()->withErrors(['error' => $e->getMessage()])->withInput();
@@ -550,8 +550,8 @@ $hairstyles = \App\Models\Hairstyle::all();
     {
         $this->authorize('delete', $booking);
 
-        if (!in_array($booking->status, ['pending', 'confirmed'])) {
-            return back()->with('error', 'Booking tidak dapat dibatalkan karena sudah ' . $booking->status);
+        if (! in_array($booking->status, ['pending', 'confirmed'])) {
+            return back()->with('error', 'Booking tidak dapat dibatalkan karena sudah '.$booking->status);
         }
 
         try {
@@ -563,7 +563,7 @@ $hairstyles = \App\Models\Hairstyle::all();
 
             Log::info('Booking cancelled', [
                 'booking_id' => $booking->id,
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             return redirect()->route('bookings.index')
@@ -573,7 +573,7 @@ $hairstyles = \App\Models\Hairstyle::all();
             Log::error('Error cancelling booking', [
                 'booking_id' => $booking->id,
                 'error' => $e->getMessage(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             return back()->with('error', 'Gagal membatalkan booking');
@@ -584,62 +584,59 @@ $hairstyles = \App\Models\Hairstyle::all();
      * Update booking status (for admin/staff)
      */
     public function updateStatus(Request $request, Booking $booking)
-{
-    $this->authorize('updateStatus', $booking);
+    {
+        $this->authorize('updateStatus', $booking);
 
-    $request->validate([
-        'status' => 'required|in:pending,confirmed,in_progress,completed,cancelled'
-    ]);
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,in_progress,completed,cancelled',
+        ]);
 
-    try {
-        $this->bookingService->updateBookingStatus($booking, $request->status);
+        try {
+            $this->bookingService->updateBookingStatus($booking, $request->status);
 
-        // ✅ Tambahkan ini jika status = completed
-        if ($request->status === 'completed') {
-            $this->completeBooking($booking->id);
-            Log::info('Loyalty berhasil di tambahkan', [
+            // ✅ Tambahkan ini jika status = completed
+            if ($request->status === 'completed') {
+                $this->completeBooking($booking->id);
+                Log::info('Loyalty berhasil di tambahkan', [
+                    'booking_id' => $booking->id,
+                ]);
+            }
+
+            // Clear caches
+            $this->cacheService->clearBookingCaches($booking->date_time);
+            $this->cacheService->clearDashboardStats();
+
+            Log::info('Booking status updated', [
                 'booking_id' => $booking->id,
+                'new_status' => $request->status,
+                'user_id' => auth()->id(),
             ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status booking berhasil diperbarui',
+                'new_status' => $request->status,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error updating booking status', [
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
         }
-
-        // Clear caches
-        $this->cacheService->clearBookingCaches($booking->date_time);
-        $this->cacheService->clearDashboardStats();
-
-        Log::info('Booking status updated', [
-            'booking_id' => $booking->id,
-            'new_status' => $request->status,
-            'user_id' => auth()->id()
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Status booking berhasil diperbarui',
-            'new_status' => $request->status
-        ]);
-
-    } catch (\Exception $e) {
-        Log::error('Error updating booking status', [
-            'booking_id' => $booking->id,
-            'error' => $e->getMessage(),
-            'user_id' => auth()->id()
-        ]);
-
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ], 422);
     }
-}
-
-
-    
 
     public function completeBooking($bookingId)
     {
         Log::info('Fungsi completeBooking dipanggil', [
             'booking_id' => $bookingId,
-            'waktu' => now()->toDateTimeString()
+            'waktu' => now()->toDateTimeString(),
         ]);
 
         DB::beginTransaction();
@@ -649,7 +646,7 @@ $hairstyles = \App\Models\Hairstyle::all();
 
             if ($booking->status === 'completed') {
                 Log::warning('Booking sudah completed sebelumnya', [
-                    'booking_id' => $booking->id
+                    'booking_id' => $booking->id,
                 ]);
                 // return back()->with('warning', 'Booking sudah selesai sebelumnya.');
             }
@@ -658,7 +655,7 @@ $hairstyles = \App\Models\Hairstyle::all();
             $booking->save();
 
             Log::info('Status booking diubah menjadi completed', [
-                'booking_id' => $booking->id
+                'booking_id' => $booking->id,
             ]);
 
             $user = $booking->user;
@@ -667,17 +664,17 @@ $hairstyles = \App\Models\Hairstyle::all();
             if ($user->loyalty) {
                 Log::info('User sudah memiliki loyalty', [
                     'user_id' => $user->id,
-                    'points' => $user->loyalty->points
+                    'points' => $user->loyalty->points,
                 ]);
             } else {
                 Log::info('User belum memiliki loyalty', [
-                    'user_id' => $user->id
+                    'user_id' => $user->id,
                 ]);
             }
 
             $loyalty = $user->loyalty;
 
-            if (!$loyalty) {
+            if (! $loyalty) {
                 Log::info('Loyalty baru dibuat untuk user', ['user_id' => $user->id]);
 
                 Loyalty::create([
@@ -685,7 +682,7 @@ $hairstyles = \App\Models\Hairstyle::all();
                     'points' => 1,
                 ]);
             } else {
-                Log::info('Loyalty ditemukan, point sebelumnya: ' . $loyalty->points, ['user_id' => $user->id]);
+                Log::info('Loyalty ditemukan, point sebelumnya: '.$loyalty->points, ['user_id' => $user->id]);
 
                 $loyalty->points = ($loyalty->points ?? 0) + 1;
 
@@ -696,7 +693,7 @@ $hairstyles = \App\Models\Hairstyle::all();
 
                 $loyalty->save();
 
-                Log::info('Loyalty diupdate, point sekarang: ' . $loyalty->points, ['user_id' => $user->id]);
+                Log::info('Loyalty diupdate, point sekarang: '.$loyalty->points, ['user_id' => $user->id]);
             }
 
             DB::commit();
@@ -706,10 +703,10 @@ $hairstyles = \App\Models\Hairstyle::all();
             DB::rollBack();
             Log::error('Gagal menyelesaikan booking', [
                 'booking_id' => $bookingId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+
+            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
-
 }

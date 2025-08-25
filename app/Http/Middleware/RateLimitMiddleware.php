@@ -18,10 +18,10 @@ class RateLimitMiddleware
 
         if (RateLimiter::tooManyAttempts($limiterKey, $maxAttempts)) {
             $seconds = RateLimiter::availableIn($limiterKey);
-            
+
             return response()->json([
-                'message' => 'Too many requests. Please try again in ' . $seconds . ' seconds.',
-                'retry_after' => $seconds
+                'message' => 'Too many requests. Please try again in '.$seconds.' seconds.',
+                'retry_after' => $seconds,
             ], 429);
         }
 
@@ -41,13 +41,13 @@ class RateLimitMiddleware
     protected function resolveRequestSignature(Request $request, string $key): string
     {
         $user = $request->user();
-        
-        return match($key) {
-            'booking' => 'booking:' . ($user?->id ?? $request->ip()),
-            'login' => 'login:' . $request->ip(),
-            'api' => 'api:' . ($user?->id ?? $request->ip()),
-            'upload' => 'upload:' . ($user?->id ?? $request->ip()),
-            default => 'global:' . ($user?->id ?? $request->ip())
+
+        return match ($key) {
+            'booking' => 'booking:'.($user?->id ?? $request->ip()),
+            'login' => 'login:'.$request->ip(),
+            'api' => 'api:'.($user?->id ?? $request->ip()),
+            'upload' => 'upload:'.($user?->id ?? $request->ip()),
+            default => 'global:'.($user?->id ?? $request->ip())
         };
     }
 }

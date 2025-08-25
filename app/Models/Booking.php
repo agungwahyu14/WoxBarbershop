@@ -10,18 +10,18 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-    'user_id',
-    'name',
-    'service_id',
-    'hairstyle_id',
-    'date_time',
-    'queue_number',
-    'description',
-    'status',
-    'total_price',
-   
-];
-    
+        'user_id',
+        'name',
+        'service_id',
+        'hairstyle_id',
+        'date_time',
+        'queue_number',
+        'description',
+        'status',
+        'total_price',
+
+    ];
+
     protected $casts = [
         'date_time' => 'datetime',
     ];
@@ -45,8 +45,7 @@ class Booking extends Model
     }
 
     public function transactions()
-{
-    return $this->hasMany(Transaction::class, 'booking_id');
-}
-
+    {
+        return $this->hasMany(Transaction::class, 'booking_id');
+    }
 }

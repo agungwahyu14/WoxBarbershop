@@ -12,19 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            if (!Schema::hasColumn('transactions', 'booking_id')) {
+            if (! Schema::hasColumn('transactions', 'booking_id')) {
                 $table->string('booking_id')->after('id');
             }
-            if (!Schema::hasColumn('transactions', 'price')) {
+            if (! Schema::hasColumn('transactions', 'price')) {
                 $table->integer('price')->after('booking_id');
             }
-            if (!Schema::hasColumn('transactions', 'total_amount')) {
+            if (! Schema::hasColumn('transactions', 'total_amount')) {
                 $table->integer('total_amount')->after('price');
             }
-            if (!Schema::hasColumn('transactions', 'payment_method')) {
+            if (! Schema::hasColumn('transactions', 'payment_method')) {
                 $table->string('payment_method')->nullable()->after('total_amount');
             }
-            if (!Schema::hasColumn('transactions', 'payment_status')) {
+            if (! Schema::hasColumn('transactions', 'payment_status')) {
                 $table->string('payment_status')->nullable()->after('payment_method');
             }
         });

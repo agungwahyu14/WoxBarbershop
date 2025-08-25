@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Booking;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class BookingPolicy
 {
@@ -54,7 +53,7 @@ class BookingPolicy
      */
     public function delete(User $user, Booking $booking): bool
     {
-        return $user->hasAnyRole(['admin', 'pegawai']) || 
+        return $user->hasAnyRole(['admin', 'pegawai']) ||
                ($user->id === $booking->user_id && in_array($booking->status, ['pending', 'confirmed']));
     }
 

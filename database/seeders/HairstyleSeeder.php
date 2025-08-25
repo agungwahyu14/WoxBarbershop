@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Hairstyle;
+use Illuminate\Database\Seeder;
 
 class HairstyleSeeder extends Seeder
 {
@@ -30,7 +30,7 @@ class HairstyleSeeder extends Seeder
                 'image' => 'fade-cut.jpg',
             ],
             // Previous entries...
-            
+
             // New additions:
             [
                 'name' => 'French Crop',
@@ -143,7 +143,7 @@ class HairstyleSeeder extends Seeder
                 'tipe_rambut' => 'Keriting',
                 'style_preference' => 'urban',
                 'image' => 'cornrows.jpg',
-            ]
+            ],
         ];
 
         foreach ($hairstyles as $hairstyle) {

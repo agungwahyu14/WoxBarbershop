@@ -11,15 +11,13 @@ class HairstyleScore extends Model
 
     protected $fillable = ['hairstyle_id', 'criterion_id ', 'score'];
 
-
     public function hairstyle()
-{
-    return $this->belongsTo(Hairstyle::class);
-}
+    {
+        return $this->belongsTo(Hairstyle::class);
+    }
 
-public function criterion()
-{
-    return $this->belongsTo(Criteria::class);
-}
-
+    public function criterion()
+    {
+        return $this->belongsTo(Criteria::class);
+    }
 }

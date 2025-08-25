@@ -15,23 +15,21 @@ class ProfileController extends Controller
      * Display the user's profile form.
      */
     public function edit(Request $request): View
-{
-    $user = $request->user();
+    {
+        $user = $request->user();
 
-    if ($user->hasRole(['admin', 'pegawai'])) {
-        return view('admin.profile.edit', [
-            'user' => $user,
-        ]);
-    } elseif ($user->hasRole(['pelanggan', 'customer'])) {
-        return view('profile.edit', [
-            'user' => $user,
-        ]);
+        if ($user->hasRole(['admin', 'pegawai'])) {
+            return view('admin.profile.edit', [
+                'user' => $user,
+            ]);
+        } elseif ($user->hasRole(['pelanggan', 'customer'])) {
+            return view('profile.edit', [
+                'user' => $user,
+            ]);
+        }
+
+        abort(403, 'Unauthorized action.');
     }
-
-    abort(403, 'Unauthorized action.');
-}
-
-
 
     /**
      * Update the user's profile information.

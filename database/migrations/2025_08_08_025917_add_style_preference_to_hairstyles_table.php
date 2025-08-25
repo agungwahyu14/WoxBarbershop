@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('hairstyles', function (Blueprint $table) {
-        $table->string('style_preference')->nullable();
-    });
+            if (! Schema::hasColumn('hairstyles', 'style_preference')) {
+                $table->string('style_preference')->nullable();
+            }
+        });
     }
 
     /**
@@ -22,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('hairstyles', function (Blueprint $table) {
-            //
+            if (Schema::hasColumn('hairstyles', 'style_preference')) {
+                $table->dropColumn('style_preference');
+            }
         });
     }
 };

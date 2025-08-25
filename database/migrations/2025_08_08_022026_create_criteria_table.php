@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('criteria', function (Blueprint $table) {
-    $table->id();
-    $table->string('name'); // contoh: bentuk kepala, tipe rambut, preferensi
-    $table->timestamps();
-});
+            $table->id();
+            $table->string('name'); // contoh: bentuk kepala, tipe rambut, preferensi
+            $table->timestamps();
+        });
     }
 
     /**

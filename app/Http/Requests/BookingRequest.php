@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Carbon\Carbon;
+use Illuminate\Foundation\Http\FormRequest;
 
 class BookingRequest extends FormRequest
 {
@@ -22,7 +22,7 @@ class BookingRequest extends FormRequest
                 'required',
                 'date',
                 'after:now',
-                'before:' . Carbon::now()->addMonths(3)->format('Y-m-d H:i:s')
+                'before:'.Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
             ],
             'description' => 'nullable|string|max:500',
         ];
@@ -56,7 +56,7 @@ class BookingRequest extends FormRequest
     {
         // Additional business logic validation
         $dateTime = Carbon::parse($this->date_time);
-        
+
         // Check if booking time is within business hours (9 AM - 9 PM)
         if ($dateTime->hour < 9 || $dateTime->hour >= 21) {
             throw new \Illuminate\Validation\ValidationException(

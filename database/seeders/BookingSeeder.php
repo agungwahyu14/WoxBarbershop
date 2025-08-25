@@ -2,13 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Booking;
-use App\Models\User;
-use App\Models\Service;
 use App\Models\Hairstyle;
+use App\Models\Service;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class BookingSeeder extends Seeder
 {
@@ -23,6 +22,7 @@ class BookingSeeder extends Seeder
 
         if ($users->isEmpty() || $services->isEmpty() || $hairstyles->isEmpty()) {
             $this->command->warn('Please run UserSeeder, ServiceSeeder, and HairstyleSeeder first');
+
             return;
         }
 
@@ -87,7 +87,7 @@ class BookingSeeder extends Seeder
             Booking::insert($batch);
         }
 
-        $this->command->info('Created ' . count($bookings) . ' bookings');
+        $this->command->info('Created '.count($bookings).' bookings');
     }
 
     private function getRandomDescription(): string

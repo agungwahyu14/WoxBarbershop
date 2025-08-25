@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Dashboard;
 use App\Models\Booking;
+use App\Models\Dashboard;
+use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Models\Service;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class DashboardSeeder extends Seeder
 {
@@ -21,7 +20,7 @@ class DashboardSeeder extends Seeder
         $this->generateDailyMetrics();
         $this->generateWeeklyMetrics();
         $this->generateMonthlyMetrics();
-        
+
         $this->command->info('Dashboard metrics generated successfully');
     }
 
@@ -30,7 +29,7 @@ class DashboardSeeder extends Seeder
         // Generate metrics for the past 30 days
         for ($i = 30; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i);
-            
+
             // Total bookings for this date
             $totalBookings = Booking::whereDate('created_at', $date)->count();
             Dashboard::firstOrCreate(
@@ -57,7 +56,9 @@ class DashboardSeeder extends Seeder
 
             // New customers
             $newCustomers = User::whereDate('created_at', $date)
-                ->whereHas('roles', function($q) { $q->where('name', 'customer'); })
+                ->whereHas('roles', function ($q) {
+                    $q->where('name', 'customer');
+                })
                 ->count();
             Dashboard::updateOrCreate(
                 ['metric_name' => 'new_customers', 'date' => $date, 'period' => 'daily'],
@@ -82,13 +83,13 @@ class DashboardSeeder extends Seeder
                 ->limit(3)
                 ->pluck('booking_count', 'name')
                 ->toArray();
-            
+
             Dashboard::updateOrCreate(
                 ['metric_name' => 'popular_services', 'date' => $date, 'period' => 'daily'],
                 [
                     'metric_value' => json_encode($popularServices),
                     'metric_type' => 'json',
-                    'additional_data' => $popularServices
+                    'additional_data' => $popularServices,
                 ]
             );
         }
@@ -100,7 +101,7 @@ class DashboardSeeder extends Seeder
         for ($i = 12; $i >= 0; $i--) {
             $weekStart = Carbon::now()->subWeeks($i)->startOfWeek();
             $weekEnd = Carbon::now()->subWeeks($i)->endOfWeek();
-            
+
             // Weekly bookings
             $weeklyBookings = Booking::whereBetween('created_at', [$weekStart, $weekEnd])->count();
             Dashboard::updateOrCreate(
@@ -123,11 +124,11 @@ class DashboardSeeder extends Seeder
                 ->groupBy('user_id')
                 ->having('booking_count', '>', 1)
                 ->count();
-            
+
             $totalCustomers = Booking::whereBetween('created_at', [$weekStart, $weekEnd])
                 ->distinct('user_id')
                 ->count();
-            
+
             $retentionRate = $totalCustomers > 0 ? round(($repeatCustomers / $totalCustomers) * 100, 2) : 0;
             Dashboard::updateOrCreate(
                 ['metric_name' => 'customer_retention_rate', 'date' => $weekStart->toDateString(), 'period' => 'weekly'],
@@ -142,7 +143,7 @@ class DashboardSeeder extends Seeder
         for ($i = 6; $i >= 0; $i--) {
             $monthStart = Carbon::now()->subMonths($i)->startOfMonth();
             $monthEnd = Carbon::now()->subMonths($i)->endOfMonth();
-            
+
             // Monthly bookings
             $monthlyBookings = Booking::whereBetween('created_at', [$monthStart, $monthEnd])->count();
             Dashboard::updateOrCreate(
@@ -163,7 +164,7 @@ class DashboardSeeder extends Seeder
             $totalTransactions = Transaction::whereBetween('created_at', [$monthStart, $monthEnd])
                 ->where('payment_status', 'settlement')
                 ->count();
-            
+
             $avgOrderValue = $totalTransactions > 0 ? round($monthlyRevenue / $totalTransactions, 0) : 0;
             Dashboard::updateOrCreate(
                 ['metric_name' => 'avg_order_value', 'date' => $monthStart->toDateString(), 'period' => 'monthly'],
@@ -178,13 +179,13 @@ class DashboardSeeder extends Seeder
                 ->orderByDesc('total_revenue')
                 ->get()
                 ->toArray();
-            
+
             Dashboard::updateOrCreate(
                 ['metric_name' => 'service_performance', 'date' => $monthStart->toDateString(), 'period' => 'monthly'],
                 [
                     'metric_value' => json_encode($servicePerformance),
                     'metric_type' => 'json',
-                    'additional_data' => $servicePerformance
+                    'additional_data' => $servicePerformance,
                 ]
             );
         }

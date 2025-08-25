@@ -12,7 +12,7 @@
             <p class="menu-label">General</p>
             <ul class="menu-list">
                 <li class="active">
-                    <a href="{{ route('admin.dashboard') }}">
+                    <a href="{{ route('dashboard') }}">
                         <span class="icon"><i class="mdi mdi-view-dashboard"></i></span>
                         <span class="menu-item-label">Dashboard</span>
                     </a>
@@ -80,7 +80,7 @@
             <p class="menu-label">General</p>
             <ul class="menu-list">
                 <li>
-                    <a href="{{ route('admin.dashboard') }}">
+                    <a href="{{ route('dashboard') }}">
                         <span class="icon"><i class="mdi mdi-view-dashboard"></i></span>
                         <span class="menu-item-label">Dashboard</span>
                     </a>

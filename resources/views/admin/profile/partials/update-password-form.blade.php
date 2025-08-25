@@ -17,7 +17,7 @@
                 {{ __('Current Password') }}
             </label>
             <input id="update_password_current_password" name="current_password" type="password"
-                class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]""
+                class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-blue-700 focus:ring-0 focus:ring-blue-700"
                 autocomplete="current-password" />
             @if ($errors->updatePassword->get('current_password'))
                 <p class="mt-2 text-sm text-red-600">
@@ -31,7 +31,7 @@
                 {{ __('New Password') }}
             </label>
             <input id="update_password_password" name="password" type="password"
-                class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]"
+                class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-blue-700 focus:ring-0 focus:ring-blue-700"
                 autocomplete="new-password" />
             @if ($errors->updatePassword->get('password'))
                 <p class="mt-2 text-sm text-red-600">
@@ -45,7 +45,7 @@
                 {{ __('Confirm Password') }}
             </label>
             <input id="update_password_password_confirmation" name="password_confirmation" type="password"
-                class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]"
+                class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-blue-700 focus:ring-0 focus:ring-blue-700"
                 autocomplete="new-password" />
             @if ($errors->updatePassword->get('password_confirmation'))
                 <p class="mt-2 text-sm text-red-600">
@@ -56,7 +56,7 @@
 
         <div class="flex items-center gap-4">
             <button type="submit"
-                class="rounded-lg inline-flex items-center px-4 py-2 bg-[#d4af37] border border-transparent font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#c2a033] active:bg-[#b08d2e] focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2 transition ease-in-out duration-150">
+                class="rounded-lg inline-flex items-center px-4 py-2 bg-blue-700 border border-transparent font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#c2a033] active:bg-[#b08d2e] focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-offset-2 transition ease-in-out duration-150">
                 {{ __('Simpan') }}
             </button>
 

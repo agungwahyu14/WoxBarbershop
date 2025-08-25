@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Carbon\Carbon;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -62,13 +61,44 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Transaction::class);
     }
 
-
-public function loyalty()
-{
-    return $this->hasOne(Loyalty::class);
-}
+    public function loyalty()
+    {
+        return $this->hasOne(Loyalty::class);
+    }
 
     /**
      * Scope for active users
      */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Check if user has verified email
+     */
+    public function isEmailVerified(): bool
+    {
+        return ! is_null($this->email_verified_at);
+    }
+
+    /**
+     * Update last login timestamp
+     */
+    public function updateLastLogin(): void
+    {
+        $this->update(['last_login_at' => now()]);
+    }
+
+    /**
+     * Get user's full profile photo URL
+     */
+    public function getProfilePhotoUrlAttribute(): string
+    {
+        if ($this->profile_photo) {
+            return asset('storage/'.$this->profile_photo);
+        }
+
+        return asset('img/default-avatar.png');
+    }
 }

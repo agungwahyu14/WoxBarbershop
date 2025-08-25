@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Hairstyle;
-use App\Models\Criteria;
 use App\Models\HairstyleScore;
+use Illuminate\Database\Seeder;
 
 class HairstyleScoresTableSeeder extends Seeder
 {
@@ -25,7 +24,7 @@ class HairstyleScoresTableSeeder extends Seeder
                     'heart' => 0.75,
                     'diamond' => 0.7,
                     default => 0.6,
-                }
+                },
             ]);
 
             // Skor berdasarkan tipe rambut
@@ -39,7 +38,7 @@ class HairstyleScoresTableSeeder extends Seeder
                     'ikal' => 0.75,
                     'coily' => 0.7,
                     default => 0.6,
-                }
+                },
             ]);
 
             // Skor preferensi gaya (asumsi preferensi ditentukan berdasarkan nama gaya)
@@ -59,7 +58,7 @@ class HairstyleScoresTableSeeder extends Seeder
             HairstyleScore::create([
                 'hairstyle_id' => $hairstyle->id,
                 'criterion_id' => 10, // Preferensi Gaya
-                'score' => $score
+                'score' => $score,
             ]);
         }
     }

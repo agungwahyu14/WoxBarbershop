@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Hairstyle;
 use App\Models\Criteria;
+use App\Models\Hairstyle;
 use App\Models\PairwiseComparison;
-use App\Models\HairstyleScore;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class RecommendationController extends Controller
@@ -48,50 +47,48 @@ class RecommendationController extends Controller
 
         // Step 3: Hitung skor rekomendasi berdasarkan bobot
         foreach ($hairstyles as $hairstyle) {
-    $totalScore = 0;
-    $logDetail = [];
+            $totalScore = 0;
+            $logDetail = [];
 
-    foreach ($hairstyle->scores as $score) {
-    $criteriaId = $score->criterion_id; // ✅ yang benar
-    $weight = $weights[$criteriaId] ?? 0;
-    $contribution = $weight * $score->score;
+            foreach ($hairstyle->scores as $score) {
+                $criteriaId = $score->criterion_id; // ✅ yang benar
+                $weight = $weights[$criteriaId] ?? 0;
+                $contribution = $weight * $score->score;
 
-    $totalScore += $contribution;
+                $totalScore += $contribution;
 
-    $logDetail[] = [
-        'criteria_id' => $criteriaId,
-        'weight' => $weight,
-        'score' => $score->score,
-        'contribution' => round($contribution, 4),
-    ];
-}
+                $logDetail[] = [
+                    'criteria_id' => $criteriaId,
+                    'weight' => $weight,
+                    'score' => $score->score,
+                    'contribution' => round($contribution, 4),
+                ];
+            }
 
+            $roundedScore = round($totalScore, 4);
 
-    $roundedScore = round($totalScore, 4);
+            // Log semua skor
+            Log::info("Hairstyle ID {$hairstyle->id} ({$hairstyle->name}) => Total Score: $roundedScore", $logDetail);
 
-    // Log semua skor
-    Log::info("Hairstyle ID {$hairstyle->id} ({$hairstyle->name}) => Total Score: $roundedScore", $logDetail);
+            // Log khusus jika total score = 0.8325
+            if ($roundedScore == 0.8325) {
+                Log::info('Potongan rambut dengan skor 0.8325 ditemukan:', [
+                    'id' => $hairstyle->id,
+                    'name' => $hairstyle->name,
+                ]);
+            }
 
-    // Log khusus jika total score = 0.8325
-    if ($roundedScore == 0.8325) {
-        Log::info("Potongan rambut dengan skor 0.8325 ditemukan:", [
-            'id' => $hairstyle->id,
-            'name' => $hairstyle->name,
-        ]);
-    }
-
-    $results[] = [
-        'hairstyle' => $hairstyle,
-        'score' => $roundedScore,
-    ];
-}
-
+            $results[] = [
+                'hairstyle' => $hairstyle,
+                'score' => $roundedScore,
+            ];
+        }
 
         // Step 4: Urutkan berdasarkan skor tertinggi
-        usort($results, fn($a, $b) => $b['score'] <=> $a['score']);
+        usort($results, fn ($a, $b) => $b['score'] <=> $a['score']);
 
         // Log hasil
-        Log::info('Total hasil rekomendasi: ' . count($results));
+        Log::info('Total hasil rekomendasi: '.count($results));
 
         return view('rekomendasi', compact('results'));
     }

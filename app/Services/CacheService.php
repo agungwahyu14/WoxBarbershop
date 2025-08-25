@@ -2,18 +2,22 @@
 
 namespace App\Services;
 
-use App\Models\Service;
-use App\Models\Hairstyle;
 use App\Models\Booking;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Hairstyle;
+use App\Models\Service;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class CacheService
 {
     const CACHE_TTL = 3600; // 1 hour
+
     const SERVICES_CACHE_KEY = 'active_services';
+
     const HAIRSTYLES_CACHE_KEY = 'active_hairstyles';
+
     const DAILY_BOOKINGS_KEY = 'daily_bookings_';
+
     const QUEUE_STATUS_KEY = 'queue_status_';
 
     /**
@@ -45,8 +49,8 @@ class CacheService
      */
     public function getDailyBookings(Carbon $date): \Illuminate\Database\Eloquent\Collection
     {
-        $cacheKey = self::DAILY_BOOKINGS_KEY . $date->format('Y-m-d');
-        
+        $cacheKey = self::DAILY_BOOKINGS_KEY.$date->format('Y-m-d');
+
         return Cache::remember($cacheKey, 1800, function () use ($date) { // 30 minutes
             return Booking::with(['user', 'service', 'hairstyle'])
                 ->whereDate('date_time', $date->format('Y-m-d'))
@@ -60,10 +64,11 @@ class CacheService
      */
     public function getQueueStatus(Carbon $date): array
     {
-        $cacheKey = self::QUEUE_STATUS_KEY . $date->format('Y-m-d');
-        
+        $cacheKey = self::QUEUE_STATUS_KEY.$date->format('Y-m-d');
+
         return Cache::remember($cacheKey, 300, function () use ($date) { // 5 minutes
-            $queueService = new QueueService();
+            $queueService = new QueueService;
+
             return $queueService->getQueueStatus($date);
         });
     }
@@ -89,7 +94,7 @@ class CacheService
      */
     public function clearDailyBookingsCache(Carbon $date): void
     {
-        $cacheKey = self::DAILY_BOOKINGS_KEY . $date->format('Y-m-d');
+        $cacheKey = self::DAILY_BOOKINGS_KEY.$date->format('Y-m-d');
         Cache::forget($cacheKey);
     }
 
@@ -98,7 +103,7 @@ class CacheService
      */
     public function clearQueueStatusCache(Carbon $date): void
     {
-        $cacheKey = self::QUEUE_STATUS_KEY . $date->format('Y-m-d');
+        $cacheKey = self::QUEUE_STATUS_KEY.$date->format('Y-m-d');
         Cache::forget($cacheKey);
     }
 
@@ -136,7 +141,7 @@ class CacheService
         return Cache::remember('dashboard_stats', 1800, function () {
             $today = Carbon::today();
             $thisMonth = Carbon::now()->startOfMonth();
-            
+
             return [
                 'today_bookings' => Booking::whereDate('date_time', $today)->count(),
                 'pending_bookings' => Booking::where('status', 'pending')->count(),

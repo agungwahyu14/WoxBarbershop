@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Service;
-use App\Models\Hairstyle;
 use App\Models\Booking;
+use App\Models\Hairstyle;
+use App\Models\Service;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use Carbon\Carbon;
 use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class BookingTest extends TestCase
 {
@@ -19,25 +19,25 @@ class BookingTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create roles
         Role::create(['name' => 'admin']);
         Role::create(['name' => 'pegawai']);
         Role::create(['name' => 'pelanggan']);
-        
+
         // Create test data
         $this->service = Service::factory()->create([
             'name' => 'Haircut Premium',
             'price' => 50000,
             'duration' => 60,
-            'is_active' => true
+            'is_active' => true,
         ]);
-        
+
         $this->hairstyle = Hairstyle::factory()->create([
             'name' => 'Modern Cut',
-            'is_active' => true
+            'is_active' => true,
         ]);
-        
+
         $this->user = User::factory()->create();
         $this->user->assignRole('pelanggan');
     }
@@ -51,7 +51,7 @@ class BookingTest extends TestCase
             'service_id' => $this->service->id,
             'hairstyle_id' => $this->hairstyle->id,
             'date_time' => Carbon::now()->addDays(1)->setHour(14)->format('Y-m-d H:i:s'),
-            'description' => 'Request for quick service'
+            'description' => 'Request for quick service',
         ];
 
         $response = $this->post(route('bookings.store'), $bookingData);
@@ -62,7 +62,7 @@ class BookingTest extends TestCase
             'name' => 'John Doe',
             'service_id' => $this->service->id,
             'hairstyle_id' => $this->hairstyle->id,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
     }
 
@@ -75,7 +75,7 @@ class BookingTest extends TestCase
             'service_id' => $this->service->id,
             'hairstyle_id' => $this->hairstyle->id,
             'date_time' => Carbon::now()->subHours(1)->format('Y-m-d H:i:s'),
-            'description' => 'Past booking attempt'
+            'description' => 'Past booking attempt',
         ];
 
         $response = $this->post(route('bookings.store'), $bookingData);
@@ -88,13 +88,13 @@ class BookingTest extends TestCase
         $this->actingAs($this->user);
 
         $nextSunday = Carbon::now()->next(Carbon::SUNDAY)->setHour(14);
-        
+
         $bookingData = [
             'name' => 'John Doe',
             'service_id' => $this->service->id,
             'hairstyle_id' => $this->hairstyle->id,
             'date_time' => $nextSunday->format('Y-m-d H:i:s'),
-            'description' => 'Sunday booking attempt'
+            'description' => 'Sunday booking attempt',
         ];
 
         $response = $this->post(route('bookings.store'), $bookingData);
@@ -107,13 +107,13 @@ class BookingTest extends TestCase
         $this->actingAs($this->user);
 
         $earlyMorning = Carbon::now()->addDays(1)->setHour(7); // Before 9 AM
-        
+
         $bookingData = [
             'name' => 'John Doe',
             'service_id' => $this->service->id,
             'hairstyle_id' => $this->hairstyle->id,
             'date_time' => $earlyMorning->format('Y-m-d H:i:s'),
-            'description' => 'Early booking attempt'
+            'description' => 'Early booking attempt',
         ];
 
         $response = $this->post(route('bookings.store'), $bookingData);
@@ -145,7 +145,7 @@ class BookingTest extends TestCase
             'user_id' => $this->user->id,
             'service_id' => $this->service->id,
             'hairstyle_id' => $this->hairstyle->id,
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         $response = $this->delete(route('bookings.destroy', $booking));
@@ -153,7 +153,7 @@ class BookingTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseHas('bookings', [
             'id' => $booking->id,
-            'status' => 'cancelled'
+            'status' => 'cancelled',
         ]);
     }
 

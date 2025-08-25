@@ -10,19 +10,18 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::table('bookings', function (Blueprint $table) {
-        if (!Schema::hasColumn('bookings', 'created_at')) {
-            $table->timestamps(); // ini akan menambahkan created_at dan updated_at
-        }
-    });
-}
+    {
+        Schema::table('bookings', function (Blueprint $table) {
+            if (! Schema::hasColumn('bookings', 'created_at')) {
+                $table->timestamps(); // ini akan menambahkan created_at dan updated_at
+            }
+        });
+    }
 
-public function down()
-{
-    Schema::table('bookings', function (Blueprint $table) {
-        $table->dropTimestamps(); // untuk rollback
-    });
-}
-
+    public function down()
+    {
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->dropTimestamps(); // untuk rollback
+        });
+    }
 };

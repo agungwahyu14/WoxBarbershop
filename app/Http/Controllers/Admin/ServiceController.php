@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Service;
-use Yajra\DataTables\DataTables;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\DataTables;
 
 class ServiceController extends Controller
 {
@@ -27,25 +27,25 @@ class ServiceController extends Controller
             $query = Service::query();
 
             // Apply search filter
-            if ($request->has('search') && !empty($request->search['value'])) {
+            if ($request->has('search') && ! empty($request->search['value'])) {
                 $searchTerm = $request->search['value'];
-                $query->where(function($q) use ($searchTerm) {
+                $query->where(function ($q) use ($searchTerm) {
                     $q->where('name', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('description', 'LIKE', "%{$searchTerm}%")
-                      ->orWhere('price', 'LIKE', "%{$searchTerm}%");
+                        ->orWhere('description', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('price', 'LIKE', "%{$searchTerm}%");
                 });
             }
 
             // Apply category filter
-            if ($request->has('category_filter') && !empty($request->category_filter)) {
+            if ($request->has('category_filter') && ! empty($request->category_filter)) {
                 $query->where('category', $request->category_filter);
             }
 
             // Apply price range filter
-            if ($request->has('price_min') && !empty($request->price_min)) {
+            if ($request->has('price_min') && ! empty($request->price_min)) {
                 $query->where('price', '>=', $request->price_min);
             }
-            if ($request->has('price_max') && !empty($request->price_max)) {
+            if ($request->has('price_max') && ! empty($request->price_max)) {
                 $query->where('price', '<=', $request->price_max);
             }
 
@@ -53,84 +53,87 @@ class ServiceController extends Controller
 
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->editColumn('name', function($row) {
+                ->editColumn('name', function ($row) {
                     $icon = $this->getServiceIcon($row->name);
                     $status = $row->is_active ? 'Active' : 'Inactive';
                     $statusColor = $row->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-                    
+
                     return '<div class="flex items-center space-x-3">
                         <div class="flex-shrink-0">
                             <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="' . $icon . ' text-blue-600"></i>
+                                <i class="'.$icon.' text-blue-600"></i>
                             </div>
                         </div>
                         <div>
-                            <div class="font-semibold text-gray-900">' . e($row->name) . '</div>
-                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ' . $statusColor . '">
-                                ' . $status . '
+                            <div class="font-semibold text-gray-900">'.e($row->name).'</div>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium '.$statusColor.'">
+                                '.$status.'
                             </span>
                         </div>
                     </div>';
                 })
-                ->editColumn('category', function($row) {
+                ->editColumn('category', function ($row) {
                     $categoryColors = [
                         'haircut' => 'bg-blue-100 text-blue-800',
                         'styling' => 'bg-purple-100 text-purple-800',
                         'treatment' => 'bg-green-100 text-green-800',
                         'coloring' => 'bg-pink-100 text-pink-800',
-                        'other' => 'bg-gray-100 text-gray-800'
+                        'other' => 'bg-gray-100 text-gray-800',
                     ];
-                    
+
                     $color = $categoryColors[$row->category ?? 'other'] ?? $categoryColors['other'];
-                    
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' . $color . '">
-                        ' . ucfirst($row->category ?? 'Other') . '
+
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium '.$color.'">
+                        '.ucfirst($row->category ?? 'Other').'
                     </span>';
                 })
-                ->editColumn('price', function($row) {
+                ->editColumn('price', function ($row) {
                     return '<div class="text-right">
-                        <div class="text-lg font-bold text-green-600">Rp ' . number_format($row->price, 0, ',', '.') . '</div>
+                        <div class="text-lg font-bold text-green-600">Rp '.number_format($row->price, 0, ',', '.').'</div>
                         <div class="text-xs text-gray-500">Price</div>
                     </div>';
                 })
-                ->editColumn('duration', function($row) {
+                ->editColumn('duration', function ($row) {
                     if ($row->duration) {
                         return '<div class="flex items-center space-x-1">
                             <i class="fas fa-clock text-blue-500"></i>
-                            <span class="text-sm">' . $row->duration . ' min</span>
+                            <span class="text-sm">'.$row->duration.' min</span>
                         </div>';
                     }
+
                     return '<span class="text-gray-400 text-sm">Not set</span>';
                 })
-                ->editColumn('description', function($row) {
+                ->editColumn('description', function ($row) {
                     if ($row->description) {
                         return '<div class="max-w-xs">
-                            <p class="text-sm text-gray-600 truncate" title="' . e($row->description) . '">
-                                ' . e($row->description) . '
+                            <p class="text-sm text-gray-600 truncate" title="'.e($row->description).'">
+                                '.e($row->description).'
                             </p>
                         </div>';
                     }
+
                     return '<span class="text-gray-400 text-sm">No description</span>';
                 })
-                ->addColumn('image', function($row) {
+                ->addColumn('image', function ($row) {
                     if ($row->image) {
                         return '<div class="flex justify-center">
-                            <img src="' . Storage::url($row->image) . '" 
+                            <img src="'.Storage::url($row->image).'" 
                                  class="w-12 h-12 object-cover rounded-lg border border-gray-200" 
-                                 alt="' . e($row->name) . '" />
+                                 alt="'.e($row->name).'" />
                         </div>';
                     }
+
                     return '<div class="flex justify-center">
                         <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-image text-gray-400"></i>
                         </div>
                     </div>';
                 })
-                ->addColumn('stats', function($row) {
+                ->addColumn('stats', function ($row) {
                     $bookingsCount = $row->bookings ? $row->bookings->count() : 0;
-                    
+
                     return '<div class="text-center">
-                        <div class="text-sm font-semibold text-gray-900">' . $bookingsCount . '</div>
+                        <div class="text-sm font-semibold text-gray-900">'.$bookingsCount.'</div>
                         <div class="text-xs text-gray-500">Bookings</div>
                     </div>';
                 })
@@ -139,50 +142,50 @@ class ServiceController extends Controller
                     $editUrl = route('admin.services.edit', $row->id);
 
                     $actions = '<div class="flex justify-center items-center space-x-1">';
-                    
+
                     // View button
-                    $actions .= '<a href="' . $showUrl . '" 
+                    $actions .= '<a href="'.$showUrl.'" 
                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-all duration-200 group" 
                                    title="View Details">
                                     <i class="fas fa-eye text-xs group-hover:scale-110 transition-transform"></i>
                                 </a>';
-                    
+
                     // Edit button
                     if (auth()->user()->can('edit services')) {
-                        $actions .= '<a href="' . $editUrl . '" 
+                        $actions .= '<a href="'.$editUrl.'" 
                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-all duration-200 group" 
                                        title="Edit Service">
                                         <i class="fas fa-edit text-xs group-hover:scale-110 transition-transform"></i>
                                     </a>';
                     }
-                    
+
                     // Toggle status button
                     if (auth()->user()->can('edit services')) {
                         $statusAction = $row->is_active ? 'deactivate' : 'activate';
                         $statusColor = $row->is_active ? 'yellow' : 'green';
                         $statusIcon = $row->is_active ? 'pause' : 'play';
-                        
+
                         $actions .= '<button type="button" 
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-' . $statusColor . '-100 hover:bg-' . $statusColor . '-200 text-' . $statusColor . '-600 transition-all duration-200 group toggleStatusBtn" 
-                                            data-id="' . $row->id . '" 
-                                            data-action="' . $statusAction . '"
-                                            title="' . ucfirst($statusAction) . ' Service">
-                                        <i class="fas fa-' . $statusIcon . ' text-xs group-hover:scale-110 transition-transform"></i>
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-'.$statusColor.'-100 hover:bg-'.$statusColor.'-200 text-'.$statusColor.'-600 transition-all duration-200 group toggleStatusBtn" 
+                                            data-id="'.$row->id.'" 
+                                            data-action="'.$statusAction.'"
+                                            title="'.ucfirst($statusAction).' Service">
+                                        <i class="fas fa-'.$statusIcon.' text-xs group-hover:scale-110 transition-transform"></i>
                                     </button>';
                     }
-                    
+
                     // Delete button
                     if (auth()->user()->can('delete services')) {
                         $actions .= '<button type="button" 
                                             class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-all duration-200 group deleteBtn" 
-                                            data-id="' . $row->id . '" 
+                                            data-id="'.$row->id.'" 
                                             title="Delete Service">
                                         <i class="fas fa-trash text-xs group-hover:scale-110 transition-transform"></i>
                                     </button>';
                     }
-                    
+
                     $actions .= '</div>';
-                    
+
                     return $actions;
                 })
                 ->rawColumns(['name', 'category', 'price', 'duration', 'description', 'image', 'stats', 'action'])
@@ -198,13 +201,13 @@ class ServiceController extends Controller
         ];
 
         $categories = Service::distinct()->pluck('category')->filter()->values();
-        
+
         return view('admin.services.index', compact('stats', 'categories'));
     }
 
     public function show(Service $service)
     {
-        $service->load(['bookings' => function($query) {
+        $service->load(['bookings' => function ($query) {
             $query->orderBy('created_at', 'desc')->limit(10);
         }]);
 
@@ -218,9 +221,9 @@ class ServiceController extends Controller
             'styling' => 'Hair Styling',
             'treatment' => 'Hair Treatment',
             'coloring' => 'Hair Coloring',
-            'other' => 'Other Services'
+            'other' => 'Other Services',
         ];
-        
+
         return view('admin.services.create', compact('categories'));
     }
 
@@ -237,7 +240,7 @@ class ServiceController extends Controller
         ]);
 
         DB::beginTransaction();
-        
+
         try {
             $data = [
                 'name' => $validated['name'],
@@ -257,14 +260,14 @@ class ServiceController extends Controller
             DB::commit();
 
             return redirect()->route('admin.services.index')
-                           ->with('success', 'Service created successfully!');
-                           
+                ->with('success', 'Service created successfully!');
+
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Service creation failed: ' . $e->getMessage());
-            
+            Log::error('Service creation failed: '.$e->getMessage());
+
             return back()->withInput()
-                        ->with('error', 'Failed to create service. Please try again.');
+                ->with('error', 'Failed to create service. Please try again.');
         }
     }
 
@@ -275,16 +278,16 @@ class ServiceController extends Controller
             'styling' => 'Hair Styling',
             'treatment' => 'Hair Treatment',
             'coloring' => 'Hair Coloring',
-            'other' => 'Other Services'
+            'other' => 'Other Services',
         ];
-        
+
         return view('admin.services.edit', compact('service', 'categories'));
     }
 
     public function update(Request $request, Service $service)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:services,name,' . $service->id,
+            'name' => 'required|string|max:255|unique:services,name,'.$service->id,
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0|max:10000000',
             'duration' => 'nullable|integer|min:1|max:480',
@@ -294,7 +297,7 @@ class ServiceController extends Controller
         ]);
 
         DB::beginTransaction();
-        
+
         try {
             $data = [
                 'name' => $validated['name'],
@@ -310,7 +313,7 @@ class ServiceController extends Controller
                 if ($service->image) {
                     Storage::disk('public')->delete($service->image);
                 }
-                
+
                 $data['image'] = $request->file('image')->store('services', 'public');
             }
 
@@ -319,14 +322,14 @@ class ServiceController extends Controller
             DB::commit();
 
             return redirect()->route('admin.services.index')
-                           ->with('success', 'Service updated successfully!');
-                           
+                ->with('success', 'Service updated successfully!');
+
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Service update failed: ' . $e->getMessage());
-            
+            Log::error('Service update failed: '.$e->getMessage());
+
             return back()->withInput()
-                        ->with('error', 'Failed to update service. Please try again.');
+                ->with('error', 'Failed to update service. Please try again.');
         }
     }
 
@@ -334,36 +337,36 @@ class ServiceController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             // Check if service is used in bookings
             if ($service->bookings && $service->bookings->count() > 0) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Cannot delete service that has associated bookings.'
+                    'message' => 'Cannot delete service that has associated bookings.',
                 ], 422);
             }
-            
+
             // Delete image if exists
             if ($service->image) {
                 Storage::disk('public')->delete($service->image);
             }
-            
+
             $service->delete();
-            
+
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Service deleted successfully.'
+                'message' => 'Service deleted successfully.',
             ]);
-            
+
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Service deletion failed: ' . $e->getMessage());
-            
+            Log::error('Service deletion failed: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to delete service. Please try again.'
+                'message' => 'Failed to delete service. Please try again.',
             ], 500);
         }
     }
@@ -374,27 +377,27 @@ class ServiceController extends Controller
     public function toggleStatus(Request $request, Service $service)
     {
         $request->validate([
-            'action' => 'required|in:activate,deactivate'
+            'action' => 'required|in:activate,deactivate',
         ]);
 
         try {
             $isActivating = $request->action === 'activate';
-            
+
             $service->update([
-                'is_active' => $isActivating
+                'is_active' => $isActivating,
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Service ' . ($isActivating ? 'activated' : 'deactivated') . ' successfully.'
+                'message' => 'Service '.($isActivating ? 'activated' : 'deactivated').' successfully.',
             ]);
-            
+
         } catch (\Exception $e) {
-            Log::error('Service status toggle failed: ' . $e->getMessage());
-            
+            Log::error('Service status toggle failed: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update service status.'
+                'message' => 'Failed to update service status.',
             ], 500);
         }
     }
@@ -417,16 +420,16 @@ class ServiceController extends Controller
                 'price_range' => [
                     'min' => Service::where('is_active', true)->min('price') ?? 0,
                     'max' => Service::where('is_active', true)->max('price') ?? 0,
-                ]
+                ],
             ];
 
             return response()->json($stats);
-            
+
         } catch (\Exception $e) {
-            Log::error('Service stats retrieval failed: ' . $e->getMessage());
-            
+            Log::error('Service stats retrieval failed: '.$e->getMessage());
+
             return response()->json([
-                'error' => 'Failed to retrieve statistics.'
+                'error' => 'Failed to retrieve statistics.',
             ], 500);
         }
     }
@@ -434,7 +437,7 @@ class ServiceController extends Controller
     private function getServiceIcon($serviceName)
     {
         $serviceName = strtolower($serviceName);
-        
+
         $icons = [
             'potong rambut' => 'fas fa-cut',
             'hair cut' => 'fas fa-cut',

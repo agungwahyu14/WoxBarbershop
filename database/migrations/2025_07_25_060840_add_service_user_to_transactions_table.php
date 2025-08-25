@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            if (!Schema::hasColumn('transactions', 'service_id')) {
+            if (! Schema::hasColumn('transactions', 'service_id')) {
                 $table->unsignedBigInteger('service_id')->after('booking_id');
             }
-            if (!Schema::hasColumn('transactions', 'user_id')) {
+            if (! Schema::hasColumn('transactions', 'user_id')) {
                 $table->unsignedBigInteger('user_id')->after('service_id');
             }
         });

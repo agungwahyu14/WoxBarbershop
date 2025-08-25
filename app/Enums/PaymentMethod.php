@@ -1,5 +1,7 @@
 <?php
+
 // app/Enums/PaymentMethod.php
+
 namespace App\Enums;
 
 enum PaymentMethod: string
@@ -15,7 +17,7 @@ enum PaymentMethod: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::BANK_TRANSFER => 'Bank Transfer',
             self::BCA => 'BCA Virtual Account',
             self::QRIS => 'QRIS',
