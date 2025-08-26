@@ -59,18 +59,26 @@ class BookingController extends Controller
         if ($request->ajax()) {
             Log::info('Processing AJAX request for bookings datatable');
 
-            // Apply month filter
-            if ($request->has('month_filter') && ! empty($request->month_filter)) {
-                $query->whereMonth('created_at', $request->month_filter);
-            }
-
-            // Apply year filter
-            if ($request->has('year_filter') && ! empty($request->year_filter)) {
-                $query->whereYear('created_at', $request->year_filter);
-            }
-
             try {
                 $query = Booking::with(['user', 'service', 'hairstyle']);
+
+                // Apply status filter
+                if ($request->has('status_filter') && ! empty($request->status_filter)) {
+                    $query->where('status', $request->status_filter);
+                    Log::info('Status filter applied', ['status' => $request->status_filter]);
+                }
+
+                // Apply month filter
+                if ($request->has('month_filter') && ! empty($request->month_filter)) {
+                    $query->whereMonth('date_time', $request->month_filter);
+                    Log::info('Month filter applied', ['month' => $request->month_filter]);
+                }
+
+                // Apply year filter
+                if ($request->has('year_filter') && ! empty($request->year_filter)) {
+                    $query->whereYear('date_time', $request->year_filter);
+                    Log::info('Year filter applied', ['year' => $request->year_filter]);
+                }
 
                 $data = $query->get();
 
@@ -167,8 +175,6 @@ class BookingController extends Controller
                     })
                     ->addColumn('actions', function ($row) {
                         $showUrl = route('admin.bookings.show', $row->id);
-                        $confirmUrl = route('admin.bookings.update', $row->id);
-                        $cancelUrl = route('admin.bookings.destroy', $row->id);
                         $actions = '<div class="flex justify-center items-center space-x-2">';
 
                         // View details button

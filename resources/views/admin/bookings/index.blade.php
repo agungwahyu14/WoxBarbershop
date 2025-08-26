@@ -85,7 +85,7 @@
     </div>
 
     <section class="section main-section">
-      
+
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
@@ -113,6 +113,15 @@
                             @for ($year = date('Y'); $year >= 2020; $year--)
                                 <option value="{{ $year }}">{{ $year }}</option>
                             @endfor
+                        </select>
+                        <select id="status-filter"
+                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
                         </select>
                         <button id="resetFilter"
                             class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
@@ -290,13 +299,8 @@
                 }
             });
 
-            // Status filter change event
-            $('#status-filter').on('change', function() {
-                table.draw();
-            });
-
-            // Month/Year filter event listeners
-            $('#monthFilter, #yearFilter').on('change', function() {
+            // Month/Year/Status filter event listeners
+            $('#monthFilter, #yearFilter, #status-filter').on('change', function() {
                 table.ajax.reload();
             });
 
@@ -304,6 +308,7 @@
             $('#resetFilter').on('click', function() {
                 $('#monthFilter').val('');
                 $('#yearFilter').val('');
+                $('#status-filter').val('');
                 table.ajax.reload();
             });
 
@@ -374,7 +379,7 @@
         function updateBookingStatus(bookingId, status, action) {
             Swal.fire({
                 title: 'Konfirmasi',
-                text: action,
+                text: `Apakah Anda yakin ingin ${action}?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#d4af37',
@@ -383,7 +388,17 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(`/bookings/${bookingId}/status`, {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Sedang memproses permintaan Anda',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    });
+
+                    fetch(window.url(`admin/bookings/${bookingId}/status`), {
                             method: 'PATCH',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -393,16 +408,28 @@
                                 status: status
                             })
                         })
-                        .then(response => response.json())
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
                         .then(data => {
+                            Swal.close();
                             if (data.success) {
                                 showNotification('success', 'Success!', data.message);
-                                location.reload();
+                                // Reload DataTable instead of whole page for better UX
+                                if (typeof table !== 'undefined' && table.ajax) {
+                                    table.ajax.reload();
+                                } else {
+                                    location.reload();
+                                }
                             } else {
-                                showNotification('error', 'Error!', data.message);
+                                showNotification('error', 'Error!', data.message || 'Terjadi kesalahan');
                             }
                         })
                         .catch(error => {
+                            Swal.close();
                             console.error('Error:', error);
                             showNotification('error', 'Error!',
                                 'Terjadi kesalahan saat update status booking.');
@@ -417,7 +444,8 @@
     <style>
         /* Filter styling */
         #monthFilter,
-        #yearFilter {
+        #yearFilter,
+        #status-filter {
             min-width: 120px;
         }
 
@@ -434,6 +462,7 @@
 
             #monthFilter,
             #yearFilter,
+            #status-filter,
             #resetFilter {
                 width: 100%;
             }
