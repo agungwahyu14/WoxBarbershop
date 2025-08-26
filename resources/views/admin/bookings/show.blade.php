@@ -275,7 +275,7 @@
                     @endif
 
 
-                    <a href="{{ route('bookings.index') }}"
+                    <a href="{{ route('admin.bookings.index') }}"
                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
                         <i class="fas fa-arrow-left mr-2"></i>
                         Back to Bookings

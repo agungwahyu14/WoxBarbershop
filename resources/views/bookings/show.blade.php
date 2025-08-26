@@ -237,13 +237,15 @@
                             }
                         </script>
 
-
-                        <button type="button" id="pay-button-{{ $booking->id }}"
-                            onclick="initiatePayment({{ $booking->id }})"
-                            class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                            <i class="fas fa-credit-card mr-2"></i>
-                            Bayar Sekarang
-                        </button>
+                        {{-- Payment Button (only show if booking is not completed and payment is not paid) --}}
+                        @if (!in_array($booking->status, ['completed', 'cancelled']) && $booking->payment_status !== 'paid')
+                            <button type="button" id="pay-button-{{ $booking->id }}"
+                                onclick="initiatePayment({{ $booking->id }})"
+                                class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                <i class="fas fa-credit-card mr-2"></i>
+                                Bayar Sekarang
+                            </button>
+                        @endif
 
                         <script src="https://app.sandbox.midtrans.com/snap/snap.js"
                             data-client-key="{{ config('services.midtrans.client_key') }}"></script>

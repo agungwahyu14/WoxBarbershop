@@ -17,7 +17,7 @@
                     </p>
                 </div>
                 <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                    <a href="{{ route('users.index') }}"
+                    <a href="{{ route('admin.users.index') }}"
                         class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-arrow-left mr-2"></i>Back to Users
                     </a>
@@ -42,7 +42,7 @@
             </div>
 
             <div class="p-8">
-                <form method="POST" action="{{ route('users.store') }}" class="space-y-6">
+                <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-6">
                     @csrf
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -165,7 +165,7 @@
                     <!-- Action Buttons -->
                     <div class="border-t border-gray-200 pt-6">
                         <div class="flex justify-end space-x-4">
-                            <a href="{{ route('users.index') }}"
+                            <a href="{{ route('admin.users.index') }}"
                                 class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                 <i class="fas fa-times mr-2"></i>Cancel
                             </a>

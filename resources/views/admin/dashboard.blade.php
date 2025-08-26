@@ -43,7 +43,7 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3 class=" text-sm font-medium mb-2">Total Pelanggan</h3>
-                            <h1 class="text-3xl font-bold">{{ $totalCustomers }}</h1>
+                            <h1 class="text-3xl font-bold" id="total-customers">{{ $totalCustomers }}</h1>
 
                         </div>
                         <div class="bg-blue-400 bg-opacity-30 p-3 rounded-full">
@@ -60,7 +60,7 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3 class="text-green-100 text-sm font-medium mb-2">Total Revenue</h3>
-                            <h1 class="text-3xl font-bold">
+                            <h1 class="text-3xl font-bold" id="total-revenue">
                                 Rp{{ number_format($totalRevenue, 0, ',', '.') }}
                             </h1>
 
@@ -80,11 +80,12 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3 class="text-orange-100 text-sm font-medium mb-2">Today's Bookings</h3>
-                            <h1 class="text-3xl font-bold">
+                            <h1 class="text-3xl font-bold" id="today-bookings">
                                 {{ $todayBookings }}
                             </h1>
                             <p class="text-orange-200 text-xs mt-1">
-                                {{ $pendingBookings }} pending</p>
+                                <span id="pending-bookings">{{ $pendingBookings }}</span> pending
+                            </p>
                         </div>
                         <div class="bg-orange-400 bg-opacity-30 p-3 rounded-full">
                             <i class="mdi mdi-calendar-today text-2xl"></i>
@@ -100,7 +101,7 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3 class="text-pink-100 text-sm font-medium mb-2">Most Popular Service</h3>
-                            <h1 class="text-3xl font-bold text-white">{{ $popularServiceName }}</h1>
+                            <h1 class="text-3xl font-bold text-white" id="popular-service">{{ $popularServiceName }}</h1>
 
                         </div>
                         <div class="bg-pink-400 bg-opacity-30 p-3 rounded-full">
@@ -110,6 +111,90 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- Today's Bookings Table -->
+        <div class="card mb-8">
+            <header class="card-header bg-gradient-to-r from-indigo-50 to-blue-50">
+                <p class="card-header-title text-gray-800">
+                    <span class="icon text-indigo-600"><i class="mdi mdi-calendar-today"></i></span>
+                    Booking Hari Ini
+                </p>
+                <div class="card-header-icon">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-gray-500">Last updated: <span
+                                id="last-update">{{ now()->format('H:i:s') }}</span></span>
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse" title="Auto-refresh active"></div>
+                    </div>
+                </div>
+            </header>
+            <div class="card-content">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    No</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Pelanggan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Layanan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Waktu</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="today-bookings-table" class="bg-white divide-y divide-gray-200">
+                            @forelse($todayBookingsData as $index => $booking)
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $index + 1 }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $booking->user->name ?? 'N/A' }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ $booking->service->name ?? 'N/A' }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            {{ \Carbon\Carbon::parse($booking->date_time)->format('H:i') }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @php
+                                            $statusColors = [
+                                                'pending' => 'bg-yellow-100 text-yellow-800',
+                                                'confirmed' => 'bg-blue-100 text-blue-800',
+                                                'completed' => 'bg-green-100 text-green-800',
+                                                'cancelled' => 'bg-red-100 text-red-800',
+                                            ];
+                                        @endphp
+                                        <span
+                                            class="px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$booking->status] ?? 'bg-gray-100 text-gray-800' }}">
+                                            {{ ucfirst($booking->status) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            Rp{{ number_format($booking->total_price, 0, ',', '.') }}</div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                        <div class="flex flex-col items-center">
+                                            <i class="mdi mdi-calendar-remove text-4xl mb-2 text-gray-300"></i>
+                                            <p class="text-sm">Belum ada booking hari ini</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         @role('admin')
             <!-- Charts Row -->
@@ -266,6 +351,75 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Auto-refresh dashboard data every 3 seconds
+            function refreshDashboardData() {
+                fetch('{{ route('dashboard.data') }}', {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            console.error('Dashboard refresh error:', data.error);
+                            return;
+                        }
+
+                        // Update stats cards
+                        document.getElementById('total-customers').textContent = data.totalCustomers;
+                        document.getElementById('total-revenue').textContent = data.totalRevenue;
+                        document.getElementById('today-bookings').textContent = data.todayBookings;
+                        document.getElementById('pending-bookings').textContent = data.pendingBookings;
+                        document.getElementById('popular-service').textContent = data.popularServiceName;
+                        document.getElementById('last-update').textContent = data.lastUpdate;
+
+                        // Update today's bookings table
+                        const tableBody = document.getElementById('today-bookings-table');
+                        if (data.todayBookingsData.length > 0) {
+                            tableBody.innerHTML = data.todayBookingsData.map((booking, index) => `
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${index + 1}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">${booking.customer_name}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">${booking.service_name}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">${booking.time}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    ${booking.status_badge}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">${booking.total_price}</div>
+                                </td>
+                            </tr>
+                        `).join('');
+                        } else {
+                            tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                    <div class="flex flex-col items-center">
+                                        <i class="mdi mdi-calendar-remove text-4xl mb-2 text-gray-300"></i>
+                                        <p class="text-sm">Belum ada booking hari ini</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error refreshing dashboard:', error);
+                    });
+            }
+
+            // Start auto-refresh every 3 seconds
+            setInterval(refreshDashboardData, 3000);
+
             // Helper function to safely get canvas context
             function getCanvasContext(id) {
                 const canvas = document.getElementById(id);
@@ -458,12 +612,12 @@
                 // fetchRevenueData().then(data => updateChart(revenueChart, data));
             };
 
-            // Auto-refresh data every 5 minutes (optional)
-            setInterval(function() {
-                console.log('Auto-refreshing dashboard data...');
-                // Add your auto-refresh logic here
-                // You could make AJAX calls to update the charts with fresh data
-            }, 300000);
+            // Auto-refresh data every 3 seconds - this is now handled by the main refresh function above
+            // setInterval(function() {
+            //     console.log('Chart auto-refresh running...');
+            //     // Add your auto-refresh logic here
+            //     // You could make AJAX calls to update the charts with fresh data
+            // }, 3000);
         });
     </script>
 

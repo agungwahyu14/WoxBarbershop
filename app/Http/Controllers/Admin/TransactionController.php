@@ -2,20 +2,34 @@
 
 namespace App\Http\Controllers\Admin;
 
-// use App\Models\Transaction;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Traits\ExportTrait;
+use App\Exports\TransactionsExport;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 class TransactionController extends Controller
 {
+    use ExportTrait;
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $query = Transaction::all();
+            $query = Transaction::query();
 
-            return DataTables::of($query)
+            // Apply month filter
+            if ($request->has('month_filter') && ! empty($request->month_filter)) {
+                $query->whereMonth('transaction_time', $request->month_filter);
+            }
+
+            // Apply year filter
+            if ($request->has('year_filter') && ! empty($request->year_filter)) {
+                $query->whereYear('transaction_time', $request->year_filter);
+            }
+
+            $data = $query->get();
+
+            return DataTables::of($data)
                 ->addIndexColumn()
 
                 ->editColumn('name', function ($row) {
@@ -54,7 +68,7 @@ class TransactionController extends Controller
 
                 ->addColumn('action', function ($row) {
                     return '<div class="flex justify-center space-x-2">
-                    <a href="'.route('transactions.show', $row->id).'" class="btn btn-sm bg-blue-100 text-blue-600 rounded px-2 py-1 hover:bg-blue-200">
+                    <a href="'.route('admin.transactions.show', $row->id).'" class="btn btn-sm bg-blue-100 text-blue-600 rounded px-2 py-1 hover:bg-blue-200">
                         <i class="mdi mdi-eye"></i>
                     </a>
                 </div>';
@@ -78,5 +92,38 @@ class TransactionController extends Controller
         }
 
         return view('admin.transactions.show', compact('transaction'));
+    }
+
+    // Export methods
+    public function exportPdf(Request $request)
+    {
+        $query = Transaction::with(['booking.user', 'booking.service'])->orderBy('created_at', 'desc');
+        return $this->exportPDF($request, $query, 'admin.exports.transactions_pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        return $this->exportExcel($request, TransactionsExport::class);
+    }
+
+    public function exportCsv(Request $request)
+    {
+        return $this->exportCSV($request, TransactionsExport::class);
+    }
+
+    public function print(Request $request)
+    {
+        $query = Transaction::with(['booking.user', 'booking.service'])->orderBy('created_at', 'desc');
+        return $this->printView($request, $query, 'admin.exports.transactions_print');
+    }
+
+    protected function getModelName(): string
+    {
+        return 'transactions';
+    }
+
+    protected function getExportTitle(): string
+    {
+        return 'Data Transaksi';
     }
 }

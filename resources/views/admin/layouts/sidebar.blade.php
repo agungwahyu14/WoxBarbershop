@@ -28,7 +28,7 @@
                         <span class="icon"><i class="mdi mdi-plus"></i></span>
                     </a>
                     <ul>
-                        <li><a href="{{ route('users.index') }}"><span>Users</span></a></li>
+                        <li><a href="{{ route('admin.users.index') }}"><span>Users</span></a></li>
                     </ul>
                 </li>
 
@@ -39,8 +39,8 @@
                         <span class="icon"><i class="mdi mdi-plus"></i></span>
                     </a>
                     <ul>
-                        <li><a href="{{ route('services.index') }}"><span>Services</span></a></li>
-                        <li><a href="{{ route('hairstyles.index') }}"><span>Hairstyles</span></a></li>
+                        <li><a href="{{ route('admin.services.index') }}"><span>Services</span></a></li>
+                        <li><a href="{{ route('admin.hairstyles.index') }}"><span>Hairstyles</span></a></li>
                     </ul>
                 </li>
 
@@ -51,13 +51,13 @@
                         <span class="icon"><i class="mdi mdi-plus"></i></span>
                     </a>
                     <ul>
-                        <li><a href="{{ route('bookings.index') }}"><span>Bookings</span></a></li>
-                        <li><a href="{{ route('transactions.index') }}"><span>Transactions</span></a></li>
+                        <li><a href="{{ route('admin.bookings.index') }}"><span>Bookings</span></a></li>
+                        <li><a href="{{ route('admin.transactions.index') }}"><span>Transactions</span></a></li>
                     </ul>
                 </li>
 
                 <li>
-                    <a href="{{ route('loyalties.index') }}">
+                    <a href="{{ route('admin.loyalty.index') }}">
                         <span class="icon"><i class="mdi mdi-star-circle"></i></span>
                         <span class="menu-item-label">Loyalty Program</span>
                     </a>
@@ -67,7 +67,7 @@
             <p class="menu-label">Authorization</p>
             <ul class="menu-list">
                 <li>
-                    <a href="{{ route('roles.index') }}">
+                    <a href="{{ route('admin.roles.index') }}">
                         <span class="icon"><i class="mdi mdi-shield-key"></i></span>
                         <span class="menu-item-label">Role </span>
                     </a>
@@ -90,13 +90,13 @@
             <p class="menu-label">Transaksi</p>
             <ul class="menu-list">
                 <li>
-                    <a href="{{ route('bookings.index') }}">
+                    <a href="{{ route('admin.bookings.index') }}">
                         <span class="icon"><i class="mdi mdi-calendar-check"></i></span>
                         <span class="menu-item-label">Bookings</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('transactions.index') }}">
+                    <a href="{{ route('admin.transactions.index') }}">
                         <span class="icon"><i class="mdi mdi-cash-register"></i></span>
                         <span class="menu-item-label">Transactions</span>
                     </a>

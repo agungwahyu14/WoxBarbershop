@@ -13,10 +13,45 @@
     </section>
 
     <section class="section min-h-screen main-section">
+        <!-- Export Toolbar -->
+        @include('admin.components.export-toolbar', [
+            'title' => 'Transactions',
+            'baseExportUrl' => route('admin.transactions.index') . '/export/:type',
+        ])
+
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="flex items-center space-x-2">
+                        <select id="monthFilter"
+                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                            <option value="">All Months</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <select id="yearFilter"
+                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                            <option value="">All Years</option>
+                            @for ($year = date('Y'); $year >= 2020; $year--)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
+                        <button id="resetFilter"
+                            class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
+                            <i class="mdi mdi-refresh mr-1"></i>Reset
+                        </button>
+                    </div>
                     <div id="export-buttons" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
@@ -58,10 +93,16 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#transactions-table').DataTable({
+            const table = $('#transactions-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('transactions.index') }}',
+                ajax: {
+                    url: '{{ route('admin.transactions.index') }}',
+                    data: function(d) {
+                        d.month_filter = $('#monthFilter').val();
+                        d.year_filter = $('#yearFilter').val();
+                    }
+                },
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -154,12 +195,48 @@
                     }
                 },
             });
+
+            // Filter event listeners
+            $('#monthFilter, #yearFilter').on('change', function() {
+                table.ajax.reload();
+            });
+
+            // Reset filter button
+            $('#resetFilter').on('click', function() {
+                $('#monthFilter').val('');
+                $('#yearFilter').val('');
+                table.ajax.reload();
+            });
         });
     </script>
 @endpush
 
 @push('styles')
     <style>
+        /* Filter styling */
+        #monthFilter,
+        #yearFilter {
+            min-width: 120px;
+        }
+
+        #resetFilter {
+            min-width: 80px;
+        }
+
+        /* Responsive filter layout */
+        @media (max-width: 640px) {
+            .flex.items-center.space-x-2 {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            #monthFilter,
+            #yearFilter,
+            #resetFilter {
+                width: 100%;
+            }
+        }
+
         th.text-center {
             text-align: center !important;
         }

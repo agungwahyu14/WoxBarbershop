@@ -30,7 +30,7 @@ class ServiceController extends Controller
                     return $row->description ? '<div class="max-w-xs truncate" title="'.$row->description.'">'.$row->description.'</div>' : '-';
                 })
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('services.edit', $row->id);
+                    $editUrl = route('admin.services.edit', $row->id);
 
                     return '
                         <div class="flex justify-center items-center gap-2">

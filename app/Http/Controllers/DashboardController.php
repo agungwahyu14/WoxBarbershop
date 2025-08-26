@@ -74,6 +74,12 @@ class DashboardController extends Controller
                 $revenueData[] = $monthlyRevenue;
             }
 
+            // Today's bookings with details
+            $todayBookingsData = Booking::with(['user', 'service'])
+                ->whereDate('date_time', today())
+                ->orderBy('date_time', 'asc')
+                ->get();
+
             return view('admin.dashboard', compact(
                 'totalCustomers',
                 'totalBookings',
@@ -85,7 +91,8 @@ class DashboardController extends Controller
                 'popularServiceCount',
                 'userActivity',
                 'monthLabels',        // chart label bulan
-                'revenueData'         // chart data revenue
+                'revenueData',        // chart data revenue
+                'todayBookingsData'   // today's bookings data
             ));
         }
 
@@ -95,6 +102,82 @@ class DashboardController extends Controller
         $users = User::all();
 
         return view('dashboard', compact('services', 'hairstyles', 'users'));
+    }
+
+    /**
+     * Get dashboard data for AJAX refresh
+     */
+    public function getDashboardData(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json(['error' => 'Invalid request'], 400);
+        }
+
+        $user = Auth::user();
+        
+        if (!$user->hasRole(['admin', 'pegawai'])) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Get fresh data
+        $totalCustomers = User::role('pelanggan')->count();
+        $totalBookings = Booking::count();
+        $todayBookings = Booking::whereDate('date_time', today())->count();
+        $pendingBookings = Booking::whereDate('date_time', today())->where('status', 'pending')->count();
+        $totalRevenue = Transaction::where('transaction_status', 'settlement')
+            ->whereDate('created_at', Carbon::today())
+            ->sum('gross_amount');
+
+        // Most popular service
+        $popularService = Booking::select('service_id', \DB::raw('count(*) as count'))
+            ->groupBy('service_id')
+            ->orderByDesc('count')
+            ->first();
+
+        $popularServiceName = $popularService ? Service::find($popularService->service_id)->name : '-';
+
+        // Today's bookings with details
+        $todayBookingsData = Booking::with(['user', 'service'])
+            ->whereDate('date_time', today())
+            ->orderBy('date_time', 'asc')
+            ->get()
+            ->map(function ($booking) {
+                return [
+                    'id' => $booking->id,
+                    'customer_name' => $booking->user->name ?? 'N/A',
+                    'service_name' => $booking->service->name ?? 'N/A',
+                    'time' => Carbon::parse($booking->date_time)->format('H:i'),
+                    'status' => $booking->status,
+                    'status_badge' => $this->getStatusBadge($booking->status),
+                    'total_price' => 'Rp' . number_format($booking->total_price, 0, ',', '.')
+                ];
+            });
+
+        return response()->json([
+            'totalCustomers' => $totalCustomers,
+            'totalBookings' => $totalBookings,
+            'todayBookings' => $todayBookings,
+            'pendingBookings' => $pendingBookings,
+            'totalRevenue' => 'Rp' . number_format($totalRevenue, 0, ',', '.'),
+            'popularServiceName' => $popularServiceName,
+            'todayBookingsData' => $todayBookingsData,
+            'lastUpdate' => now()->format('H:i:s')
+        ]);
+    }
+
+    /**
+     * Get status badge HTML
+     */
+    private function getStatusBadge($status)
+    {
+        $badges = [
+            'pending' => '<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">Pending</span>',
+            'confirmed' => '<span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Confirmed</span>',
+            'completed' => '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Completed</span>',
+            'cancelled' => '<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Cancelled</span>',
+        ];
+
+        return $badges[$status] ?? '<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">' . ucfirst($status) . '</span>';
     }
 
     /**

@@ -22,11 +22,11 @@
                             <i class="fas fa-envelope mr-2"></i>Resend Verification
                         </button>
                     @endif --}}
-                    <a href="{{ route('users.edit', $user) }}"
+                    <a href="{{ route('admin.users.edit', $user) }}"
                         class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-edit mr-2"></i>Edit User
                     </a>
-                    <a href="{{ route('users.index') }}"
+                    <a href="{{ route('admin.users.index') }}"
                         class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-arrow-left mr-2"></i>Back to Users
                     </a>
@@ -295,7 +295,7 @@
                         </h3>
                     </div>
                     <div class="p-6 space-y-3">
-                        <a href="{{ route('users.edit', $user) }}"
+                        <a href="{{ route('admin.users.edit', $user) }}"
                             class="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                             <i class="fas fa-edit mr-2"></i>Edit User Details
                         </a>

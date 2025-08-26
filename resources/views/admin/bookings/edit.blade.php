@@ -15,7 +15,7 @@
     <section class="section main-section">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 space-y-8">
-            <form action="{{ route('bookings.update', $booking->id) }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('admin.bookings.update', $booking->id) }}" method="POST" enctype="multipart/form-data"
                 class="space-y-6">
                 @csrf
                 @method('PUT')
@@ -112,7 +112,7 @@
 
                 {{-- Submit --}}
                 <div class="flex justify-end pt-4">
-                    <a href="{{ route('bookings.index') }}"
+                    <a href="{{ route('admin.bookings.index') }}"
                         class="mr-4 inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancel</a>
                     <button type="submit"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update</button>

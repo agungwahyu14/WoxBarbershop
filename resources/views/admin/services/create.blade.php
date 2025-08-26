@@ -21,7 +21,7 @@
                 <div class="section main-section">
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Create New Service</h1>
 
-                    <form action="{{ route('services.store') }}" method="POST" class="space-y-6">
+                    <form action="{{ route('admin.services.store') }}" method="POST" class="space-y-6">
                         @csrf
 
                         <!-- Name -->
@@ -53,7 +53,7 @@
 
                         <!-- Action Buttons -->
                         <div class="flex justify-end">
-                            <a href="{{ route('services.index') }}"
+                            <a href="{{ route('admin.services.index') }}"
                                 class="mr-4 inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md">Cancel</a>
                             <button type="submit"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md">Create</button>

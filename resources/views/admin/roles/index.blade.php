@@ -21,7 +21,7 @@
             <!-- Table Header -->
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <a href="{{ route('roles.create') }}"
+                    <a href="{{ route('admin.roles.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                         <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
                         Create Role
@@ -80,7 +80,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('roles.index') }}',
+                    url: '{{ route('admin.roles.index') }}',
                     type: 'GET',
                 },
                 columns: [{
@@ -194,7 +194,7 @@
 
             $(document).on('click', '.deleteBtn', function() {
                 const roleId = $(this).data('id');
-                const deleteUrl = '{{ route('roles.destroy', ':id') }}'.replace(':id', roleId);
+                const deleteUrl = '{{ route('admin.roles.destroy', ':id') }}'.replace(':id', roleId);
 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -257,7 +257,7 @@
                             timer: 3000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = '{{ route('roles.index') }}';
+                            window.location.href = '{{ route('admin.roles.index') }}';
                         });
                     },
                     error: function(xhr) {

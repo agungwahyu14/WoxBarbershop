@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use App\Traits\ExportTrait;
+use App\Exports\ServicesExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +14,7 @@ use Yajra\DataTables\DataTables;
 
 class ServiceController extends Controller
 {
+    use ExportTrait;
     public function __construct()
     {
         $this->middleware('auth');
@@ -36,10 +39,10 @@ class ServiceController extends Controller
                 });
             }
 
-            // Apply category filter
-            if ($request->has('category_filter') && ! empty($request->category_filter)) {
-                $query->where('category', $request->category_filter);
-            }
+            // // Apply category filter
+            // if ($request->has('category_filter') && ! empty($request->category_filter)) {
+            //     $query->where('category', $request->category_filter);
+            // }
 
             // Apply price range filter
             if ($request->has('price_min') && ! empty($request->price_min)) {
@@ -47,6 +50,16 @@ class ServiceController extends Controller
             }
             if ($request->has('price_max') && ! empty($request->price_max)) {
                 $query->where('price', '<=', $request->price_max);
+            }
+
+            // Apply month filter
+            if ($request->has('month_filter') && ! empty($request->month_filter)) {
+                $query->whereMonth('created_at', $request->month_filter);
+            }
+
+            // Apply year filter
+            if ($request->has('year_filter') && ! empty($request->year_filter)) {
+                $query->whereYear('created_at', $request->year_filter);
             }
 
             $data = $query->latest()->get();
@@ -138,17 +151,17 @@ class ServiceController extends Controller
                     </div>';
                 })
                 ->addColumn('action', function ($row) {
-                    $showUrl = route('admin.services.show', $row->id);
+                    // $showUrl = route('admin.services.show', $row->id);
                     $editUrl = route('admin.services.edit', $row->id);
 
                     $actions = '<div class="flex justify-center items-center space-x-1">';
 
                     // View button
-                    $actions .= '<a href="'.$showUrl.'" 
-                                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-all duration-200 group" 
-                                   title="View Details">
-                                    <i class="fas fa-eye text-xs group-hover:scale-110 transition-transform"></i>
-                                </a>';
+                    // $actions .= '<a href="'.$showUrl.'" 
+                    //                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-all duration-200 group" 
+                    //                title="View Details">
+                    //                 <i class="fas fa-eye text-xs group-hover:scale-110 transition-transform"></i>
+                    //             </a>';
 
                     // Edit button
                     if (auth()->user()->can('edit services')) {
@@ -160,19 +173,19 @@ class ServiceController extends Controller
                     }
 
                     // Toggle status button
-                    if (auth()->user()->can('edit services')) {
-                        $statusAction = $row->is_active ? 'deactivate' : 'activate';
-                        $statusColor = $row->is_active ? 'yellow' : 'green';
-                        $statusIcon = $row->is_active ? 'pause' : 'play';
+                    // if (auth()->user()->can('edit services')) {
+                    //     $statusAction = $row->is_active ? 'deactivate' : 'activate';
+                    //     $statusColor = $row->is_active ? 'yellow' : 'green';
+                    //     $statusIcon = $row->is_active ? 'pause' : 'play';
 
-                        $actions .= '<button type="button" 
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-'.$statusColor.'-100 hover:bg-'.$statusColor.'-200 text-'.$statusColor.'-600 transition-all duration-200 group toggleStatusBtn" 
-                                            data-id="'.$row->id.'" 
-                                            data-action="'.$statusAction.'"
-                                            title="'.ucfirst($statusAction).' Service">
-                                        <i class="fas fa-'.$statusIcon.' text-xs group-hover:scale-110 transition-transform"></i>
-                                    </button>';
-                    }
+                    //     $actions .= '<button type="button" 
+                    //                         class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-'.$statusColor.'-100 hover:bg-'.$statusColor.'-200 text-'.$statusColor.'-600 transition-all duration-200 group toggleStatusBtn" 
+                    //                         data-id="'.$row->id.'" 
+                    //                         data-action="'.$statusAction.'"
+                    //                         title="'.ucfirst($statusAction).' Service">
+                    //                     <i class="fas fa-'.$statusIcon.' text-xs group-hover:scale-110 transition-transform"></i>
+                    //                 </button>';
+                    // }
 
                     // Delete button
                     if (auth()->user()->can('delete services')) {
@@ -200,9 +213,9 @@ class ServiceController extends Controller
             'average_price' => Service::where('is_active', true)->avg('price') ?? 0,
         ];
 
-        $categories = Service::distinct()->pluck('category')->filter()->values();
+        // $categories = Service::distinct()->pluck('category')->filter()->values();
 
-        return view('admin.services.index', compact('stats', 'categories'));
+        return view('admin.services.index', compact('stats'));
     }
 
     public function show(Service $service)
@@ -465,5 +478,38 @@ class ServiceController extends Controller
         }
 
         return 'fas fa-scissors';
+    }
+
+    // Export methods
+    public function exportPdf(Request $request)
+    {
+        $query = Service::orderBy('created_at', 'desc');
+        return $this->exportPDF($request, $query, 'admin.exports.services_pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        return $this->exportExcel($request, ServicesExport::class);
+    }
+
+    public function exportCsv(Request $request)
+    {
+        return $this->exportCSV($request, ServicesExport::class);
+    }
+
+    public function print(Request $request)
+    {
+        $query = Service::orderBy('created_at', 'desc');
+        return $this->printView($request, $query, 'admin.exports.services_print');
+    }
+
+    protected function getModelName(): string
+    {
+        return 'services';
+    }
+
+    protected function getExportTitle(): string
+    {
+        return 'Data Layanan';
     }
 }

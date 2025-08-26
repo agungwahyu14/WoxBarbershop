@@ -2,8 +2,9 @@
     <div class="container mx-auto px-4 py-4">
         <nav class="flex justify-between items-center">
             <!-- Logo -->
-            <div class="text-2xl font-playfair font-bold tracking-wider">
-                <span class="text-primary">WOX'S Barbershop</span><span class="text-secondary">.</span>
+            <div class="flex items-center space-x-3">
+                <img src="{{ asset('images/Logo.jpeg') }}" alt="WOX'S Barbershop Logo" class="h-12 w-auto object-contain">
+                <span class="text-2xl font-playfair font-bold tracking-wider text-primary">Wox's Barbershop</span>
             </div>
 
             <!-- Desktop Navigation Menu -->

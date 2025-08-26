@@ -15,6 +15,12 @@
     </section>
 
     <section class="section main-section">
+        <!-- Export Toolbar -->
+        @include('admin.components.export-toolbar', [
+            'title' => 'Loyalty',
+            'baseExportUrl' => route('admin.loyalty.index') . '/export/:type',
+        ])
+
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
@@ -48,7 +54,7 @@
             const table = $('#loyalty-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('loyalties.index') }}',
+                ajax: '{{ route('admin.loyalties.index') }}',
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',

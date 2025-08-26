@@ -24,7 +24,7 @@
 
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Edit Role</h1>
 
-                    <form action="{{ route('roles.update', $role->id) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('admin.roles.update', $role->id) }}" method="POST" class="space-y-6">
                         @csrf
                         @method('PUT')
 
@@ -39,7 +39,7 @@
 
                         <!-- Permissions -->
                         <div class="flex justify-end">
-                            <a href="{{ route('roles.index') }}"
+                            <a href="{{ route('admin.roles.index') }}"
                                 class="mr-4 inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md">
                                 Cancel
                             </a>

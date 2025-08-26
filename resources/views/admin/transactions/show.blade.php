@@ -8,7 +8,7 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">View complete transaction information</p>
             </div>
             <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                <a href="{{ route('transactions.index') }}"
+                <a href="{{ route('admin.transactions.index') }}"
                     class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                     <i class="fas fa-arrow-left mr-2"></i>Back to Transactions
                 </a>

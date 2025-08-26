@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="pt-4">
-                    <a href="{{ route('loyalties.index') }}"
+                    <a href="{{ route('admin.loyalties.index') }}"
                         class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg shadow-sm transition duration-200">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Loyalty
                     </a>

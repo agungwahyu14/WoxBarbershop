@@ -59,6 +59,16 @@ class BookingController extends Controller
         if ($request->ajax()) {
             Log::info('Processing AJAX request for bookings datatable');
 
+            // Apply month filter
+            if ($request->has('month_filter') && ! empty($request->month_filter)) {
+                $query->whereMonth('created_at', $request->month_filter);
+            }
+
+            // Apply year filter
+            if ($request->has('year_filter') && ! empty($request->year_filter)) {
+                $query->whereYear('created_at', $request->year_filter);
+            }
+
             try {
                 $query = Booking::with(['user', 'service', 'hairstyle']);
 
@@ -156,9 +166,9 @@ class BookingController extends Controller
                     </span>';
                     })
                     ->addColumn('actions', function ($row) {
-                        $showUrl = route('bookings.show', $row->id);
-                        $confirmUrl = route('bookings.update', $row->id);
-                        $cancelUrl = route('bookings.destroy', $row->id);
+                        $showUrl = route('admin.bookings.show', $row->id);
+                        $confirmUrl = route('admin.bookings.update', $row->id);
+                        $cancelUrl = route('admin.bookings.destroy', $row->id);
                         $actions = '<div class="flex justify-center items-center space-x-2">';
 
                         // View details button

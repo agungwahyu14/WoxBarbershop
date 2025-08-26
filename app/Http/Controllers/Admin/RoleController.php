@@ -54,7 +54,7 @@ class RoleController extends Controller
                     </div>';
                 })
                 ->addColumn('action', function ($row) {
-                    $editUrl = route('roles.edit', $row->id);
+                    $editUrl = route('admin.roles.edit', $row->id);
                     $canDelete = ! in_array($row->name, ['admin', 'super-admin']); // Protect critical roles
 
                     $actions = '

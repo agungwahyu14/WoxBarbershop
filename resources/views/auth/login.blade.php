@@ -18,49 +18,59 @@
     </div>
 
     <!-- Form container -->
-    <div class="relative z-10 flex items-center justify-center min-h-screen ">
-        <div class="bg-white bg-opacity-95 p-8 shadow-lg w-full max-w-md rounded-lg">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+    <div class="relative z-10 flex items-center justify-center min-h-screen px-4">
+        <div class="w-full max-w-md">
+            <!-- Logo -->
+            {{-- <div class="text-center mb-8">
+                <img src="{{ asset('images/Logo.jpeg') }}" alt="WOX'S Barbershop Logo"
+                    class="h-40 w-auto object-contain mx-auto">
 
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
+            </div> --}}
 
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
-                        autocomplete="username"
-                        class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg">
-                </div>
+            <!-- Login Card -->
+            <div class="bg-white bg-opacity-95 p-8 shadow-lg rounded-lg">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
 
-                <div class="mb-4">
-                    <label for="password" class="block text-gray-700 font-medium mb-1">Password</label>
-                    <input id="password" type="password" name="password" required autocomplete="current-password"
-                        class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg">
-                </div>
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
 
-                <div class="flex items-center justify-between mb-6">
-                    <label class="inline-flex items-center">
-                        <input id="remember_me" type="checkbox"
-                            class="border-gray-300 text-[#d4af37] focus:ring-[#d4af37]" name="remember">
-                        <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
-                    </label>
-                    @if (Route::has('password.request'))
-                        <a class="text-sm text-[#d4af37] hover:underline" href="{{ route('password.request') }}">
-                            Lupa password?
-                        </a>
-                    @endif
-                </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" required
+                            autofocus autocomplete="username"
+                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg">
+                    </div>
 
-                <button type="submit"
-                    class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-semibold transition duration-300 rounded-lg">
-                    Login
-                </button>
+                    <div class="mb-4">
+                        <label for="password" class="block text-gray-700 font-medium mb-1">Password</label>
+                        <input id="password" type="password" name="password" required autocomplete="current-password"
+                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg">
+                    </div>
 
-                <p class="mt-4 text-sm text-center text-gray-600">
-                    Belum punya akun?
-                    <a href="{{ route('register') }}" class="text-[#d4af37] hover:underline">Daftar di sini</a>
-                </p>
-            </form>
+                    <div class="flex items-center justify-between mb-6">
+                        <label class="inline-flex items-center">
+                            <input id="remember_me" type="checkbox"
+                                class="border-gray-300 text-[#d4af37] focus:ring-[#d4af37]" name="remember">
+                            <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
+                        </label>
+                        @if (Route::has('password.request'))
+                            <a class="text-sm text-[#d4af37] hover:underline" href="{{ route('password.request') }}">
+                                Lupa password?
+                            </a>
+                        @endif
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-semibold transition duration-300 rounded-lg">
+                        Login
+                    </button>
+
+                    <p class="mt-4 text-sm text-center text-gray-600">
+                        Belum punya akun?
+                        <a href="{{ route('register') }}" class="text-[#d4af37] hover:underline">Daftar di sini</a>
+                    </p>
+                </form>
+            </div>
         </div>
     </div>
 

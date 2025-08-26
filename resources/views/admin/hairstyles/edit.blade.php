@@ -15,7 +15,7 @@
     <section class="section main-section">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden p-6">
-            <form action="{{ route('hairstyles.update', $hairstyle->id) }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('admin.hairstyles.update', $hairstyle->id) }}" method="POST" enctype="multipart/form-data"
                 class="space-y-6">
                 @csrf
                 @method('PUT')
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="flex justify-end">
-                    <a href="{{ route('hairstyles.index') }}"
+                    <a href="{{ route('admin.hairstyles.index') }}"
                         class="mr-4 inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md">Cancel</a>
                     <button type="submit"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md">Update</button>
