@@ -9,12 +9,10 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\HairstyleController;
 use App\Http\Controllers\LoyaltyController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecommendationController;
-use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 /*
