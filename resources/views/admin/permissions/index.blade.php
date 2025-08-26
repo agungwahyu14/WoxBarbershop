@@ -74,7 +74,7 @@
     <script>
         $(document).ready(function() {
             // Initialize DataTable with improved styling
-            const table = $('#permissions-table').DataTable({
+            let table = $('#permissions-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {

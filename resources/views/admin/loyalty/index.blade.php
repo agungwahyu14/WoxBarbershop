@@ -45,7 +45,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const table = $('#loyalty-table').DataTable({
+            let table = $('#loyalty-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('admin.loyalty.index') }}',

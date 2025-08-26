@@ -180,7 +180,7 @@
     <script>
         $(document).ready(function() {
             // Enhanced DataTable configuration
-            const table = $('#bookings-table').DataTable({
+            let table = $('#bookings-table').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
@@ -422,7 +422,8 @@
                         }
                     });
 
-                    fetch(window.url(`admin/bookings/${bookingId}/status`), {
+                    fetch('{{ route('admin.bookings.updateStatus', ':bookingId') }}'.replace(':bookingId',
+                            bookingId), {
                             method: 'PATCH',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -433,33 +434,62 @@
                             })
                         })
                         .then(response => {
+                            console.log('Response status:', response.status);
                             if (!response.ok) {
                                 throw new Error(`HTTP error! status: ${response.status}`);
                             }
                             return response.json();
                         })
                         .then(data => {
+                            console.log('Response data:', data);
                             Swal.close();
                             if (data.success) {
                                 showNotification('success', 'Success!', data.message);
                                 // Reload DataTable instead of whole page for better UX
                                 if (typeof table !== 'undefined' && table.ajax) {
-                                    table.ajax.reload();
+                                    table.ajax.reload(null, false); // Keep pagination
                                 } else {
                                     location.reload();
                                 }
+                                // Update statistics
+                                updateStatistics();
                             } else {
                                 showNotification('error', 'Error!', data.message || 'Terjadi kesalahan');
                             }
                         })
                         .catch(error => {
                             Swal.close();
-                            console.error('Error:', error);
+                            console.error('Error details:', error);
                             showNotification('error', 'Error!',
-                                'Terjadi kesalahan saat update status booking.');
+                                'Terjadi kesalahan saat update status booking: ' + error.message);
                         });
                 }
             });
+        }
+
+        // Function to update statistics after status change
+        function updateStatistics() {
+            // Update today's bookings count
+            fetch('{{ route('admin.bookings.statistics') }}', {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('today-bookings').textContent = data.today_bookings || '0';
+                        document.getElementById('pending-bookings').textContent = data.pending_bookings || '0';
+                        document.getElementById('progress-bookings').textContent = data.progress_bookings || '0';
+                        document.getElementById('completed-bookings').textContent = data.completed_bookings || '0';
+                    }
+                })
+                .catch(error => {
+                    console.log('Error updating statistics:', error);
+                });
         }
     </script>
 @endpush

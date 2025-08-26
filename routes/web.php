@@ -84,6 +84,8 @@ Route::middleware('auth')->group(function () {
         ]);
         Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])
             ->name('admin.bookings.updateStatus');
+        Route::get('/bookings/statistics', [BookingController::class, 'getStatistics'])
+            ->name('admin.bookings.statistics');
 
         // Common resources for pegawai & admin
         Route::resource('services', AdminServiceController::class)->names([

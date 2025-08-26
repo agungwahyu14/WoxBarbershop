@@ -88,7 +88,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const table = $('#transactions-table').DataTable({
+            let table = $('#transactions-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {

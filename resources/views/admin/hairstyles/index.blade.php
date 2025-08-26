@@ -53,7 +53,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const table = $('#hairstyles-table').DataTable({
+            let table = $('#hairstyles-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('admin.hairstyles.index') }}',

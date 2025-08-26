@@ -209,8 +209,8 @@ class BookingController extends Controller
                                 break;
                         }
 
-                        // Cancel/Delete button (only for non-completed bookings)
-                        if ($row->status !== 'completed') {
+                        // Cancel/Delete button (only for pending, confirmed, and in_progress bookings)
+                        if (!in_array($row->status, ['completed', 'cancelled'])) {
                             $actions .= '<button onclick="cancelBooking('.$row->id.')" 
                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200" 
                                            title="Cancel Booking">
@@ -723,6 +723,40 @@ class BookingController extends Controller
             ]);
 
             return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Get booking statistics for real-time updates
+     */
+    public function getStatistics()
+    {
+        try {
+            $statistics = [
+                'today_bookings' => Booking::whereDate('date_time', today())->count(),
+                'pending_bookings' => Booking::where('status', 'pending')->count(),
+                'progress_bookings' => Booking::where('status', 'in_progress')->count(),
+                'completed_bookings' => Booking::where('status', 'completed')->whereDate('date_time', today())->count(),
+            ];
+
+            return response()->json([
+                'success' => true,
+                'today_bookings' => $statistics['today_bookings'],
+                'pending_bookings' => $statistics['pending_bookings'],
+                'progress_bookings' => $statistics['progress_bookings'],
+                'completed_bookings' => $statistics['completed_bookings'],
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error getting booking statistics', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get statistics',
+            ], 500);
         }
     }
 }

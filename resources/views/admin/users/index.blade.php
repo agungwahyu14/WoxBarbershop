@@ -107,7 +107,7 @@
                 }
             });
 
-            const table = $('#users-table').DataTable({
+            let table = $('#users-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
