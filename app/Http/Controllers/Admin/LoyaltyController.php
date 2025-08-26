@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Loyalty;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -25,7 +26,7 @@ class LoyaltyController extends Controller
                     return $row->user->name ?? '-';
                 })
                 ->addColumn('action', function ($row) {
-                    $showUrl = route('loyalties.show', $row->id);
+                    $showUrl = route('admin.loyalty.show', $row->id);
 
                     return '<a href="'.$showUrl.'" 
                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-green-600 transition-all duration-200 group" 

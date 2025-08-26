@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\HairstyleController as AdminHairstyleController;
+use App\Http\Controllers\Admin\LoyaltyController as AdminLoyaltyController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LoyaltyController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecommendationController;
@@ -104,15 +104,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'admin.hairstyles.update',
             'destroy' => 'admin.hairstyles.destroy',
         ]);
-        Route::resource('bookings', BookingController::class)->names([
-            'index' => 'admin.bookings.index',
-            'create' => 'admin.bookings.create',
-            'store' => 'admin.bookings.store',
-            'show' => 'admin.bookings.show',
-            'edit' => 'admin.bookings.edit',
-            'update' => 'admin.bookings.update',
-            'destroy' => 'admin.bookings.destroy',
-        ]);
+       
         Route::resource('transactions', TransactionController::class)->names([
             'index' => 'admin.transactions.index',
             'create' => 'admin.transactions.create',
@@ -122,7 +114,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'admin.transactions.update',
             'destroy' => 'admin.transactions.destroy',
         ]);
-        Route::resource('loyalty', LoyaltyController::class)->names([
+        Route::resource('loyalty', AdminLoyaltyController::class)->names([
             'index' => 'admin.loyalty.index',
             'create' => 'admin.loyalty.create',
             'store' => 'admin.loyalty.store',
