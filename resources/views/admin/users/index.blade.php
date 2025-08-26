@@ -314,8 +314,34 @@
                 });
             });
 
-            // Auto reload
-            setInterval(() => table.ajax.reload(null, false), 30000);
+            // Auto reload with authentication check
+            let refreshInterval = setInterval(function() {
+                // Check if user is still authenticated
+                fetch('{{ route('admin.users.index') }}', {
+                    method: 'HEAD',
+                    credentials: 'same-origin'
+                }).then(response => {
+                    if (response.ok) {
+                        // User is still authenticated, reload table
+                        table.ajax.reload(null, false);
+                    } else {
+                        // User is not authenticated, clear interval and redirect
+                        clearInterval(refreshInterval);
+                        if (response.status === 401 || response.status === 419) {
+                            window.location.href = '{{ route('login') }}';
+                        }
+                    }
+                }).catch(error => {
+                    // Connection error, clear interval
+                    clearInterval(refreshInterval);
+                    console.log('Auto-refresh stopped due to connection error');
+                });
+            }, 30000);
+
+            // Stop refresh when page is about to unload
+            window.addEventListener('beforeunload', function() {
+                clearInterval(refreshInterval);
+            });
         });
     </script>
 @endpush

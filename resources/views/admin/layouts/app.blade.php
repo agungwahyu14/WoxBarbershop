@@ -120,6 +120,20 @@
     <!-- Enhanced JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+    <!-- Setup jQuery AJAX defaults -->
+    <script>
+        // Setup CSRF token for all AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+    </script>
+
+    <!-- Admin Auto-Refresh Utility -->
+    <script src="{{ asset('js/admin-auto-refresh.js?v=' . time()) }}"></script>
+
     <!-- Enhanced DataTables -->
     <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.0/js/dataTables.responsive.min.js"></script>
@@ -180,14 +194,89 @@
             // Auto-focus first input in forms
             $('form input:first').focus();
 
-            // Enhanced form submission
-            $('form').on('submit', function() {
+            // Enhanced form submission - exclude logout form
+            $('form:not(#logout-form)').on('submit', function() {
+                console.log('Form submission intercepted for AJAX:', this.action);
                 $(this).find('button[type="submit"]').prop('disabled', true).html(
                     '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...');
             });
 
             // Auto-hide alerts after 5 seconds
             $('.alert').delay(5000).fadeOut('slow');
+
+            // Global AJAX error handler for authentication issues
+            $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
+                // Don't handle errors if user is logging out
+                if (window.isLoggingOut) {
+                    return;
+                }
+
+                if (jqXHR.status === 401 || jqXHR.status === 419) {
+                    // Session expired or CSRF token mismatch
+                    console.log('Authentication error detected, redirecting to login...');
+                    window.location.href = '{{ route('login') }}';
+                } else if (jqXHR.status === 0) {
+                    // Connection error - only log if it's not an aborted request
+                    if (jqXHR.statusText !== 'abort' && thrownError !== 'abort') {
+                        console.warn('Network connection issue detected:', {
+                            url: ajaxSettings.url,
+                            status: jqXHR.status,
+                            statusText: jqXHR.statusText,
+                            error: thrownError
+                        });
+                    }
+                } else if (jqXHR.status >= 500) {
+                    // Server errors
+                    console.error('Server error detected:', {
+                        url: ajaxSettings.url,
+                        status: jqXHR.status,
+                        statusText: jqXHR.statusText
+                    });
+                }
+            });
+
+            // Handle logout form submission to clear intervals
+            $('#logout-form').on('submit', function(e) {
+                console.log('Logout form submitted - normal form submission');
+
+                // Use AdminAutoRefresh utility if available
+                if (window.AdminAutoRefresh) {
+                    AdminAutoRefresh.setLoggingOut();
+                } else {
+                    // Fallback: Clear all active intervals before logout
+                    if (window.refreshInterval) {
+                        clearInterval(window.refreshInterval);
+                    }
+                    if (window.dashboardRefreshInterval) {
+                        clearInterval(window.dashboardRefreshInterval);
+                    }
+
+                    // Set a flag to prevent new intervals from starting
+                    window.isLoggingOut = true;
+                }
+
+                // Show logout message (don't prevent default - let form submit naturally)
+                $('button[type="submit"]', this).html(
+                    '<i class="fas fa-spinner fa-spin mr-2"></i>Logging out...');
+            });
+
+            // Set login URL for utility
+            window.LOGIN_URL = '{{ route('login') }}';
+
+            // Clear intervals when page unloads
+            window.addEventListener('beforeunload', function() {
+                if (window.AdminAutoRefresh) {
+                    AdminAutoRefresh.clearAll();
+                } else {
+                    // Fallback cleanup
+                    if (window.refreshInterval) {
+                        clearInterval(window.refreshInterval);
+                    }
+                    if (window.dashboardRefreshInterval) {
+                        clearInterval(window.dashboardRefreshInterval);
+                    }
+                }
+            });
         });
     </script>
 

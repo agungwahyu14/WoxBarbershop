@@ -1,8 +1,8 @@
-[2025-08-26 06:01:35] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36"} 
-[2025-08-26 06:01:35] local.INFO: User logout successful  
-[2025-08-26 06:08:42] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"} 
-[2025-08-26 06:08:42] local.INFO: User logout successful  
-[2025-08-26 06:09:16] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36"} 
-[2025-08-26 06:09:16] local.INFO: User logout successful  
-[2025-08-26 06:14:41] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36"} 
-[2025-08-26 06:14:41] local.INFO: User logout successful  
+[2025-08-26 06:37:06] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36"} 
+[2025-08-26 06:37:06] local.INFO: User logout successful  
+[2025-08-26 06:40:30] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36"} 
+[2025-08-26 06:40:30] local.INFO: User logout successful  
+[2025-08-26 06:46:31] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36"} 
+[2025-08-26 06:46:31] local.INFO: User logout successful  
+[2025-08-26 06:50:56] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36"} 
+[2025-08-26 06:50:56] local.INFO: User logout successful  

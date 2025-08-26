@@ -233,8 +233,8 @@
                 });
             });
 
-            // Handle form submissions via AJAX (for create/update)
-            $('form').on('submit', function(e) {
+            // Handle form submissions via AJAX (for create/update) - exclude logout form
+            $('form:not(#logout-form)').on('submit', function(e) {
                 e.preventDefault();
                 const form = $(this);
                 const formData = form.serialize();

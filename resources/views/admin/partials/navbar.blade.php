@@ -24,7 +24,7 @@
                     </a>
                     <hr class="navbar-divider">
                     <!-- Form Logout Breeze -->
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form method="POST" action="{{ route('logout') }}" id="logout-form">
                         @csrf
                         <button type="submit" class="navbar-item"
                             style="background: none; border: none; cursor: pointer;">

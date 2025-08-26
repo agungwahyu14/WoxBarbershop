@@ -21,11 +21,11 @@
     <div class="relative z-10 flex items-center justify-center min-h-screen px-4">
         <div class="w-full max-w-md">
             <!-- Logo -->
-            {{-- <div class="text-center mb-8">
-                <img src="{{ asset('images/Logo.jpeg') }}" alt="WOX'S Barbershop Logo"
-                    class="h-40 w-auto object-contain mx-auto">
+                {{-- <div class="text-center mb-8">
+                    <img src="{{ asset('images/Logo.jpeg') }}" alt="WOX'S Barbershop Logo"
+                        class="h-40 w-auto object-contain mx-auto">
 
-            </div> --}}
+                </div> --}}
 
             <!-- Login Card -->
             <div class="bg-white bg-opacity-95 p-8 shadow-lg rounded-lg">

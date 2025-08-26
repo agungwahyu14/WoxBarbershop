@@ -414,11 +414,48 @@
                     })
                     .catch(error => {
                         console.error('Error refreshing dashboard:', error);
+                        // Clear interval on persistent errors
+                        if (window.dashboardRefreshInterval) {
+                            clearInterval(window.dashboardRefreshInterval);
+                        }
                     });
             }
 
-            // Start auto-refresh every 3 seconds
-            setInterval(refreshDashboardData, 3000);
+            // Start auto-refresh every 3 seconds with authentication check
+            function startDashboardRefresh() {
+                window.dashboardRefreshInterval = setInterval(function() {
+                    // Check if user is still authenticated
+                    fetch('{{ route('dashboard.data') }}', {
+                        method: 'HEAD',
+                        credentials: 'same-origin'
+                    }).then(response => {
+                        if (response.ok) {
+                            // User is still authenticated, refresh dashboard
+                            refreshDashboardData();
+                        } else {
+                            // User is not authenticated, clear interval and redirect
+                            clearInterval(window.dashboardRefreshInterval);
+                            if (response.status === 401 || response.status === 419) {
+                                window.location.href = '{{ route('login') }}';
+                            }
+                        }
+                    }).catch(error => {
+                        // Connection error, clear interval
+                        clearInterval(window.dashboardRefreshInterval);
+                        console.log('Dashboard auto-refresh stopped due to connection error');
+                    });
+                }, 3000);
+            }
+
+            // Start the refresh
+            startDashboardRefresh();
+
+            // Stop refresh when page is about to unload
+            window.addEventListener('beforeunload', function() {
+                if (window.dashboardRefreshInterval) {
+                    clearInterval(window.dashboardRefreshInterval);
+                }
+            });
 
             // Helper function to safely get canvas context
             function getCanvasContext(id) {

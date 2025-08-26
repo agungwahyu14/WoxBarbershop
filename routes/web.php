@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\HairstyleController as AdminHairstyleController;
-use App\Http\Controllers\Admin\LoyaltyController as AdminLoyaltyController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
@@ -123,7 +122,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'admin.transactions.update',
             'destroy' => 'admin.transactions.destroy',
         ]);
-        Route::resource('loyalty', AdminLoyaltyController::class)->names([
+        Route::resource('loyalty', LoyaltyController::class)->names([
             'index' => 'admin.loyalty.index',
             'create' => 'admin.loyalty.create',
             'store' => 'admin.loyalty.store',
@@ -163,42 +162,6 @@ Route::middleware('auth')->group(function () {
             ->name('admin.users.toggle-status');
         Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
 
-        // Export Routes
-        // Users Exports
-        Route::get('/users/export/pdf', [UserController::class, 'exportPdf'])->name('admin.users.export.pdf');
-        Route::get('/users/export/excel', [UserController::class, 'exportExcel'])->name('admin.users.export.excel');
-        Route::get('/users/export/csv', [UserController::class, 'exportCsv'])->name('admin.users.export.csv');
-        Route::get('/users/print', [UserController::class, 'print'])->name('admin.users.print');
-
-        // Services Exports
-        Route::get('/services/export/pdf', [AdminServiceController::class, 'exportPdf'])->name('admin.services.export.pdf');
-        Route::get('/services/export/excel', [AdminServiceController::class, 'exportExcel'])->name('admin.services.export.excel');
-        Route::get('/services/export/csv', [AdminServiceController::class, 'exportCsv'])->name('admin.services.export.csv');
-        Route::get('/services/print', [AdminServiceController::class, 'print'])->name('admin.services.print');
-
-        // Hairstyles Exports
-        Route::get('/hairstyles/export/pdf', [AdminHairstyleController::class, 'exportPdf'])->name('admin.hairstyles.export.pdf');
-        Route::get('/hairstyles/export/excel', [AdminHairstyleController::class, 'exportExcel'])->name('admin.hairstyles.export.excel');
-        Route::get('/hairstyles/export/csv', [AdminHairstyleController::class, 'exportCsv'])->name('admin.hairstyles.export.csv');
-        Route::get('/hairstyles/print', [AdminHairstyleController::class, 'print'])->name('admin.hairstyles.print');
-
-        // Bookings Exports
-        Route::get('/bookings/export/pdf', [AdminBookingController::class, 'exportPdf'])->name('admin.bookings.export.pdf');
-        Route::get('/bookings/export/excel', [AdminBookingController::class, 'exportExcel'])->name('admin.bookings.export.excel');
-        Route::get('/bookings/export/csv', [AdminBookingController::class, 'exportCsv'])->name('admin.bookings.export.csv');
-        Route::get('/bookings/print', [AdminBookingController::class, 'print'])->name('admin.bookings.print');
-
-        // Transactions Exports
-        Route::get('/transactions/export/pdf', [TransactionController::class, 'exportPdf'])->name('admin.transactions.export.pdf');
-        Route::get('/transactions/export/excel', [TransactionController::class, 'exportExcel'])->name('admin.transactions.export.excel');
-        Route::get('/transactions/export/csv', [TransactionController::class, 'exportCsv'])->name('admin.transactions.export.csv');
-        Route::get('/transactions/print', [TransactionController::class, 'print'])->name('admin.transactions.print');
-
-        // Loyalty Exports
-        Route::get('/loyalty/export/pdf', [AdminLoyaltyController::class, 'exportPdf'])->name('admin.loyalty.export.pdf');
-        Route::get('/loyalty/export/excel', [AdminLoyaltyController::class, 'exportExcel'])->name('admin.loyalty.export.excel');
-        Route::get('/loyalty/export/csv', [AdminLoyaltyController::class, 'exportCsv'])->name('admin.loyalty.export.csv');
-        Route::get('/loyalty/print', [AdminLoyaltyController::class, 'print'])->name('admin.loyalty.print');
     });
 
    

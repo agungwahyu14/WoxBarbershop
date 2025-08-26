@@ -237,8 +237,8 @@
                 });
             });
 
-            // Handle form submissions via AJAX (for create/update)
-            $('form').on('submit', function(e) {
+            // Handle form submissions via AJAX (for create/update) - exclude logout form
+            $('form:not(#logout-form)').on('submit', function(e) {
                 e.preventDefault();
                 const form = $(this);
                 const formData = form.serialize();
@@ -277,10 +277,42 @@
         });
 
 
-        // Refresh table data
-        setInterval(function() {
-            table.ajax.reload(null, false);
+        // Refresh table data with authentication check
+        window.refreshInterval = setInterval(function() {
+            // Check if user is logging out
+            if (window.isLoggingOut) {
+                clearInterval(window.refreshInterval);
+                return;
+            }
+
+            // Check if user is still authenticated
+            fetch('{{ route('admin.roles.index') }}', {
+                method: 'HEAD',
+                credentials: 'same-origin'
+            }).then(response => {
+                if (response.ok && !window.isLoggingOut) {
+                    // User is still authenticated, reload table
+                    table.ajax.reload(null, false);
+                } else {
+                    // User is not authenticated, clear interval and redirect
+                    clearInterval(window.refreshInterval);
+                    if (response.status === 401 || response.status === 419) {
+                        window.location.href = '{{ route('login') }}';
+                    }
+                }
+            }).catch(error => {
+                // Connection error, clear interval only if not logging out
+                if (!window.isLoggingOut) {
+                    clearInterval(window.refreshInterval);
+                    console.warn('Roles auto-refresh stopped due to connection error:', error.message);
+                }
+            });
         }, 30000); // Refresh every 30 seconds
+
+        // Stop refresh when page is about to unload
+        window.addEventListener('beforeunload', function() {
+            clearInterval(window.refreshInterval);
+        });
     </script>
 @endpush
 

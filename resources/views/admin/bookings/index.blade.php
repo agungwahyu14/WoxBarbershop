@@ -340,11 +340,35 @@
                 // For now, we'll just refresh the page stats
             }
 
-            // Auto-refresh every 30 seconds
-            setInterval(function() {
-                table.ajax.reload(null, false);
-                updateStats();
+            // Auto-refresh every 30 seconds with authentication check
+            let refreshInterval = setInterval(function() {
+                // Check if user is still authenticated
+                fetch('{{ route('admin.bookings.index') }}', {
+                    method: 'HEAD',
+                    credentials: 'same-origin'
+                }).then(response => {
+                    if (response.ok) {
+                        // User is still authenticated, reload table and update stats
+                        table.ajax.reload(null, false);
+                        updateStats();
+                    } else {
+                        // User is not authenticated, clear interval and redirect
+                        clearInterval(refreshInterval);
+                        if (response.status === 401 || response.status === 419) {
+                            window.location.href = '{{ route('login') }}';
+                        }
+                    }
+                }).catch(error => {
+                    // Connection error, clear interval
+                    clearInterval(refreshInterval);
+                    console.log('Auto-refresh stopped due to connection error');
+                });
             }, 30000);
+
+            // Stop refresh when page is about to unload
+            window.addEventListener('beforeunload', function() {
+                clearInterval(refreshInterval);
+            });
 
             // Modal functions
 
