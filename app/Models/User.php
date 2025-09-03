@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -114,10 +115,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getProfilePhotoUrlAttribute(): string
     {
-        if ($this->profile_photo) {
+        if ($this->profile_photo && Storage::disk('public')->exists($this->profile_photo)) {
             return asset('storage/'.$this->profile_photo);
         }
 
-        return asset('img/default-avatar.png');
+        // Use a more reliable placeholder service or create initials-based avatar
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF&size=200';
     }
 }

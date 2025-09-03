@@ -2,7 +2,7 @@
 
 @section('content')
     <section id="beranda" class="h-screen flex items-center justify-center text-center text-white parallax relative"
-        style="background-image: url('{{ asset('images/hero.jpg') }}');">
+        style="background-image: url('{{ asset('images/hero2.jpeg') }}');">
         <div class="absolute inset-0 bg-black opacity-60"></div>
 
         <div class="container mx-auto px-4 animate-fade-in relative z-10">
@@ -437,28 +437,24 @@
             <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center">Galeri Kami</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <a href="#"
-                    class="gallery-item overflow-hidden  shadow-md hover:shadow-xl transition-all duration-300">
-                    <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
-                        alt="Barber at work"
-                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500 rounded-lg ">
+                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                    <img src="{{ asset('images/galeri1.jpeg') }}" alt="Wox's Barbershop Gallery 1"
+                        class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl ">
                 </a>
                 <a href="#"
-                    class="gallery-item overflow-hidden  shadow-md hover:shadow-xl transition-all duration-300">
-                    <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-                        alt="Haircut"
-                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500 rounded-lg">
+                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                    <img src="{{ asset('images/galeri2.jpeg') }}" alt="Wox's Barbershop Gallery 2"
+                        class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl">
                 </a>
                 <a href="#"
-                    class="gallery-item overflow-hidden  shadow-md hover:shadow-xl transition-all duration-300">
-                    <img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-                        alt="Beard trim"
-                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500 rounded-lg">
+                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                    <img src="{{ asset('images/hero.jpeg') }}" alt="Wox's Barbershop Gallery 3"
+                        class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl">
                 </a>
                 <a href="#"
-                    class="gallery-item overflow-hidden  shadow-md hover:shadow-xl transition-all duration-300">
-                    <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
-                        alt="Barbershop interior"
-                        class="w-full h-48 object-cover transform hover:scale-110 transition-all duration-500 rounded-lg">
+                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                    <img src="{{ asset('images/galeri4.jpeg') }}" alt="Wox's Barbershop Gallery 4"
+                        class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl">
                 </a>
             </div>
         </div>
