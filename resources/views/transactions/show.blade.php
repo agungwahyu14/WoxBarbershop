@@ -15,6 +15,23 @@
                     {{-- Informasi Transaksi --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
+                        {{-- Customer Information --}}
+                        <div class="col-span-full border-b border-gray-200 pb-4 mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                                <i class="fas fa-user mr-2 text-blue-600"></i> Informasi Customer
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h4 class="text-sm text-gray-500 uppercase mb-1">Nama Pelanggan</h4>
+                                    <p class="text-lg font-medium text-gray-800">{{ $data['customer_name'] ?? '-' }}</p>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm text-gray-500 uppercase mb-1">Email</h4>
+                                    <p class="text-lg text-gray-700">{{ $data['customer_email'] ?? '-' }}</p>
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Order ID --}}
                         <div>
                             <h4 class="text-sm text-gray-500 uppercase mb-1">Order ID</h4>

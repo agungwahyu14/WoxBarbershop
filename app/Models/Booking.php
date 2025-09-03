@@ -48,4 +48,10 @@ class Booking extends Model
     {
         return $this->hasMany(Transaction::class, 'booking_id');
     }
+
+    // Single transaction (latest)
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class, 'order_id', 'id')->latest();
+    }
 }

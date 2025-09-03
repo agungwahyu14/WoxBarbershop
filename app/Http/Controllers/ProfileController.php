@@ -6,7 +6,9 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -36,15 +38,88 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        try {
+            $user = $request->user();
+            $data = $request->validated();
+            $oldData = $user->only(['name', 'email', 'no_telepon', 'profile_photo']);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+            Log::info('Profile update attempt', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'ip' => $request->ip(),
+                'updated_fields' => array_keys($data)
+            ]);
+
+            // Handle profile photo upload
+            if ($request->hasFile('profile_photo')) {
+                try {
+                    // Delete old profile photo if exists
+                    if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+                        Storage::disk('public')->delete($user->profile_photo);
+                        
+                        Log::info('Old profile photo deleted', [
+                            'user_id' => $user->id,
+                            'old_photo' => $user->profile_photo
+                        ]);
+                    }
+
+                    // Store new profile photo
+                    $path = $request->file('profile_photo')->store('profile_photos', 'public');
+                    $data['profile_photo'] = $path;
+                    
+                    Log::info('New profile photo uploaded', [
+                        'user_id' => $user->id,
+                        'new_photo_path' => $path,
+                        'file_size' => $request->file('profile_photo')->getSize(),
+                        'mime_type' => $request->file('profile_photo')->getMimeType()
+                    ]);
+
+                } catch (\Exception $e) {
+                    Log::error('Profile photo upload failed', [
+                        'user_id' => $user->id,
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+
+                    return Redirect::route('profile.edit')
+                        ->with('error', 'Failed to upload profile photo. Please try again.');
+                }
+            }
+
+            $user->fill($data);
+
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+                Log::info('Email changed - verification reset', [
+                    'user_id' => $user->id,
+                    'old_email' => $oldData['email'],
+                    'new_email' => $data['email']
+                ]);
+            }
+
+            $user->save();
+
+            Log::info('Profile updated successfully', [
+                'user_id' => $user->id,
+                'old_data' => $oldData,
+                'new_data' => $user->only(['name', 'email', 'no_telepon', 'profile_photo']),
+                'ip' => $request->ip()
+            ]);
+
+            return Redirect::route('profile.edit')
+                ->with('success', 'Profile updated successfully!');
+
+        } catch (\Exception $e) {
+            Log::error('Profile update failed', [
+                'user_id' => $request->user()->id ?? 'unknown',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'ip' => $request->ip()
+            ]);
+
+            return Redirect::route('profile.edit')
+                ->with('error', 'Failed to update profile. Please try again.');
         }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**

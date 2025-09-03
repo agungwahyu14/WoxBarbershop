@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -25,12 +26,59 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        try {
+            Log::channel('user_activity')->info('User login attempt', [
+                'email' => $request->email,
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]);
 
-        $request->session()->regenerate();
+            $request->authenticate();
 
-        // Default redirect for customers and other roles
-        return redirect()->intended(RouteServiceProvider::HOME);
+            // Check if user is active
+            $user = Auth::user();
+            if (!$user->is_active) {
+                Auth::logout();
+                
+                Log::channel('user_activity')->warning('Login attempt by inactive user', [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'ip' => $request->ip()
+                ]);
+
+                return back()->withErrors([
+                    'email' => 'Your account has been deactivated. Please contact administrator.',
+                ])->with('error', 'Your account has been deactivated. Please contact administrator.');
+            }
+
+            // Update last login timestamp
+            $user->updateLastLogin();
+            
+            Log::channel('user_activity')->info('User login successful', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'last_login_at' => $user->last_login_at,
+                'ip' => $request->ip()
+            ]);
+
+            $request->session()->regenerate();
+
+            // Default redirect for customers and other roles
+            return redirect()->intended(RouteServiceProvider::HOME)
+                ->with('success', 'Welcome back, ' . $user->name . '!');
+
+        } catch (\Exception $e) {
+            Log::error('Login error occurred', [
+                'error' => $e->getMessage(),
+                'email' => $request->email ?? 'unknown',
+                'ip' => $request->ip(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()->withErrors([
+                'email' => 'An error occurred during login. Please try again.',
+            ])->with('error', 'An error occurred during login. Please try again.');
+        }
     }
 
     /**

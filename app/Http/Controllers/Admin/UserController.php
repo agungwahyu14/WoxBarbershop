@@ -549,9 +549,30 @@ class UserController extends Controller
 
         try {
             $isActivating = $request->action === 'activate';
+            $previousStatus = $user->is_active;
+
+            Log::info('User status toggle attempt', [
+                'admin_user_id' => auth()->id(),
+                'admin_email' => auth()->user()->email,
+                'target_user_id' => $user->id,
+                'target_user_email' => $user->email,
+                'action' => $request->action,
+                'previous_status' => $previousStatus,
+                'new_status' => $isActivating,
+                'ip' => $request->ip()
+            ]);
 
             $user->update([
                 'is_active' => $isActivating,
+            ]);
+
+            Log::info('User status toggle successful', [
+                'admin_user_id' => auth()->id(),
+                'target_user_id' => $user->id,
+                'target_user_email' => $user->email,
+                'action_completed' => $request->action,
+                'status_changed_from' => $previousStatus,
+                'status_changed_to' => $isActivating
             ]);
 
             return response()->json([
@@ -560,7 +581,15 @@ class UserController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('User status toggle failed: '.$e->getMessage());
+            Log::error('User status toggle failed', [
+                'admin_user_id' => auth()->id(),
+                'target_user_id' => $user->id,
+                'target_user_email' => $user->email,
+                'action' => $request->action,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'ip' => $request->ip()
+            ]);
 
             return response()->json([
                 'success' => false,

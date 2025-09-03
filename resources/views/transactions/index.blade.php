@@ -35,6 +35,21 @@
                             {{-- Card Body --}}
                             <div class="p-6">
 
+                                {{-- Customer Information --}}
+                                <div class="mb-4 pb-4 border-b border-gray-100">
+                                    <h4 class="text-sm font-medium text-gray-900 mb-2">Informasi Customer</h4>
+                                    <div class="space-y-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-600">Nama:</span>
+                                            <span class="text-sm font-medium text-gray-900">{{ $tx['name'] ?? '-' }}</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-600">Email:</span>
+                                            <span class="text-sm text-gray-700">{{ $tx['email'] ?? '-' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {{-- Payment Method --}}
                                 <div class="mb-4">
                                     <div class="flex items-center justify-between">

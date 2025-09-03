@@ -280,6 +280,153 @@
         });
     </script>
 
+    <!-- SweetAlert Notifications for Admin -->
+    <script>
+        // SweetAlert for Success Messages
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                timer: 3000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true
+            });
+        @endif
+
+        // SweetAlert for Error Messages
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                timer: 5000,
+                showConfirmButton: true,
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true
+            });
+        @endif
+
+        // SweetAlert for Admin Validation Errors
+        @if (session('validation_error_category'))
+            @php
+                $errorCategory = session('validation_error_category');
+                $validationErrors = session('validation_errors_detail', []);
+                $businessLogicErrors = session('business_logic_errors', []);
+                $allErrors = array_merge($validationErrors, $businessLogicErrors);
+            @endphp
+
+            @if ($errorCategory === 'business_hours')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Jam Operasional',
+                    html: `
+                        <div class="text-left">
+                            <p class="mb-3">{{ collect($allErrors)->flatten()->first() }}</p>
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-red-800 mb-2">
+                                    <i class="fas fa-clock mr-1"></i> Jam Operasional:
+                                </h4>
+                                <p class="text-red-700"><strong>Senin - Sabtu:</strong> 09:00 - 21:00<br><strong>Minggu:</strong> Tutup</p>
+                            </div>
+                        </div>
+                    `,
+                    confirmButtonText: 'Understood',
+                    confirmButtonColor: '#DC2626'
+                });
+            @else
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    html: `
+                        <div class="text-left">
+                            @foreach ($allErrors as $field => $errors)
+                                @foreach ($errors as $error)
+                                    <p class="mb-2">• {{ $error }}</p>
+                                @endforeach
+                            @endforeach
+                        </div>
+                    `,
+                    confirmButtonText: 'Fix Issues',
+                    confirmButtonColor: '#DC2626'
+                });
+            @endif
+        @endif
+
+        // SweetAlert for Regular Validation Errors
+        @if ($errors->any() && !session('validation_error_category'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Form Validation Error',
+                html: `
+                    <div class="text-left">
+                        @foreach ($errors->all() as $error)
+                            <p class="mb-2">• {{ $error }}</p>
+                        @endforeach
+                    </div>
+                `,
+                confirmButtonText: 'Fix Form',
+                confirmButtonColor: '#DC2626'
+            });
+        @endif
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: '{{ session('error') }}',
+            timer: 5000,
+            showConfirmButton: true,
+            toast: true,
+            position: 'top-end',
+            timerProgressBar: true
+        });
+        @endif
+
+        // SweetAlert for Warning Messages
+        @if (session('warning'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning!',
+                text: '{{ session('warning') }}',
+                timer: 4000,
+                showConfirmButton: true,
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true
+            });
+        @endif
+
+        // SweetAlert for Info Messages
+        @if (session('info'))
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: '{{ session('info') }}',
+                timer: 3000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true
+            });
+        @endif
+
+        // SweetAlert for Status Messages (profile updated, etc)
+        @if (session('status'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Updated!',
+                text: 'Changes saved successfully!',
+                timer: 3000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true
+            });
+        @endif
+    </script>
+
     @stack('scripts')
 </body>
 

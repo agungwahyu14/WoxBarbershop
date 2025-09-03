@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -87,7 +88,25 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function updateLastLogin(): void
     {
-        $this->update(['last_login_at' => now()]);
+        try {
+            $previousLogin = $this->last_login_at;
+            $this->update(['last_login_at' => now()]);
+            
+            Log::info('User last login updated', [
+                'user_id' => $this->id,
+                'email' => $this->email,
+                'previous_login' => $previousLogin,
+                'current_login' => $this->fresh()->last_login_at
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to update last login', [
+                'user_id' => $this->id,
+                'email' => $this->email,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 
     /**

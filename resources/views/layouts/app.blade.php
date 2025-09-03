@@ -148,6 +148,294 @@
         });
     </script>
 
+    <!-- SweetAlert Script -->
+    <script>
+        // SweetAlert for Success Messages
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                timer: 4000,
+                showConfirmButton: true,
+                toast: true,
+                position: 'top-end'
+            });
+        @endif
+
+        // SweetAlert for Booking Success (Special handling)
+        @if (session('booking_success'))
+            @php $bookingData = session('booking_success'); @endphp
+            Swal.fire({
+                icon: 'success',
+                title: 'Booking Berhasil!',
+                html: `
+                <div class="text-left">
+                    <p><strong>Nama:</strong> {{ $bookingData['name'] }}</p>
+                    <p><strong>Nomor Antrian:</strong> <span class="text-2xl font-bold text-blue-600">{{ $bookingData['queue_number'] }}</span></p>
+                    <p><strong>Waktu:</strong> {{ $bookingData['date_time'] ?? '' }}</p>
+                    <p><strong>Layanan:</strong> {{ $bookingData['service_name'] ?? '' }}</p>
+                </div>
+                <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <p class="text-sm text-blue-800">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Mohon hadir 10 menit sebelum waktu booking Anda
+                    </p>
+                </div>
+            `,
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3B82F6'
+            });
+        @endif
+
+        // SweetAlert for Business Hours Error
+        @if (session('error') && session('error_type') === 'business_hours')
+            Swal.fire({
+                icon: 'error',
+                title: 'Jam Operasional',
+                html: `
+                <div class="text-left">
+                    <p class="mb-3">{{ session('error') }}</p>
+                    <div class="bg-red-50 p-3 rounded-lg">
+                        <h4 class="font-semibold text-red-800 mb-2">
+                            <i class="fas fa-clock mr-1"></i> Jam Operasional:
+                        </h4>
+                        <p class="text-red-700">
+                            <strong>Senin - Sabtu:</strong> 09:00 - 21:00<br>
+                            <strong>Minggu:</strong> Tutup
+                        </p>
+                    </div>
+                </div>
+            `,
+                showConfirmButton: true,
+                confirmButtonText: 'Pilih Waktu Lain',
+                confirmButtonColor: '#DC2626'
+            });
+        @endif
+
+        // SweetAlert for Time Conflict Warning
+        @if (session('warning') && session('error_type') === 'time_conflict')
+            Swal.fire({
+                icon: 'warning',
+                title: 'Waktu Tidak Tersedia',
+                html: `
+                <div class="text-left">
+                    <p class="mb-3">{{ session('warning') }}</p>
+                    <div class="bg-yellow-50 p-3 rounded-lg">
+                        <p class="text-yellow-800">
+                            <i class="fas fa-lightbulb mr-1"></i>
+                            <strong>Tip:</strong> Coba pilih waktu 30 menit sebelum atau sesudah waktu yang diminta
+                        </p>
+                    </div>
+                </div>
+            `,
+                showConfirmButton: true,
+                confirmButtonText: 'Coba Lagi',
+                confirmButtonColor: '#F59E0B'
+            });
+        @endif
+
+        // SweetAlert for General Error Messages
+        @if (session('error') && !session('error_type'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                timer: 5000,
+                showConfirmButton: true,
+                toast: true,
+                position: 'top-end'
+            });
+        @endif
+
+        // SweetAlert for Validation Errors (Laravel Form Request)
+        @if (session('validation_error_category'))
+            @php
+                $errorCategory = session('validation_error_category');
+                $validationErrors = session('validation_errors_detail', []);
+                $businessLogicErrors = session('business_logic_errors', []);
+                $allErrors = array_merge($validationErrors, $businessLogicErrors);
+            @endphp
+
+            @if ($errorCategory === 'business_hours')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Jam Operasional',
+                    html: `
+                        <div class="text-left">
+                            <p class="mb-3">{{ collect($allErrors)->flatten()->first() }}</p>
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-red-800 mb-2">
+                                    <i class="fas fa-clock mr-1"></i> Jam Operasional Barbershop:
+                                </h4>
+                                <div class="text-red-700">
+                                    <p><strong>Senin - Sabtu:</strong> 09:00 - 21:00</p>
+                                    <p><strong>Minggu:</strong> <span class="text-red-600 font-semibold">TUTUP</span></p>
+                                </div>
+                                <div class="mt-3 p-2 bg-red-100 rounded text-red-800 text-sm">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Mohon pilih waktu dalam jam operasional kami
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Pilih Waktu Lain',
+                    confirmButtonColor: '#DC2626',
+                    allowOutsideClick: false
+                });
+            @elseif ($errorCategory === 'closed_day')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hari Libur',
+                    html: `
+                        <div class="text-left">
+                            <p class="mb-3">{{ collect($allErrors)->flatten()->first() }}</p>
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-red-800 mb-2">
+                                    <i class="fas fa-calendar-times mr-1"></i> Jadwal Operasional:
+                                </h4>
+                                <div class="text-red-700">
+                                    <p><strong>Hari Buka:</strong> Senin - Sabtu</p>
+                                    <p><strong>Hari Libur:</strong> Minggu</p>
+                                </div>
+                                <div class="mt-3 p-2 bg-blue-50 rounded text-blue-800 text-sm">
+                                    <i class="fas fa-lightbulb mr-1"></i>
+                                    <strong>Saran:</strong> Pilih hari Senin - Sabtu untuk booking Anda
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Pilih Hari Lain',
+                    confirmButtonColor: '#DC2626',
+                    allowOutsideClick: false
+                });
+            @elseif ($errorCategory === 'past_date')
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Waktu Tidak Valid',
+                    html: `
+                        <div class="text-left">
+                            <p class="mb-3">{{ collect($allErrors)->flatten()->first() }}</p>
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <p class="text-yellow-800">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    Pastikan Anda memilih tanggal dan waktu di masa depan
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Pilih Waktu Baru',
+                    confirmButtonColor: '#F59E0B'
+                });
+            @elseif ($errorCategory === 'selection_error')
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Pilihan Tidak Lengkap',
+                    html: `
+                        <div class="text-left">
+                            @foreach ($allErrors as $field => $errors)
+                                @foreach ($errors as $error)
+                                    <p class="mb-2">• {{ $error }}</p>
+                                @endforeach
+                            @endforeach
+                            <div class="bg-blue-50 p-3 rounded-lg mt-3">
+                                <p class="text-blue-800 text-sm">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Pastikan semua field wajib sudah dipilih
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3B82F6'
+                });
+            @else
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validasi Gagal',
+                    html: `
+                        <div class="text-left">
+                            @foreach ($allErrors as $field => $errors)
+                                @foreach ($errors as $error)
+                                    <p class="mb-2">• {{ $error }}</p>
+                                @endforeach
+                            @endforeach
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Perbaiki',
+                    confirmButtonColor: '#DC2626'
+                });
+            @endif
+        @endif
+
+        // SweetAlert for Regular Laravel Validation Errors
+        @if ($errors->any() && !session('validation_error_category'))
+            @php
+                $firstError = $errors->first();
+                $allErrorMessages = $errors->all();
+            @endphp
+            Swal.fire({
+                icon: 'error',
+                title: 'Form Validation Error',
+                html: `
+                    <div class="text-left">
+                        @foreach ($allErrorMessages as $error)
+                            <p class="mb-2 text-red-600">• {{ $error }}</p>
+                        @endforeach
+                    </div>
+                `,
+                showConfirmButton: true,
+                confirmButtonText: 'Perbaiki Form',
+                confirmButtonColor: '#DC2626'
+            });
+        @endif
+
+        // SweetAlert for Warning Messages
+        @if (session('warning') && !session('error_type'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning!',
+                text: '{{ session('warning') }}',
+                timer: 4000,
+                showConfirmButton: true,
+                toast: true,
+                position: 'top-end'
+            });
+        @endif
+
+        // SweetAlert for Info Messages
+        @if (session('info'))
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: '{{ session('info') }}',
+                timer: 3000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        @endif
+
+        // SweetAlert for Status Messages (profile updated, etc)
+        @if (session('status'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Updated!',
+                text: 'Profile updated successfully!',
+                timer: 3000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        @endif
+    </script>
+
     @stack('scripts')
 </body>
 

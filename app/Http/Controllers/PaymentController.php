@@ -86,8 +86,9 @@ class PaymentController extends Controller
                 return redirect()->route('login');
             }
 
-            // Ambil semua booking milik user
-            $bookings = Booking::where('user_id', $user->id)
+            // Ambil semua booking milik user dengan transaksi lokal
+            $bookings = Booking::with(['user', 'transaction'])
+                ->where('user_id', $user->id)
                 ->orderByDesc('id')
                 ->get();
 
@@ -101,57 +102,81 @@ class PaymentController extends Controller
             foreach ($bookings as $booking) {
                 $orderId = $booking->id;
 
-                try {
-                    $response = Http::withBasicAuth($serverKey, '')
-                        ->timeout(10)
-                        ->get($baseUrl.$orderId.'/status');
+                // Check if we have local transaction data first
+                $localTransaction = \App\Models\Transaction::where('order_id', $orderId)->first();
 
-                    if ($response->successful()) {
-                        $data = $response->json();
+                if ($localTransaction) {
+                    // Use local transaction data (includes name and email)
+                    $transactions[] = [
+                        'order_id' => $orderId,
+                        'amount' => $localTransaction->gross_amount ?? $booking->total_price,
+                        'status' => $localTransaction->transaction_status ?? 'unknown',
+                        'payment_type' => $localTransaction->payment_type ?? '-',
+                        'channel' => $localTransaction->bank ?? '-',
+                        'name' => $localTransaction->name ?? $booking->name, // From transaction table
+                        'email' => $localTransaction->email ?? $booking->user->email, // From transaction table
+                        'transaction_time' => $localTransaction->transaction_time ?? $booking->created_at,
+                        'booking' => $booking,
+                        'formatted_payment_type' => $this->formatPaymentMethod($localTransaction->payment_type ?? '-'),
+                        'formatted_status' => $this->formatStatus($localTransaction->transaction_status ?? 'unknown'),
+                    ];
+                } else {
+                    // Fallback to Midtrans API if no local transaction
+                    try {
+                        $response = Http::withBasicAuth($serverKey, '')
+                            ->timeout(10)
+                            ->get($baseUrl.$orderId.'/status');
 
-                        $transactions[] = [
-                            'order_id' => $orderId,
-                            'amount' => $data['gross_amount'] ?? $booking->total_price,
-                            'status' => $data['transaction_status'] ?? 'unknown',
-                            'payment_type' => $data['payment_type'] ?? '-',
-                            'channel' => $data['channel'] ?? '-', // Tambahkan channel
-                            'email' => $booking->user->email ?? '-', // Tambahkan email
-                            'transaction_time' => $data['transaction_time'] ?? $booking->created_at,
-                            'booking' => $booking,
-                            'formatted_payment_type' => $this->formatPaymentMethod($data['payment_type'] ?? '-'),
-                            'formatted_status' => $this->formatStatus($data['transaction_status'] ?? 'unknown'),
-                        ];
-                    } else {
-                        // Jika API gagal
+                        if ($response->successful()) {
+                            $data = $response->json();
+
+                            $transactions[] = [
+                                'order_id' => $orderId,
+                                'amount' => $data['gross_amount'] ?? $booking->total_price,
+                                'status' => $data['transaction_status'] ?? 'unknown',
+                                'payment_type' => $data['payment_type'] ?? '-',
+                                'channel' => $data['channel'] ?? '-',
+                                'name' => $booking->name, // From booking
+                                'email' => $booking->user->email ?? '-', // From user relation
+                                'transaction_time' => $data['transaction_time'] ?? $booking->created_at,
+                                'booking' => $booking,
+                                'formatted_payment_type' => $this->formatPaymentMethod($data['payment_type'] ?? '-'),
+                                'formatted_status' => $this->formatStatus($data['transaction_status'] ?? 'unknown'),
+                            ];
+                        } else {
+                            // Jika API gagal
+                            $transactions[] = [
+                                'order_id' => $orderId,
+                                'amount' => $booking->total_price,
+                                'status' => 'unknown',
+                                'payment_type' => '-',
+                                'channel' => '-',
+                                'name' => $booking->name,
+                                'email' => $booking->user->email ?? '-',
+                                'transaction_time' => $booking->created_at,
+                                'booking' => $booking,
+                                'formatted_payment_type' => '-',
+                                'formatted_status' => 'Status Tidak Diketahui',
+                            ];
+                        }
+                    } catch (\Exception $e) {
+                        Log::error('Midtrans API error for booking '.$orderId.': '.$e->getMessage());
+
+                        // Jika terjadi exception
                         $transactions[] = [
                             'order_id' => $orderId,
                             'amount' => $booking->total_price,
                             'status' => 'unknown',
                             'payment_type' => '-',
-                            'channel' => '-', // Channel default jika error
-                            'email' => $booking->user->email ?? '-', // Tetap ambil email dari relasi
+                            'channel' => '-',
+                            'name' => $booking->name,
+                            'email' => $booking->user->email ?? '-',
                             'transaction_time' => $booking->created_at,
                             'booking' => $booking,
                             'formatted_payment_type' => '-',
                             'formatted_status' => 'Status Tidak Diketahui',
                         ];
                     }
-                } catch (\Exception $e) {
-                    Log::error('Midtrans API error for booking '.$orderId.': '.$e->getMessage());
-
-                    // Jika terjadi exception
-                    $transactions[] = [
-                        'order_id' => $orderId,
-                        'amount' => $booking->total_price,
-                        'status' => 'unknown',
-                        'payment_type' => '-',
-                        'channel' => '-', // Channel default jika exception
-                        'email' => $booking->user->email ?? '-', // Tetap ambil email dari relasi
-                        'transaction_time' => $booking->created_at,
-                        'booking' => $booking,
-                        'formatted_payment_type' => '-',
-                        'formatted_status' => 'Status Tidak Diketahui',
-                    ];
                 }
             }
 
@@ -223,6 +248,9 @@ class PaymentController extends Controller
         try {
             // Ambil data booking terkait
             $booking = Booking::with('user')->findOrFail($orderId);
+            
+            // Check for local transaction first
+            $localTransaction = \App\Models\Transaction::where('order_id', $orderId)->first();
 
             // Ambil status transaksi dari Midtrans
             $status = \Midtrans\Transaction::status($orderId);
@@ -245,12 +273,14 @@ class PaymentController extends Controller
                 'va_number' => $vaNumber,
                 'bank' => $bank,
                 'booking' => $booking,
+                // Add name and email from local transaction or fallback to booking/user
+                'customer_name' => $localTransaction?->name ?? $booking->name ?? $booking->user->name,
+                'customer_email' => $localTransaction?->email ?? $booking->user->email,
             ];
 
             return view('transactions.show', compact('data'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal mengambil detail transaksi: '.$e->getMessage());
         }
-
     }
 }

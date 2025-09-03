@@ -13,6 +13,7 @@ use App\Services\QueueService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\DataTables;
 
 class BookingController extends Controller
@@ -288,13 +289,18 @@ class BookingController extends Controller
 
     public function store(BookingRequest $request)
     {
-
-        // dd(gettype($request), get_class($request));
         try {
             DB::beginTransaction();
 
             // Simpan booking dari data tervalidasi
             $validated = $request->validated();
+            
+            Log::info('Booking store attempt', [
+                'user_id' => auth()->id(),
+                'validated_data' => $validated,
+                'ip' => $request->ip()
+            ]);
+            
             $booking = $this->bookingService->createBooking($validated);
 
             // Clear cache terkait booking dan dashboard
@@ -309,30 +315,70 @@ class BookingController extends Controller
                 'user_id' => auth()->id(),
                 'date_time' => $booking->date_time,
                 'service_id' => $booking->service_id,
+                'queue_number' => $booking->queue_number
             ]);
 
             // Redirect ke halaman booking dengan pesan sukses
             return redirect()->route('bookings.index')
+                ->with('success', "Booking berhasil dibuat! Nomor antrian Anda: {$booking->queue_number}")
                 ->with('booking_success', [
                     'name' => $booking->name,
                     'queue_number' => $booking->queue_number,
+                    'date_time' => $booking->date_time->format('d/m/Y H:i'),
+                    'service_name' => $booking->service->name ?? 'N/A'
                 ]);
+
+        } catch (ValidationException $e) {
+            DB::rollback();
+            
+            // Handle validation exceptions specifically
+            Log::warning('Booking validation failed', [
+                'user_id' => auth()->id(),
+                'validation_errors' => $e->errors(),
+                'ip' => $request->ip()
+            ]);
+
+            return back()
+                ->withErrors($e->errors())
+                ->withInput()
+                ->with('error', 'Validasi gagal. Mohon periksa input Anda.');
 
         } catch (\Exception $e) {
             DB::rollback();
 
-            // Log error
+            // Log error dengan detail
             Log::error('Error creating booking', [
-                'error' => $e->getMessage(),
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
                 'user_id' => auth()->id(),
                 'request_data' => $request->all(),
+                'ip' => $request->ip(),
+                'trace' => $e->getTraceAsString()
             ]);
 
-            // Kembalikan ke halaman sebelumnya dengan pesan error
-            return back()
-                ->with('booking_error', $e->getMessage())
-                ->withInput();
-
+            // Handle different error types with appropriate messages
+            $errorCode = $e->getCode();
+            $errorMessage = $e->getMessage();
+            
+            if ($errorCode === 422) {
+                // Business hours validation errors
+                return redirect()->back()
+                    ->with('error', $errorMessage)
+                    ->with('error_type', 'business_hours')
+                    ->withInput();
+            } elseif ($errorCode === 409) {
+                // Time slot conflict errors
+                return redirect()->back()
+                    ->with('warning', $errorMessage)
+                    ->with('error_type', 'time_conflict')
+                    ->withInput();
+            } else {
+                // General errors
+                return redirect()->back()
+                    ->with('error', 'Terjadi kesalahan saat membuat booking. Silakan coba lagi.')
+                    ->with('error_type', 'general')
+                    ->withInput();
+            }
         }
     }
 

@@ -12,9 +12,40 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+
+        <!-- Profile Photo Field -->
+        {{-- <div>
+            <label class="block font-medium text-sm text-gray-700 mb-2">
+                Foto Profil
+            </label>
+
+            <!-- Current Photo Display -->
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300">
+                    <img src="{{ $user->profile_photo_url }}" alt="Profile Photo" class="w-full h-full object-cover"
+                        id="profile-preview">
+                </div>
+                <div class="flex-1">
+                    <input type="file" name="profile_photo" id="profile_photo" accept="image/*" class="hidden"
+                        onchange="previewImage(this)">
+                    <label for="profile_photo"
+                        class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none cursor-pointer">
+                        <i class="fas fa-camera mr-2"></i>
+                        Pilih Foto
+                    </label>
+                    <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal 2MB.</p>
+                </div>
+            </div>
+
+            @if ($errors->get('profile_photo'))
+                <p class="mt-2 text-sm text-red-600">
+                    {{ $errors->first('profile_photo') }}
+                </p>
+            @endif
+        </div> --}}
 
         <!-- Name Field -->
         <div>
@@ -96,3 +127,57 @@
         </div>
     </form>
 </section>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+
+            // Validate file size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Too Large',
+                    text: 'Please select a file smaller than 2MB.',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                input.value = '';
+                return;
+            }
+
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File Type',
+                    text: 'Please select a valid image file (JPG, PNG, or GIF).',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-preview').src = e.target.result;
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Photo Selected',
+                    text: 'Click Save to upload your new profile photo.',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
