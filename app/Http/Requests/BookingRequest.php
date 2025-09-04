@@ -16,18 +16,32 @@ class BookingRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => 'required|string|min:2|max:100',
             'service_id' => 'required|exists:services,id',
             'hairstyle_id' => 'required|exists:hairstyles,id',
-            'date_time' => [
+            'description' => 'nullable|string|max:500',
+        ];
+
+        // Different validation for create vs update
+        if ($this->isMethod('post')) {
+            // For creating new booking
+            $rules['date_time'] = [
                 'required',
                 'date',
                 'after:now',
                 'before:'.Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
-            ],
-            'description' => 'nullable|string|max:500',
-        ];
+            ];
+        } else {
+            // For updating existing booking - less restrictive
+            $rules['date_time'] = [
+                'required',
+                'date',
+                'before:'.Carbon::now()->addMonths(3)->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        return $rules;
     }
 
     public function messages(): array

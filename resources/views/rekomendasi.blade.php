@@ -3,7 +3,7 @@
 @section('content')
     <section id="produk" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16 mt-8">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Rekomendasi Gaya Rambut</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
                     Pilih bentuk wajah dan jenis rambut Anda untuk mendapatkan gaya terbaik yang direkomendasikan.

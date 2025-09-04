@@ -4,7 +4,7 @@
     <div class="py-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <!-- Loyalty Info -->
-            <div class="p-4 sm:p-8 bg-white shadow rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow rounded-lg mt-8">
                 <div class="max-w-xl">
                     <h2 class="text-lg font-bold mb-4">Loyalty Kamu</h2>
                     @php

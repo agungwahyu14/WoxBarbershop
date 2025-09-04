@@ -38,8 +38,7 @@ class CacheService
     public function getActiveHairstyles(): \Illuminate\Database\Eloquent\Collection
     {
         return Cache::remember(self::HAIRSTYLES_CACHE_KEY, self::CACHE_TTL, function () {
-            return Hairstyle::where('is_active', true)
-                ->orderBy('name')
+            return Hairstyle::orderBy('name')
                 ->get();
         });
     }

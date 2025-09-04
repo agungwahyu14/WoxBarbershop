@@ -4,7 +4,7 @@
     <section id="edit-booking" class="py-20 bg-gray-50">
         <div class="container mx-auto px-4">
             {{-- Header --}}
-            <div class="text-center mb-12">
+            <div class="text-center mb-12 mt-8">
                 <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">Edit Booking</h2>
                 <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Ubah detail booking Anda sesuai kebutuhan.</p>
             </div>
@@ -60,7 +60,7 @@
                                 @if ($booking->total_price)
                                     <div>
                                         <span class="text-gray-500">Total:</span>
-                                        <span class="ml-2 font-semibold text-green-600">Rp
+                                        <span class="ml-2 font-semibold text-green-600" id="current-price">Rp
                                             {{ number_format($booking->total_price, 0, ',', '.') }}</span>
                                     </div>
                                 @endif
@@ -68,7 +68,8 @@
                         </div>
 
                         {{-- Edit Form --}}
-                        <form action="{{ route('bookings.update', $booking->id) }}" method="POST" class="space-y-6">
+                        <form action="{{ route('bookings.update', $booking->id) }}" method="POST" class="space-y-6"
+                            id="editBookingForm">
                             @csrf
                             @method('PUT')
 
@@ -106,14 +107,14 @@
                             @if (isset($services) && $services->count() > 0)
                                 <div>
                                     <label for="service_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                        <i class="fas fa-cut mr-1 text-[#d4af37]    "></i>
-                                        Layanan
+                                        <i class="fas fa-cut mr-1 text-[#d4af37]"></i>
+                                        Layanan <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="service_id" id="service_id"
+                                    <select name="service_id" id="service_id" required
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('service_id') border-red-500 @enderror">
                                         <option value="">Pilih Layanan</option>
                                         @foreach ($services as $service)
-                                            <option value="{{ $service->id }}"
+                                            <option value="{{ $service->id }}" data-price="{{ $service->price }}"
                                                 {{ old('service_id', $booking->service_id) == $service->id ? 'selected' : '' }}>
                                                 {{ $service->name }} - Rp
                                                 {{ number_format($service->price, 0, ',', '.') }}
@@ -124,16 +125,23 @@
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
+                            @else
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                    <p class="text-red-600 text-sm">
+                                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                                        Tidak ada layanan tersedia saat ini.
+                                    </p>
+                                </div>
                             @endif
 
                             {{-- Hairstyle --}}
                             @if (isset($hairstyles) && $hairstyles->count() > 0)
                                 <div>
                                     <label for="hairstyle_id" class="block text-sm font-medium text-gray-700 mb-2">
-                                        <i class="fas fa-magic mr-1 text-[#d4af37]  "></i>
-                                        Gaya Rambut
+                                        <i class="fas fa-magic mr-1 text-[#d4af37]"></i>
+                                        Gaya Rambut <span class="text-red-500">*</span>
                                     </label>
-                                    <select name="hairstyle_id" id="hairstyle_id"
+                                    <select name="hairstyle_id" id="hairstyle_id" required
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('hairstyle_id') border-red-500 @enderror">
                                         <option value="">Pilih Gaya Rambut</option>
                                         @foreach ($hairstyles as $style)
@@ -146,6 +154,13 @@
                                     @error('hairstyle_id')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
+                                </div>
+                            @else
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                    <p class="text-red-600 text-sm">
+                                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                                        Tidak ada gaya rambut tersedia saat ini.
+                                    </p>
                                 </div>
                             @endif
 
@@ -191,7 +206,7 @@
                                 <li>Perubahan tanggal dan waktu mungkin mempengaruhi nomor antrian Anda</li>
                                 <li>Jika mengubah layanan, total harga akan dihitung ulang</li>
                                 <li>Booking hanya dapat diubah jika status masih "Pending" atau "Confirmed"</li>
-                                <li>Untuk pembatalan booking, silakan hubungi customer service</li>
+
                             </ul>
                         </div>
                     </div>
@@ -199,5 +214,137 @@
             </div>
         </div>
     </section>
+
+    {{-- JavaScript untuk handling form --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceSelect = document.getElementById('service_id');
+            const currentPriceElement = document.getElementById('current-price');
+            const form = document.getElementById('editBookingForm');
+
+            // Service prices data
+            const servicePrices = {
+                @foreach ($services as $service)
+                    {{ $service->id }}: {{ $service->price }},
+                @endforeach
+            };
+
+            // Update price display when service changes
+            if (serviceSelect && currentPriceElement) {
+                serviceSelect.addEventListener('change', function() {
+                    const selectedServiceId = this.value;
+                    if (selectedServiceId && servicePrices[selectedServiceId]) {
+                        const newPrice = servicePrices[selectedServiceId];
+                        const formattedPrice = new Intl.NumberFormat('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR',
+                            minimumFractionDigits: 0
+                        }).format(newPrice).replace('IDR', 'Rp');
+
+                        currentPriceElement.textContent = formattedPrice;
+                        currentPriceElement.classList.add('text-orange-600');
+                        currentPriceElement.classList.remove('text-green-600');
+                    }
+                });
+            }
+
+            // Form validation
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const dateTimeInput = document.getElementById('date_time');
+                    const serviceInput = document.getElementById('service_id');
+                    const hairstyleInput = document.getElementById('hairstyle_id');
+                    const nameInput = document.getElementById('name');
+
+                    let hasError = false;
+                    let errorMessage = '';
+
+                    // Validate required fields
+                    if (!nameInput.value.trim()) {
+                        hasError = true;
+                        errorMessage += '• Nama wajib diisi\n';
+                    }
+
+                    if (!serviceInput.value) {
+                        hasError = true;
+                        errorMessage += '• Layanan wajib dipilih\n';
+                    }
+
+                    if (!hairstyleInput.value) {
+                        hasError = true;
+                        errorMessage += '• Gaya rambut wajib dipilih\n';
+                    }
+
+                    if (!dateTimeInput.value) {
+                        hasError = true;
+                        errorMessage += '• Tanggal dan waktu wajib diisi\n';
+                    } else {
+                        // Validate business hours
+                        const selectedDateTime = new Date(dateTimeInput.value);
+                        const hours = selectedDateTime.getHours();
+                        const dayOfWeek = selectedDateTime.getDay();
+
+                        if (dayOfWeek === 0) { // Sunday
+                            hasError = true;
+                            errorMessage += '• Maaf, kami tutup pada hari Minggu\n';
+                        }
+
+                        if (hours < 9 || hours >= 21) {
+                            hasError = true;
+                            errorMessage += '• Booking hanya dapat dilakukan antara jam 09:00 - 21:00\n';
+                        }
+                    }
+
+                    if (hasError) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: errorMessage,
+                            confirmButtonColor: '#d4af37'
+                        });
+                    }
+                });
+            }
+
+            // Handle validation errors from server
+            @if ($errors->any())
+                let errorMessage = '';
+                @foreach ($errors->all() as $error)
+                    errorMessage += '• {{ $error }}\n';
+                @endforeach
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Gagal!',
+                    text: errorMessage,
+                    confirmButtonColor: '#d4af37',
+                    confirmButtonText: 'Coba Lagi'
+                });
+            @endif
+
+            // Handle success message
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#d4af37',
+                    confirmButtonText: 'Oke'
+                });
+            @endif
+
+            // Handle error message
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan!',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#d4af37',
+                    confirmButtonText: 'Oke'
+                });
+            @endif
+        });
+    </script>
 
 @endsection

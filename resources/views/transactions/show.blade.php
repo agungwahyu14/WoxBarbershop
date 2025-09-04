@@ -4,13 +4,14 @@
     <section class="py-20">
         <div class="container mx-auto px-4">
 
+            <div class="text-center mb-10 mt-8">
+                <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">Detail Transaksi</h2>
+                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Lihat detail transaksi Anda di sini.</p>
+            </div>
+
             <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
                 <div class="p-6 space-y-6">
 
-                    {{-- Header --}}
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">
-                        <i class="fas fa-credit-card mr-2 text-blue-600"></i> Detail Transaksi Pembayaran
-                    </h2>
 
                     {{-- Informasi Transaksi --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

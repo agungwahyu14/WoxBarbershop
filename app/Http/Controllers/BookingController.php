@@ -551,7 +551,18 @@ class BookingController extends Controller
         }
 
         $services = $this->cacheService->getActiveServices();
-        // $hairstyles = $this->cacheService->getActiveHairstyles();
+        $hairstyles = $this->cacheService->getActiveHairstyles();
+
+        // Check if services and hairstyles exist
+        if ($services->isEmpty()) {
+            return redirect()->route('bookings.show', $booking)
+                ->with('error', 'Tidak ada layanan aktif tersedia untuk edit booking.');
+        }
+
+        if ($hairstyles->isEmpty()) {
+            return redirect()->route('bookings.show', $booking)
+                ->with('error', 'Tidak ada gaya rambut aktif tersedia untuk edit booking.');
+        }
 
         return view('bookings.edit', compact('booking', 'services', 'hairstyles'));
     }
@@ -568,13 +579,21 @@ class BookingController extends Controller
             DB::beginTransaction();
 
             $oldDateTime = $booking->date_time;
-
-            // Update booking with new data
             $validatedData = $request->validated();
 
             // Recalculate price if service changed
-            if ($booking->service_id !== $validatedData['service_id']) {
-                $validatedData['total_price'] = $this->bookingService->calculatePrice(new Booking($validatedData));
+            if ($booking->service_id != $validatedData['service_id']) {
+                $newService = Service::findOrFail($validatedData['service_id']);
+                $validatedData['total_price'] = $newService->price;
+            }
+
+            // Update queue number if date changed
+            $newDateTime = \Carbon\Carbon::parse($validatedData['date_time']);
+            if ($oldDateTime->format('Y-m-d') !== $newDateTime->format('Y-m-d')) {
+                // Get the next queue number for the new date
+                $maxQueue = Booking::whereDate('date_time', $newDateTime->format('Y-m-d'))
+                    ->max('queue_number');
+                $validatedData['queue_number'] = $maxQueue ? $maxQueue + 1 : 1;
             }
 
             $booking->update($validatedData);

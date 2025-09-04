@@ -372,16 +372,19 @@
                 confirmButtonColor: '#DC2626'
             });
         @endif
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: '{{ session('error') }}',
-            timer: 5000,
-            showConfirmButton: true,
-            toast: true,
-            position: 'top-end',
-            timerProgressBar: true
-        });
+
+        // SweetAlert for Error Messages
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                timer: 5000,
+                showConfirmButton: true,
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true
+            });
         @endif
 
         // SweetAlert for Warning Messages

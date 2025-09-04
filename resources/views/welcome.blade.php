@@ -253,7 +253,7 @@
     </section>
 
 
-    <section id="reservasi" class="pt-8 pb-20 bg-white">
+    <section id="reservasi" class="pt-8 py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Reservasi</h2>

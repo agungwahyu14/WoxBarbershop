@@ -129,6 +129,51 @@ class RecommendationController extends Controller
             $weights[$i] /= $n;
         }
 
+        // Check consistency
+        $this->calculateConsistencyRatio($matrix, $weights, $n);
+
         return $weights;
+    }
+
+    /**
+     * Calculate Consistency Ratio untuk memvalidasi AHP
+     */
+    private function calculateConsistencyRatio($matrix, $weights, $n)
+    {
+        // Step 1: Calculate weighted sum vector
+        $weightedSum = [];
+        foreach ($matrix as $i => $row) {
+            $weightedSum[$i] = 0;
+            foreach ($row as $j => $value) {
+                $weightedSum[$i] += $value * $weights[$j];
+            }
+        }
+
+        // Step 2: Calculate consistency vector
+        $consistencyVector = [];
+        foreach ($weightedSum as $i => $ws) {
+            $consistencyVector[$i] = $ws / $weights[$i];
+        }
+
+        // Step 3: Calculate λmax (lambda max)
+        $lambdaMax = array_sum($consistencyVector) / $n;
+
+        // Step 4: Calculate CI (Consistency Index)
+        $CI = ($lambdaMax - $n) / ($n - 1);
+
+        // Step 5: Random Index values
+        $RI = [0, 0, 0.52, 0.89, 1.11, 1.25, 1.35, 1.40, 1.45];
+
+        // Step 6: Calculate CR (Consistency Ratio)
+        $CR = $n > 2 ? $CI / $RI[$n - 1] : 0;
+
+        Log::info('AHP Consistency Check:', [
+            'lambda_max' => $lambdaMax,
+            'CI' => $CI,
+            'CR' => $CR,
+            'is_consistent' => $CR < 0.1
+        ]);
+
+        return $CR;
     }
 }

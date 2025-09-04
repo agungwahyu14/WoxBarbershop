@@ -38,9 +38,9 @@
     <!-- Services Section -->
     <section id="layanan" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16 animate-slide-up">
+            <div class="text-center mb-16 animate-slide-up mt-8">
                 <!-- Contoh pada Section Judul -->
-                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-playfair font-bold mb-4">
+                <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">
                     Layanan Kami
                 </h2>
                 <p class="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
@@ -119,7 +119,7 @@
     <!-- About Section -->
     <section id="tentang" class="py-20 bg-light">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row items-center gap-12">
+            <div class="flex flex-col lg:flex-row items-center gap-12 ">
                 <div class="lg:w-1/2 animate-slide-up">
                     <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-6">Tentang Wox's Barbershop</h2>
                     <p class="text-gray-600 mb-6 text-justify">
@@ -151,7 +151,7 @@
     <!-- Menu Section -->
     <section id="produk" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16 mt-8">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Produk Kami</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
                     Produk-produk premium untuk perawatan rambut dan jenggot Anda
@@ -209,7 +209,7 @@
     <!-- Testimonials Section -->
     <section class="py-20 bg-light">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16 mt-8">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Testimoni Pelanggan</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     Apa kata mereka tentang Wox's Barbershop
@@ -253,9 +253,10 @@
     </section>
 
 
-    <section id="reservasi" class="pt-8 pb-20 bg-white">
+
+    <section id="reservasi" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16 animate-slide-up">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Reservasi</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     Buat janji untuk pengalaman grooming terbaik di Wox's Barbershop
@@ -429,7 +430,6 @@
             </div>
         </div>
     </section>
-
 
     <!-- Gallery Section -->
     <section class="py-12 bg-white ">

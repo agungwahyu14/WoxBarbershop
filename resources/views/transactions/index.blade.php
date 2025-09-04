@@ -4,7 +4,7 @@
     <section id="transactions" class="py-20 bg-gray-50">
         <div class="container mx-auto px-4">
             {{-- Header --}}
-            <div class="text-center mb-10">
+            <div class="text-center mb-10 mt-8">
                 <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">Riwayat Transaksi</h2>
                 <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Lihat semua transaksi pembayaran Anda di sini.</p>
             </div>

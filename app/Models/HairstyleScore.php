@@ -9,7 +9,7 @@ class HairstyleScore extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hairstyle_id', 'criterion_id ', 'score'];
+    protected $fillable = ['hairstyle_id', 'criterion_id', 'score'];
 
     public function hairstyle()
     {
