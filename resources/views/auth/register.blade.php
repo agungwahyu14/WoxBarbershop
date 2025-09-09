@@ -53,7 +53,7 @@
 
                     <div class="mb-4">
                         <label for="no_telepon" class="block text-gray-700 font-medium mb-1">No Telepon</label>
-                        <input type="number" name="no_telepon" id="no_telepon"
+                        <input type="text" name="no_telepon" id="no_telepon"
                             class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
                             value="{{ old('no_telepon') }}" required>
                     </div>
