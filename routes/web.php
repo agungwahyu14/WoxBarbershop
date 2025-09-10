@@ -45,6 +45,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    /** ===================== SECURITY - DISABLED ===================== */
+    // Remember Me & Security features - Disabled for now, may be used in the future
+    /*
+    Route::get('/security', function () {
+        return view('user.security');
+    })->name('security.index');
+    
+    Route::post('/security/revoke-remember-token', function () {
+        auth()->user()->update(['remember_token' => null]);
+        return redirect()->route('security.index')->with('success', 'Remember token berhasil dibatalkan. Anda akan perlu login ulang di semua perangkat.');
+    })->name('security.revoke-remember-token');
+    */
+
     /*
     |--------------------------------------------------------------------------
     | Pelanggan Routes
@@ -168,4 +181,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-Route::get('/test-forgot-password', function() { return view('test-forgot-password'); });
+
+// Test route for forgot password - Disabled for now, may be used in the future
+// Route::get('/test-forgot-password', function() { return view('test-forgot-password'); });

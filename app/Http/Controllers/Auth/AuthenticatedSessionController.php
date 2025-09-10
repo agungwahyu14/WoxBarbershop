@@ -65,7 +65,7 @@ class AuthenticatedSessionController extends Controller
 
             // Default redirect for customers and other roles
             return redirect()->intended(RouteServiceProvider::HOME)
-                ->with('success', 'Welcome back, ' . $user->name . '!');
+                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
 
         } catch (\Exception $e) {
             Log::error('Login error occurred', [

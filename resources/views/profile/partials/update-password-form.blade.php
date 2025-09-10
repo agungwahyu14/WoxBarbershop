@@ -1,10 +1,10 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Update Password') }}
+            {{ __('Perbarui Kata Sandi') }}
         </h2>
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
+            {{ __('Pastikan akun Anda menggunakan kata sandi yang panjang dan acak untuk tetap aman.') }}
         </p>
     </header>
 
@@ -14,7 +14,7 @@
 
         <div>
             <label for="update_password_current_password" class="block font-medium text-sm text-gray-700">
-                {{ __('Current Password') }}
+                {{ __('Kata Sandi Saat Ini') }}
             </label>
             <input id="update_password_current_password" name="current_password" type="password"
                 class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]""
@@ -28,7 +28,7 @@
 
         <div>
             <label for="update_password_password" class="block font-medium text-sm text-gray-700">
-                {{ __('New Password') }}
+                {{ __('Kata Sandi Baru') }}
             </label>
             <input id="update_password_password" name="password" type="password"
                 class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]"
@@ -42,7 +42,7 @@
 
         <div>
             <label for="update_password_password_confirmation" class="block font-medium text-sm text-gray-700">
-                {{ __('Confirm Password') }}
+                {{ __('Konfirmasi Kata Sandi') }}
             </label>
             <input id="update_password_password_confirmation" name="password_confirmation" type="password"
                 class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]"

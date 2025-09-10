@@ -19,7 +19,7 @@
                         {{-- Customer Information --}}
                         <div class="col-span-full border-b border-gray-200 pb-4 mb-4">
                             <h3 class="text-lg font-semibold text-gray-800 mb-3">
-                                <i class="fas fa-user mr-2 text-blue-600"></i> Informasi Customer
+                                <i class="fas fa-user mr-2 text-blue-600"></i> Informasi Pelanggan
                             </h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
@@ -35,7 +35,7 @@
 
                         {{-- Order ID --}}
                         <div>
-                            <h4 class="text-sm text-gray-500 uppercase mb-1">Order ID</h4>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">ID Pesan</h4>
                             <p class="text-lg font-semibold text-gray-800">{{ $data['order_id'] }}</p>
                         </div>
 

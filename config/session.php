@@ -37,6 +37,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Remember Me Cookie Lifetime - DISABLED
+    |--------------------------------------------------------------------------
+    |
+    | Remember Me feature is disabled for now, may be used in the future
+    |
+    | This setting controls the lifetime of the "remember me" cookie in 
+    | minutes. By default, Laravel sets this to 5 years (2628000 minutes).
+    | For better security, we set it to 30 days (43200 minutes).
+    |
+    */
+
+    // 'remember_me_lifetime' => env('REMEMBER_ME_LIFETIME', 43200), // 30 days - DISABLED
+
+    /*
+    |--------------------------------------------------------------------------
     | Session Encryption
     |--------------------------------------------------------------------------
     |

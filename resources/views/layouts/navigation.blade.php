@@ -138,7 +138,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                <span>Profile Settings</span>
+                                <span>Pengaturan Profil</span>
                             </a>
 
                             <!-- Riwayat Transaksi -->
@@ -160,7 +160,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z" />
                                 </svg>
-                                <span>Riwayat Booking</span>
+                                <span>Riwayat Pemesanan</span>
                             </a>
 
                             <!-- Divider -->
@@ -185,11 +185,11 @@
                     <div class="flex items-center space-x-3">
                         <a href="{{ route('login') }}"
                             class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
-                            Login
+                            Masuk
                         </a>
                         <a href="{{ route('register') }}"
                             class="px-4 py-2 text-sm font-medium bg-[#d4af37] text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200">
-                            Register
+                            Daftar
                         </a>
                     </div>
                 @endauth

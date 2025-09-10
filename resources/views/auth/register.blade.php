@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="block text-gray-700 font-medium mb-1">Password</label>
+                        <label for="password" class="block text-gray-700 font-medium mb-1">Kata Sandi</label>
                         <input type="password" name="password" id="password"
                             class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
                             required>
@@ -67,7 +67,7 @@
 
                     <div class="mb-6">
                         <label for="password_confirmation" class="block text-gray-700 font-medium mb-1">Konfirmasi
-                            Password
+                            Kata Sandi
                         </label>
                         <input type="password" name="password_confirmation" id="password_confirmation"
                             class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
@@ -81,7 +81,7 @@
 
                     <p class="mt-4 text-sm text-center text-gray-600">
                         Sudah punya akun?
-                        <a href="{{ route('login') }}" class="text-[#d4af37] hover:underline">Login di sini</a>
+                        <a href="{{ route('login') }}" class="text-[#d4af37] hover:underline">Masuk di sini</a>
                     </p>
                 </form>
             </div>

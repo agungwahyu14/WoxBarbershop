@@ -129,8 +129,11 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param  string  $token
      * @return void
      */
+    // Forgot Password feature disabled - may be used in the future
+    /*
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \App\Notifications\ResetPasswordNotification($token));
     }
+    */
 }

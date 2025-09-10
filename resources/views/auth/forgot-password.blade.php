@@ -27,7 +27,7 @@
                     <img src="{{ asset('images/Logo.jpeg') }}" alt="WOX'S Barbershop Logo"
                         class="h-20 w-auto object-contain mx-auto mb-4">
                 </div>
-                
+
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Reset Password</h2>
                 <p class="text-center text-gray-600 text-sm mb-6">
                     Lupa password? Masukkan email Anda dan kami akan mengirimkan link reset password.

@@ -6,7 +6,7 @@
             <!-- Loyalty Info -->
             <div class="p-4 sm:p-8 bg-white shadow rounded-lg mt-8">
                 <div class="max-w-xl">
-                    <h2 class="text-lg font-bold mb-4">Loyalty Kamu</h2>
+                    <h2 class="text-lg font-bold mb-4">Kesetiaan Kamu</h2>
                     @php
                         $points = Auth::user()->loyalty ? Auth::user()->loyalty->points : 0;
                     @endphp

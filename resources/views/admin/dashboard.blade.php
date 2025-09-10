@@ -42,8 +42,8 @@
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class=" text-sm font-medium mb-2">Total Pelanggan</h3>
-                            <h1 class="text-3xl font-bold" id="total-customers">{{ $totalCustomers }}</h1>
+                            <h3 class=" text-sm font-medium mb-2">Pelanggan</h3>
+                            <h1 class="text-3xl font-bold" id="total-customers">{{ $todayCustomers }}</h1>
 
                         </div>
                         <div class="bg-blue-400 bg-opacity-30 p-3 rounded-full">
@@ -59,9 +59,9 @@
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class="text-green-100 text-sm font-medium mb-2">Total Revenue</h3>
-                            <h1 class="text-3xl font-bold" id="total-revenue">
-                                Rp{{ number_format($totalRevenue, 0, ',', '.') }}
+                            <h3 class="text-green-100 text-sm font-medium mb-2">Transaksi</h3>
+                            <h1 class="text-3xl font-bold" id="today-bookings">
+                                {{ $todayTransactions }}
                             </h1>
 
                         </div>
@@ -79,7 +79,7 @@
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class="text-orange-100 text-sm font-medium mb-2">Today's Bookings</h3>
+                            <h3 class="text-orange-100 text-sm font-medium mb-2">Pemesanan</h3>
                             <h1 class="text-3xl font-bold" id="today-bookings">
                                 {{ $todayBookings }}
                             </h1>
@@ -196,7 +196,7 @@
                 </div>
             </div>
         </div>
-        @role('admin')
+        {{-- @role('admin')
             <!-- Charts Row -->
             <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
                 <!-- Booking Status Chart -->
@@ -294,10 +294,10 @@
                     </div>
                 </div>
             </div>
-        @endrole
+        @endrole --}}
 
         <!-- Statistics and Recent Activity -->
-        <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-6">
+        {{-- <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-6">
             <!-- Booking Status Details -->
             <!-- Popular Services -->
             <div class="card">
@@ -343,7 +343,7 @@
                 </div>
             </div>
 
-        </div>
+        </div> --}}
 
     </section>
 @endsection
@@ -559,72 +559,6 @@
                 });
             }
 
-            // Popular Service Chart (only if canvas exists)
-            const serviceCtx = getCanvasContext('popularServiceChart');
-            if (serviceCtx) {
-                const serviceChart = new Chart(serviceCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: [
-                            @foreach ($popularServices as $service)
-                                '{{ $service->service->name }}',
-                            @endforeach
-                        ],
-                        datasets: [{
-                            data: [
-                                @foreach ($popularServices as $service)
-                                    {{ $service->count }},
-                                @endforeach
-                            ],
-                            backgroundColor: ['#F87171', '#60A5FA', '#34D399', '#FBBF24', '#A78BFA']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }
-                });
-            }
-
-            // User Activity Bar Chart
-            const userCtx = getCanvasContext('userActivityChart');
-            if (userCtx) {
-                const userChart = new Chart(userCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: {!! json_encode($userActivity->pluck('month') ?? []) !!},
-                        datasets: [{
-                            label: 'New Users',
-                            data: {!! json_encode($userActivity->pluck('count') ?? []) !!},
-                            backgroundColor: '#8B5CF6'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
-                    }
-                });
-            }
 
             // Refresh functions
             window.refreshBookingChart = function() {

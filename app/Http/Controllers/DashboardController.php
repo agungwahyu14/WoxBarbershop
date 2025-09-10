@@ -17,92 +17,105 @@ class DashboardController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        // Jika admin atau pegawai
-        if ($user->hasRole(['admin', 'pegawai'])) {
-            // Data chart dan statistik
-            $totalCustomers = User::role('pelanggan')->count();
-            $totalBookings = Booking::count();
-            $todayBookings = Booking::whereDate('date_time', today())->count();
-            $pendingBookings = Booking::whereDate('date_time', today())->where('status', 'pending')->count();
-            $totalRevenue = Transaction::where('transaction_status', 'settlement')
-                ->whereDate('created_at', Carbon::today())
-                ->sum('gross_amount');
+    // Jika admin atau pegawai
+    if ($user->hasRole(['admin', 'pegawai'])) {
+        // Data chart dan statistik
+        $totalCustomers = User::role('pelanggan')->count();
+        $totalBookings = Booking::count();
+        $todayBookings = Booking::whereDate('date_time', today())->count();
+        $pendingBookings = Booking::whereDate('date_time', today())->where('status', 'pending')->count();
+        $totalRevenue = Transaction::where('transaction_status', 'settlement')
+            ->whereDate('created_at', Carbon::today())
+            ->sum('gross_amount');
 
-            // Booking status stats
-            $bookingStats = Booking::select('status', \DB::raw('count(*) as count'))
-                ->groupBy('status')
-                ->get();
+        // ➕ Total pelanggan hari ini (yang baru daftar)
+        $todayCustomers = User::role('pelanggan')
+            ->whereDate('created_at', today())
+            ->count();
 
-            // Most popular service
-            $popularService = Booking::select('service_id', \DB::raw('count(*) as count'))
-                ->groupBy('service_id')
-                ->orderByDesc('count')
-                ->first();
+        // ➕ Total transaksi hari ini (status settlement)
+        $todayTransactions = Transaction::where('transaction_status', 'settlement')
+            ->whereDate('created_at', today())
+            ->count();
 
-            $popularServiceName = $popularService ? Service::find($popularService->service_id)->name : '-';
-            $popularServiceCount = $popularService ? $popularService->count : 0;
+        // Booking status stats
+        $bookingStats = Booking::select('status', \DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get();
 
-            // User activity (registrations per month, last 6 months)
-            $userActivity = collect();
-            for ($i = 5; $i >= 0; $i--) {
-                $month = Carbon::now()->subMonths($i);
-                $count = User::whereYear('created_at', $month->year)
-                    ->whereMonth('created_at', $month->month)
-                    ->count();
+        // Most popular service
+        $popularService = Booking::select('service_id', \DB::raw('count(*) as count'))
+            ->groupBy('service_id')
+            ->orderByDesc('count')
+            ->first();
 
-                $userActivity->push([
-                    'month' => $month->translatedFormat('M y'),
-                    'count' => $count,
-                ]);
-            }
+        $popularServiceName = $popularService ? Service::find($popularService->service_id)->name : '-';
+        $popularServiceCount = $popularService ? $popularService->count : 0;
 
-            // Revenue per month (last 6 months)
-            $monthLabels = [];
-            $revenueData = [];
-            for ($i = 5; $i >= 0; $i--) {
-                $month = Carbon::now()->subMonths($i);
-                $monthLabels[] = $month->translatedFormat('M y');
+        // User activity (registrations per month, last 6 months)
+        $userActivity = collect();
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $count = User::whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->count();
 
-                $monthlyRevenue = Transaction::where('transaction_status', 'settlement')
-                    ->whereYear('transaction_time', $month->year)
-                    ->whereMonth('transaction_time', $month->month)
-                    ->sum('gross_amount');
-
-                $revenueData[] = $monthlyRevenue;
-            }
-
-            // Today's bookings with details
-            $todayBookingsData = Booking::with(['user', 'service'])
-                ->whereDate('date_time', today())
-                ->orderBy('date_time', 'asc')
-                ->get();
-
-            return view('admin.dashboard', compact(
-                'totalCustomers',
-                'totalBookings',
-                'todayBookings',
-                'pendingBookings',
-                'totalRevenue',
-                'bookingStats',
-                'popularServiceName',
-                'popularServiceCount',
-                'userActivity',
-                'monthLabels',        // chart label bulan
-                'revenueData',        // chart data revenue
-                'todayBookingsData'   // today's bookings data
-            ));
+            $userActivity->push([
+                'month' => $month->translatedFormat('M y'),
+                'count' => $count,
+            ]);
         }
 
-        // Jika bukan admin atau pegawai, tampilkan dashboard user biasa
-        $services = Service::all();
-        $hairstyles = Hairstyle::all();
-        $users = User::all();
+        // Revenue per month (last 6 months)
+        $monthLabels = [];
+        $revenueData = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i);
+            $monthLabels[] = $month->translatedFormat('M y');
 
-        return view('dashboard', compact('services', 'hairstyles', 'users'));
+            $monthlyRevenue = Transaction::where('transaction_status', 'settlement')
+                ->whereYear('transaction_time', $month->year)
+                ->whereMonth('transaction_time', $month->month)
+                ->sum('gross_amount');
+
+            $revenueData[] = $monthlyRevenue;
+        }
+
+        // Today's bookings with details
+        $todayBookingsData = Booking::with(['user', 'service'])
+            ->whereDate('date_time', today())
+            ->orderBy('date_time', 'asc')
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'totalCustomers',
+            'totalBookings',
+            'todayBookings',
+            'pendingBookings',
+            'totalRevenue',
+            'todayCustomers',     // ➕ total pelanggan hari ini
+            'todayTransactions',  // ➕ total transaksi hari ini
+            'bookingStats',
+            'popularServiceName',
+            'popularServiceCount',
+            'userActivity',
+            'monthLabels',
+            'revenueData',
+            'todayBookingsData'
+        ));
     }
+
+    // Jika bukan admin atau pegawai, tampilkan dashboard user biasa
+    $services = Service::all();
+    $hairstyles = Hairstyle::all();
+    $users = User::all();
+
+    return view('dashboard', compact('services', 'hairstyles', 'users'));
+}
+
 
     /**
      * Get dashboard data for AJAX refresh

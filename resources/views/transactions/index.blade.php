@@ -37,7 +37,7 @@
 
                                 {{-- Customer Information --}}
                                 <div class="mb-4 pb-4 border-b border-gray-100">
-                                    <h4 class="text-sm font-medium text-gray-900 mb-2">Informasi Customer</h4>
+                                    <h4 class="text-sm font-medium text-gray-900 mb-2">Informasi Pelanggan</h4>
                                     <div class="space-y-1">
                                         <div class="flex items-center justify-between">
                                             <span class="text-sm text-gray-600">Nama:</span>
@@ -120,7 +120,7 @@
                                         <a onclick="window.open('{{ route('transaction.download', $tx['order_id']) }}', '_blank')"
                                             class="w-full inline-flex justify-center items-center px-4 py-2 hover:bg-green-600 bg-green-500 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                                             <i class="fas fa-download mr-2"></i>
-                                            Download Bukti
+                                            Unduh Bukti Pembayaran
                                         </a>
                                     @endif
                                 </div>

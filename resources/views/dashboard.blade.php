@@ -422,7 +422,7 @@
                         @else
                             <a href="{{ route('login') }}"
                                 class="  text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1 rounded-lg">
-                                LOGIN UNTUK RESERVASI
+                                MASUK UNTUK RESERVASI
                             </a>
                         @endauth
                     </form>

@@ -27,7 +27,7 @@
                     <img src="{{ asset('images/Logo.jpeg') }}" alt="WOX'S Barbershop Logo"
                         class="h-20 w-auto object-contain mx-auto mb-4">
                 </div>
-                
+
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Buat Password Baru</h2>
                 <p class="text-center text-gray-600 text-sm mb-6">
                     Masukkan password baru untuk akun Anda.
@@ -46,8 +46,8 @@
                     <div class="mb-4">
                         <label for="email_display" class="block text-gray-700 font-medium mb-1">Email</label>
                         <div class="relative">
-                            <input id="email_display" type="email" 
-                                value="{{ old('email', $request->email) }}" readonly
+                            <input id="email_display" type="email" value="{{ old('email', $request->email) }}"
+                                readonly
                                 class="w-full px-4 py-3 pl-12 border border-gray-300 bg-gray-100 rounded-lg cursor-not-allowed">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-400"></i>
@@ -59,14 +59,14 @@
                     <div class="mb-4">
                         <label for="password" class="block text-gray-700 font-medium mb-1">Password Baru</label>
                         <div class="relative">
-                            <input id="password" type="password" name="password" required 
-                                autocomplete="new-password"
+                            <input id="password" type="password" name="password" required autocomplete="new-password"
                                 class="w-full px-4 py-3 pl-12 pr-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg @error('password') border-red-500 @enderror"
                                 placeholder="Masukkan password baru">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-400"></i>
                             </div>
-                            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <button type="button" id="togglePassword"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                 <i class="fas fa-eye text-gray-400 hover:text-gray-600" id="togglePasswordIcon"></i>
                             </button>
                         </div>
@@ -81,7 +81,8 @@
 
                     <!-- Confirm Password -->
                     <div class="mb-6">
-                        <label for="password_confirmation" class="block text-gray-700 font-medium mb-1">Konfirmasi Password</label>
+                        <label for="password_confirmation" class="block text-gray-700 font-medium mb-1">Konfirmasi
+                            Password</label>
                         <div class="relative">
                             <input id="password_confirmation" type="password" name="password_confirmation" required
                                 autocomplete="new-password"
@@ -90,8 +91,10 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-400"></i>
                             </div>
-                            <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                <i class="fas fa-eye text-gray-400 hover:text-gray-600" id="toggleConfirmPasswordIcon"></i>
+                            <button type="button" id="toggleConfirmPassword"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i class="fas fa-eye text-gray-400 hover:text-gray-600"
+                                    id="toggleConfirmPasswordIcon"></i>
                             </button>
                         </div>
                         @error('password_confirmation')
@@ -136,7 +139,7 @@
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
             const togglePasswordIcon = document.getElementById('togglePasswordIcon');
-            
+
             const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
             const confirmPasswordInput = document.getElementById('password_confirmation');
             const toggleConfirmPasswordIcon = document.getElementById('toggleConfirmPasswordIcon');
@@ -175,7 +178,7 @@
             function updatePasswordStrengthUI(strength) {
                 const bars = document.querySelectorAll('[id^="strength-bar-"]');
                 const strengthText = document.getElementById('strength-text');
-                
+
                 bars.forEach((bar, index) => {
                     bar.className = 'h-2 flex-1 rounded-full';
                     if (index < strength) {
@@ -190,7 +193,7 @@
 
                 const texts = ['Lemah', 'Cukup', 'Baik', 'Kuat'];
                 const colors = ['text-red-500', 'text-orange-500', 'text-yellow-500', 'text-green-500'];
-                
+
                 strengthText.textContent = texts[Math.max(0, strength - 1)] || 'Lemah';
                 strengthText.className = 'text-xs mt-1 ' + (colors[Math.max(0, strength - 1)] || 'text-red-500');
             }

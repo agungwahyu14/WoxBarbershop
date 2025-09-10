@@ -35,7 +35,7 @@
                         class="h-40 w-auto object-contain mx-auto mb-4">
                 </div>
 
-                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Masuk</h2>
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
@@ -48,27 +48,43 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="block text-gray-700 font-medium mb-1">Password</label>
+                        <label for="password" class="block text-gray-700 font-medium mb-1">Kata Sandi</label>
                         <input id="password" type="password" name="password" required autocomplete="current-password"
                             class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg">
                     </div>
 
                     <div class="flex items-center justify-between mb-6">
-                        <label class="inline-flex items-center">
+                        {{-- Remember Me - Disabled for now, may be used in the future
+                        <label class="inline-flex items-center cursor-pointer group">
                             <input id="remember_me" type="checkbox"
-                                class="border-gray-300 text-[#d4af37] focus:ring-[#d4af37]" name="remember">
-                            <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
+                                class="border-gray-300 text-[#d4af37] focus:ring-[#d4af37] focus:ring-offset-0 rounded transition-colors duration-200"
+                                name="remember" value="1">
+                            <span
+                                class="ml-2 text-sm text-gray-600 group-hover:text-gray-800 transition-colors duration-200">
+                                Ingat saya selama 30 hari
+                            </span>
+                            <svg class="ml-1 w-4 h-4 text-gray-400 group-hover:text-[#d4af37] transition-colors duration-200"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
                         </label>
+                        --}}
+                        <div></div>
+                        {{-- Forgot Password - Disabled for now, may be used in the future
                         @if (Route::has('password.request'))
-                            <a class="text-sm text-[#d4af37] hover:underline" href="{{ route('password.request') }}">
+                            <a class="text-sm text-[#d4af37] hover:underline hover:text-[#111111] transition-colors duration-200"
+                                href="{{ route('password.request') }}">
                                 Lupa password?
                             </a>
                         @endif
+                        --}}
                     </div>
 
                     <button type="submit"
                         class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-semibold transition duration-300 rounded-lg">
-                        Login
+                        Masuk
                     </button>
 
                     <p class="mt-4 text-sm text-center text-gray-600">
@@ -82,6 +98,30 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Remember Me checkbox functionality
+            const rememberCheckbox = document.getElementById('remember_me');
+            const rememberLabel = rememberCheckbox.closest('label');
+            const rememberText = rememberLabel.querySelector('span');
+
+            // Add smooth transition effects for remember me
+            rememberCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    rememberText.classList.add('text-[#d4af37]', 'font-medium');
+                    rememberText.classList.remove('text-gray-600');
+
+                    // Show temporary confirmation
+                    const originalText = rememberText.textContent;
+                    rememberText.textContent = '✓ Akan diingat selama 30 hari';
+
+                    setTimeout(() => {
+                        rememberText.textContent = originalText;
+                    }, 2000);
+                } else {
+                    rememberText.classList.remove('text-[#d4af37]', 'font-medium');
+                    rememberText.classList.add('text-gray-600');
+                }
+            });
+
             // Periksa pesan status sukses
             @if (session('status'))
                 Swal.fire({
