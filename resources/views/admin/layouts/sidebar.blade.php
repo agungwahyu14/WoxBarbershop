@@ -9,7 +9,7 @@
 
         {{-- Sidebar untuk Admin --}}
         @hasrole('admin')
-            <p class="menu-label">Umum</p>
+            <p class="menu-label">General</p>
             <ul class="menu-list">
                 <li class="active">
                     <a href="{{ route('dashboard') }}">
@@ -19,57 +19,57 @@
                 </li>
             </ul>
 
-            <p class="menu-label">Manajemen</p>
+            <p class="menu-label">Management</p>
             <ul class="menu-list">
                 <li>
                     <a class="dropdown">
                         <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-                        <span class="menu-item-label">Manajemen Pengguna</span>
+                        <span class="menu-item-label">User Management</span>
                         <span class="icon"><i class="mdi mdi-plus"></i></span>
                     </a>
                     <ul>
-                        <li><a href="{{ route('admin.users.index') }}"><span>Pengguna</span></a></li>
+                        <li><a href="{{ route('admin.users.index') }}"><span>Users</span></a></li>
                     </ul>
                 </li>
 
                 <li>
                     <a class="dropdown">
                         <span class="icon"><i class="mdi mdi-scissors-cutting"></i></span>
-                        <span class="menu-item-label">Manajemen Layanan</span>
+                        <span class="menu-item-label">Service Management</span>
                         <span class="icon"><i class="mdi mdi-plus"></i></span>
                     </a>
                     <ul>
-                        <li><a href="{{ route('admin.services.index') }}"><span>Layanan</span></a></li>
-                        <li><a href="{{ route('admin.hairstyles.index') }}"><span>Gaya Rambut</span></a></li>
+                        <li><a href="{{ route('admin.services.index') }}"><span>Services</span></a></li>
+                        <li><a href="{{ route('admin.hairstyles.index') }}"><span>Hairstyles</span></a></li>
                     </ul>
                 </li>
 
                 <li>
                     <a class="dropdown">
                         <span class="icon"><i class="mdi mdi-calendar-check"></i></span>
-                        <span class="menu-item-label">Pemesanan & Transaksi</span>
+                        <span class="menu-item-label">Booking & Transaction</span>
                         <span class="icon"><i class="mdi mdi-plus"></i></span>
                     </a>
                     <ul>
-                        <li><a href="{{ route('admin.bookings.index') }}"><span>Pemesanan</span></a></li>
-                        <li><a href="{{ route('admin.transactions.index') }}"><span>Transaksi</span></a></li>
+                        <li><a href="{{ route('admin.bookings.index') }}"><span>Bookings</span></a></li>
+                        <li><a href="{{ route('admin.transactions.index') }}"><span>Transactions</span></a></li>
                     </ul>
                 </li>
 
                 <li>
                     <a href="{{ route('admin.loyalty.index') }}">
                         <span class="icon"><i class="mdi mdi-star-circle"></i></span>
-                        <span class="menu-item-label">Program Loyalitas</span>
+                        <span class="menu-item-label">Loyalty Program</span>
                     </a>
                 </li>
             </ul>
 
-            <p class="menu-label">Persetujuan</p>
+            <p class="menu-label">Authorization</p>
             <ul class="menu-list">
                 <li>
                     <a href="{{ route('admin.roles.index') }}">
                         <span class="icon"><i class="mdi mdi-shield-key"></i></span>
-                        <span class="menu-item-label">Peran</span>
+                        <span class="menu-item-label">Role </span>
                     </a>
                 </li>
             </ul>

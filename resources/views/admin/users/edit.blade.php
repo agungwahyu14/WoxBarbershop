@@ -15,16 +15,7 @@
                         Update user information, roles and permissions for {{ $user->name }}
                     </p>
                 </div>
-                <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                    <a href="{{ route('admin.users.show', $user) }}"
-                        class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                        <i class="fas fa-eye mr-2"></i>View User
-                    </a>
-                    <a href="{{ route('admin.users.index') }}"
-                        class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                        <i class="fas fa-arrow-left mr-2"></i>Back to Users
-                    </a>
-                </div>
+
             </div>
         </div>
     </div>
@@ -41,7 +32,7 @@
                         <h2 class="text-2xl font-bold text-gray-900">User Information</h2>
                         <p class="text-gray-600 mt-1">Update user details and permissions</p>
                     </div>
-                    <div class="ml-auto">
+                    {{-- <div class="ml-auto">
                         <span
                             class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
                             {{ $user->hasVerifiedEmail() ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
@@ -49,7 +40,7 @@
                                 class="fas fa-{{ $user->hasVerifiedEmail() ? 'check-circle' : 'exclamation-triangle' }} mr-1"></i>
                             {{ $user->hasVerifiedEmail() ? 'Verified' : 'Unverified' }}
                         </span>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 
@@ -62,11 +53,11 @@
                         <!-- Name Field -->
                         <div>
                             <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-user mr-2 text-blue-600"></i>Full Name
+                                <i class="fas fa-user mr-2 text-blue-600"></i> Name
                             </label>
                             <input type="text" name="name" id="name"
                                 class="form-control w-full @error('name') border-red-500 @enderror"
-                                value="{{ old('name', $user->name) }}" placeholder="Enter full name" required>
+                                value="{{ old('name', $user->name) }}" placeholder="Enter  name" required>
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -262,6 +253,10 @@
                     <div class="border-t border-gray-200 pt-6">
                         <div class="flex justify-between">
                             <div class="flex space-x-4">
+
+                            </div>
+                            <div class="flex space-x-4">
+
                                 <a href="{{ route('admin.users.show', $user) }}"
                                     class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                     <i class="fas fa-eye mr-2"></i>View User
@@ -270,14 +265,6 @@
                                     class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                     <i class="fas fa-times mr-2"></i>Cancel
                                 </a>
-                            </div>
-                            <div class="flex space-x-4">
-                                {{-- @if (!$user->hasVerifiedEmail())
-                                    <button type="button" id="resend-verification"
-                                        class="inline-flex items-center px-6 py-3 border border-blue-300 shadow-sm text-sm font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                        <i class="fas fa-envelope mr-2"></i>Resend Verification
-                                    </button>
-                                @endif --}}
                                 <button type="submit"
                                     class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                     <i class="fas fa-save mr-2"></i>Update User
@@ -382,7 +369,7 @@
             $('input, select, textarea').on('input change', detectChanges);
             detectChanges(); // Initial check
 
-            
+
 
             // Form submission
             form.on('submit', function(e) {

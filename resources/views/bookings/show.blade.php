@@ -6,7 +6,7 @@
             {{-- Header --}}
             <div class="text-center mb-12 mt-8">
                 <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">Detail Booking</h2>
-                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Lihat dan kelola detail transaksi Anda.</p>
+                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Lihat dan kelola detail booking Anda.</p>
             </div>
 
             {{-- Booking Card --}}

@@ -5,8 +5,8 @@
         <div class="container mx-auto px-4">
             {{-- Header --}}
             <div class="text-center mb-10 mt-8">
-                <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">Riwayat Pemesanan</h2>
-                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Lihat riwayat pemesanan Anda di sini.</p>
+                <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">Riwayat Booking</h2>
+                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Lihat riwayat booking Anda di sini.</p>
             </div>
 
             {{-- Booking Cards Grid --}}
@@ -17,7 +17,7 @@
                         {{-- Card Header --}}
                         <div class="bg-black px-6 py-4">
                             <h3 class="text-white font-semibold text-lg">{{ $booking->name }}</h3>
-                            <p class="text-blue-100 text-sm">Pemesanan #{{ $booking->id }}</p>
+                            <p class="text-blue-100 text-sm">Booking #{{ $booking->id }}</p>
                         </div>
 
                         {{-- Card Body --}}

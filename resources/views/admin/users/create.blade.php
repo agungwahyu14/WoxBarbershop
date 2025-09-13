@@ -16,12 +16,7 @@
                         Add a new user to the system with roles and permissions
                     </p>
                 </div>
-                <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                    <a href="{{ route('admin.users.index') }}"
-                        class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                        <i class="fas fa-arrow-left mr-2"></i>Back to Users
-                    </a>
-                </div>
+
             </div>
         </div>
     </div>
@@ -49,11 +44,11 @@
                         <!-- Name Field -->
                         <div>
                             <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-user mr-2 text-blue-600"></i>Full Name
+                                <i class="fas fa-user mr-2 text-blue-600"></i> Name
                             </label>
                             <input type="text" name="name" id="name"
                                 class="form-control w-full @error('name') border-red-500 @enderror"
-                                value="{{ old('name') }}" placeholder="Enter full name" required>
+                                value="{{ old('name') }}" placeholder="Enter  name" required>
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror

@@ -20,7 +20,7 @@
                 <div class="navbar-dropdown">
                     <a href="{{ route('profile.edit') }}" class="navbar-item">
                         <span class="icon"><i class="mdi mdi-account"></i></span>
-                        <span>Profil Saya</span>
+                        <span>My Profile</span>
                     </a>
                     <hr class="navbar-divider">
                     <!-- Form Logout Breeze -->
@@ -29,7 +29,7 @@
                         <button type="submit" class="navbar-item"
                             style="background: none; border: none; cursor: pointer;">
                             <span class="icon"><i class="mdi mdi-logout"></i></span>
-                            <span>Keluar</span>
+                            <span>Log Out</span>
                         </button>
                     </form>
 

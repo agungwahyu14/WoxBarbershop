@@ -8,7 +8,7 @@
                     Edit Service
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Perbarui data layanan Wox's Barbershop
+                    Update Wox's Barbershop service data
                 </p>
             </div>
         </div>
@@ -19,7 +19,7 @@
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="card-content rounded-md overflow-x-auto">
                 <div class="section main-section">
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Edit Service</h1>
+
 
                     <form action="{{ route('admin.services.update', $service->id) }}" method="POST" class="space-y-6">
                         @csrf

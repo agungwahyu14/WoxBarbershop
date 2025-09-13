@@ -32,10 +32,11 @@
                                 </div>
                             </div>
                         </div>
+                        
 
                         {{-- Order ID --}}
                         <div>
-                            <h4 class="text-sm text-gray-500 uppercase mb-1">ID Pesan</h4>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">ID Order</h4>
                             <p class="text-lg font-semibold text-gray-800">{{ $data['order_id'] }}</p>
                         </div>
 

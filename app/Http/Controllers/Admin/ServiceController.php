@@ -79,9 +79,7 @@ class ServiceController extends Controller
                         </div>
                         <div>
                             <div class="font-semibold text-gray-900">'.e($row->name).'</div>
-                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium '.$statusColor.'">
-                                '.$status.'
-                            </span>
+                            
                         </div>
                     </div>';
                 })

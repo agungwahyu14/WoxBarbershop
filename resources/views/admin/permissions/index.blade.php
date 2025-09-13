@@ -115,11 +115,7 @@
                     "<'overflow-x-auto't>" +
                     "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>", // tampilkan info & pagination
                 // Hide default info and pagination
-                buttons: [{
-                        extend: 'copy',
-                        text: '<i class="mdi mdi-content-copy mr-2"></i>Copy',
-                        className: 'dt-btn dt-btn-copy'
-                    },
+                buttons: [
                     {
                         extend: 'csv',
                         text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV',

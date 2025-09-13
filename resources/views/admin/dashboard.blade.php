@@ -9,7 +9,7 @@
             </ul>
             <div class="text-sm text-gray-600 flex items-center">
                 <i class="fas fa-user-circle mr-2"></i>
-                Selamat datang, <span class="font-semibold ml-1">{{ Auth::user()->name }}</span>
+                Welcome back, <span class="font-semibold ml-1">{{ Auth::user()->name }}</span>
                 @if (Auth::user()->hasRole('admin'))
                     <span class="ml-2 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">(Administrator)</span>
                 @elseif(Auth::user()->hasRole('pegawai'))
@@ -25,7 +25,7 @@
                 <h1 class="title text-3xl font-bold text-gray-800">
                     Dashboard WOX Barbershop
                 </h1>
-                <p class="text-gray-600 mt-2">Monitor performa bisnis barbershop Anda</p>
+                <p class="text-gray-600 mt-2">Monitor the performance of your barbershop business</p>
             </div>
             <div class="text-right">
                 <div class="text-sm text-gray-500">{{ now()->format('l, d F Y') }}</div>
@@ -59,7 +59,7 @@
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class="text-green-100 text-sm font-medium mb-2">Transaksi</h3>
+                            <h3 class="text-green-100 text-sm font-medium mb-2">Transactions</h3>
                             <h1 class="text-3xl font-bold" id="today-bookings">
                                 {{ $todayTransactions }}
                             </h1>
@@ -79,7 +79,7 @@
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class="text-orange-100 text-sm font-medium mb-2">Pemesanan</h3>
+                            <h3 class="text-orange-100 text-sm font-medium mb-2">Bookings</h3>
                             <h1 class="text-3xl font-bold" id="today-bookings">
                                 {{ $todayBookings }}
                             </h1>
@@ -100,7 +100,7 @@
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class="text-pink-100 text-sm font-medium mb-2">Most Popular Service</h3>
+                            <h3 class="text-pink-100 text-sm font-medium mb-2">Layanan Terpopuler</h3>
                             <h1 class="text-3xl font-bold text-white" id="popular-service">{{ $popularServiceName }}</h1>
 
                         </div>

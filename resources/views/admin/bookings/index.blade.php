@@ -243,11 +243,7 @@
                     }
                 ],
                 dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-6'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-6'ip>",
-                buttons: [{
-                        extend: 'copy',
-                        className: 'dt-btn dt-btn-copy',
-                        text: '<i class="mdi mdi-content-copy mr-2"></i>Copy'
-                    },
+                buttons: [
                     {
                         extend: 'csv',
                         className: 'dt-btn dt-btn-csv',

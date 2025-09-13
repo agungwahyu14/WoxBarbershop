@@ -49,6 +49,12 @@
                                     <option value="{{ $year }}">{{ $year }}</option>
                                 @endfor
                             </select>
+                            <select id="statusFilter"
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                                <option value="">All Status</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
                             <button id="resetFilter"
                                 class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
                                 <i class="mdi mdi-refresh mr-1"></i>Reset
@@ -120,6 +126,7 @@
                     data: function(d) {
                         d.month_filter = $('#monthFilter').val();
                         d.year_filter = $('#yearFilter').val();
+                        d.status_filter = $('#statusFilter').val();
                     }
                 },
                 columns: [{
@@ -197,11 +204,6 @@
                     "<'overflow-x-auto't>" +
                     "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
                 buttons: [{
-                        extend: 'copy',
-                        className: 'dt-btn dt-btn-copy',
-                        text: '<i class="mdi mdi-content-copy mr-2"></i>Copy'
-                    },
-                    {
                         extend: 'csv',
                         className: 'dt-btn dt-btn-csv',
                         text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV'
@@ -248,7 +250,7 @@
             });
 
             // Filter event listeners
-            $('#monthFilter, #yearFilter').on('change', function() {
+            $('#monthFilter, #yearFilter, #statusFilter').on('change', function() {
                 table.ajax.reload();
             });
 
@@ -256,6 +258,7 @@
             $('#resetFilter').on('click', function() {
                 $('#monthFilter').val('');
                 $('#yearFilter').val('');
+                $('#statusFilter').val('');
                 table.ajax.reload();
             });
 

@@ -27,6 +27,12 @@ class TransactionController extends Controller
                 $query->whereYear('transaction_time', $request->year_filter);
             }
 
+             // ✅ Apply status filter
+        if ($request->has('status_filter') && ! empty($request->status_filter)) {
+            $query->where('transaction_status', $request->status_filter);
+        }
+
+
             $data = $query->get();
 
             return DataTables::of($data)

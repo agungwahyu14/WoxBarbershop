@@ -3,7 +3,7 @@
         <nav class="flex items-center justify-between">
             <!-- Left Section: Logo -->
             <div class="flex items-center space-x-3 flex-shrink-0">
-                <img src="{{ asset('images/Logo.jpeg') }}" alt="WOX'S Barbershop Logo" class="h-12 w-auto object-contain">
+                <img src="{{ asset('images/Logo.png') }}" alt="WOX'S Barbershop Logo" class="h-12 w-auto object-contain">
 
             </div>
 
@@ -160,7 +160,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z" />
                                 </svg>
-                                <span>Riwayat Pemesanan</span>
+                                <span>Riwayat Booking</span>
                             </a>
 
                             <!-- Divider -->
@@ -175,7 +175,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                     </svg>
-                                    <span>Logout</span>
+                                    <span>Keluar</span>
                                 </button>
                             </form>
                         </div>
@@ -300,7 +300,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        Profile Settings
+                        Pengaturan Profil
                     </a>
 
                     <a href="{{ route('payment.index') }}"
@@ -331,7 +331,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
-                            Logout
+                            Keluar
                         </button>
                     </form>
                 </div>
@@ -339,11 +339,11 @@
                 <div class="border-t border-gray-200 pt-4 mt-4 space-y-2">
                     <a href="{{ route('login') }}"
                         class="block w-full text-center py-2 px-4 text-gray-800 hover:text-secondary transition-colors border border-gray-300 rounded-lg">
-                        Login
+                        Masuk
                     </a>
                     <a href="{{ route('register') }}"
                         class="block w-full text-center py-2 px-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all">
-                        Register
+                        Daftar
                     </a>
                 </div>
             @endauth

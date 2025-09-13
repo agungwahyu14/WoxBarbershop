@@ -51,14 +51,11 @@ class UserController extends Controller
                 });
             }
 
-            // Apply status filter
-            if ($request->has('status_filter') && ! empty($request->status_filter)) {
-                if ($request->status_filter === 'verified') {
-                    $query->whereNotNull('email_verified_at');
-                } elseif ($request->status_filter === 'unverified') {
-                    $query->whereNull('email_verified_at');
-                }
-            }
+            // Apply status filter (active/inactive)
+            // Apply status filter (active/inactive)
+if ($request->filled('status_filter')) {
+    $query->where('is_active', (int) $request->status_filter);
+}
 
             // Apply month filter
             if ($request->has('month_filter') && ! empty($request->month_filter)) {

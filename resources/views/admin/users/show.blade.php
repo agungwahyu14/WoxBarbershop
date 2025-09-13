@@ -6,34 +6,47 @@
     <!-- Enhanced Page Header -->
     <div class="is-hero-bar">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div>
-                    <h1 class="text-4xl font-bold mb-2">
-                        <i class="fas fa-user mr-3"></i>User Details
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+
+                <!-- Left: Title & Description -->
+                <div class="text-center md:text-left">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center md:justify-start">
+                        <i class="fas fa-user mr-3 text-gray-700"></i>
+                        User Details
                     </h1>
-                    <p class="text-black text-lg">
+                    <p class="text-gray-700 text-lg">
                         Comprehensive user information and activity overview
                     </p>
                 </div>
-                <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                    {{-- @if (!$user->hasVerifiedEmail())
-                        <button type="button" id="resend-verification"
-                            class="glass-effect px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all">
-                            <i class="fas fa-envelope mr-2"></i>Resend Verification
-                        </button>
-                    @endif --}}
+
+                <!-- Right: Action Buttons -->
+                <div class="flex flex-wrap gap-3 justify-center md:justify-end">
                     <a href="{{ route('admin.users.edit', $user) }}"
                         class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-edit mr-2"></i>Edit User
                     </a>
+
                     <a href="{{ route('admin.users.index') }}"
                         class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-arrow-left mr-2"></i>Back to Users
                     </a>
+
+                    @if ($user->is_active ?? true)
+                        <button type="button" onclick="toggleUserStatus('deactivate')"
+                            class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
+                            <i class="fas fa-user-slash mr-2"></i>Deactivate Account
+                        </button>
+                    @else
+                        <button type="button" onclick="toggleUserStatus('activate')"
+                            class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200">
+                            <i class="fas fa-user-check mr-2"></i>Activate Account
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- User Profile Section -->
     <div class="container mx-auto px-6 py-6 mt-8">
@@ -74,13 +87,13 @@
                                                 <i class="fas fa-user-tag mr-1"></i>{{ $role->name }}
                                             </span>
                                         @endforeach
-                                        <span
+                                        {{-- <span
                                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
                                 {{ $user->hasVerifiedEmail() ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
                                             <i
                                                 class="fas fa-{{ $user->hasVerifiedEmail() ? 'check-circle' : 'exclamation-triangle' }} mr-1"></i>
                                             {{ $user->hasVerifiedEmail() ? 'Email Verified' : 'Email Unverified' }}
-                                        </span>
+                                        </span> --}}
                                     </div>
                                     </p>
                                 </div>
@@ -175,8 +188,8 @@
                                                 <div>
                                                     <p class="font-medium text-blue-900 capitalize">{{ $role->name }}
                                                     </p>
-                                                    <p class="text-sm text-blue-600">{{ $role->permissions->count() }}
-                                                        permissions</p>
+                                                    {{-- <p class="text-sm text-blue-600">{{ $role->permissions->count() }}
+                                                        permissions</p> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -216,7 +229,7 @@
                 </div>
 
                 <!-- Recent Activity -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                {{-- <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                     <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-900 flex items-center">
                             <i class="fas fa-history mr-3 text-blue-600"></i>Recent Activity
@@ -253,7 +266,7 @@
                             </div>
                         @endif
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <!-- Right Column - Statistics & Quick Actions -->
@@ -272,12 +285,7 @@
                             </div>
                             <p class="text-sm text-gray-500">Total Bookings</p>
                         </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-green-600 mb-2">
-                                {{ $user->bookings ? $user->bookings->where('status', 'confirmed')->count() : 0 }}
-                            </div>
-                            <p class="text-sm text-gray-500">Confirmed Bookings</p>
-                        </div>
+
                         <div class="text-center">
                             <div class="text-3xl font-bold text-purple-600 mb-2">
                                 {{ $user->created_at->diffInDays(now()) }}
@@ -288,76 +296,10 @@
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-xl font-semibold text-gray-900 flex items-center">
-                            <i class="fas fa-bolt mr-3 text-blue-600"></i>Quick Actions
-                        </h3>
-                    </div>
-                    <div class="p-6 space-y-3">
-                        <a href="{{ route('admin.users.edit', $user) }}"
-                            class="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                            <i class="fas fa-edit mr-2"></i>Edit User Details
-                        </a>
-                        {{-- @if (!$user->hasVerifiedEmail())
-                            <button type="button" id="resend-verification-sidebar"
-                                class="w-full inline-flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                <i class="fas fa-envelope mr-2"></i>Send Verification Email
-                            </button>
-                        @endif --}}
-                        <button type="button" onclick="resetUserPassword()"
-                            class="w-full inline-flex items-center justify-center px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
-                            <i class="fas fa-key mr-2"></i>Reset Password
-                        </button>
-                        @if ($user->is_active ?? true)
-                            <button type="button" onclick="toggleUserStatus('deactivate')"
-                                class="w-full inline-flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                                <i class="fas fa-user-slash mr-2"></i>Deactivate Account
-                            </button>
-                        @else
-                            <button type="button" onclick="toggleUserStatus('activate')"
-                                class="w-full inline-flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                <i class="fas fa-user-check mr-2"></i>Activate Account
-                            </button>
-                        @endif
-                    </div>
-                </div>
+
 
                 <!-- Account Information -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-xl font-semibold text-gray-900 flex items-center">
-                            <i class="fas fa-info-circle mr-3 text-blue-600"></i>Account Details
-                        </h3>
-                    </div>
-                    <div class="p-6 space-y-4">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">User ID:</span>
-                            <span class="font-medium text-gray-900">#{{ $user->id }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Member Since:</span>
-                            <span class="font-medium text-gray-900">{{ $user->created_at->format('M d, Y') }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Last Updated:</span>
-                            <span class="font-medium text-gray-900">{{ $user->updated_at->format('M d, Y') }}</span>
-                        </div>
-                        @if ($user->email_verified_at)
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Email Verified:</span>
-                                <span
-                                    class="font-medium text-green-600">{{ $user->email_verified_at->format('M d, Y') }}</span>
-                            </div>
-                        @endif
-                        @if ($user->last_login_at)
-                            <div class="flex justify-between">
-                                <span class="text-gray-600">Last Login:</span>
-                                <span class="font-medium text-gray-900">{{ $user->last_login_at->diffForHumans() }}</span>
-                            </div>
-                        @endif
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
