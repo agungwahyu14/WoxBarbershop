@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-     <div class="is-hero-bar">
+    <div class="is-hero-bar">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div>
@@ -19,37 +19,39 @@
                     </a>
                 </div>
             </div>
+
         </div>
-    </div>
 
 
-    <section class="section main-section">
-        <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <section class="section main-section">
+            <div class="container mx-auto px-6">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
 
 
-            <div class=" rounded-md overflow-x-auto">
-                <!-- Update Profile Information -->
-                <div class="p-4 sm:p-8 bg-white shadow rounded-lg">
-                    <div class="max-w-xl">
-                        @include('admin.profile.partials.update-profile-information-form')
-                    </div>
-                </div>
+                    <div class=" rounded-md overflow-x-auto">
+                        <!-- Update Profile Information -->
+                        <div class="p-4 sm:p-8 bg-white shadow rounded-lg">
+                            <div class="max-w-xl">
+                                @include('admin.profile.partials.update-profile-information-form')
+                            </div>
+                        </div>
 
-                <!-- Update Password -->
-                <div class="p-4 sm:p-8 bg-white shadow rounded-lg">
-                    <div class="max-w-xl">
-                        @include('admin.profile.partials.update-password-form')
-                    </div>
-                </div>
+                        <!-- Update Password -->
+                        <div class="p-4 sm:p-8 bg-white shadow rounded-lg">
+                            <div class="max-w-xl">
+                                @include('admin.profile.partials.update-password-form')
+                            </div>
+                        </div>
 
-                <!-- Delete Account -->
-                <div class="p-4 sm:p-8 bg-white shadow rounded-lg">
-                    <div class="max-w-xl">
-                        @include('admin.profile.partials.delete-user-form')
+                        <!-- Delete Account -->
+                        <div class="p-4 sm:p-8 bg-white shadow rounded-lg">
+                            <div class="max-w-xl">
+                                @include('admin.profile.partials.delete-user-form')
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-@endsection
+        </section>
+    @endsection

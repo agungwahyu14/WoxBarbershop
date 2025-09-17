@@ -4,7 +4,8 @@
     <section class="is-hero-bar">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
-                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">Transactions Management</h1>
+                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white"><i
+                        class="fas fa-receipt mr-3"></i>Transactions Management</h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     Latest payment transactions from Wox's Barbershop
                 </p>
@@ -18,7 +19,7 @@
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div class="flex items-center space-x-2">
+                    @if (Auth::user()->hasRole('admin'))
                         <select id="monthFilter"
                             class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
                             <option value="">All Months</option>
@@ -42,20 +43,38 @@
                                 <option value="{{ $year }}">{{ $year }}</option>
                             @endfor
                         </select>
-                        <select id="statusFilter"
-                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                            <option value="">All Status</option>
-                            <option value="pending">Menunggu</option>
-                            <option value="settlement">Sukses</option>
-                            <option value="cancel">Batal</option>
+                        <div class="flex items-center space-x-2">
+                            <select id="statusFilter"
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                                <option value="">All Status</option>
+                                <option value="pending">Menunggu</option>
+                                <option value="settlement">Sukses</option>
+                                <option value="cancel">Batal</option>
 
-                        </select>
-                        <button id="resetFilter"
-                            class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
-                            <i class="mdi mdi-refresh mr-1"></i>Reset
-                        </button>
-                    </div>
-                    <div id="export-buttons" class="flex flex-wrap gap-2"></div>
+                            </select>
+                            <button id="resetFilter"
+                                class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                <i class="mdi mdi-refresh mr-1"></i>Reset
+                            </button>
+                        </div>
+
+                        <div id="export-buttons" class="flex flex-wrap gap-2"></div>
+                    @elseif(Auth::user()->hasRole('pegawai'))
+                        <div class="flex items-center space-x-2">
+                            <select id="statusFilter"
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                                <option value="">All Status</option>
+                                <option value="pending">Menunggu</option>
+                                <option value="settlement">Sukses</option>
+                                <option value="cancel">Batal</option>
+
+                            </select>
+                            <button id="resetFilter"
+                                class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                <i class="mdi mdi-refresh mr-1"></i>Reset
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
 

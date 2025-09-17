@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    Users Management
+                    <i class="fas fa-users mr-3"></i> Users Management
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     Manage user roles and permissions across your system

@@ -4,7 +4,12 @@
     <section class="is-title-bar">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
             <ul>
-                <li>Admin</li>
+
+                @if (Auth::user()->hasRole('admin'))
+                    <li>Admin</li>
+                @elseif(Auth::user()->hasRole('pegawai'))
+                    <li>Pegawai</li>
+                @endif
                 <li>Dashboard</li>
             </ul>
             <div class="text-sm text-gray-600 flex items-center">

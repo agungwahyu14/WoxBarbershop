@@ -4,7 +4,8 @@
     <section class="is-hero-bar">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
-                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center mb-4">
+                    <i class="fas fa-cogs mr-3"></i>
                     Edit Service
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">

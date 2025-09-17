@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    Create Hairstyle
+                    <i class="fas fa-cut mr-3"></i> Create Hairstyle
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add new hairstyle recommendation</p>
             </div>
@@ -15,7 +15,8 @@
     <section class="section main-section">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden p-6">
-            <form action="{{ route('admin.hairstyles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form action="{{ route('admin.hairstyles.store') }}" method="POST" enctype="multipart/form-data"
+                class="space-y-6">
                 @csrf
 
                 <div>

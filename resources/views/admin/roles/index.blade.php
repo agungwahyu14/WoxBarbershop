@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    Role Management
+                    <i class="fas fa-user-shield mr-3"></i> Role Management
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     Manage user roles and permissions across your system
@@ -118,8 +118,7 @@
                     "<'overflow-x-auto't>" +
                     "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>", // tampilkan info & pagination
                 // Hide default info and pagination
-                buttons: [
-                    {
+                buttons: [{
                         extend: 'csv',
                         text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV',
                         className: 'dt-btn dt-btn-csv'

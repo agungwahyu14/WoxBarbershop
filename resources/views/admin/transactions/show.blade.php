@@ -4,7 +4,8 @@
     <section class="is-hero-bar">
         <div class="flex flex-col md:flex-row justify-between items-center">
             <div>
-                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">Transaction Detail</h1>
+                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white"> <i class="fas fa-receipt mr-3"></i>
+                    Transaction Detail</h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">View complete transaction information</p>
             </div>
             <div class="flex items-center space-x-4 mt-4 md:mt-0">
@@ -87,7 +88,7 @@
                         <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</span>
                         <span class="text-sm text-gray-900 dark:text-white">{{ $transaction->customer_email ?? '-' }}</span>
                     </div>
-                    
+
                 </div>
             </div>
 
