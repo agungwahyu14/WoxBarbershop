@@ -21,6 +21,7 @@ class BookingRequest extends FormRequest
             'service_id' => 'required|exists:services,id',
             'hairstyle_id' => 'required|exists:hairstyles,id',
             'description' => 'nullable|string|max:500',
+            'payment_method' => 'required|in:cash,bank',
         ];
 
         // Different validation for create vs update
@@ -45,21 +46,24 @@ class BookingRequest extends FormRequest
     }
 
     public function messages(): array
-    {
-        return [
-            'name.required' => 'Nama wajib diisi.',
-            'name.min' => 'Nama minimal 2 karakter.',
-            'name.max' => 'Nama maksimal 100 karakter.',
-            'service_id.required' => 'Layanan wajib dipilih.',
-            'service_id.exists' => 'Layanan yang dipilih tidak valid.',
-            'hairstyle_id.required' => 'Gaya rambut wajib dipilih.',
-            'hairstyle_id.exists' => 'Gaya rambut yang dipilih tidak valid.',
-            'date_time.required' => 'Tanggal dan waktu wajib diisi.',
-            'date_time.after' => 'Tanggal dan waktu harus di masa depan.',
-            'date_time.before' => 'Booking hanya dapat dilakukan maksimal 3 bulan ke depan.',
-            'description.max' => 'Deskripsi maksimal 500 karakter.',
-        ];
-    }
+{
+    return [
+        'name.required' => 'Nama wajib diisi.',
+        'name.min' => 'Nama minimal 2 karakter.',
+        'name.max' => 'Nama maksimal 100 karakter.',
+        'service_id.required' => 'Layanan wajib dipilih.',
+        'service_id.exists' => 'Layanan yang dipilih tidak valid.',
+        'hairstyle_id.required' => 'Gaya rambut wajib dipilih.',
+        'hairstyle_id.exists' => 'Gaya rambut yang dipilih tidak valid.',
+        'date_time.required' => 'Tanggal dan waktu wajib diisi.',
+        'date_time.after' => 'Tanggal dan waktu harus di masa depan.',
+        'date_time.before' => 'Booking hanya dapat dilakukan maksimal 3 bulan ke depan.',
+        'description.max' => 'Deskripsi maksimal 500 karakter.',
+        'payment_method.required' => 'Metode pembayaran wajib dipilih.', // ✅ Tambahan
+        'payment_method.in' => 'Metode pembayaran harus Cash atau Bank.', // ✅ Tambahan
+    ];
+}
+
 
     /**
      * Handle a failed validation attempt with enhanced logging and error categorization

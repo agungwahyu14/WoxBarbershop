@@ -17,6 +17,7 @@ class Booking extends Model
         'date_time',
         'queue_number',
         'description',
+        'payment_method',
         'status',
         'total_price',
 

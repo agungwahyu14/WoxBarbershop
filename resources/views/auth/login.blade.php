@@ -98,30 +98,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Remember Me checkbox functionality
-            const rememberCheckbox = document.getElementById('remember_me');
-            const rememberLabel = rememberCheckbox.closest('label');
-            const rememberText = rememberLabel.querySelector('span');
-
-            // Add smooth transition effects for remember me
-            rememberCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    rememberText.classList.add('text-[#d4af37]', 'font-medium');
-                    rememberText.classList.remove('text-gray-600');
-
-                    // Show temporary confirmation
-                    const originalText = rememberText.textContent;
-                    rememberText.textContent = '✓ Akan diingat selama 30 hari';
-
-                    setTimeout(() => {
-                        rememberText.textContent = originalText;
-                    }, 2000);
-                } else {
-                    rememberText.classList.remove('text-[#d4af37]', 'font-medium');
-                    rememberText.classList.add('text-gray-600');
-                }
-            });
-
             // Periksa pesan status sukses
             @if (session('status'))
                 Swal.fire({
@@ -142,7 +118,7 @@
 
                 Swal.fire({
                     icon: 'error',
-                    title: 'Login Gagal!',
+                    title: 'Pendaftaran Gagal!',
                     text: errorMessage,
                     confirmButtonColor: '#d4af37',
                     confirmButtonText: 'Coba Lagi'
@@ -177,6 +153,17 @@
                     icon: 'warning',
                     title: 'Peringatan!',
                     text: '{{ session('warning') }}',
+                    confirmButtonColor: '#d4af37',
+                    confirmButtonText: 'Oke'
+                });
+            @endif
+
+            // Periksa pesan sukses pendaftaran
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pendaftaran Berhasil!',
+                    text: '{{ session('success') }}',
                     confirmButtonColor: '#d4af37',
                     confirmButtonText: 'Oke'
                 });

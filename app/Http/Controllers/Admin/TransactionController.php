@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Models\Booking;
 use App\Traits\ExportTrait;
 use App\Exports\TransactionsExport;
 use Illuminate\Http\Request;
@@ -73,12 +74,28 @@ class TransactionController extends Controller
                 })
 
                 ->addColumn('action', function ($row) {
-                    return '<div class="flex justify-center space-x-2">
-                    <a href="'.route('admin.transactions.show', $row->id).'" class="btn btn-sm bg-blue-100 text-blue-600 rounded px-2 py-1 hover:bg-blue-200">
-                        <i class="mdi mdi-eye"></i>
-                    </a>
-                </div>';
-                })
+    $actions = '<div class="flex justify-center space-x-2">
+        <a href="'.route('admin.transactions.show', $row->id).'" 
+            class="btn btn-sm bg-blue-100 text-blue-600 rounded px-2 py-1 hover:bg-blue-200" 
+            title="Lihat Detail">
+            <i class="mdi mdi-eye"></i>
+        </a>';
+    
+    // Show settlement button only if status is not already settlement
+    if ($row->transaction_status !== 'settlement') {
+        $actions .= '<button type="button" 
+            class="btn btn-sm bg-green-100 text-green-600 rounded px-2 py-1 hover:bg-green-200" 
+            title="Konfirmasi Settlement" 
+            onclick="confirmSettlement('.$row->id.')">
+            <i class="mdi mdi-check-circle"></i>
+        </button>';
+    }
+    
+    $actions .= '</div>';
+    
+    return $actions;
+})
+
 
                 ->rawColumns(['name', 'email', 'transaction_status', 'action'])
 
@@ -87,6 +104,39 @@ class TransactionController extends Controller
 
         return view('admin.transactions.index');
     }
+
+    
+
+public function edit(Transaction $transaction)
+{
+    $user = auth()->user();
+
+    // Admin dan pegawai bisa edit semua, pelanggan hanya miliknya
+    if (! $user->hasAnyRole(['admin', 'pegawai']) && $transaction->user_id !== $user->id) {
+        abort(403);
+    }
+
+    return view('admin.transactions.edit', compact('transaction'));
+}
+
+public function update(Request $request, Transaction $transaction)
+{
+    $request->validate([
+        'transaction_status' => 'required|in:pending,settlement,cancel,failed',
+        'payment_type' => 'required|in:cash,bank',
+    ]);
+
+    $transaction->update([
+        'transaction_status' => $request->transaction_status,
+        'payment_type' => $request->payment_type,
+    ]);
+
+    return redirect()->route('admin.transactions.index')
+        ->with('success', 'Transaksi berhasil diperbarui.');
+}
+
+
+    
 
     public function show(Transaction $transaction)
     {
@@ -131,5 +181,29 @@ class TransactionController extends Controller
     protected function getExportTitle(): string
     {
         return 'Data Transaksi';
+    }
+
+    public function markAsSettlement($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        
+        // Update transaction status to settlement
+        $transaction->update([
+            'transaction_status' => 'settlement'
+        ]);
+
+        // Update related booking if exists
+        $booking = Booking::where('id', $transaction->order_id)->first();
+        if ($booking) {
+            $booking->update([
+                'status' => 'completed',
+                'payment_status' => 'paid'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaksi berhasil dikonfirmasi sebagai settlement.'
+        ]);
     }
 }

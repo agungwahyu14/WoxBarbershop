@@ -96,43 +96,30 @@
                             <div class="space-y-1">
                                 <span
                                     class="inline-block px-3 py-1 rounded-full text-sm font-medium
-                                    @switch($booking->payment_status)
-                                        @case('paid')
-                                        @case('settlement')
-                                            bg-green-100 text-green-700
-                                            @break
-                                        @case('pending')
-                                            bg-yellow-100 text-yellow-700
-                                            @break
-                                        @case('unpaid')
-                                        @case('failed')
-                                            bg-red-100 text-red-700
-                                            @break
-                                        @default
-                                            bg-gray-100 text-gray-600
-                                    @endswitch">
-                                    @switch($booking->payment_status)
-                                        @case('paid')
-                                        @case('settlement')
-                                            Lunas
+        @switch($booking->payment_method)
+            @case('cash')
+                bg-blue-100 text-blue-700
+                @break
+            @case('bank')
+                bg-purple-100 text-purple-700
+                @break
+            @default
+                bg-gray-100 text-gray-600
+        @endswitch">
+                                    @switch($booking->payment_method)
+                                        @case('cash')
+                                            Cash
                                         @break
 
-                                        @case('pending')
-                                            Menunggu
-                                        @break
-
-                                        @case('unpaid')
-                                            Belum Bayar
-                                        @break
-
-                                        @case('failed')
-                                            Gagal
+                                        @case('bank')
+                                            Bank
                                         @break
 
                                         @default
-                                            {{ ucfirst($booking->payment_status) }}
+                                            {{ ucfirst($booking->payment_method) }}
                                     @endswitch
                                 </span>
+
                                 @if (isset($booking->total_price) && $booking->total_price)
                                     <p class="text-lg font-bold text-gray-800">
                                         <i class="fas fa-money-bill-wave mr-1 text-green-600"></i>
@@ -140,6 +127,7 @@
                                     </p>
                                 @endif
                             </div>
+
                         </div>
                     </div>
 
@@ -238,13 +226,28 @@
                         </script>
 
                         {{-- Payment Button (only show if booking is not completed and payment is not paid) --}}
-                        @if (!in_array($booking->status, ['completed', 'cancelled']) && $booking->payment_status !== 'paid')
-                            <button type="button" id="pay-button-{{ $booking->id }}"
-                                onclick="initiatePayment({{ $booking->id }})"
-                                class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                                <i class="fas fa-credit-card mr-2"></i>
-                                Bayar Sekarang
-                            </button>
+                        @if (!in_array($booking->status, ['completed', 'cancelled']))
+                            @if ($booking->payment_method === 'bank')
+                                <!-- Tombol untuk Midtrans (Bank) -->
+                                <button type="button" id="pay-button-{{ $booking->id }}"
+                                    onclick="initiatePayment({{ $booking->id }})"
+                                    class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                    <i class="fas fa-credit-card mr-2"></i>
+                                    Bayar Sekarang
+                                </button>
+                            @elseif ($booking->payment_method === 'cash')
+                                <!-- Tombol untuk Cash -->
+                                <form action="{{ route('payment.cash') }}" method="POST" class="inline">
+                                    @csrf
+                                    <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                                    <input type="hidden" name="payment_method" value="cash">
+                                    <button type="submit"
+                                        class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                        <i class="fas fa-money-bill-wave mr-2"></i>
+                                        Bayar Tunai
+                                    </button>
+                                </form>
+                            @endif
                         @endif
 
                         <script src="https://app.sandbox.midtrans.com/snap/snap.js"

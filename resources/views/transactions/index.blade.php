@@ -99,21 +99,24 @@
                                 {{-- Action Buttons --}}
                                 <div class="pt-4 border-t border-gray-100 space-y-2">
                                     {{-- View Detail Button --}}
-                                    <a href="{{ route('payment.show', $tx['order_id']) }}"
-                                        class="w-full inline-flex justify-center items-center px-4 py-2 hover:bg-blue-600 bg-blue-500 text-white text-sm font-medium rounded-lg transition-colors duration-200">
-                                        <i class="fas fa-eye mr-2"></i>
-                                        Lihat Detail
-                                    </a>
+
+                                    @if ($tx['payment_type'] == 'bank_transfer')
+                                        <a href="{{ route('payment.show', $tx['order_id']) }}"
+                                            class="w-full inline-flex justify-center items-center px-4 py-2 hover:bg-blue-600 bg-blue-500 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                                            <i class="fas fa-eye mr-2"></i>
+                                            Lihat Detail
+                                        </a>
+                                    @endif
 
                                     {{-- Payment Action for Pending Status --}}
-                                    @if ($tx['status'] == 'pending')
+                                    {{-- @if ($tx['status'] == 'pending')
                                         <button
                                             class="btn-bayar-sekarang w-full inline-flex justify-center items-center px-4 py-2 hover:bg-orange-600 bg-orange-500 text-white text-sm font-medium rounded-lg transition-colors duration-200"
                                             data-order-id="{{ $tx['order_id'] }}">
                                             <i class="fas fa-credit-card mr-2"></i>
                                             Bayar Sekarang
                                         </button>
-                                    @endif
+                                    @endif --}}
 
                                     {{-- Download Receipt for Successful Transactions --}}
                                     @if (in_array($tx['status'], ['settlement', 'capture']))
@@ -147,6 +150,36 @@
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Show success message if exists
+            @if (session('success'))
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'rounded-lg',
+                        confirmButton: 'bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600'
+                    },
+                    buttonsStyling: false
+                });
+            @endif
+
+            // Show error message if exists
+            @if (session('error'))
+                Swal.fire({
+                    title: 'Error!',
+                    text: '{{ session('error') }}',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'rounded-lg',
+                        confirmButton: 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600'
+                    },
+                    buttonsStyling: false
+                });
+            @endif
+
             const bayarButtons = document.querySelectorAll(".btn-bayar-sekarang");
 
             bayarButtons.forEach(button => {

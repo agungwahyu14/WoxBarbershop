@@ -19,64 +19,62 @@
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    @if (Auth::user()->hasRole('admin'))
-                        <select id="monthFilter"
-                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                            <option value="">All Months</option>
-                            <option value="01">January</option>
-                            <option value="02">February</option>
-                            <option value="03">March</option>
-                            <option value="04">April</option>
-                            <option value="05">May</option>
-                            <option value="06">June</option>
-                            <option value="07">July</option>
-                            <option value="08">August</option>
-                            <option value="09">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-                        <select id="yearFilter"
-                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                            <option value="">All Years</option>
-                            @for ($year = date('Y'); $year >= 2020; $year--)
-                                <option value="{{ $year }}">{{ $year }}</option>
-                            @endfor
-                        </select>
-                        <div class="flex items-center space-x-2">
+
+                    {{-- 🔹 Bagian Kiri --}}
+                    <div class="flex flex-wrap items-center gap-2">
+                        @if (Auth::user()->hasRole('admin'))
+                            <select id="monthFilter"
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                                <option value="">All Months</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+
+                            <select id="yearFilter"
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                                <option value="">All Years</option>
+                                @for ($year = date('Y'); $year >= 2020; $year--)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endfor
+                            </select>
                             <select id="statusFilter"
                                 class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
                                 <option value="">All Status</option>
                                 <option value="pending">Menunggu</option>
                                 <option value="settlement">Sukses</option>
                                 <option value="cancel">Batal</option>
-
                             </select>
+
                             <button id="resetFilter"
                                 class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
                                 <i class="mdi mdi-refresh mr-1"></i>Reset
                             </button>
-                        </div>
+                        @endif
+                    </div>
 
-                        <div id="export-buttons" class="flex flex-wrap gap-2"></div>
-                    @elseif(Auth::user()->hasRole('pegawai'))
-                        <div class="flex items-center space-x-2">
-                            <select id="statusFilter"
-                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                <option value="">All Status</option>
-                                <option value="pending">Menunggu</option>
-                                <option value="settlement">Sukses</option>
-                                <option value="cancel">Batal</option>
+                    {{-- 🔹 Bagian Kanan --}}
+                    <div class="flex items-center space-x-2">
 
-                            </select>
-                            <button id="resetFilter"
-                                class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                <i class="mdi mdi-refresh mr-1"></i>Reset
-                            </button>
-                        </div>
-                    @endif
+
+                        @if (Auth::user()->hasRole('admin'))
+                            <div id="export-buttons" class="flex flex-wrap gap-2"></div>
+                        @endif
+                    </div>
+
                 </div>
             </div>
+
+
 
             <div class="card-content rounded-md overflow-x-auto">
                 <table id="transactions-table" class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
@@ -227,8 +225,53 @@
                 table.ajax.reload();
             });
 
-
         });
+
+        // Function to confirm settlement
+        function confirmSettlement(transactionId) {
+            Swal.fire({
+                title: 'Konfirmasi Settlement',
+                text: 'Apakah Anda yakin ingin mengubah status transaksi menjadi settlement?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#22c55e',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Settlement',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send AJAX request to mark as settlement
+                    $.ajax({
+                        url: '/admin/transactions/' + transactionId + '/settlement',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonColor: '#22c55e'
+                                });
+                                // Reload DataTable
+                                $('#transactions-table').DataTable().ajax.reload();
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Terjadi kesalahan saat mengupdate transaksi.',
+                                icon: 'error',
+                                confirmButtonColor: '#ef4444'
+                            });
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @endpush
 

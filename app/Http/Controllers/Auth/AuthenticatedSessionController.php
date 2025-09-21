@@ -46,9 +46,8 @@ class AuthenticatedSessionController extends Controller
                     'ip' => $request->ip()
                 ]);
 
-                return back()->withErrors([
-                    'email' => 'Your account has been deactivated. Please contact administrator.',
-                ])->with('error', 'Your account has been deactivated. Please contact administrator.');
+               return redirect()->route('login')->with('error', 'Akun Anda dinonaktifkan, hubungi admin.');
+
             }
 
             // Update last login timestamp
@@ -75,9 +74,7 @@ class AuthenticatedSessionController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            return back()->withErrors([
-                'email' => 'An error occurred during login. Please try again.',
-            ])->with('error', 'An error occurred during login. Please try again.');
+              return redirect()->route('login')->with('error', 'Email or Password wrong.');
         }
     }
 

@@ -68,8 +68,10 @@ Route::middleware('auth')->group(function () {
         // Booking
         Route::resource('bookings', BookingController::class);
 
-        // Payment
+        // Payment & Transactions
         Route::get('/transaction', [PaymentController::class, 'index'])->name('payment.index');
+        Route::get('/transactions', [PaymentController::class, 'index'])->name('transactions.index');
+        Route::post('/transaction/cash', [PaymentController::class, 'cashPayment'])->name('payment.cash');
         Route::get('/transaction/{orderId}', [PaymentController::class, 'show'])->name('payment.show');
         Route::get('/transaction/va/{orderId}', [PaymentController::class, 'showVA']);
         Route::get('/transaction/download/{orderId}', [PaymentController::class, 'downloadReceipt'])->name('transaction.download');
@@ -129,6 +131,9 @@ Route::middleware('auth')->group(function () {
             'update' => 'admin.transactions.update',
             'destroy' => 'admin.transactions.destroy',
         ]);
+        
+        // Additional transaction routes
+        Route::post('transactions/{id}/settlement', [TransactionController::class, 'markAsSettlement'])->name('admin.transactions.settlement');
         Route::resource('loyalty', AdminLoyaltyController::class)->names([
             'index' => 'admin.loyalty.index',
             'create' => 'admin.loyalty.create',

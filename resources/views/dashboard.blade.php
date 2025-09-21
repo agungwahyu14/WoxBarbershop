@@ -342,39 +342,38 @@
                             <label for="name"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">Nama</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
-                                class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                             @error('name')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Layanan -->
-                        <div>
-                            <label for="service_id"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">Layanan</label>
-                            <select id="service_id" name="service_id"
-                                class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
-                                <option value="">Pilih Layanan</option>
-                                @foreach ($services as $service)
-                                    <option value="{{ $service->id }}"
-                                        {{ old('service_id') == $service->id ? 'selected' : '' }}>
-                                        {{ $service->name }} - Rp {{ number_format($service->price, 0, ',', '.') }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('service_id')
-                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Gaya Rambut & Tanggal -->
+                        <!-- Layanan & Gaya Rambut -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="service_id"
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Layanan</label>
+                                <select id="service_id" name="service_id"
+                                    class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    <option value="">Pilih Layanan</option>
+                                    @foreach ($services as $service)
+                                        <option value="{{ $service->id }}"
+                                            {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                                            {{ $service->name }} - Rp {{ number_format($service->price, 0, ',', '.') }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('service_id')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <div>
                                 <label for="hairstyle_id"
                                     class="block text-primary mb-2 font-bold font-playfair text-xl">Pilih Gaya
                                     Rambut</label>
                                 <select id="hairstyle_id" name="hairstyle_id"
-                                    class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">Pilih Gaya</option>
                                     @foreach ($hairstyles as $hairstyle)
                                         <option value="{{ $hairstyle->id }}"
@@ -387,19 +386,36 @@
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+                        </div>
 
+                        <!-- Pembayaran & Tanggal -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="date_time"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Tanggal &
-                                    Waktu</label>
-                                <input type="datetime-local" id="date_time" name="date_time"
-                                    value="{{ old('date_time') }}"
-                                    class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
-                                @error('date_time')
+                                <label for="payment_method"
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Pembayaran</label>
+                                <select id="payment_method" name="payment_method"
+                                    class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    <option value="">Pilih Metode Pembayaran</option>
+                                    <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Cash
+                                    </option>
+                                    <option value="bank" {{ old('payment_method') == 'bank' ? 'selected' : '' }}>Bank
+                                    </option>
+                                </select>
+                                @error('payment_method')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
+                            <div>
+                                <label for="date_time"
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Tanggal & Waktu</label>
+                                <input type="datetime-local" id="date_time" name="date_time"
+                                    value="{{ old('date_time') }}"
+                                    class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                @error('date_time')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
 
                         <!-- Deskripsi -->
@@ -407,7 +423,7 @@
                             <label for="description"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">Deskripsi</label>
                             <textarea id="description" name="description" rows="3"
-                                class="w-full px-4 py-3  border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">{{ old('description') }}</textarea>
+                                class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -421,7 +437,7 @@
                             </button>
                         @else
                             <a href="{{ route('login') }}"
-                                class="  text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1 rounded-lg">
+                                class="text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1 rounded-lg">
                                 MASUK UNTUK RESERVASI
                             </a>
                         @endauth

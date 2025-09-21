@@ -78,8 +78,10 @@ class RegisteredUserController extends Controller
                 'errors' => $e->errors(),
                 'ip' => $request->ip()
             ]);
-            
-            throw $e;
+
+            $firstError = collect($e->errors())->flatten()->first();
+
+            return back()->withInput()->with('error', $firstError);
 
         } catch (\Exception $e) {
             Log::error('User registration failed', [

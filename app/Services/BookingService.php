@@ -206,103 +206,107 @@ class BookingService
      * Create booking with business logic validation
      */
     public function createBooking(array $data): Booking
-    {
-        DB::beginTransaction();
+{
+    DB::beginTransaction();
 
-        try {
-            $dateTime = Carbon::parse($data['date_time']);
-            $service = Service::findOrFail($data['service_id']);
+    try {
+        $dateTime = Carbon::parse($data['date_time']);
+        $service = Service::findOrFail($data['service_id']);
 
-            Log::info('Booking creation attempt', [
-                'user_id' => auth()->id(),
-                'service_id' => $data['service_id'],
-                'requested_datetime' => $dateTime->format('Y-m-d H:i:s'),
-                'service_duration' => $service->duration
-            ]);
+        Log::info('Booking creation attempt', [
+            'user_id' => auth()->id(),
+            'service_id' => $data['service_id'],
+            'requested_datetime' => $dateTime->format('Y-m-d H:i:s'),
+            'service_duration' => $service->duration,
+            'payment_method' => $data['payment_method'] ?? null
+        ]);
 
-            // Comprehensive business hours validation
-            $validation = $this->validateBusinessHours($dateTime);
+        // Comprehensive business hours validation
+        $validation = $this->validateBusinessHours($dateTime);
+        
+        if (!$validation['is_valid']) {
+            $errorMessage = implode('. ', $validation['errors']);
             
-            if (!$validation['is_valid']) {
-                $errorMessage = implode('. ', $validation['errors']);
-                
-                Log::warning('Booking validation failed', [
-                    'user_id' => auth()->id(),
-                    'errors' => $validation['errors'],
-                    'suggestions' => $validation['suggestions']
-                ]);
-                
-                throw new \Exception($errorMessage, 422); // 422 = Unprocessable Entity
-            }
-
-            // Check if service extends beyond business hours
-            $bookingEndTime = $dateTime->copy()->addMinutes($service->duration);
-            if (!$this->isWithinBusinessHours($bookingEndTime->subMinute())) {
-                Log::warning('Service would extend beyond business hours', [
-                    'start_time' => $dateTime->format('H:i'),
-                    'service_duration' => $service->duration,
-                    'end_time' => $bookingEndTime->format('H:i')
-                ]);
-                
-                throw new \Exception('Layanan akan berakhir setelah jam tutup (21:00). Silakan pilih waktu yang lebih awal.', 422);
-            }
-
-            // Validasi ketersediaan slot waktu
-            if (! $this->isTimeSlotAvailable($dateTime, $service->duration)) {
-                $nextAvailable = $this->findNextAvailableSlot($dateTime, $service->duration);
-                
-                Log::warning('Time slot not available', [
-                    'requested_time' => $dateTime->format('Y-m-d H:i:s'),
-                    'next_available' => $nextAvailable->format('Y-m-d H:i:s')
-                ]);
-                
-                throw new \Exception('Slot waktu tidak tersedia. Slot terdekat: '.$nextAvailable->format('d/m/Y H:i'), 409); // 409 = Conflict
-            }
-
-            // Generate nomor antrian
-            $queueService = new QueueService;
-            $queueNumber = $queueService->generateQueueNumber($dateTime);
-
-            // Simpan booking
-            $booking = Booking::create([
+            Log::warning('Booking validation failed', [
                 'user_id' => auth()->id(),
-                'name' => $data['name'],
-                'service_id' => $data['service_id'],
-                'hairstyle_id' => $data['hairstyle_id'],
-                'date_time' => $dateTime,
-                'queue_number' => $queueNumber,
-                'description' => $data['description'] ?? null,
-                'status' => 'pending',
-                'total_price' => $service->price,
-            ]);
-
-            Log::info('Booking created successfully', [
-                'booking_id' => $booking->id,
-                'user_id' => $booking->user_id,
-                'queue_number' => $queueNumber,
-                'datetime' => $dateTime->format('Y-m-d H:i:s'),
-                'service' => $service->name,
-                'total_price' => $service->price
-            ]);
-
-            DB::commit();
-
-            return $booking;
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            
-            Log::error('Booking creation failed', [
-                'user_id' => auth()->id(),
-                'error' => $e->getMessage(),
-                'code' => $e->getCode(),
-                'data' => $data,
-                'trace' => $e->getTraceAsString()
+                'errors' => $validation['errors'],
+                'suggestions' => $validation['suggestions']
             ]);
             
-            throw $e;
+            throw new \Exception($errorMessage, 422); // 422 = Unprocessable Entity
         }
+
+        // Check if service extends beyond business hours
+        $bookingEndTime = $dateTime->copy()->addMinutes($service->duration);
+        if (!$this->isWithinBusinessHours($bookingEndTime->subMinute())) {
+            Log::warning('Service would extend beyond business hours', [
+                'start_time' => $dateTime->format('H:i'),
+                'service_duration' => $service->duration,
+                'end_time' => $bookingEndTime->format('H:i')
+            ]);
+            
+            throw new \Exception('Layanan akan berakhir setelah jam tutup (21:00). Silakan pilih waktu yang lebih awal.', 422);
+        }
+
+        // Validasi ketersediaan slot waktu
+        if (! $this->isTimeSlotAvailable($dateTime, $service->duration)) {
+            $nextAvailable = $this->findNextAvailableSlot($dateTime, $service->duration);
+            
+            Log::warning('Time slot not available', [
+                'requested_time' => $dateTime->format('Y-m-d H:i:s'),
+                'next_available' => $nextAvailable->format('Y-m-d H:i:s')
+            ]);
+            
+            throw new \Exception('Slot waktu tidak tersedia. Slot terdekat: '.$nextAvailable->format('d/m/Y H:i'), 409); // 409 = Conflict
+        }
+
+        // Generate nomor antrian
+        $queueService = new QueueService;
+        $queueNumber = $queueService->generateQueueNumber($dateTime);
+
+        // Simpan booking
+        $booking = Booking::create([
+            'user_id' => auth()->id(),
+            'name' => $data['name'],
+            'service_id' => $data['service_id'],
+            'hairstyle_id' => $data['hairstyle_id'],
+            'date_time' => $dateTime,
+            'queue_number' => $queueNumber,
+            'description' => $data['description'] ?? null,
+            'status' => 'pending',
+            'total_price' => $service->price,
+            'payment_method' => $data['payment_method'], // ✅ ditambahkan
+        ]);
+
+        Log::info('Booking created successfully', [
+            'booking_id' => $booking->id,
+            'user_id' => $booking->user_id,
+            'queue_number' => $queueNumber,
+            'datetime' => $dateTime->format('Y-m-d H:i:s'),
+            'service' => $service->name,
+            'total_price' => $service->price,
+            'payment_method' => $booking->payment_method
+        ]);
+
+        DB::commit();
+
+        return $booking;
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        
+        Log::error('Booking creation failed', [
+            'user_id' => auth()->id(),
+            'error' => $e->getMessage(),
+            'code' => $e->getCode(),
+            'data' => $data,
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        throw $e;
     }
+}
+
 
     /**
      * Update booking status with validation

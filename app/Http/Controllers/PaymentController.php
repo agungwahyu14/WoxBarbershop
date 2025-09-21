@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Transaction;
 use App\Services\MidtransService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -242,6 +243,43 @@ class PaymentController extends Controller
 
         return $statusMap[$status] ?? ucfirst($status);
     }
+
+    public function cashPayment(Request $request)
+    {
+        $request->validate([
+            'booking_id' => 'required|exists:bookings,id',
+            'payment_method' => 'required|in:cash,bank',
+        ]);
+
+        $booking = Booking::findOrFail($request->booking_id);
+
+        // Buat transaksi baru
+        $transaction = Transaction::create([
+            'order_id' => $booking->id, // Menggunakan booking ID sebagai order_id
+            'transaction_status' => 'pending',
+            'payment_type' => $request->payment_method,
+            'gross_amount' => $booking->total_price,
+            'transaction_time' => now(),
+            'bank' => null,
+            'va_number' => null,
+            'name' => $booking->name,
+            'email' => $booking->user->email ?? null,
+        ]);
+
+        // Update booking status jika cash
+        // if ($request->payment_method === 'cash') {
+        //     $booking->update([
+        //         'status' => 'completed',
+        //         'payment_status' => 'paid',
+        //     ]);
+        // }
+
+        return redirect()->route('transactions.index')
+            ->with('success', 'Transaksi berhasil dibuat.');
+    }
+
+    
+
 
     public function show($orderId)
     {
