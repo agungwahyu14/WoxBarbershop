@@ -152,6 +152,8 @@
                 text: '{{ session('success') }}',
                 timer: 3000,
                 showConfirmButton: false
+            }).then(() => {
+                location.reload(); // reload halaman penuh setelah update / create
             });
         @endif
 
@@ -181,10 +183,12 @@
                                 icon: 'success',
                                 title: 'Deleted!',
                                 text: response.message,
-                                timer: 3000,
+                                timer: 2000,
                                 showConfirmButton: false
+                            }).then(() => {
+                                location
+                            .reload(); // reload halaman penuh setelah delete
                             });
-                            table.ajax.reload();
                         },
                         error: function(xhr) {
                             Swal.fire({

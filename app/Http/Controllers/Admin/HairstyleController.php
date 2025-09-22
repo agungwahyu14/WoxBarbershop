@@ -184,7 +184,7 @@ class HairstyleController extends Controller
 
         Hairstyle::create($data);
 
-        return redirect()->route('hairstyles.index')->with('success', 'Hairstyle created successfully.');
+        return redirect()->route('admin.hairstyles.index')->with('success', 'Hairstyle created successfully.');
     }
 
     public function edit(Hairstyle $hairstyle)
