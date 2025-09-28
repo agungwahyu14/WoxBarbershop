@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Hairstyle Management')
+
 @section('content')
     <section class="is-hero-bar">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
@@ -8,7 +10,6 @@
                     <i class="fas fa-cut mr-3"></i>
                     Hairstyle Management
                 </h1>
-
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     Manage hairstyle recommendations for Wox’s Barbershop
                 </p>
@@ -17,7 +18,6 @@
     </section>
 
     <section class="section main-section">
-
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
@@ -40,17 +40,18 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold">Description</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold">Bentuk Kepala</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold">Tipe Rambut</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold">Style Preference</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold">Image</th>
                             <th class="text-center text-xs font-semibold">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    </tbody>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
                 </table>
             </div>
         </div>
     </section>
 @endsection
+
 
 @push('scripts')
     <script>
@@ -74,11 +75,25 @@
                     },
                     {
                         data: 'bentuk_kepala',
-                        name: 'bentuk_kepala'
+                        name: 'bentuk_kepala',
+                        render: function(data, type, row) {
+                            // Data sekarang sudah berupa HTML dari controller
+                            return data || '-';
+                        }
                     },
                     {
                         data: 'tipe_rambut',
-                        name: 'tipe_rambut'
+                        name: 'tipe_rambut',
+                        render: function(data, type, row) {
+                            return data || '-';
+                        }
+                    },
+                    {
+                        data: 'style_preference',
+                        name: 'style_preference',
+                        render: function(data, type, row) {
+                            return data || '-';
+                        }
                     },
                     {
                         data: 'image',
@@ -86,6 +101,10 @@
                         orderable: false,
                         searchable: false,
                         className: 'text-center',
+                        render: function(data) {
+                            return data ||
+                                '<div class="flex justify-center"><i class="fas fa-image text-gray-400"></i></div>';
+                        }
                     },
                     {
                         data: 'action',
@@ -124,9 +143,9 @@
                     zeroRecords: "No matching hairstyles",
                     emptyTable: "No hairstyles available",
                     processing: `<div class="flex items-center justify-center py-4">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
-        </div>`,
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
+                        </div>`,
                     paginate: {
                         previous: '<i class="mdi mdi-chevron-left"></i>',
                         next: '<i class="mdi mdi-chevron-right"></i>'
@@ -141,8 +160,8 @@
                     $('.dt-buttons').appendTo('#export-buttons');
                 }
             });
-
         });
+
 
         // Success popup
         @if (session('success'))
@@ -187,7 +206,7 @@
                                 showConfirmButton: false
                             }).then(() => {
                                 location
-                            .reload(); // reload halaman penuh setelah delete
+                                    .reload(); // reload halaman penuh setelah delete
                             });
                         },
                         error: function(xhr) {

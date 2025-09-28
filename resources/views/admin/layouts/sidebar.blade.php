@@ -43,6 +43,12 @@
                         <li><a href="{{ route('admin.hairstyles.index') }}"><span>Hairstyles</span></a></li>
                     </ul>
                 </li>
+                <li>
+                    <a href="{{ route('admin.ahp-management') }}">
+                        <span class="icon"><i class="mdi mdi-chart-bar"></i></span>
+                        <span class="menu-item-label">AHP Management</span>
+                    </a>
+                </li>
 
                 <li>
                     <a class="dropdown">

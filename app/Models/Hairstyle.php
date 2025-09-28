@@ -12,22 +12,38 @@ class Hairstyle extends Model
     protected $fillable = [
         'name',
         'description',
-        'bentuk_kepala',
-        'tipe_rambut',
-        'style_preference', // Added field for style preference
         'image',
     ];
 
+    // Relasi ke bentuk kepala
+   public function bentuk_kepala()
+{
+    return $this->belongsToMany(BentukKepala::class, 'hairstyle_bentuk_kepala');
+}
+
+public function tipe_rambut()
+{
+    return $this->belongsToMany(TipeRambut::class, 'hairstyle_tipe_rambut');
+}
+
+public function style_preference()
+{
+    return $this->belongsToMany(StylePreference::class, 'hairstyle_style_preference');
+}
+
+    // Relasi ke booking jika ada
     public function bookings()
     {
         return $this->hasMany(Booking::class);
     }
 
+    // Relasi ke user jika diperlukan
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    // Relasi ke scores
     public function scores()
     {
         return $this->hasMany(HairstyleScore::class);

@@ -28,21 +28,28 @@ class RecommendationController extends Controller
         $weights = $this->calculateAHPWeights();
 
         // Step 2: Ambil semua hairstyle yang sesuai filter
-        $query = Hairstyle::with('scores');
+        $query = Hairstyle::with(['scores', 'bentuk_kepala', 'tipe_rambut', 'style_preference']);
+        \Log::info('Initial hairstyle query built. $query: '. $query->toSql());
 
-        if ($bentukKepala) {
-            $query->where('bentuk_kepala', $bentukKepala);
-        }
+if ($bentukKepala) {
+    $query->whereHas('bentuk_kepala', function($q) use ($bentukKepala) {
+        $q->where('nama', $bentukKepala);
+    });
+}
 
-        if ($tipeRambut) {
-            $query->where('tipe_rambut', $tipeRambut);
-        }
+if ($tipeRambut) {
+    $query->whereHas('tipe_rambut', function($q) use ($tipeRambut) {
+        $q->where('nama', $tipeRambut);
+    });
+}
 
-        if ($preferensiGaya) {
-            $query->where('style_preference', $preferensiGaya);
-        }
-
-        $hairstyles = $query->get();
+if ($preferensiGaya) {
+    $query->whereHas('style_preference', function($q) use ($preferensiGaya) {
+        $q->where('nama', $preferensiGaya);
+    });
+}
+$hairstyles = $query->get();
+\Log::info('Total hairstyles fetched for recommendation: '. $hairstyles->count());
         $results = [];
 
         // Step 3: Hitung skor rekomendasi berdasarkan bobot
@@ -70,13 +77,7 @@ class RecommendationController extends Controller
             // Log semua skor
             Log::info("Hairstyle ID {$hairstyle->id} ({$hairstyle->name}) => Total Score: $roundedScore", $logDetail);
 
-            // Log khusus jika total score = 0.8325
-            if ($roundedScore == 0.8325) {
-                Log::info('Potongan rambut dengan skor 0.8325 ditemukan:', [
-                    'id' => $hairstyle->id,
-                    'name' => $hairstyle->name,
-                ]);
-            }
+          
 
             $results[] = [
                 'hairstyle' => $hairstyle,
@@ -98,6 +99,7 @@ class RecommendationController extends Controller
         $criterias = Criteria::all();
         $criteriaIds = $criterias->pluck('id')->toArray();
         $n = count($criterias);
+        \Log::info("Calculating AHP weights for $n criteria.");
 
         $matrix = [];
         foreach ($criteriaIds as $i) {
@@ -131,6 +133,10 @@ class RecommendationController extends Controller
 
         // Check consistency
         $this->calculateConsistencyRatio($matrix, $weights, $n);
+         
+            \Log::info("AHP Weights: ".json_encode($weights));
+            \Log::info("AHP Normalized Matrix: ".json_encode($normalized));
+            \Log::info("AHP Consistency Ratio: ".json_encode($this->calculateConsistencyRatio($matrix, $weights, $n)));
 
         return $weights;
     }

@@ -174,6 +174,15 @@ Route::middleware('auth')->group(function () {
             ->name('admin.users.toggle-status');
         Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
 
+    // AHP Management
+    Route::get('/ahp-management', [\App\Http\Controllers\Admin\AhpManagementController::class, 'index'])->name('admin.ahp-management');
+    Route::post('/ahp-management/criteria', [\App\Http\Controllers\Admin\AhpManagementController::class, 'storeCriterion'])->name('admin.ahp-management.storeCriterion');
+    Route::put('/ahp-management/criteria/{id}', [\App\Http\Controllers\Admin\AhpManagementController::class, 'updateCriterion'])->name('admin.ahp-management.updateCriterion');
+    Route::delete('/ahp-management/criteria/{id}', [\App\Http\Controllers\Admin\AhpManagementController::class, 'destroyCriterion'])->name('admin.ahp-management.destroyCriterion');
+    Route::post('/ahp-management/comparisons', [\App\Http\Controllers\Admin\AhpManagementController::class, 'storeComparison'])->name('admin.ahp-management.storeComparison');
+    Route::put('/ahp-management/comparisons/{id}', [\App\Http\Controllers\Admin\AhpManagementController::class, 'updateComparison'])->name('admin.ahp-management.updateComparison');
+    Route::delete('/ahp-management/comparisons/{id}', [\App\Http\Controllers\Admin\AhpManagementController::class, 'destroyComparison'])->name('admin.ahp-management.destroyComparison');
+
     });
 
    
