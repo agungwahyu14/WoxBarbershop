@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserController extends Controller
 {
@@ -623,5 +625,55 @@ if ($request->filled('status_filter')) {
                 'error' => 'Failed to retrieve statistics.',
             ], 500);
         }
+    }
+
+
+    public function exportCsv(): StreamedResponse
+    {
+        $fileName = 'users_' . now()->format('Ymd_His') . '.csv';
+
+        $users = User::with('roles')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function () use ($users) {
+            $handle = fopen('php://output', 'w');
+
+            // Header
+            fputcsv($handle, ['ID', 'Name', 'Email', 'No Telepon', 'Roles', 'Status', 'Created At']);
+
+            // Rows
+            foreach ($users as $user) {
+                fputcsv($handle, [
+                    $user->id,
+                    $user->name,
+                    $user->email,
+                    $user->no_telepon,
+                    $user->roles->pluck('name')->implode(', '),
+                    $user->is_active ? 'Active' : 'Inactive',
+                    $user->created_at->format('Y-m-d H:i:s'),
+                ]);
+            }
+
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Export all users to PDF
+     */
+    public function exportPdf()
+    {
+        $users = User::with('roles')->get();
+
+        $pdf = Pdf::loadView('admin.users.export_pdf', compact('users'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('users_' . now()->format('Ymd_His') . '.pdf');
     }
 }

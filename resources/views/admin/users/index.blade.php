@@ -2,9 +2,9 @@
 
 @section('content')
     <section class="is-hero-bar">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
             <div>
-                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 class="title">
                     <i class="fas fa-users mr-3"></i> Users Management
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
@@ -15,16 +15,20 @@
     </section>
 
     <section class="section main-section">
+
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <a href="{{ route('admin.users.create') }}"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
-                            <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                            Create User
-                        </a>
+                    <!-- Kiri: Tombol Create -->
+                    <a href="{{ route('admin.users.create') }}"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
+                        <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
+                        Create User
+                    </a>
+
+                    <!-- Kanan: Filter + Export -->
+                    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                         <div class="flex items-center space-x-2">
                             <select id="monthFilter"
                                 class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
@@ -59,43 +63,54 @@
                                 class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
                                 <i class="mdi mdi-refresh mr-1"></i>Reset
                             </button>
+
+                            <a href="{{ route('admin.users.export.csv') }}"
+                                class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                <i class="mdi mdi-file-delimited mr-2"></i> CSV
+                            </a>
+                            <a href="{{ route('admin.users.export.pdf') }}"
+                                class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                <i class="mdi mdi-file mr-2"></i> PDF
+                            </a>
+
                         </div>
+
+                        <!-- Export Buttons -->
+
                     </div>
-                    <div id="export-buttons" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
 
-            <div class="card-content rounded-md overflow-x-auto">
-                <table id="users-table" class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-100 dark:bg-gray-800">
+
+            <div class="card-content">
+                <table id="users-table">
+                    <thead>
                         <tr>
-                            <th class="w-12 px-6 py-4 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            <th>
                                 #
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            <th>
                                 Name
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            <th>
                                 No Telepon
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            <th>
                                 Roles
                             </th>
-                            {{-- <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                Permissions
-                            </th> --}}
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+
+                            <th>
                                 Status
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            <th>
                                 Created Date
                             </th>
-                            <th class="text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            <th>
                                 Actions
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    <tbody>
                     </tbody>
                 </table>
             </div>
@@ -119,10 +134,6 @@
                 ajax: {
                     url: '{{ route('admin.users.index') }}',
                     type: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
                     data: function(d) {
                         d.month_filter = $('#monthFilter').val();
                         d.year_filter = $('#yearFilter').val();
@@ -140,56 +151,19 @@
                     },
                     {
                         data: 'no_telepon',
-                        name: 'no_telepon',
+                        name: 'no_telepon'
                     },
                     {
                         data: 'roles',
-                        name: 'roles',
-                        className: 'px-6 py-4',
-
+                        name: 'roles'
                     },
-
-                    // {
-                    //     data: 'permissions',
-                    //     name: 'permissions',
-                    //     className: 'px-6 py-4',
-                    //     render: function(data, type, row) {
-                    //         if (type === 'display') {
-                    //             if (data && data.length > 0) {
-                    //                 const perms = data.split(', ');
-                    //                 let html = '<div class="flex flex-wrap gap-1">';
-
-                    //                 // Show first 3 permissions as badges
-                    //                 const displayPerms = perms.slice(0, 3);
-                    //                 displayPerms.forEach(perm => {
-                    //                     html +=
-                    //                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 capitalize">${perm.trim()}</span>`;
-                    //                 });
-
-                    //                 // Show "+X more" if there are more permissions
-                    //                 if (perms.length > 3) {
-                    //                     html +=
-                    //                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="${data}">+${perms.length - 3} more</span>`;
-                    //                 }
-
-                    //                 html += '</div>';
-                    //                 return html;
-                    //             } else {
-                    //                 return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">No permissions</span>';
-                    //             }
-                    //         }
-                    //         return data;
-                    //     }
-                    // },
                     {
                         data: 'status',
-                        name: 'status',
-                        className: 'px-6 py-4'
+                        name: 'status'
                     },
                     {
                         data: 'created_at',
-                        name: 'created_at',
-                        className: 'px-6 py-4'
+                        name: 'created_at'
                     },
                     {
                         data: 'action',
@@ -199,53 +173,41 @@
                         className: 'text-center'
                     }
                 ],
-                dom: "<'hidden'B>" +
-                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf>" +
-                    "<'overflow-x-auto't>" +
-                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
-                buttons: [{
-                        extend: 'csv',
-                        className: 'dt-btn dt-btn-csv',
-                        text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'dt-btn dt-btn-excel',
-                        text: '<i class="mdi mdi-file-excel mr-2"></i>Excel'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'dt-btn dt-btn-pdf',
-                        text: '<i class="mdi mdi-file-pdf mr-2"></i>PDF'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'dt-btn dt-btn-print',
-                        text: '<i class="mdi mdi-printer mr-2"></i>Print'
-                    },
-                ],
                 language: {
                     searchPlaceholder: "Search users...",
                     info: "Showing _START_ to _END_ of _TOTAL_ users",
                     infoEmpty: "No users found",
                     zeroRecords: "No matching users",
                     emptyTable: "No users available",
-                    processing: `<div class="flex items-center justify-center py-4">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
-                    </div>`,
-                    paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i>',
-                        next: '<i class="mdi mdi-chevron-right"></i>'
-                    }
                 },
                 responsive: true,
                 pageLength: 10,
                 order: [
                     [1, 'asc']
                 ],
+                dom: '<"flex flex-col md:flex-row justify-between items-center mb-6"lf>rt<"flex flex-col md:flex-row justify-between items-center mt-6"ip>',
                 initComplete: function() {
-                    $('.dt-buttons').appendTo('#export-buttons');
+                    // Style DataTable elements
+                    $('.dataTables_filter input').addClass(
+                        'border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-80 text-base'
+                    );
+                    $('.dataTables_length select').addClass(
+                        'border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base'
+                    );
+                    $('.dataTables_paginate .paginate_button').addClass(
+                        'px-4 py-2 mx-1 rounded-lg text-base font-medium');
+                    $('.dataTables_paginate .current').addClass('bg-blue-600 text-white');
+                    $('.dataTables_info').addClass('text-gray-600 dark:text-gray-400 text-base');
+
+                    // Add hover effect to table rows
+                    $('#users-table tbody tr').hover(
+                        function() {
+                            $(this).addClass('bg-gray-50 dark:bg-gray-700/50');
+                        },
+                        function() {
+                            $(this).removeClass('bg-gray-50 dark:bg-gray-700/50');
+                        }
+                    );
                 }
             });
 
@@ -269,7 +231,12 @@
                     title: 'Success!',
                     text: '{{ session('success') }}',
                     timer: 3000,
-                    showConfirmButton: false
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end',
+                    customClass: {
+                        popup: 'swal2-desktop-toast'
+                    }
                 });
             @endif
 
@@ -285,7 +252,14 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Yes, delete it!',
+                    customClass: {
+                        popup: 'swal2-desktop-popup',
+                        title: 'text-xl',
+                        content: 'text-base',
+                        confirmButton: 'px-6 py-3',
+                        cancelButton: 'px-6 py-3'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -300,7 +274,12 @@
                                     title: 'Deleted!',
                                     text: response.message,
                                     timer: 3000,
-                                    showConfirmButton: false
+                                    showConfirmButton: false,
+                                    toast: true,
+                                    position: 'top-end',
+                                    customClass: {
+                                        popup: 'swal2-desktop-toast'
+                                    }
                                 });
                                 table.ajax.reload();
                             },
@@ -310,6 +289,11 @@
                                     title: 'Error!',
                                     text: xhr.responseJSON?.message ||
                                         'Something went wrong.',
+                                    toast: true,
+                                    position: 'top-end',
+                                    customClass: {
+                                        popup: 'swal2-desktop-toast'
+                                    }
                                 });
                             }
                         });
@@ -319,29 +303,24 @@
 
             // Auto reload with authentication check
             let refreshInterval = setInterval(function() {
-                // Check if user is still authenticated
                 fetch('{{ route('admin.users.index') }}', {
                     method: 'HEAD',
                     credentials: 'same-origin'
                 }).then(response => {
                     if (response.ok) {
-                        // User is still authenticated, reload table
                         table.ajax.reload(null, false);
                     } else {
-                        // User is not authenticated, clear interval and redirect
                         clearInterval(refreshInterval);
                         if (response.status === 401 || response.status === 419) {
                             window.location.href = '{{ route('login') }}';
                         }
                     }
                 }).catch(error => {
-                    // Connection error, clear interval
                     clearInterval(refreshInterval);
                     console.log('Auto-refresh stopped due to connection error');
                 });
             }, 30000);
 
-            // Stop refresh when page is about to unload
             window.addEventListener('beforeunload', function() {
                 clearInterval(refreshInterval);
             });

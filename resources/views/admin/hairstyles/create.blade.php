@@ -34,20 +34,45 @@
                 </div>
 
                 <div>
-                    <label for="bentuk_kepala" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bentuk
-                        Kepala</label>
-                    <input type="text" name="bentuk_kepala" id="bentuk_kepala"
-                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                        required>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bentuk Kepala</label>
+                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                        @foreach ($bentukKepalas as $bk)
+                            <label class="inline-flex items-center space-x-2">
+                                <input type="checkbox" name="bentuk_kepala[]" value="{{ $bk->id }}"
+                                    class="form-checkbox h-4 w-4 text-blue-600">
+                                <span class="text-gray-700 dark:text-gray-300">{{ $bk->nama }}</span>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
 
                 <div>
-                    <label for="tipe_rambut" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe
-                        Rambut</label>
-                    <input type="text" name="tipe_rambut" id="tipe_rambut"
-                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                        required>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Rambut</label>
+                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                        @foreach ($tipeRambuts as $tr)
+                            <label class="inline-flex items-center space-x-2">
+                                <input type="checkbox" name="tipe_rambut[]" value="{{ $tr->id }}"
+                                    class="form-checkbox h-4 w-4 text-green-600">
+                                <span class="text-gray-700 dark:text-gray-300">{{ $tr->nama }}</span>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Style Preference</label>
+                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                        @foreach ($stylePreferences as $sp)
+                            <label class="inline-flex items-center space-x-2">
+                                <input type="checkbox" name="style_preference[]" value="{{ $sp->id }}"
+                                    class="form-checkbox h-4 w-4 text-purple-600">
+                                <span class="text-gray-700 dark:text-gray-300">{{ $sp->nama }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+
+
 
                 <div>
                     <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Image</label>

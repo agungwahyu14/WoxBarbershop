@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\HairstyleController as AdminHairstyleController;
+use App\Http\Controllers\Admin\HairstyleScoreController;    
+use App\Http\Controllers\Admin\HairstyleRekomendasiController;
 use App\Http\Controllers\Admin\LoyaltyController as AdminLoyaltyController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -120,8 +122,33 @@ Route::middleware('auth')->group(function () {
             'edit' => 'admin.hairstyles.edit',
             'update' => 'admin.hairstyles.update',
             'destroy' => 'admin.hairstyles.destroy',
+            'score' => 'admin.hairstyles.score.index',
+            'rekomendasi' => 'admin.hairstyles.rekomendasi.index',
+
         ]);
-       
+
+          Route::resource('hairstyles', AdminHairstyleController::class)->names([
+        'index' => 'admin.hairstyles.index',
+        'create' => 'admin.hairstyles.create',
+        'store' => 'admin.hairstyles.store',
+        'show' => 'admin.hairstyles.show',
+        'edit' => 'admin.hairstyles.edit',
+        'update' => 'admin.hairstyles.update',
+        'destroy' => 'admin.hairstyles.destroy',
+    ]);
+
+    // CRUD Hairstyle Score
+    Route::resource('hairstyle-scores', HairstyleScoreController::class)->names([
+        'index' => 'admin.hairstyles.score.index',
+        'create' => 'admin.hairstyles.score.create',
+        'store' => 'admin.hairstyles.score.store',
+        'edit' => 'admin.hairstyles.score.edit',
+        'update' => 'admin.hairstyles.score.update',
+        'destroy' => 'admin.hairstyles.score.destroy',
+    ]);
+
+    // Rekomendasi (AHP Test)
+  
         Route::resource('transactions', TransactionController::class)->names([
             'index' => 'admin.transactions.index',
             'create' => 'admin.transactions.create',
@@ -153,6 +180,8 @@ Route::middleware('auth')->group(function () {
             'update' => 'admin.users.update',
             'destroy' => 'admin.users.destroy',
         ]);
+         Route::get('users/export/csv', [UserController::class, 'exportCsv'])->name('admin.users.export.csv');
+    Route::get('users/export/pdf', [UserController::class, 'exportPdf'])->name('admin.users.export.pdf');
 
 
          Route::resource('roles', RoleController::class)->names([
@@ -173,15 +202,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
             ->name('admin.users.toggle-status');
         Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
-
-    // AHP Management
-    Route::get('/ahp-management', [\App\Http\Controllers\Admin\AhpManagementController::class, 'index'])->name('admin.ahp-management');
-    Route::post('/ahp-management/criteria', [\App\Http\Controllers\Admin\AhpManagementController::class, 'storeCriterion'])->name('admin.ahp-management.storeCriterion');
-    Route::put('/ahp-management/criteria/{id}', [\App\Http\Controllers\Admin\AhpManagementController::class, 'updateCriterion'])->name('admin.ahp-management.updateCriterion');
-    Route::delete('/ahp-management/criteria/{id}', [\App\Http\Controllers\Admin\AhpManagementController::class, 'destroyCriterion'])->name('admin.ahp-management.destroyCriterion');
-    Route::post('/ahp-management/comparisons', [\App\Http\Controllers\Admin\AhpManagementController::class, 'storeComparison'])->name('admin.ahp-management.storeComparison');
-    Route::put('/ahp-management/comparisons/{id}', [\App\Http\Controllers\Admin\AhpManagementController::class, 'updateComparison'])->name('admin.ahp-management.updateComparison');
-    Route::delete('/ahp-management/comparisons/{id}', [\App\Http\Controllers\Admin\AhpManagementController::class, 'destroyComparison'])->name('admin.ahp-management.destroyComparison');
 
     });
 

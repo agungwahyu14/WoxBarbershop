@@ -11,7 +11,14 @@ class Criteria extends Model
 
     protected $table = 'criteria'; // ← Ini yang penting
 
-    protected $fillable = ['name'];
+     protected $fillable = [
+        'name',     // nama kriteria (contoh: Bentuk Kepala, Tipe Rambut)
+        'weight'    // hasil bobot dari perhitungan AHP
+    ];
+public function scores()
+{
+    return $this->hasMany(HairstyleScore::class, 'criterion_id', 'id');
+}
 
     public function comparisonsFrom()
     {

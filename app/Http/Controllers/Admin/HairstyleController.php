@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Hairstyle;
 use App\Models\BentukKepala;
 use App\Models\TipeRambut;
+use App\Models\HairstyleScore;
+use App\Models\Criteria;
+use App\Models\PairwiseComparison;
 use App\Models\StylePreference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -106,8 +109,6 @@ class HairstyleController extends Controller
     return view('admin.hairstyles.index');
 }
 
-
-
     private function getHairstyleIcon($hairstyleName)
     {
         $hairstyleName = strtolower($hairstyleName);
@@ -180,61 +181,81 @@ class HairstyleController extends Controller
         return $icons[$hairType] ?? 'fas fa-cut';
     }
 
-    public function create()
-    {
-        return view('admin.hairstyles.create');
-    }
+   public function create()
+{
+    $bentukKepalas = BentukKepala::all();
+    $tipeRambuts = TipeRambut::all();
+    $stylePreferences = StylePreference::all();
+
+    return view('admin.hairstyles.create', compact('bentukKepalas', 'tipeRambuts', 'stylePreferences'));
+}
+
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'bentuk_kepala' => 'required|string|max:255',
-            'tipe_rambut' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'bentuk_kepala' => 'required|array',
+        'tipe_rambut' => 'required|array',
+        'style_preference' => 'required|array',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
 
-        $data = $request->only(['name', 'description', 'bentuk_kepala', 'tipe_rambut']);
+    $data = $request->only(['name', 'description']);
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('hairstyles', 'public');
-        }
-
-        Hairstyle::create($data);
-
-        return redirect()->route('admin.hairstyles.index')->with('success', 'Hairstyle created successfully.');
+    if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image')->store('hairstyles', 'public');
     }
+
+    $hairstyle = Hairstyle::create($data);
+
+    // Simpan relasi ke pivot
+    $hairstyle->bentuk_kepala()->sync($request->bentuk_kepala);
+    $hairstyle->tipe_rambut()->sync($request->tipe_rambut);
+    $hairstyle->style_preference()->sync($request->style_preference);
+
+    return redirect()->route('admin.hairstyles.index')->with('success', 'Hairstyle created successfully.');
+}
 
     public function edit(Hairstyle $hairstyle)
-    {
-        return view('admin.hairstyles.edit', compact('hairstyle'));
-    }
+{
+    $bentukKepalas = BentukKepala::all();
+    $tipeRambuts = TipeRambut::all();
+    $stylePreferences = StylePreference::all();
 
-    public function update(Request $request, Hairstyle $hairstyle)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'bentuk_kepala' => 'required|string|max:255',
-            'tipe_rambut' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+    return view('admin.hairstyles.edit', compact('hairstyle', 'bentukKepalas', 'tipeRambuts', 'stylePreferences'));
+}
 
-        $data = $request->only(['name', 'description', 'bentuk_kepala', 'tipe_rambut']);
+   public function update(Request $request, Hairstyle $hairstyle)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'bentuk_kepala' => 'required|array',
+        'tipe_rambut' => 'required|array',
+        'style_preference' => 'required|array',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
 
-        if ($request->hasFile('image')) {
-            if ($hairstyle->image) {
-                Storage::disk('public')->delete($hairstyle->image);
-            }
+    $data = $request->only(['name', 'description']);
 
-            $data['image'] = $request->file('image')->store('hairstyles', 'public');
+    if ($request->hasFile('image')) {
+        if ($hairstyle->image) {
+            Storage::disk('public')->delete($hairstyle->image);
         }
-
-        $hairstyle->update($data);
-
-        return redirect()->route('admin.hairstyles.index')->with('success', 'Hairstyle updated successfully.');
+        $data['image'] = $request->file('image')->store('hairstyles', 'public');
     }
+
+    $hairstyle->update($data);
+
+    // Update relasi ke pivot
+    $hairstyle->bentuk_kepala()->sync($request->bentuk_kepala);
+    $hairstyle->tipe_rambut()->sync($request->tipe_rambut);
+    $hairstyle->style_preference()->sync($request->style_preference);
+
+    return redirect()->route('admin.hairstyles.index')->with('success', 'Hairstyle updated successfully.');
+}
 
     public function destroy(Hairstyle $hairstyle)
     {

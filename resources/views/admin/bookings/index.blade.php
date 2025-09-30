@@ -135,7 +135,16 @@
                         </div>
 
                         <div class="flex flex-wrap items-center gap-2">
-                            <div id="export-buttons" class="flex flex-wrap gap-2"></div>
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{{ route('admin.users.export.csv') }}"
+                                    class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                    <i class="mdi mdi-file-delimited mr-2"></i> CSV
+                                </a>
+                                <a href="{{ route('admin.users.export.pdf') }}"
+                                    class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                    <i class="mdi mdi-file mr-2"></i> PDF
+                                </a>
+                            </div>
                         </div>
                     @elseif(Auth::user()->hasRole('pegawai'))
                         <div class="flex items-center space-x-2">

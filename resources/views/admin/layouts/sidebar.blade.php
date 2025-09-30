@@ -22,46 +22,41 @@
             <p class="menu-label">Management</p>
             <ul class="menu-list">
                 <li>
-                    <a class="dropdown">
+                    <a href="{{ route('admin.users.index') }}">
                         <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
-                        <span class="menu-item-label">User Management</span>
-                        <span class="icon"><i class="mdi mdi-plus"></i></span>
+                        <span class="menu-item-label">Users</span>
                     </a>
-                    <ul>
-                        <li><a href="{{ route('admin.users.index') }}"><span>Users</span></a></li>
-                    </ul>
                 </li>
-
                 <li>
-                    <a class="dropdown">
+                    <a href="{{ route('admin.services.index') }}">
                         <span class="icon"><i class="mdi mdi-scissors-cutting"></i></span>
-                        <span class="menu-item-label">Service Management</span>
-                        <span class="icon"><i class="mdi mdi-plus"></i></span>
+                        <span class="menu-item-label">Services</span>
                     </a>
-                    <ul>
-                        <li><a href="{{ route('admin.services.index') }}"><span>Services</span></a></li>
-                        <li><a href="{{ route('admin.hairstyles.index') }}"><span>Hairstyles</span></a></li>
-                    </ul>
                 </li>
                 <li>
-                    <a href="{{ route('admin.ahp-management') }}">
+                    <a href="{{ route('admin.hairstyles.index') }}">
+                        <span class="icon"><i class="mdi mdi-hair-dryer"></i></span>
+                        <span class="menu-item-label">Hairstyles</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.hairstyles.score.index') }}">
                         <span class="icon"><i class="mdi mdi-chart-bar"></i></span>
-                        <span class="menu-item-label">AHP Management</span>
+                        <span class="menu-item-label">Hairstyle Score</span>
                     </a>
                 </li>
-
                 <li>
-                    <a class="dropdown">
+                    <a href="{{ route('admin.bookings.index') }}">
                         <span class="icon"><i class="mdi mdi-calendar-check"></i></span>
-                        <span class="menu-item-label">Booking & Transaction</span>
-                        <span class="icon"><i class="mdi mdi-plus"></i></span>
+                        <span class="menu-item-label">Bookings</span>
                     </a>
-                    <ul>
-                        <li><a href="{{ route('admin.bookings.index') }}"><span>Bookings</span></a></li>
-                        <li><a href="{{ route('admin.transactions.index') }}"><span>Transactions</span></a></li>
-                    </ul>
                 </li>
-
+                <li>
+                    <a href="{{ route('admin.transactions.index') }}">
+                        <span class="icon"><i class="mdi mdi-cash-register"></i></span>
+                        <span class="menu-item-label">Transactions</span>
+                    </a>
+                </li>
                 <li>
                     <a href="{{ route('admin.loyalty.index') }}">
                         <span class="icon"><i class="mdi mdi-star-circle"></i></span>
@@ -75,7 +70,7 @@
                 <li>
                     <a href="{{ route('admin.roles.index') }}">
                         <span class="icon"><i class="mdi mdi-shield-key"></i></span>
-                        <span class="menu-item-label">Role </span>
+                        <span class="menu-item-label">Role</span>
                     </a>
                 </li>
             </ul>

@@ -15,6 +15,7 @@ class StylePreference extends Model
 
     public function hairstyles()
     {
-        return $this->belongsToMany(Hairstyle::class, 'hairstyle_style_preference');
+        return $this->belongsToMany(Hairstyle::class, 'hairstyle_style_preference')
+                    ->withPivot('score');
     }
 }

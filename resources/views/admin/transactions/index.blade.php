@@ -67,7 +67,16 @@
 
 
                         @if (Auth::user()->hasRole('admin'))
-                            <div id="export-buttons" class="flex flex-wrap gap-2"></div>
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{{ route('admin.users.export.csv') }}"
+                                    class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                    <i class="mdi mdi-file-delimited mr-2"></i> CSV
+                                </a>
+                                <a href="{{ route('admin.users.export.pdf') }}"
+                                    class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                    <i class="mdi mdi-file mr-2"></i> PDF
+                                </a>
+                            </div>
                         @endif
                     </div>
 
@@ -175,27 +184,7 @@
                     [0, 'desc']
                 ],
                 dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
-                buttons: [{
-                        extend: 'csv',
-                        className: 'dt-btn dt-btn-csv',
-                        text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'dt-btn dt-btn-excel',
-                        text: '<i class="mdi mdi-file-excel mr-2"></i>Excel'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'dt-btn dt-btn-pdf',
-                        text: '<i class="mdi mdi-file-pdf mr-2"></i>PDF'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'dt-btn dt-btn-print',
-                        text: '<i class="mdi mdi-printer mr-2"></i>Print'
-                    },
-                ],
+
                 initComplete: function() {
                     $('.dt-buttons').appendTo('#export-buttons');
                 },

@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                     <i class="fas fa-cut mr-3"></i> Edit Hairstyle
+                    <i class="fas fa-cut mr-3"></i> Edit Hairstyle
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Modify existing hairstyle recommendation</p>
             </div>
@@ -35,22 +35,47 @@
                 </div>
 
                 <div>
-                    <label for="bentuk_kepala" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bentuk
-                        Kepala</label>
-                    <input type="text" name="bentuk_kepala" id="bentuk_kepala"
-                        value="{{ old('bentuk_kepala', $hairstyle->bentuk_kepala) }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                        required>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bentuk Kepala</label>
+                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                        @foreach ($bentukKepalas as $bk)
+                            <label class="inline-flex items-center space-x-2">
+                                <input type="checkbox" name="bentuk_kepala[]" value="{{ $bk->id }}"
+                                    class="form-checkbox h-4 w-4 text-blue-600"
+                                    {{ in_array($bk->id, old('bentuk_kepala', $hairstyle->bentuk_kepala->pluck('id')->toArray())) ? 'checked' : '' }}>
+                                <span>{{ $bk->nama }}</span>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
 
                 <div>
-                    <label for="tipe_rambut" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe
-                        Rambut</label>
-                    <input type="text" name="tipe_rambut" id="tipe_rambut"
-                        value="{{ old('tipe_rambut', $hairstyle->tipe_rambut) }}"
-                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                        required>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Rambut</label>
+                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                        @foreach ($tipeRambuts as $tr)
+                            <label class="inline-flex items-center space-x-2">
+                                <input type="checkbox" name="tipe_rambut[]" value="{{ $tr->id }}"
+                                    class="form-checkbox h-4 w-4 text-green-600"
+                                    {{ in_array($tr->id, old('tipe_rambut', $hairstyle->tipe_rambut->pluck('id')->toArray())) ? 'checked' : '' }}>
+                                <span>{{ $tr->nama }}</span>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Style Preference</label>
+                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                        @foreach ($stylePreferences as $sp)
+                            <label class="inline-flex items-center space-x-2">
+                                <input type="checkbox" name="style_preference[]" value="{{ $sp->id }}"
+                                    class="form-checkbox h-4 w-4 text-purple-600"
+                                    {{ in_array($sp->id, old('style_preference', $hairstyle->style_preference->pluck('id')->toArray())) ? 'checked' : '' }}>
+                                <span>{{ $sp->nama }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+
 
                 <div>
                     <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Image</label>

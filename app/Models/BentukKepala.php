@@ -15,6 +15,7 @@ class BentukKepala extends Model
 
     public function hairstyles()
     {
-        return $this->belongsToMany(Hairstyle::class, 'hairstyle_bentuk_kepala');
+         return $this->belongsToMany(Hairstyle::class, 'hairstyle_bentuk_kepala')
+                    ->withPivot('score'); // kalau ada kolom score di pivot
     }
 }

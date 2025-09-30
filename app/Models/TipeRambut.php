@@ -15,6 +15,7 @@ class TipeRambut extends Model
 
     public function hairstyles()
     {
-        return $this->belongsToMany(Hairstyle::class, 'hairstyle_tipe_rambut');
+        return $this->belongsToMany(Hairstyle::class, 'hairstyle_tipe_rambut')
+                    ->withPivot('score');
     }
 }

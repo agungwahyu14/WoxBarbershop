@@ -48,4 +48,23 @@ public function style_preference()
     {
         return $this->hasMany(HairstyleScore::class);
     }
+
+    public function bentukKepala()
+{
+    return $this->belongsToMany(BentukKepala::class, 'hairstyle_bentuk_kepala')
+                ->withPivot('score');
+}
+
+public function tipeRambut()
+{
+    return $this->belongsToMany(TipeRambut::class, 'hairstyle_tipe_rambut')
+                ->withPivot('score');
+}
+
+public function stylePreference()
+{
+    return $this->belongsToMany(StylePreference::class, 'hairstyle_style_preference')
+                ->withPivot('score');
+}
+
 }
