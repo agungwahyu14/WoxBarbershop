@@ -14,38 +14,52 @@
         </div>
     </section>
 
+
     <section class="section main-section">
-        <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-
-            <!-- Table Content -->
-            <div class="card-content rounded-md overflow-x-auto">
-                <div class="section main-section">
-
-
-                    <form action="{{ route('admin.roles.store') }}" method="POST" class="space-y-6">
-                        @csrf
-
-                        <!-- Role Name -->
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Role
-                                Name</label>
-                            <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                required>
-                        </div>
-
-                        <!-- Permissions -->
-
-                        <div class="flex justify-end">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="mr-4 inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md">Cancel</a>
-                            <button type="submit"
-                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md">Create</button>
-                        </div>
-                    </form>
-
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-gradient-to-r from-gray-50 to-white px-8 py-6 border-b border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-blue-600 p-3 rounded-lg">
+                        <i class="fas fa-user-shield text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Roles Information</h2>
+                        <p class="text-gray-600 mt-1">Please fill in all required roles information</p>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-8">
+                <form action="{{ route('admin.roles.store') }}" method="POST" enctype="multipart/form-data"
+                    class="space-y-6">
+                    @csrf
+
+                    <!-- Hairstyle Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-tag mr-2 text-blue-600"></i> Name
+                        </label>
+                        <input type="text" name="name" id="name" value="{{ old('name') }}"
+                            class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            required>
+                    </div>
+
+
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end space-x-4">
+                        <a href="{{ route('admin.roles.index') }}"
+                            class="mr-4 inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-times mr-2"></i>Cancel
+                        </a>
+                        <button type="submit"
+                            class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-save mr-2"></i>Create Hairstyle
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </section>

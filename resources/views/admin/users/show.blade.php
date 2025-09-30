@@ -104,6 +104,7 @@
                                     <p class="font-medium text-gray-900">{{ $user->email }}</p>
                                 </div>
                             </div>
+                            <!-- Bagian Nomor Telepon (tetap sama) -->
                             <div class="flex items-center space-x-4">
                                 <div class="bg-green-100 p-3 rounded-lg">
                                     <i class="fas fa-phone text-green-600"></i>
@@ -113,6 +114,30 @@
                                     <p class="font-medium text-gray-900">{{ $user->no_telepon ?: 'Not provided' }}</p>
                                 </div>
                             </div>
+                            <!-- Bagian Poin Loyalitas (diubah ke format ternary) -->
+                            @if ($user->loyalty)
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-yellow-100 p-3 rounded-lg">
+                                        <i class="fas fa-star text-yellow-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Points</p>
+                                        <p class="font-medium text-gray-900">
+                                            {{ number_format($user->loyalty->points) }} poin
+                                        </p>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="flex items-center space-x-4 mt-4">
+                                    <div class="bg-gray-100 p-3 rounded-lg">
+                                        <i class="fas fa-star text-gray-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Points</p>
+                                        <p class="font-medium text-gray-900">Not provided</p>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

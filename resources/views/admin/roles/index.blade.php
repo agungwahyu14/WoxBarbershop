@@ -32,37 +32,23 @@
 
             <!-- Table Content -->
 
-            <div class="card-content rounded-md overflow-x-auto">
+            <div class="card-content">
 
-                <table id="roles-table" class="min-w-full table-fixed divide-y  divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-100 dark:bg-gray-800 ">
+                <table id="roles-table">
+                    <thead>
                         <tr>
-                            <th style="width: 60px"
-                                class="px-6 py-4 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
-                                <div class="flex items-center justify-center space-x-1">
-                                    <i class="mdi mdi-cog text-sm"></i>
-                                    <span>#</span>
-                                </div>
+                            <th>
+                                #
                             </th>
-
-                            <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300  tracking-wider">
-                                <div class="flex items-center space-x-1">
-                                    <i class="mdi mdi-account-key text-sm"></i>
-                                    <span>Role Name</span>
-                                </div>
+                            <th>
+                                Role Name
                             </th>
-
-                            <th
-                                class="px-6 py-4 text-center text-xs font-semibold text-gray-700 dark:text-gray-300  tracking-wider">
-                                <div class="flex items-center justify-center space-x-1">
-                                    <i class="mdi mdi-cog text-sm"></i>
-                                    <span>Actions</span>
-                                </div>
+                            <th>
+                                Action
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    <tbody>
                         <!-- Data will be populated by DataTables -->
                     </tbody>
                 </table>

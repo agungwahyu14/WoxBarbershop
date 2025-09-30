@@ -66,6 +66,7 @@
                             <th>
                                 Status
                             </th>
+                            <th>Loyalty Points</th> <!-- Kolom baru -->
                             <th>
                                 Created Date
                             </th>
@@ -124,6 +125,10 @@
                     {
                         data: 'status',
                         name: 'status'
+                    },
+                    {
+                        data: 'loyalty_points',
+                        name: 'loyalty_points'
                     },
                     {
                         data: 'created_at',

@@ -18,10 +18,10 @@
                     <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
                 </a>
                 <div class="navbar-dropdown">
-                    <a href="{{ route('profile.edit') }}" class="navbar-item">
+                    {{-- <a href="{{ route('profile.edit') }}" class="navbar-item">
                         <span class="icon"><i class="mdi mdi-account"></i></span>
                         <span>My Profile</span>
-                    </a>
+                    </a> --}}
                     <hr class="navbar-divider">
                     <!-- Form Logout Breeze -->
                     <form method="POST" action="{{ route('logout') }}" id="logout-form">

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
+use App\Models\Loyalty;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -34,7 +35,7 @@ class UserController extends Controller
                 'request_data' => $request->all()
             ]);
 
-            $query = User::with(['roles', 'permissions', 'bookings']);
+            $query = User::with(['roles', 'permissions', 'bookings', 'loyalty']);
 
             // Apply search filter
             if ($request->has('search') && ! empty($request->search['value'])) {
@@ -45,6 +46,8 @@ class UserController extends Controller
                         ->orWhere('no_telepon', 'LIKE', "%{$searchTerm}%");
                 });
             }
+
+            
 
             // Apply role filter
             if ($request->has('role_filter') && ! empty($request->role_filter)) {
@@ -123,6 +126,30 @@ if ($request->filled('status_filter')) {
                         </span>';
                     })->implode(' ');
                 })
+
+
+                // Tambahkan kolom loyalty points
+->editColumn('loyalty_points', function ($row) {
+    $loyalty = $row->loyalty; // Menggunakan relasi loyalty
+    
+    if (!$loyalty || !$loyalty->points) {
+        return '<span class="text-gray-400 text-sm">-</span>';
+    }
+
+    $badgeClass = match (true) {
+        $loyalty->points >= 1000 => 'bg-gold-500 text-white',
+        $loyalty->points >= 500 => 'bg-silver-500 text-white',
+        default => 'bg-bronze-500 text-white'
+    };
+
+    return '<div class="flex items-center space-x-2">
+        <i class="fas fa-star text-yellow-500"></i>
+        <span class="text-sm font-medium text-gray-700">' . number_format($loyalty->points) . ' poin</span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ' . $badgeClass . ' ml-2">
+            ' . ucfirst($loyalty->tier) . '
+        </span>
+    </div>';
+})
                 // ->editColumn('permissions', function ($row) {
                 //     $allPermissions = $row->getAllPermissions();
 
@@ -228,7 +255,16 @@ if ($request->filled('status_filter')) {
 
                     return $actions;
                 })
-                ->rawColumns(['name', 'no_telepon', 'roles', 'created_at', 'status', 'stats', 'action'])
+               ->rawColumns([
+    'name', 
+    'no_telepon', 
+    'roles', 
+    'created_at', 
+    'status', 
+    'stats', 
+    'action',
+    'loyalty_points' // Tambahkan kolom baru ini
+])
                 ->make(true);
         }
 
@@ -241,13 +277,14 @@ if ($request->filled('status_filter')) {
         ];
 
         $roles = Role::all();
+        $loyaltyPoints = Loyalty::all();
 
-        return view('admin.users.index', compact('stats', 'roles'));
+        return view('admin.users.index', compact('stats', 'roles', 'loyaltyPoints'));
     }
 
     public function show(User $user)
     {
-        $user->load(['roles', 'permissions', 'bookings' => function ($query) {
+        $user->load(['roles', 'permissions', 'bookings', 'loyalty' => function ($query) {
             $query->orderBy('created_at', 'desc')->limit(10);
         }]);
 

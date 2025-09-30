@@ -111,18 +111,6 @@
                             <!-- User Info Header -->
                             <div class="px-4 py-3 border-b border-gray-100">
                                 <div class="flex items-center space-x-3">
-                                    <div
-                                        class="flex items-center justify-center w-12 h-12 bg-[#d4af37] rounded-full text-white font-semibold">
-                                        @if (Auth::user()->profile_photo)
-                                            <img src="{{ Auth::user()->profile_photo_url }}"
-                                                alt="{{ Auth::user()->name }}"
-                                                class="w-full h-full rounded-full object-cover">
-                                        @else
-                                            <span class="text-lg font-bold">
-                                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                            </span>
-                                        @endif
-                                    </div>
                                     <div>
                                         <p class="font-semibold text-gray-900">{{ Auth::user()->name }}</p>
                                         <p class="text-sm text-gray-500">{{ Auth::user()->email }}</p>

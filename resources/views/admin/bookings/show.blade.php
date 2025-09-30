@@ -180,18 +180,18 @@
                                             {{ $booking->hairstyle->description ?? 'Classic hairstyle' }}</p>
                                     </div>
                                     <div class="grid grid-cols-1 gap-3">
-                                        @if ($booking->hairstyle->bentuk_kepala)
+                                        @if ($booking->bentuk_kepala->name)
                                             <div class="flex justify-between">
                                                 <span class="text-gray-600 dark:text-gray-400">Face Shape:</span>
                                                 <span
-                                                    class="font-medium text-gray-900 dark:text-white">{{ $booking->hairstyle->bentuk_kepala }}</span>
+                                                    class="font-medium text-gray-900 dark:text-white">{{ $booking->bentuk_kepala->name }}</span>
                                             </div>
                                         @endif
-                                        @if ($booking->hairstyle->tipe_rambut)
+                                        @if ($booking->tipe_rambut->name)
                                             <div class="flex justify-between">
                                                 <span class="text-gray-600 dark:text-gray-400">Hair Type:</span>
                                                 <span
-                                                    class="font-medium text-gray-900 dark:text-white">{{ $booking->hairstyle->tipe_rambut }}</span>
+                                                    class="font-medium text-gray-900 dark:text-white">{{ $booking->tipe_rambut->name }}</span>
                                             </div>
                                         @endif
                                     </div>
@@ -230,7 +230,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
                 </div>
             @endif
