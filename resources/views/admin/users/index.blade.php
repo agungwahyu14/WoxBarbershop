@@ -30,39 +30,6 @@
                     <!-- Kanan: Filter + Export -->
                     <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                         <div class="flex items-center space-x-2">
-                            <select id="monthFilter"
-                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                <option value="">All Months</option>
-                                <option value="01">January</option>
-                                <option value="02">February</option>
-                                <option value="03">March</option>
-                                <option value="04">April</option>
-                                <option value="05">May</option>
-                                <option value="06">June</option>
-                                <option value="07">July</option>
-                                <option value="08">August</option>
-                                <option value="09">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
-                            </select>
-                            <select id="yearFilter"
-                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                <option value="">All Years</option>
-                                @for ($year = date('Y'); $year >= 2020; $year--)
-                                    <option value="{{ $year }}">{{ $year }}</option>
-                                @endfor
-                            </select>
-                            <select id="statusFilter"
-                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                <option value="">All Status</option>
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                            <button id="resetFilter"
-                                class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                <i class="mdi mdi-refresh mr-1"></i>Reset
-                            </button>
 
                             <a href="{{ route('admin.users.export.csv') }}"
                                 class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
@@ -74,9 +41,6 @@
                             </a>
 
                         </div>
-
-                        <!-- Export Buttons -->
-
                     </div>
                 </div>
             </div>
@@ -174,7 +138,6 @@
                     }
                 ],
                 language: {
-                    searchPlaceholder: "Search users...",
                     info: "Showing _START_ to _END_ of _TOTAL_ users",
                     infoEmpty: "No users found",
                     zeroRecords: "No matching users",

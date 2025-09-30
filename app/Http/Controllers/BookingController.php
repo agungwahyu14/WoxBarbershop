@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\DataTables;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BookingController extends Controller
 {
@@ -823,5 +825,56 @@ class BookingController extends Controller
                 'message' => 'Failed to get statistics',
             ], 500);
         }
+    }
+
+
+    public function exportCsv(): StreamedResponse
+{
+    $fileName = 'bookings_' . now()->format('Ymd_His') . '.csv';
+
+    // Eager load relasi user, service, hairstyle
+    $bookings = Booking::with(['user', 'service', 'hairstyle'])->get();
+
+    $headers = [
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => "attachment; filename=\"$fileName\"",
+    ];
+
+    $callback = function () use ($bookings) {
+        $handle = fopen('php://output', 'w');
+
+        // Header CSV
+        fputcsv($handle, ['No', 'Customer Name', 'Service', 'Hairstyle', 'Date & Time', 'Queue', 'Status']);
+
+        // Data rows
+        foreach ($bookings as $i => $booking) {
+            fputcsv($handle, [
+                $i + 1, // Nomor urut
+                $booking->user->name ?? '-', // Customer Name
+                $booking->service->name ?? '-', // Service Name
+                $booking->hairstyle->name ?? '-', // Hairstyle Name
+                $booking->date_time ? $booking->date_time->format('d/m/Y H:i') : '-', // Date & Time
+                $booking->queue_number ?? '-', // Queue Number
+                ucfirst($booking->status ?? '-'), // Status
+            ]);
+        }
+
+        fclose($handle);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
+
+    /**
+     * Export all users to PDF
+     */
+    public function exportPdf()
+    {
+        $bookings = Booking::with('user')->get();
+
+        $pdf = Pdf::loadView('admin.bookings.export_pdf', compact('bookings'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('bookings_' . now()->format('Ymd_His') . '.pdf');
     }
 }

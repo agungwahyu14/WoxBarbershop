@@ -5,53 +5,50 @@
 @section('content')
     <!-- Enhanced Page Header -->
     <div class="is-hero-bar">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
 
-                <!-- Left: Title & Description -->
-                <div class="text-center md:text-left">
-                    <h1 class="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center md:justify-start">
-                        <i class="fas fa-user mr-3 text-gray-700"></i>
-                        User Details
-                    </h1>
-                    <p class="text-gray-700 text-lg">
-                        Comprehensive user information and activity overview
-                    </p>
-                </div>
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
 
-                <!-- Right: Action Buttons -->
-                <div class="flex flex-wrap gap-3 justify-center md:justify-end">
-                    <a href="{{ route('admin.users.edit', $user) }}"
-                        class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                        <i class="fas fa-edit mr-2"></i>Edit User
-                    </a>
+            <!-- Left: Title & Description -->
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center md:justify-start">
+                    <i class="fas fa-user mr-3 text-gray-700"></i>
+                    User Details
+                </h1>
+                <p class="text-gray-700 text-lg">
+                    Comprehensive user information and activity overview
+                </p>
+            </div>
 
-                    <a href="{{ route('admin.users.index') }}"
-                        class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                        <i class="fas fa-arrow-left mr-2"></i>Back to Users
-                    </a>
+            <!-- Right: Action Buttons -->
+            <div class="flex flex-wrap gap-3 justify-center md:justify-end">
+                <a href="{{ route('admin.users.edit', $user) }}"
+                    class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
+                    <i class="fas fa-edit mr-2"></i>Edit User
+                </a>
 
-                    @if ($user->is_active ?? true)
-                        <button type="button" onclick="toggleUserStatus('deactivate')"
-                            class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
-                            <i class="fas fa-user-slash mr-2"></i>Deactivate Account
-                        </button>
-                    @else
-                        <button type="button" onclick="toggleUserStatus('activate')"
-                            class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200">
-                            <i class="fas fa-user-check mr-2"></i>Activate Account
-                        </button>
-                    @endif
-                </div>
+                <a href="{{ route('admin.users.index') }}"
+                    class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Users
+                </a>
+
+                @if ($user->is_active ?? true)
+                    <button type="button" onclick="toggleUserStatus('deactivate')"
+                        class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
+                        <i class="fas fa-user-slash mr-2"></i>Deactivate Account
+                    </button>
+                @else
+                    <button type="button" onclick="toggleUserStatus('activate')"
+                        class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200">
+                        <i class="fas fa-user-check mr-2"></i>Activate Account
+                    </button>
+                @endif
             </div>
         </div>
     </div>
 
 
-    <!-- User Profile Section -->
-    <div class="container mx-auto px-6 py-6 mt-8">
-        <!-- Main Profile Card -->
-        <!-- Information Grid -->
+
+    <div class="section main-section">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Column - User Information -->
             <div class="lg:col-span-2 space-y-8">
@@ -267,40 +264,36 @@
                         @endif
                     </div>
                 </div> --}}
-            </div>
 
-            <!-- Right Column - Statistics & Quick Actions -->
-            <div class="space-y-8">
-                <!-- Account Statistics -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-xl font-semibold text-gray-900 flex items-center">
-                            <i class="fas fa-chart-bar mr-3 text-blue-600"></i>Account Statistics
-                        </h3>
-                    </div>
-                    <div class="p-6 space-y-6">
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-blue-600 mb-2">
-                                {{ $user->bookings ? $user->bookings->count() : 0 }}
-                            </div>
-                            <p class="text-sm text-gray-500">Total Bookings</p>
-                        </div>
+                <div class="">
 
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-purple-600 mb-2">
-                                {{ $user->created_at->diffInDays(now()) }}
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                        <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-xl font-semibold text-gray-900 flex items-center">
+                                <i class="fas fa-chart-bar mr-3 text-blue-600"></i>Account Statistics
+                            </h3>
+                        </div>
+                        <div class="p-6 space-y-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-blue-600 mb-2">
+                                    {{ $user->bookings ? $user->bookings->count() : 0 }}
+                                </div>
+                                <p class="text-sm text-gray-500">Total Bookings</p>
                             </div>
-                            <p class="text-sm text-gray-500">Days as Member</p>
+
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-purple-600 mb-2">
+                                    {{ $user->created_at->diffInDays(now()) }}
+                                </div>
+                                <p class="text-sm text-gray-500">Days as Member</p>
+                            </div>
                         </div>
                     </div>
+
                 </div>
-
-                <!-- Quick Actions -->
-
-
-                <!-- Account Information -->
-
             </div>
+
+
         </div>
     </div>
 @endsection

@@ -3,25 +3,23 @@
 @section('title', 'Edit User')
 
 @section('content')
-    <!-- Enhanced Page Header -->
-    <div class="is-hero-bar">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div>
-                    <h1 class="text-4xl font-bold mb-2">
-                        <i class="fas fa-user-edit mr-3"></i>Edit User
-                    </h1>
-                    <p class="text-black text-lg">
-                        Update user information, roles and permissions for {{ $user->name }}
-                    </p>
-                </div>
 
+
+    <section class="is-hero-bar">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+            <div>
+                <h1 class="title">
+                    <i class="fas fa-user-edit mr-3"></i> Edit User
+                </h1>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                    Update user information, roles and permissions for {{ $user->name }}
+                </p>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- Enhanced Form Container -->
-    <div class="container mx-auto px-6 py-6 mt-8">
+    <div class="section main-section">
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div class="bg-gradient-to-r from-gray-50 to-white px-8 py-6 border-b border-gray-200">
                 <div class="flex items-center space-x-4">

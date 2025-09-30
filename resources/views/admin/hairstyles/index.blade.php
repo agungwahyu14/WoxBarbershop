@@ -27,31 +27,22 @@
                         <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
                         Create Hairstyle
                     </a>
-                    <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('admin.users.export.csv') }}"
-                            class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                            <i class="mdi mdi-file-delimited mr-2"></i> CSV
-                        </a>
-                        <a href="{{ route('admin.users.export.pdf') }}"
-                            class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                            <i class="mdi mdi-file mr-2"></i> PDF
-                        </a>
-                    </div>
+
                 </div>
             </div>
 
-            <div class="card-content rounded-md overflow-x-auto">
-                <table id="hairstyles-table" class="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-100 dark:bg-gray-800">
+            <div class="card-content ">
+                <table id="hairstyles-table">
+                    <thead>
                         <tr>
-                            <th class="w-12 px-6 py-4 text-center text-xs font-semibold">#</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Name</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Description</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Bentuk Kepala</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Tipe Rambut</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Style Preference</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold">Image</th>
-                            <th class="text-center text-xs font-semibold">Actions</th>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Bentuk Kepala</th>
+                            <th>Tipe Rambut</th>
+                            <th>Style Preference</th>
+                            <th>Image</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"></tbody>
@@ -125,7 +116,6 @@
                 ],
                 dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
                 language: {
-                    searchPlaceholder: "Search hairstyles...",
                     info: "Showing _START_ to _END_ of _TOTAL_ hairstyles",
                     infoEmpty: "No hairstyles found",
                     zeroRecords: "No matching hairstyles",

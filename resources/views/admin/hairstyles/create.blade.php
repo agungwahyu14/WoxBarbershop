@@ -1,10 +1,11 @@
 @extends('admin.layouts.app')
 
 @section('content')
+    <!-- Page Header -->
     <section class="is-hero-bar">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
-                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center mb-4">
                     <i class="fas fa-cut mr-3"></i> Create Hairstyle
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add new hairstyle recommendation</p>
@@ -12,81 +13,135 @@
         </div>
     </section>
 
+    <!-- Form Section -->
     <section class="section main-section">
-        <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden p-6">
-            <form action="{{ route('admin.hairstyles.store') }}" method="POST" enctype="multipart/form-data"
-                class="space-y-6">
-                @csrf
-
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
-                    <input type="text" name="name" id="name"
-                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                        required>
-                </div>
-
-                <div>
-                    <label for="description"
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                    <textarea name="description" id="description" rows="3"
-                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bentuk Kepala</label>
-                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
-                        @foreach ($bentukKepalas as $bk)
-                            <label class="inline-flex items-center space-x-2">
-                                <input type="checkbox" name="bentuk_kepala[]" value="{{ $bk->id }}"
-                                    class="form-checkbox h-4 w-4 text-blue-600">
-                                <span class="text-gray-700 dark:text-gray-300">{{ $bk->nama }}</span>
-                            </label>
-                        @endforeach
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-gradient-to-r from-gray-50 to-white px-8 py-6 border-b border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-blue-600 p-3 rounded-lg">
+                        <i class="fas fa-cut text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Hairstyle Information</h2>
+                        <p class="text-gray-600 mt-1">Please fill in all required hairstyle information</p>
                     </div>
                 </div>
+            </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipe Rambut</label>
-                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
-                        @foreach ($tipeRambuts as $tr)
-                            <label class="inline-flex items-center space-x-2">
-                                <input type="checkbox" name="tipe_rambut[]" value="{{ $tr->id }}"
-                                    class="form-checkbox h-4 w-4 text-green-600">
-                                <span class="text-gray-700 dark:text-gray-300">{{ $tr->nama }}</span>
-                            </label>
-                        @endforeach
+            <!-- Card Body -->
+            <div class="p-8">
+                <form action="{{ route('admin.hairstyles.store') }}" method="POST" enctype="multipart/form-data"
+                    class="space-y-6">
+                    @csrf
+
+                    <!-- Hairstyle Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-tag mr-2 text-blue-600"></i>Hairstyle Name
+                        </label>
+                        <input type="text" name="name" id="name" value="{{ old('name') }}"
+                            class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            required>
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Style Preference</label>
-                    <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
-                        @foreach ($stylePreferences as $sp)
-                            <label class="inline-flex items-center space-x-2">
-                                <input type="checkbox" name="style_preference[]" value="{{ $sp->id }}"
-                                    class="form-checkbox h-4 w-4 text-purple-600">
-                                <span class="text-gray-700 dark:text-gray-300">{{ $sp->nama }}</span>
-                            </label>
-                        @endforeach
+                    <!-- Description -->
+                    <div>
+                        <label for="description" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-align-left mr-2 text-blue-600"></i>Description
+                        </label>
+                        <textarea name="description" id="description" rows="3"
+                            class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ old('description') }}</textarea>
                     </div>
-                </div>
+
+                    <!-- Head Shape -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bentuk Kepala</label>
+                        <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                            @foreach ($bentukKepalas as $bk)
+                                <label class="inline-flex items-center space-x-2">
+                                    <input type="checkbox" name="bentuk_kepala[]" value="{{ $bk->id }}"
+                                        class="form-checkbox h-4 w-4 text-blue-600">
+                                    <span class="text-gray-700 dark:text-gray-300">{{ $bk->nama }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Hair Type -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipe Rambut</label>
+                        <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                            @foreach ($tipeRambuts as $tr)
+                                <label class="inline-flex items-center space-x-2">
+                                    <input type="checkbox" name="tipe_rambut[]" value="{{ $tr->id }}"
+                                        class="form-checkbox h-4 w-4 text-green-600">
+                                    <span class="text-gray-700 dark:text-gray-300">{{ $tr->nama }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Style Preferences -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Style
+                            Preference</label>
+                        <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
+                            @foreach ($stylePreferences as $sp)
+                                <label class="inline-flex items-center space-x-2">
+                                    <input type="checkbox" name="style_preference[]" value="{{ $sp->id }}"
+                                        class="form-checkbox h-4 w-4 text-purple-600">
+                                    <span class="text-gray-700 dark:text-gray-300">{{ $sp->nama }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div>
+                        <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-image mr-2 text-blue-600"></i>Image
+                        </label>
+                        <div class="relative">
+                            <!-- Hidden file input -->
+                            <input type="file" name="image" id="image" class="hidden" accept="image/*"
+                                onchange="updateFileName()">
+                            <!-- Custom button -->
+                            <label for="image"
+                                class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none cursor-pointer">
+                                <i class="fas fa-upload mr-2 text-blue-600"></i> Choose a file
+                            </label>
+
+                            <!-- Display selected file name -->
+                            <div id="file-name-container" class="mt-2 text-sm text-gray-500 dark:text-gray-400">No file
+                                chosen</div>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Function to update the displayed file name
+                        function updateFileName() {
+                            const fileInput = document.getElementById('image');
+                            const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'No file chosen';
+                            document.getElementById('file-name-container').textContent = fileName;
+                        }
+                    </script>
 
 
 
-                <div>
-                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Image</label>
-                    <input type="file" name="image" id="image"
-                        class="mt-1 block w-full text-sm text-gray-700 dark:text-white">
-                </div>
-
-                <div class="flex justify-end">
-                    <a href="{{ route('admin.hairstyles.index') }}"
-                        class="mr-4 inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md">Cancel</a>
-                    <button type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md">Create</button>
-                </div>
-            </form>
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end space-x-4">
+                        <a href="{{ route('admin.hairstyles.index') }}"
+                            class="mr-4 inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-times mr-2"></i>Cancel
+                        </a>
+                        <button type="submit"
+                            class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-save mr-2"></i>Create Hairstyle
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </section>
 @endsection

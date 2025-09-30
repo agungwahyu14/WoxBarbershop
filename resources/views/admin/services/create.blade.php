@@ -15,52 +15,79 @@
         </div>
     </section>
 
+
     <section class="section main-section">
-        <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="card-content rounded-md overflow-x-auto">
-                <div class="section main-section">
-
-
-                    <form action="{{ route('admin.services.store') }}" method="POST" class="space-y-6">
-                        @csrf
-
-                        <!-- Name -->
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Service
-                                Name</label>
-                            <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                required>
-                        </div>
-
-                        <!-- Description -->
-                        <div>
-                            <label for="description"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                            <textarea name="description" id="description" rows="3"
-                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                placeholder="Optional">{{ old('description') }}</textarea>
-                        </div>
-
-                        <!-- Price -->
-                        <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Price
-                                (Rp)</label>
-                            <input type="number" name="price" id="price" value="{{ old('price') }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                required>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex justify-end">
-                            <a href="{{ route('admin.services.index') }}"
-                                class="mr-4 inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md">Cancel</a>
-                            <button type="submit"
-                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md">Create</button>
-                        </div>
-                    </form>
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-gradient-to-r from-gray-50 to-white px-8 py-6 border-b border-gray-200">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-blue-600 p-3 rounded-lg">
+                        <i class="fas fa-cogs text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Service Information</h2>
+                        <p class="text-gray-600 mt-1">Please fill in all required service information</p>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-8">
+                <form action="{{ route('admin.services.store') }}" method="POST" class="space-y-6">
+                    @csrf
+
+                    <!-- Service Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-tag mr-2 text-blue-600"></i>Service Name
+                        </label>
+                        <input type="text" name="name" id="name" value="{{ old('name') }}"
+                            class="form-control w-full @error('name') border-red-500 @enderror"
+                            placeholder="Enter service name" required>
+                        @error('name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-align-left mr-2 text-blue-600"></i>Description
+                        </label>
+                        <textarea name="description" id="description" rows="3"
+                            class="form-control w-full @error('description') border-red-500 @enderror" placeholder="Optional">{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Price -->
+                    <div>
+                        <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i>Price (Rp)
+                        </label>
+                        <input type="number" name="price" id="price" value="{{ old('price') }}"
+                            class="form-control w-full @error('price') border-red-500 @enderror" placeholder="Enter price"
+                            required>
+                        @error('price')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <div class="flex justify-end space-x-4">
+                            <a href="{{ route('admin.services.index') }}"
+                                class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-times mr-2"></i>Cancel
+                            </a>
+                            <button type="submit"
+                                class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-save mr-2"></i>Create Service
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </section>

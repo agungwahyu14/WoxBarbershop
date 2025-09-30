@@ -629,40 +629,40 @@ if ($request->filled('status_filter')) {
 
 
     public function exportCsv(): StreamedResponse
-    {
-        $fileName = 'users_' . now()->format('Ymd_His') . '.csv';
+{
+    $fileName = 'users_' . now()->format('Ymd_His') . '.csv';
 
-        $users = User::with('roles')->get();
+    $users = User::with('roles')->get();
 
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=\"$fileName\"",
-        ];
+    $headers = [
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => "attachment; filename=\"$fileName\"",
+    ];
 
-        $callback = function () use ($users) {
-            $handle = fopen('php://output', 'w');
+    $callback = function () use ($users) {
+        $handle = fopen('php://output', 'w');
 
-            // Header
-            fputcsv($handle, ['ID', 'Name', 'Email', 'No Telepon', 'Roles', 'Status', 'Created At']);
+        // Header
+        fputcsv($handle, ['No', 'Name', 'Email', 'No Telepon', 'Roles', 'Status', 'Created At']);
 
-            // Rows
-            foreach ($users as $user) {
-                fputcsv($handle, [
-                    $user->id,
-                    $user->name,
-                    $user->email,
-                    $user->no_telepon,
-                    $user->roles->pluck('name')->implode(', '),
-                    $user->is_active ? 'Active' : 'Inactive',
-                    $user->created_at->format('Y-m-d H:i:s'),
-                ]);
-            }
+        // Rows
+        foreach ($users as $i => $user) {
+            fputcsv($handle, [
+                $i + 1, // nomor urut, bukan ID
+                $user->name,
+                $user->email,
+                $user->no_telepon ?? '-',
+                $user->roles->pluck('name')->implode(', ') ?: 'pelanggan',
+                $user->deleted_at ? 'Inactive' : 'Active',
+                $user->created_at->format('d/m/Y H:i'),
+            ]);
+        }
 
-            fclose($handle);
-        };
+        fclose($handle);
+    };
 
-        return response()->stream($callback, 200, $headers);
-    }
+    return response()->stream($callback, 200, $headers);
+}
 
     /**
      * Export all users to PDF

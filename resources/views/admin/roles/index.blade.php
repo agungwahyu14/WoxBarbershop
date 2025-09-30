@@ -26,8 +26,7 @@
                         <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
                         Create Role
                     </a>
-                    <!-- Export buttons will be inserted here by DataTables -->
-                    <div id="export-buttons" class="flex flex-wrap gap-2"></div>
+
                 </div>
             </div>
 
@@ -118,35 +117,13 @@
                     "<'overflow-x-auto't>" +
                     "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>", // tampilkan info & pagination
                 // Hide default info and pagination
-                buttons: [{
-                        extend: 'csv',
-                        text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV',
-                        className: 'dt-btn dt-btn-csv'
-                    },
-                    {
-                        extend: 'excel',
-                        text: '<i class="mdi mdi-file-excel mr-2"></i>Excel',
-                        className: 'dt-btn dt-btn-excel'
-                    },
-                    {
-                        extend: 'pdf',
-                        text: '<i class="mdi mdi-file-pdf mr-2"></i>PDF',
-                        className: 'dt-btn dt-btn-pdf'
-                    },
-                    {
-                        extend: 'print',
-                        text: '<i class="mdi mdi-printer mr-2"></i>Print',
-                        className: 'dt-btn dt-btn-print'
-                    }
-                ],
+
                 language: {
-                    search: "",
+                    search: "Search:",
                     lengthMenu: "_MENU_ ",
                     info: "Showing _START_ to _END_ of _TOTAL_ roles",
                     infoEmpty: "No roles found",
                     infoFiltered: "(filtered from _MAX_ total roles)",
-
-                    searchPlaceholder: "Search roles...",
                     zeroRecords: "No matching roles found",
                     emptyTable: "No roles available",
                     loadingRecords: "Loading roles...",

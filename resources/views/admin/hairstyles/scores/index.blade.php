@@ -30,41 +30,33 @@
                 </div>
             </div>
 
-            <div class="card-content rounded-md overflow-x-auto">
+            <div class="card-content ">
                 <!-- Container dengan indikator scroll -->
-                <div class="relative">
-                    <div class="overflow-x-auto pb-4">
-                        <table id="scoresTable" class="min-w-[600px] w-full border-collapse">
-                            <thead class="bg-gray-100 dark:bg-gray-700">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                        #
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                        Hairstyle
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                        Kriteria
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                        Score
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 text-center text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Data akan diisi oleh DataTables -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
+                <table id="scoresTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                #
+                            </th>
+                            <th>
+                                Hairstyle
+                            </th>
+                            <th>
+                                Kriteria
+                            </th>
+                            <th>
+                                Score
+                            </th>
+                            <th class="flex justify-center items-center">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data akan diisi oleh DataTables -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -115,6 +107,7 @@
                         name: 'action',
                         orderable: false,
                         searchable: false,
+                        className: 'text-center'
 
                     }
                 ],
@@ -127,7 +120,7 @@
                     info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ data',
                     infoEmpty: 'Menampilkan 0 sampai 0 dari 0 data',
                     infoFiltered: '(difilter dari _MAX_ total data)',
-                    search: 'Cari:',
+                    search: 'Search:',
                     paginate: {
                         previous: '<i class="mdi mdi-chevron-left"></i>',
                         next: '<i class="mdi mdi-chevron-right"></i>'

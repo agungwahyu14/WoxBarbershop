@@ -13,6 +13,7 @@ use App\Models\StylePreference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 
 
 class HairstyleController extends Controller
@@ -66,7 +67,7 @@ class HairstyleController extends Controller
             })
             ->editColumn('description', function ($row) {
                 return $row->description 
-                    ? '<div class="max-w-xs truncate" title="'.$row->description.'">'.$row->description.'</div>' 
+                    ? '<span>' . Str::limit($row->description, 20) . '</span>' 
                     : '-';
             })
             ->addColumn('image', function ($row) {

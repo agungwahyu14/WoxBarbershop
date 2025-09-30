@@ -104,6 +104,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/bookings/statistics', [BookingController::class, 'getStatistics'])
             ->name('admin.bookings.statistics');
 
+               Route::get('bookings/export/csv', [BookingController::class, 'exportCsv'])->name('admin.bookings.export.csv');
+    Route::get('bookings/export/pdf', [BookingController::class, 'exportPdf'])->name('admin.bookings.export.pdf');
+
         // Common resources for pegawai & admin
         Route::resource('services', AdminServiceController::class)->names([
             'index' => 'admin.services.index',
@@ -158,7 +161,11 @@ Route::middleware('auth')->group(function () {
             'update' => 'admin.transactions.update',
             'destroy' => 'admin.transactions.destroy',
         ]);
-        
+
+
+               Route::get('transactions/export/csv', [TransactionController::class, 'exportCsv'])->name('admin.transactions.export.csv');
+    Route::get('transactions/export/pdf', [TransactionController::class, 'exportPdf'])->name('admin.transactions.export.pdf');
+
         // Additional transaction routes
         Route::post('transactions/{id}/settlement', [TransactionController::class, 'markAsSettlement'])->name('admin.transactions.settlement');
         Route::resource('loyalty', AdminLoyaltyController::class)->names([
