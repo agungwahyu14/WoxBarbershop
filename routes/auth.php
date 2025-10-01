@@ -22,8 +22,7 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-    // Forgot Password - Disabled for now, may be used in the future
-    /*
+    // Forgot Password Routes
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 
@@ -35,7 +34,6 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
-    */
 });
 
 Route::middleware('auth')->group(function () {

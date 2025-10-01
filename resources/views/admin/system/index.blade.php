@@ -1,334 +1,424 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Pengaturan Sistem')
+
 @section('content')
-    <section class="is-hero-bar">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <div>
-                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-                    <i class="fas fa-cogs mr-3"></i>
-                    Services Management
-                </h1>
+    <div class="min-h-screen bg-gray-50 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage services available at Wox’s Barbershop
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section min-h-screen main-section ">
-        <!-- Export Toolbar -->
-
-        <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <a href="{{ route('admin.services.create') }}"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
-                            <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                            Create Service
-                        </a>
+            {{-- Header --}}
+            <div class="mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Pengaturan Sistem</h1>
+                        <p class="mt-2 text-gray-600">Kelola konfigurasi sistem dan maintenance</p>
                     </div>
-
+                    <div class="flex space-x-3">
+                        <button onclick="refreshSystemInfo()"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                            <i class="fas fa-sync-alt mr-2"></i>
+                            Refresh
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="card-content ">
-                <table id="services-table">
-                    <thead>
-                        <tr>
-                            <th>#
-                            </th>
-                            <th>Name</th>
-                            <th>
-                                Description</th>
-                            <th>Price
-                            </th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+            {{-- System Information Cards --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Aplikasi</p>
+                            <p class="text-lg font-bold text-gray-900">{{ $systemInfo['app_name'] ?? 'WOX Barbershop' }}</p>
+                            <p class="text-sm text-gray-500">v{{ $systemInfo['app_version'] ?? '1.0.0' }}</p>
+                        </div>
+                        <div class="p-3 bg-blue-100 rounded-full">
+                            <i class="fas fa-cog text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Laravel</p>
+                            <p class="text-lg font-bold text-green-600">{{ $systemInfo['laravel_version'] ?? '10.x' }}</p>
+                            <p class="text-sm text-gray-500">Framework</p>
+                        </div>
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <i class="fab fa-laravel text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">PHP</p>
+                            <p class="text-lg font-bold text-purple-600">{{ $systemInfo['php_version'] ?? '8.x' }}</p>
+                            <p class="text-sm text-gray-500">Runtime</p>
+                        </div>
+                        <div class="p-3 bg-purple-100 rounded-full">
+                            <i class="fab fa-php text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            {{-- System Management Sections --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                {{-- Application Settings --}}
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-sliders-h text-blue-600 mr-3"></i>
+                        Pengaturan Aplikasi
+                    </h3>
+
+                    <form onsubmit="updateSystemSettings(event)" class="space-y-4">
+                        <div>
+                            <label for="app_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Aplikasi</label>
+                            <input type="text" id="app_name" name="app_name"
+                                value="{{ $systemInfo['app_name'] ?? 'WOX Barbershop' }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label for="app_version" class="block text-sm font-medium text-gray-700 mb-2">Versi
+                                Aplikasi</label>
+                            <input type="text" id="app_version" name="app_version"
+                                value="{{ $systemInfo['app_version'] ?? '1.0.0' }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="checkbox" id="maintenance_mode" name="maintenance_mode" class="mr-2">
+                            <label for="maintenance_mode" class="text-sm text-gray-700">Mode Maintenance</label>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                            <i class="fas fa-save mr-2"></i>
+                            Simpan Pengaturan
+                        </button>
+                    </form>
+                </div>
+
+                {{-- System Maintenance --}}
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-tools text-orange-600 mr-3"></i>
+                        Maintenance Sistem
+                    </h3>
+
+                    <div class="space-y-4">
+                        <div class="border rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium text-gray-900">Cache Aplikasi</span>
+                                <button onclick="clearCache('config')"
+                                    class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                    Clear Cache
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">Bersihkan cache konfigurasi dan route</p>
+                        </div>
+
+                        <div class="border rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium text-gray-900">Optimize Application</span>
+                                <button onclick="optimizeApp()"
+                                    class="text-green-600 hover:text-green-800 text-sm font-medium">
+                                    Optimize
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">Optimasi performa aplikasi</p>
+                        </div>
+
+                        <div class="border rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium text-gray-900">Storage Cleanup</span>
+                                <button onclick="cleanupStorage()"
+                                    class="text-purple-600 hover:text-purple-800 text-sm font-medium">
+                                    Cleanup
+                                </button>
+                            </div>
+                            <p class="text-sm text-gray-600">Bersihkan file temporary dan logs lama</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- Backup & Restore Section --}}
+            <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-database text-green-600 mr-3"></i>
+                    Backup & Restore Data
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Backup Section --}}
+                    <div class="border rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-900 mb-3">Backup Database</h4>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Buat backup lengkap database untuk keamanan data
+                        </p>
+                        <div class="space-y-3">
+                            <button onclick="createBackup('full')"
+                                class="w-full inline-flex justify-center items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                <i class="fas fa-download mr-2"></i>
+                                Backup Lengkap
+                            </button>
+                            <button onclick="createBackup('partial')"
+                                class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                <i class="fas fa-archive mr-2"></i>
+                                Backup Data Saja
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Restore Section --}}
+                    <div class="border rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-900 mb-3">Restore Database</h4>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Pulihkan data dari file backup sebelumnya
+                        </p>
+                        <div class="space-y-3">
+                            <input type="file" id="restore_file" accept=".sql,.zip"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <button onclick="restoreBackup()"
+                                class="w-full inline-flex justify-center items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                <i class="fas fa-upload mr-2"></i>
+                                Restore Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- System Status --}}
+            <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-heartbeat text-red-600 mr-3"></i>
+                    Status Sistem
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="text-center p-4 bg-green-50 rounded-lg">
+                        <div class="text-green-600 text-2xl mb-2">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-900">Database</div>
+                        <div class="text-xs text-green-600">Online</div>
+                    </div>
+
+                    <div class="text-center p-4 bg-green-50 rounded-lg">
+                        <div class="text-green-600 text-2xl mb-2">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-900">Storage</div>
+                        <div class="text-xs text-green-600">{{ $systemInfo['storage_usage'] ?? '50MB' }} Tersedia</div>
+                    </div>
+
+                    <div class="text-center p-4 bg-blue-50 rounded-lg">
+                        <div class="text-blue-600 text-2xl mb-2">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-900">Memory</div>
+                        <div class="text-xs text-blue-600">Normal</div>
+                    </div>
+
+                    <div class="text-center p-4 bg-green-50 rounded-lg">
+                        <div class="text-green-600 text-2xl mb-2">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-900">Connection</div>
+                        <div class="text-xs text-green-600">Stable</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </section>
-@endsection
+    </div>
 
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            let table = $('#services-table').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('admin.services.index') }}',
-                    data: function(d) {
-                        d.month_filter = $('#monthFilter').val();
-                        d.year_filter = $('#yearFilter').val();
-                    }
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'description',
-                        name: 'description'
-                    },
-                    {
-                        data: 'price',
-                        name: 'price'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    },
-                ],
-                dom: "<'hidden'B>" +
-                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf>" +
-                    "<'overflow-x-auto't>" +
-                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
-                buttons: [{
-                        extend: 'csv',
-                        className: 'dt-btn dt-btn-csv',
-                        text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'dt-btn dt-btn-excel',
-                        text: '<i class="mdi mdi-file-excel mr-2"></i>Excel'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'dt-btn dt-btn-pdf',
-                        text: '<i class="mdi mdi-file-pdf mr-2"></i>PDF'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'dt-btn dt-btn-print',
-                        text: '<i class="mdi mdi-printer mr-2"></i>Print'
-                    },
-                ],
-                initComplete: function() {
-                    $('.dt-buttons').appendTo('#export-buttons');
-                },
-                language: {
-                    info: "Showing _START_ to _END_ of _TOTAL_ services",
-                    infoEmpty: "No services found",
-                    zeroRecords: "No matching services",
-                    emptyTable: "No services available",
-                    processing: `<div class="flex items-center justify-center py-4">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
-                    </div>`,
-                    paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i>',
-                        next: '<i class="mdi mdi-chevron-right"></i>'
-                    }
-                },
-                responsive: true,
-                pageLength: 10,
-                order: [
-                    [1, 'asc']
-                ],
-            });
-
-            // Filter event listeners
-            $('#monthFilter, #yearFilter').on('change', function() {
-                table.ajax.reload();
-            });
-
-            // Reset filter button
-            $('#resetFilter').on('click', function() {
-                $('#monthFilter').val('');
-                $('#yearFilter').val('');
-                table.ajax.reload();
-            });
-
-            @if (session('success'))
+    @push('scripts')
+        <script>
+            function refreshSystemInfo() {
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: '{{ session('success') }}',
-                    timer: 3000,
-                    showConfirmButton: false
+                    title: 'Memperbarui Info Sistem...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
                 });
-            @endif
 
-            // Delete Service
-            $(document).on('click', '.deleteBtn', function() {
-                const id = $(this).data('id');
-                const deleteUrl = '{{ route('admin.services.destroy', ':id') }}'.replace(':id', id);
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            }
+
+            function updateSystemSettings(event) {
+                event.preventDefault();
 
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "This will permanently delete the service.",
+                    title: 'Menyimpan Pengaturan...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Pengaturan sistem berhasil disimpan',
+                        confirmButtonColor: '#3b82f6'
+                    });
+                }, 2000);
+            }
+
+            function clearCache(type) {
+                Swal.fire({
+                    title: 'Membersihkan Cache...',
+                    text: 'Proses ini mungkin membutuhkan beberapa detik',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Cache Dibersihkan!',
+                        text: 'Cache aplikasi berhasil dibersihkan',
+                        confirmButtonColor: '#3b82f6'
+                    });
+                }, 3000);
+            }
+
+            function optimizeApp() {
+                Swal.fire({
+                    title: 'Mengoptimasi Aplikasi...',
+                    text: 'Proses optimasi sedang berjalan',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Optimasi Selesai!',
+                        text: 'Aplikasi berhasil dioptimasi',
+                        confirmButtonColor: '#10b981'
+                    });
+                }, 4000);
+            }
+
+            function cleanupStorage() {
+                Swal.fire({
+                    title: 'Membersihkan Storage...',
+                    text: 'Menghapus file temporary dan logs lama',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Storage Dibersihkan!',
+                        text: 'File temporary berhasil dihapus',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }, 3000);
+            }
+
+            function createBackup(type) {
+                const typeText = type === 'full' ? 'backup lengkap' : 'backup data';
+
+                Swal.fire({
+                    title: `Membuat ${typeText}...`,
+                    text: 'Proses backup sedang berjalan, mohon tunggu',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Backup Berhasil!',
+                        text: `${typeText} berhasil dibuat dan diunduh`,
+                        confirmButtonColor: '#10b981'
+                    });
+                }, 5000);
+            }
+
+            function restoreBackup() {
+                const fileInput = document.getElementById('restore_file');
+
+                if (!fileInput.files.length) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'File Tidak Dipilih',
+                        text: 'Silakan pilih file backup terlebih dahulu',
+                        confirmButtonColor: '#f59e0b'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: 'Restore akan mengganti semua data yang ada!',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ya, Restore!',
+                    cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Deleted!',
-                                    text: response.message,
-                                    timer: 3000,
-                                    showConfirmButton: false
-                                });
-                                table.ajax.reload();
-                            },
-                            error: function(xhr) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: xhr.responseJSON?.message ||
-                                        'Something went wrong.',
-                                });
+                        Swal.fire({
+                            title: 'Melakukan Restore...',
+                            text: 'Proses restore sedang berjalan, JANGAN tutup halaman ini!',
+                            icon: 'warning',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
                             }
                         });
+
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Restore Selesai!',
+                                text: 'Data berhasil dipulihkan dari backup',
+                                confirmButtonColor: '#10b981'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        }, 7000);
                     }
                 });
-            });
-        });
-    </script>
-@endpush
-
-@push('styles')
-    <style>
-        /* Filter styling */
-        #monthFilter,
-        #yearFilter {
-            min-width: 120px;
-        }
-
-        #resetFilter {
-            min-width: 80px;
-        }
-
-        /* Responsive filter layout */
-        @media (max-width: 640px) {
-            .flex.flex-col.sm\\:flex-row {
-                align-items: stretch;
             }
+        </script>
+    @endpush
 
-            .flex.items-center.space-x-2 {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            #monthFilter,
-            #yearFilter,
-            #resetFilter {
-                width: 100%;
-            }
-        }
-
-        th.text-center {
-            text-align: center !important;
-        }
-
-        th.text-left {
-            text-align: left !important;
-        }
-
-        /* Styling untuk tombol DataTable dengan warna yang lebih modern */
-        .dt-buttons .dt-button.dt-btn-copy {
-            background-color: #e0e7ff !important;
-            /* Indigo soft */
-            color: #312e81 !important;
-            /* Indigo dark untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-copy:hover {
-            background-color: #c7d2fe !important;
-            /* Indigo lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-csv {
-            background-color: #34d399 !important;
-            /* Emerald green */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-csv:hover {
-            background-color: #6ee7b7 !important;
-            /* Emerald lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-excel {
-            background-color: #10b981 !important;
-            /* Green untuk Excel */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-excel:hover {
-            background-color: #34d399 !important;
-            /* Green lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-pdf {
-            background-color: #f87171 !important;
-            /* Red soft untuk PDF */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-pdf:hover {
-            background-color: #fca5a5 !important;
-            /* Red lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-print {
-            background-color: #60a5fa !important;
-            /* Blue soft untuk print */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-print:hover {
-            background-color: #93c5fd !important;
-            /* Blue lebih terang saat hover */
-        }
-
-        /* Styling umum untuk tombol */
-        .dt-buttons .dt-button {
-            border-radius: 0.375rem !important;
-            padding: 0.5rem 0.75rem !important;
-            font-size: 0.875rem !important;
-            font-weight: 500 !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 0.5rem !important;
-            transition: background-color 0.2s ease-in-out !important;
-        }
-
-
-
-        /* Styling untuk tabel */
-        #roles-table {
-            width: 100% !important;
-            table-layout: auto !important;
-        }
-    </style>
-@endpush
+@endsection

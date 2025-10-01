@@ -1,15 +1,20 @@
 <?php
 
+use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\HairstyleController as AdminHairstyleController;
 use App\Http\Controllers\Admin\HairstyleScoreController;    
 use App\Http\Controllers\Admin\HairstyleRekomendasiController;
 use App\Http\Controllers\Admin\LoyaltyController as AdminLoyaltyController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
+use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\FeedbackController as CustomerFeedbackService;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -29,7 +34,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('welcome'))->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     /** ===================== DASHBOARD ===================== */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -46,19 +51,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    /** ===================== SECURITY - DISABLED ===================== */
-    // Remember Me & Security features - Disabled for now, may be used in the future
-    /*
-    Route::get('/security', function () {
-        return view('user.security');
-    })->name('security.index');
-    
-    Route::post('/security/revoke-remember-token', function () {
-        auth()->user()->update(['remember_token' => null]);
-        return redirect()->route('security.index')->with('success', 'Remember token berhasil dibatalkan. Anda akan perlu login ulang di semua perangkat.');
-    })->name('security.revoke-remember-token');
-    */
 
     /*
     |--------------------------------------------------------------------------
@@ -81,6 +73,15 @@ Route::middleware('auth')->group(function () {
 
         // Recommendation
         Route::resource('rekomendasi', RecommendationController::class);
+
+        // Customer Feedback
+        Route::prefix('feedback')->name('feedback.')->group(function () {
+            Route::get('/create/{booking}', [CustomerFeedbackService::class, 'create'])->name('create');
+            Route::post('/store', [CustomerFeedbackService::class, 'store'])->name('store');
+            Route::get('/{feedback}', [CustomerFeedbackService::class, 'show'])->name('show');
+            Route::get('/{feedback}/edit', [CustomerFeedbackService::class, 'edit'])->name('edit');
+            Route::put('/{feedback}', [CustomerFeedbackService::class, 'update'])->name('update');
+        });
     });
 
     /*
@@ -209,6 +210,46 @@ Route::middleware('auth')->group(function () {
         Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
             ->name('admin.users.toggle-status');
         Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
+
+        // Feedback Management
+        Route::resource('feedbacks', FeedbackController::class)->names([
+            'index' => 'admin.feedbacks.index',
+            'show' => 'admin.feedbacks.show',
+            'update' => 'admin.feedbacks.update',
+            'destroy' => 'admin.feedbacks.destroy',
+        ])->only(['index', 'show', 'update', 'destroy']);
+        Route::post('/feedbacks/{feedback}/toggle-public', [FeedbackController::class, 'togglePublic'])
+            ->name('admin.feedbacks.toggle-public');
+
+        // Product Management
+        Route::resource('products', AdminProductController::class)->names([
+            'index' => 'admin.products.index',
+            'create' => 'admin.products.create',
+            'store' => 'admin.products.store',
+            'show' => 'admin.products.show',
+            'edit' => 'admin.products.edit',
+            'update' => 'admin.products.update',
+            'destroy' => 'admin.products.destroy',
+        ]);
+        Route::post('/products/{product}/toggle-status', [AdminProductController::class, 'toggleStatus'])
+            ->name('admin.products.toggle-status');
+
+        // Reports Management
+        Route::prefix('reports')->name('admin.reports.')->group(function () {
+            Route::get('/', [ReportController::class, 'index'])->name('index');
+            Route::get('/financial', [ReportController::class, 'financial'])->name('financial');
+            Route::get('/bookings', [ReportController::class, 'bookings'])->name('bookings');
+            Route::get('/customers', [ReportController::class, 'customers'])->name('customers');
+            Route::post('/export-financial', [ReportController::class, 'exportFinancial'])->name('export-financial');
+        });
+
+        // System Management
+        Route::prefix('system')->name('admin.system.')->group(function () {
+            Route::get('/', [SystemController::class, 'index'])->name('index');
+            Route::post('/settings', [SystemController::class, 'updateSettings'])->name('settings');
+            Route::post('/backup', [SystemController::class, 'backup'])->name('backup');
+            Route::post('/clear-cache', [SystemController::class, 'clear-cache'])->name('clear-cache');
+        });
 
     });
 

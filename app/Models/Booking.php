@@ -55,4 +55,10 @@ class Booking extends Model
     {
         return $this->hasOne(Transaction::class, 'order_id', 'id')->latest();
     }
+
+    // Relasi ke Feedback
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
+    }
 }

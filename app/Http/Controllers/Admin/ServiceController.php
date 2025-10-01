@@ -14,7 +14,7 @@ use Yajra\DataTables\DataTables;
 
 class ServiceController extends Controller
 {
-    use ExportTrait;
+
     public function __construct()
     {
         $this->middleware('auth');

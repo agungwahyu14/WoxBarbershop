@@ -35,7 +35,7 @@
                 </li>
 
                 <li>
-                    <a href="">
+                    <a href="{{ route('admin.products.index') }}">
                         <span class="icon"><i class="mdi mdi-package-variant"></i></span>
                         <span class="menu-item-label">Products</span>
                     </a>
@@ -64,22 +64,23 @@
                         <span class="menu-item-label">Transactions</span>
                     </a>
                 </li>
-                {{-- <li>
-                    <a href="{{ route('admin.loyalty.index') }}">
-                        <span class="icon"><i class="mdi mdi-star-circle"></i></span>
-                        <span class="menu-item-label">Loyalty Program</span>
+                <li>
+                    <a href="{{ route('admin.reports.index') }}">
+                        <span class="icon"><i class="mdi mdi-file-chart"></i></span> <!-- ikon report -->
+
+                        <span class="menu-item-label">Reports</span>
                     </a>
-                </li> --}}
+                </li>
 
 
                 <li>
-                    <a href="">
+                    <a href="{{ route('admin.system.index') }}">
                         <span class="icon"><i class="mdi mdi-monitor"></i></span>
                         <span class="menu-item-label">System</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="{{ route('admin.feedbacks.index') }}">
                         <span class="icon"><i class="mdi mdi-comment-text-outline"></i></span>
                         <span class="menu-item-label">Manage Feedbacks</span>
                     </a>

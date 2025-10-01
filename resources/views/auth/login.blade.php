@@ -72,14 +72,12 @@
                         </label>
                         --}}
                         <div></div>
-                        {{-- Forgot Password - Disabled for now, may be used in the future
                         @if (Route::has('password.request'))
                             <a class="text-sm text-[#d4af37] hover:underline hover:text-[#111111] transition-colors duration-200"
                                 href="{{ route('password.request') }}">
                                 Lupa password?
                             </a>
                         @endif
-                        --}}
                     </div>
 
                     <button type="submit"

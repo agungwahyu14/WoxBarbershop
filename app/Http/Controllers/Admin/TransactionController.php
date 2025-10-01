@@ -14,7 +14,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransactionController extends Controller
 {
-    use ExportTrait;
     public function index(Request $request)
 {
     if ($request->ajax()) {

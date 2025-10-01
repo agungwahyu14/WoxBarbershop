@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Waktu pembuatan: 30 Sep 2025 pada 14.21
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Host: 127.0.0.1
+-- Generation Time: Oct 01, 2025 at 02:24 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `bentuk_kepala`
+-- Table structure for table `bentuk_kepala`
 --
 
 CREATE TABLE `bentuk_kepala` (
@@ -33,7 +33,7 @@ CREATE TABLE `bentuk_kepala` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `bentuk_kepala`
+-- Dumping data for table `bentuk_kepala`
 --
 
 INSERT INTO `bentuk_kepala` (`id`, `nama`) VALUES
@@ -47,7 +47,7 @@ INSERT INTO `bentuk_kepala` (`id`, `nama`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `bookings`
+-- Table structure for table `bookings`
 --
 
 CREATE TABLE `bookings` (
@@ -67,7 +67,7 @@ CREATE TABLE `bookings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `bookings`
+-- Dumping data for table `bookings`
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `name`, `service_id`, `hairstyle_id`, `date_time`, `queue_number`, `description`, `payment_method`, `created_at`, `updated_at`, `total_price`, `status`) VALUES
@@ -166,12 +166,13 @@ INSERT INTO `bookings` (`id`, `user_id`, `name`, `service_id`, `hairstyle_id`, `
 (93, 55, 'Hedley Schneider', 1, NULL, '2025-08-09 20:26:00', 1, 'Aut vel consequatur', '', '2025-08-09 00:00:38', '2025-08-09 00:16:29', 25000.00, 'completed'),
 (94, 55, 'Sade', 8, NULL, '2025-09-02 11:13:00', 1, 'Et et illo facilis d', '', '2025-09-01 20:26:59', '2025-09-17 07:16:38', 30000.00, 'completed'),
 (95, 55, 'Nasim Odonnell', 1, NULL, '2025-09-18 13:54:00', 1, 'Ad fugit ea iste re', 'cash', '2025-09-17 05:44:18', '2025-09-17 06:25:14', 25000.00, 'completed'),
-(96, 55, 'Cole Oneill', 5, NULL, '2025-09-18 17:55:00', 2, 'Do incidunt sed off', 'cash', '2025-09-17 06:30:34', '2025-09-17 06:46:04', 20000.00, 'completed');
+(96, 55, 'Cole Oneill', 5, NULL, '2025-09-18 17:55:00', 2, 'Do incidunt sed off', 'cash', '2025-09-17 06:30:34', '2025-09-17 06:46:04', 20000.00, 'completed'),
+(97, 55, 'Callie Mccormick', 7, 43, '2025-09-30 16:57:00', 1, 'Doloremque repudiand', 'bank', '2025-09-30 06:31:54', '2025-09-30 07:08:10', 85000.00, 'completed');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `criteria`
+-- Table structure for table `criteria`
 --
 
 CREATE TABLE `criteria` (
@@ -183,18 +184,18 @@ CREATE TABLE `criteria` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `criteria`
+-- Dumping data for table `criteria`
 --
 
 INSERT INTO `criteria` (`id`, `name`, `weight`, `created_at`, `updated_at`) VALUES
-(8, 'Bentuk Kepala', 0.50026636036223, '2025-09-25 01:31:39', '2025-09-29 21:38:59'),
-(9, 'Tipe Rambut', 0.29976029562608, '2025-09-25 01:32:01', '2025-09-29 21:38:59'),
-(10, 'Preferensi Gaya', 0.19997334401169, '2025-09-25 01:32:07', '2025-09-29 21:38:59');
+(8, 'Bentuk Kepala', 0.50026636036223, '2025-09-25 01:31:39', '2025-09-30 08:17:09'),
+(9, 'Tipe Rambut', 0.29976029562608, '2025-09-25 01:32:01', '2025-09-30 08:17:09'),
+(10, 'Preferensi Gaya', 0.19997334401169, '2025-09-25 01:32:07', '2025-09-30 08:17:09');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `dashboards`
+-- Table structure for table `dashboards`
 --
 
 CREATE TABLE `dashboards` (
@@ -210,7 +211,7 @@ CREATE TABLE `dashboards` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `dashboards`
+-- Dumping data for table `dashboards`
 --
 
 INSERT INTO `dashboards` (`id`, `metric_name`, `metric_value`, `metric_type`, `date`, `period`, `additional_data`, `created_at`, `updated_at`) VALUES
@@ -471,7 +472,7 @@ INSERT INTO `dashboards` (`id`, `metric_name`, `metric_value`, `metric_type`, `d
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `failed_jobs`
+-- Table structure for table `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
@@ -487,7 +488,21 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `hairstyles`
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE `feedback` (
+  `id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `description` text NOT NULL,
+  `rating` int(11) NOT NULL,
+  `is_feedback` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hairstyles`
 --
 
 CREATE TABLE `hairstyles` (
@@ -500,7 +515,7 @@ CREATE TABLE `hairstyles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `hairstyles`
+-- Dumping data for table `hairstyles`
 --
 
 INSERT INTO `hairstyles` (`id`, `name`, `description`, `image`, `created_at`, `updated_at`) VALUES
@@ -521,7 +536,7 @@ INSERT INTO `hairstyles` (`id`, `name`, `description`, `image`, `created_at`, `u
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `hairstyle_bentuk_kepala`
+-- Table structure for table `hairstyle_bentuk_kepala`
 --
 
 CREATE TABLE `hairstyle_bentuk_kepala` (
@@ -530,7 +545,7 @@ CREATE TABLE `hairstyle_bentuk_kepala` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `hairstyle_bentuk_kepala`
+-- Dumping data for table `hairstyle_bentuk_kepala`
 --
 
 INSERT INTO `hairstyle_bentuk_kepala` (`hairstyle_id`, `bentuk_kepala_id`) VALUES
@@ -562,7 +577,7 @@ INSERT INTO `hairstyle_bentuk_kepala` (`hairstyle_id`, `bentuk_kepala_id`) VALUE
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `hairstyle_scores`
+-- Table structure for table `hairstyle_scores`
 --
 
 CREATE TABLE `hairstyle_scores` (
@@ -575,7 +590,7 @@ CREATE TABLE `hairstyle_scores` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `hairstyle_scores`
+-- Dumping data for table `hairstyle_scores`
 --
 
 INSERT INTO `hairstyle_scores` (`id`, `hairstyle_id`, `criterion_id`, `score`, `created_at`, `updated_at`) VALUES
@@ -622,7 +637,7 @@ INSERT INTO `hairstyle_scores` (`id`, `hairstyle_id`, `criterion_id`, `score`, `
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `hairstyle_style_preference`
+-- Table structure for table `hairstyle_style_preference`
 --
 
 CREATE TABLE `hairstyle_style_preference` (
@@ -631,7 +646,7 @@ CREATE TABLE `hairstyle_style_preference` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `hairstyle_style_preference`
+-- Dumping data for table `hairstyle_style_preference`
 --
 
 INSERT INTO `hairstyle_style_preference` (`hairstyle_id`, `style_preference_id`) VALUES
@@ -675,7 +690,7 @@ INSERT INTO `hairstyle_style_preference` (`hairstyle_id`, `style_preference_id`)
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `hairstyle_tipe_rambut`
+-- Table structure for table `hairstyle_tipe_rambut`
 --
 
 CREATE TABLE `hairstyle_tipe_rambut` (
@@ -684,7 +699,7 @@ CREATE TABLE `hairstyle_tipe_rambut` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `hairstyle_tipe_rambut`
+-- Dumping data for table `hairstyle_tipe_rambut`
 --
 
 INSERT INTO `hairstyle_tipe_rambut` (`hairstyle_id`, `tipe_rambut_id`) VALUES
@@ -730,7 +745,7 @@ INSERT INTO `hairstyle_tipe_rambut` (`hairstyle_id`, `tipe_rambut_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `loyalties`
+-- Table structure for table `loyalties`
 --
 
 CREATE TABLE `loyalties` (
@@ -742,18 +757,18 @@ CREATE TABLE `loyalties` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `loyalties`
+-- Dumping data for table `loyalties`
 --
 
 INSERT INTO `loyalties` (`id`, `user_id`, `points`, `updated_at`, `created_at`) VALUES
-(11, 55, 3, '2025-09-17 07:16:38', '2025-08-07 01:00:43'),
+(11, 55, 4, '2025-09-30 07:08:10', '2025-08-07 01:00:43'),
 (12, 51, 1, '2025-08-25 20:19:17', '2025-08-25 20:19:17'),
 (13, 50, 1, '2025-08-25 23:18:20', '2025-08-25 23:18:20');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `migrations`
+-- Table structure for table `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -763,7 +778,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `migrations`
+-- Dumping data for table `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -801,7 +816,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `model_has_permissions`
+-- Table structure for table `model_has_permissions`
 --
 
 CREATE TABLE `model_has_permissions` (
@@ -811,7 +826,7 @@ CREATE TABLE `model_has_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `model_has_permissions`
+-- Dumping data for table `model_has_permissions`
 --
 
 INSERT INTO `model_has_permissions` (`permission_id`, `model_type`, `model_id`) VALUES
@@ -889,7 +904,7 @@ INSERT INTO `model_has_permissions` (`permission_id`, `model_type`, `model_id`) 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `model_has_roles`
+-- Table structure for table `model_has_roles`
 --
 
 CREATE TABLE `model_has_roles` (
@@ -899,7 +914,7 @@ CREATE TABLE `model_has_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `model_has_roles`
+-- Dumping data for table `model_has_roles`
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
@@ -926,7 +941,7 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pairwise_comparisons`
+-- Table structure for table `pairwise_comparisons`
 --
 
 CREATE TABLE `pairwise_comparisons` (
@@ -939,7 +954,7 @@ CREATE TABLE `pairwise_comparisons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `pairwise_comparisons`
+-- Dumping data for table `pairwise_comparisons`
 --
 
 INSERT INTO `pairwise_comparisons` (`id`, `criterion_id_1`, `criterion_id_2`, `value`, `created_at`, `updated_at`) VALUES
@@ -950,7 +965,7 @@ INSERT INTO `pairwise_comparisons` (`id`, `criterion_id_1`, `criterion_id_2`, `v
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `password_reset_tokens`
+-- Table structure for table `password_reset_tokens`
 --
 
 CREATE TABLE `password_reset_tokens` (
@@ -962,7 +977,7 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `permissions`
+-- Table structure for table `permissions`
 --
 
 CREATE TABLE `permissions` (
@@ -974,7 +989,7 @@ CREATE TABLE `permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `permissions`
+-- Dumping data for table `permissions`
 --
 
 INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
@@ -1052,7 +1067,7 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `personal_access_tokens`
+-- Table structure for table `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
@@ -1071,7 +1086,7 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `recommendations`
+-- Table structure for table `recommendations`
 --
 
 CREATE TABLE `recommendations` (
@@ -1083,7 +1098,7 @@ CREATE TABLE `recommendations` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `roles`
+-- Table structure for table `roles`
 --
 
 CREATE TABLE `roles` (
@@ -1095,7 +1110,7 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `roles`
+-- Dumping data for table `roles`
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
@@ -1106,7 +1121,7 @@ INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VAL
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `role_has_permissions`
+-- Table structure for table `role_has_permissions`
 --
 
 CREATE TABLE `role_has_permissions` (
@@ -1115,7 +1130,7 @@ CREATE TABLE `role_has_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `role_has_permissions`
+-- Dumping data for table `role_has_permissions`
 --
 
 INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
@@ -1223,7 +1238,7 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `services`
+-- Table structure for table `services`
 --
 
 CREATE TABLE `services` (
@@ -1238,7 +1253,7 @@ CREATE TABLE `services` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `services`
+-- Dumping data for table `services`
 --
 
 INSERT INTO `services` (`id`, `name`, `description`, `price`, `duration`, `is_active`, `created_at`, `updated_at`) VALUES
@@ -1254,7 +1269,7 @@ INSERT INTO `services` (`id`, `name`, `description`, `price`, `duration`, `is_ac
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `style_preference`
+-- Table structure for table `style_preference`
 --
 
 CREATE TABLE `style_preference` (
@@ -1263,7 +1278,7 @@ CREATE TABLE `style_preference` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `style_preference`
+-- Dumping data for table `style_preference`
 --
 
 INSERT INTO `style_preference` (`id`, `nama`) VALUES
@@ -1274,7 +1289,7 @@ INSERT INTO `style_preference` (`id`, `nama`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tipe_rambut`
+-- Table structure for table `tipe_rambut`
 --
 
 CREATE TABLE `tipe_rambut` (
@@ -1283,7 +1298,7 @@ CREATE TABLE `tipe_rambut` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `tipe_rambut`
+-- Dumping data for table `tipe_rambut`
 --
 
 INSERT INTO `tipe_rambut` (`id`, `nama`) VALUES
@@ -1294,7 +1309,7 @@ INSERT INTO `tipe_rambut` (`id`, `nama`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `transactions`
+-- Table structure for table `transactions`
 --
 
 CREATE TABLE `transactions` (
@@ -1313,7 +1328,7 @@ CREATE TABLE `transactions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `transactions`
+-- Dumping data for table `transactions`
 --
 
 INSERT INTO `transactions` (`id`, `order_id`, `transaction_status`, `payment_type`, `gross_amount`, `transaction_time`, `bank`, `va_number`, `created_at`, `updated_at`, `name`, `email`) VALUES
@@ -1325,7 +1340,7 @@ INSERT INTO `transactions` (`id`, `order_id`, `transaction_status`, `payment_typ
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -1344,11 +1359,11 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `no_telepon`, `email_verified_at`, `password`, `is_active`, `last_login_at`, `profile_photo`, `remember_token`, `created_at`, `updated_at`) VALUES
-(45, 'Super Admin', 'admin@woxbarbershop.com', '081234567890', '2025-07-25 00:19:36', '$2y$12$cESMekqUEtM9A9wXvleli.RjgbArHEu3hFLwO2ez8LX43dbMsCwoe', 1, '2025-09-29 19:22:15', 'profile_photos/BwFhsUXZyEPoWWUn9x9L1dMFJGF2Wn12kkMw1J7W.jpg', NULL, '2025-07-25 00:19:36', '2025-09-29 19:22:15'),
+(45, 'Super Admin', 'admin@woxbarbershop.com', '081234567890', '2025-07-25 00:19:36', '$2y$12$cESMekqUEtM9A9wXvleli.RjgbArHEu3hFLwO2ez8LX43dbMsCwoe', 1, '2025-09-30 08:18:28', 'profile_photos/BwFhsUXZyEPoWWUn9x9L1dMFJGF2Wn12kkMw1J7W.jpg', NULL, '2025-07-25 00:19:36', '2025-09-30 08:18:28'),
 (46, 'Barber Ahmad', 'ahmad@woxbarbershop.com', '081234567891', '2025-07-25 00:19:36', '$2y$12$cniTOFtL6o.bBpETghYmTekFTYuvOnQrJOwA8miSePOKHRDmB6fRe', 1, '2025-09-16 23:43:40', NULL, NULL, '2025-07-25 00:19:36', '2025-09-16 23:43:40'),
 (47, 'Barber Budi', 'budi@woxbarbershop.com', '081234567892', '2025-07-25 00:19:37', '$2y$12$Nve5vdVIzWRXxHOlOEbYRuNj.57iZAllDKuijvEcF64/mKmpykssC', 1, NULL, NULL, NULL, '2025-07-25 00:19:37', '2025-07-25 00:19:37'),
 (48, 'John Doe', 'john@example.com', '089876543210', '2025-07-25 00:19:39', '$2y$12$vfTnRqxQ9NqvPteFVqePlepm2fQn6BURrjpWttdcCNYLQBrDKO0X2', 1, '2025-09-08 08:03:32', NULL, NULL, '2025-07-25 00:19:39', '2025-09-08 08:03:32'),
@@ -1358,7 +1373,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `no_telepon`, `email_verified_at`, `
 (52, 'David Brown', 'david@example.com', '089876543214', '2025-07-25 00:19:39', '$2y$12$O2L/jT592hvZi01hg46Lue.ZP0ayp/6VpGtMFvAi1x5.36RKrywgu', 1, NULL, NULL, NULL, '2025-07-25 00:19:39', '2025-07-25 00:19:39'),
 (53, 'Emily Davis', 'emily@example.com', '089876543215', '2025-07-25 00:19:39', '$2y$12$IbRKsN3Zt3iAVrArvDzowOR/2c3dK7R7s6UGbMbRt7kPw6RtNCq.6', 1, NULL, NULL, NULL, '2025-07-25 00:19:39', '2025-07-25 00:19:39'),
 (54, 'Chris Miller', 'chris@example.com', '089876543216', '2025-07-25 00:19:39', '$2y$12$8ay1PTxI0MxlsKfVHA9D2O1Y3.zNjHykI6l6xtO2r5cO/OQ.GQBcK', 1, NULL, NULL, NULL, '2025-07-25 00:19:39', '2025-07-25 00:19:39'),
-(55, 'Lisa Garcia', 'lisa@example.com', '089876543217', '2025-07-25 00:19:39', '$2y$12$N2y0lNbY6.1SXO3zPCDDlu/rh4JmMDOR7gXWly9a7cDhuEUlP3nHy', 1, '2025-09-29 20:42:16', 'profile_photos/pMdCnee3GvjrwfnYdrd5j8vDFoCUCQ2JACGZS0oa.jpg', '6Y800EUgBmC5EiQsxzFZC0K13GA1PaQn8tGog1uPrfigRkSOQhpJ9ydfGwa5', '2025-07-25 00:19:39', '2025-09-29 20:42:16'),
+(55, 'Lisa Garcia', 'lisa@example.com', '089876543217', '2025-07-25 00:19:39', '$2y$12$N2y0lNbY6.1SXO3zPCDDlu/rh4JmMDOR7gXWly9a7cDhuEUlP3nHy', 1, '2025-09-30 07:46:02', 'profile_photos/pMdCnee3GvjrwfnYdrd5j8vDFoCUCQ2JACGZS0oa.jpg', '6mXz46by3YC1VfhC25MGnmEW59jh6RV5HjVg5N6xCz3yskH8Zpx9sA1UIwkQ', '2025-07-25 00:19:39', '2025-09-30 07:46:02'),
 (56, 'Robert Martinez', 'robert@example.com', '089876543218', '2025-07-25 00:19:39', '$2y$12$m4AN0yhjvmtMZpRghXVAUeffv8EByE1wbAcOijqye7Knx5RGMij8e', 1, NULL, NULL, NULL, '2025-07-25 00:19:39', '2025-07-25 00:19:39'),
 (57, 'Jennifer Rodriguez', 'jennifer@example.com', '089876543219', '2025-07-25 00:19:39', '$2y$12$9tr3qq7GwRIwQOmAwfXEl.dmli0KlGNdgiNyOb.Q3uDRKIgJj0efu', 1, NULL, NULL, NULL, '2025-07-25 00:19:39', '2025-07-25 00:19:39'),
 (60, 'aagungwahyu', 'aagungwwahyu05@gmail.com', '081239339998', '2025-08-13 08:23:03', '$2y$12$UX3sYEfsBfcbj7XzO4K3eOokagJPYcXn83OPz4jVilhZyewsEQa2O', 1, NULL, NULL, NULL, '2025-08-12 19:27:07', '2025-09-10 04:02:31'),
@@ -1373,13 +1388,13 @@ INSERT INTO `users` (`id`, `name`, `email`, `no_telepon`, `email_verified_at`, `
 --
 
 --
--- Indeks untuk tabel `bentuk_kepala`
+-- Indexes for table `bentuk_kepala`
 --
 ALTER TABLE `bentuk_kepala`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `bookings`
+-- Indexes for table `bookings`
 --
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`),
@@ -1390,41 +1405,47 @@ ALTER TABLE `bookings`
   ADD KEY `bookings_user_id_index` (`user_id`);
 
 --
--- Indeks untuk tabel `criteria`
+-- Indexes for table `criteria`
 --
 ALTER TABLE `criteria`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `dashboards`
+-- Indexes for table `dashboards`
 --
 ALTER TABLE `dashboards`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `dashboards_metric_name_date_period_unique` (`metric_name`,`date`,`period`);
 
 --
--- Indeks untuk tabel `failed_jobs`
+-- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Indeks untuk tabel `hairstyles`
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `hairstyles`
 --
 ALTER TABLE `hairstyles`
   ADD PRIMARY KEY (`id`),
   ADD KEY `hairstyles_name_index` (`name`);
 
 --
--- Indeks untuk tabel `hairstyle_bentuk_kepala`
+-- Indexes for table `hairstyle_bentuk_kepala`
 --
 ALTER TABLE `hairstyle_bentuk_kepala`
   ADD PRIMARY KEY (`hairstyle_id`,`bentuk_kepala_id`),
   ADD KEY `bentuk_kepala_id` (`bentuk_kepala_id`);
 
 --
--- Indeks untuk tabel `hairstyle_scores`
+-- Indexes for table `hairstyle_scores`
 --
 ALTER TABLE `hairstyle_scores`
   ADD PRIMARY KEY (`id`),
@@ -1432,48 +1453,48 @@ ALTER TABLE `hairstyle_scores`
   ADD KEY `hairstyle_scores_criterion_id_foreign` (`criterion_id`);
 
 --
--- Indeks untuk tabel `hairstyle_style_preference`
+-- Indexes for table `hairstyle_style_preference`
 --
 ALTER TABLE `hairstyle_style_preference`
   ADD PRIMARY KEY (`hairstyle_id`,`style_preference_id`),
   ADD KEY `style_preference_id` (`style_preference_id`);
 
 --
--- Indeks untuk tabel `hairstyle_tipe_rambut`
+-- Indexes for table `hairstyle_tipe_rambut`
 --
 ALTER TABLE `hairstyle_tipe_rambut`
   ADD PRIMARY KEY (`hairstyle_id`,`tipe_rambut_id`),
   ADD KEY `tipe_rambut_id` (`tipe_rambut_id`);
 
 --
--- Indeks untuk tabel `loyalties`
+-- Indexes for table `loyalties`
 --
 ALTER TABLE `loyalties`
   ADD PRIMARY KEY (`id`),
   ADD KEY `loyalties_user_id_foreign` (`user_id`);
 
 --
--- Indeks untuk tabel `migrations`
+-- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `model_has_permissions`
+-- Indexes for table `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
   ADD PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
   ADD KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
--- Indeks untuk tabel `model_has_roles`
+-- Indexes for table `model_has_roles`
 --
 ALTER TABLE `model_has_roles`
   ADD PRIMARY KEY (`role_id`,`model_id`,`model_type`),
   ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
--- Indeks untuk tabel `pairwise_comparisons`
+-- Indexes for table `pairwise_comparisons`
 --
 ALTER TABLE `pairwise_comparisons`
   ADD PRIMARY KEY (`id`),
@@ -1481,20 +1502,20 @@ ALTER TABLE `pairwise_comparisons`
   ADD KEY `pairwise_comparisons_criterion_id_2_foreign` (`criterion_id_2`);
 
 --
--- Indeks untuk tabel `password_reset_tokens`
+-- Indexes for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indeks untuk tabel `permissions`
+-- Indexes for table `permissions`
 --
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`);
 
 --
--- Indeks untuk tabel `personal_access_tokens`
+-- Indexes for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -1502,27 +1523,27 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indeks untuk tabel `recommendations`
+-- Indexes for table `recommendations`
 --
 ALTER TABLE `recommendations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `roles`
+-- Indexes for table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`);
 
 --
--- Indeks untuk tabel `role_has_permissions`
+-- Indexes for table `role_has_permissions`
 --
 ALTER TABLE `role_has_permissions`
   ADD PRIMARY KEY (`permission_id`,`role_id`),
   ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
 
 --
--- Indeks untuk tabel `services`
+-- Indexes for table `services`
 --
 ALTER TABLE `services`
   ADD PRIMARY KEY (`id`),
@@ -1530,25 +1551,25 @@ ALTER TABLE `services`
   ADD KEY `services_price_index` (`price`);
 
 --
--- Indeks untuk tabel `style_preference`
+-- Indexes for table `style_preference`
 --
 ALTER TABLE `style_preference`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `tipe_rambut`
+-- Indexes for table `tipe_rambut`
 --
 ALTER TABLE `tipe_rambut`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `transactions`
+-- Indexes for table `transactions`
 --
 ALTER TABLE `transactions`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -1558,129 +1579,135 @@ ALTER TABLE `users`
   ADD KEY `users_no_telepon_index` (`no_telepon`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `bentuk_kepala`
+-- AUTO_INCREMENT for table `bentuk_kepala`
 --
 ALTER TABLE `bentuk_kepala`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `bookings`
+-- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
--- AUTO_INCREMENT untuk tabel `criteria`
+-- AUTO_INCREMENT for table `criteria`
 --
 ALTER TABLE `criteria`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT untuk tabel `dashboards`
+-- AUTO_INCREMENT for table `dashboards`
 --
 ALTER TABLE `dashboards`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=254;
 
 --
--- AUTO_INCREMENT untuk tabel `failed_jobs`
+-- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `hairstyles`
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `hairstyles`
 --
 ALTER TABLE `hairstyles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
--- AUTO_INCREMENT untuk tabel `hairstyle_scores`
+-- AUTO_INCREMENT for table `hairstyle_scores`
 --
 ALTER TABLE `hairstyle_scores`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
--- AUTO_INCREMENT untuk tabel `loyalties`
+-- AUTO_INCREMENT for table `loyalties`
 --
 ALTER TABLE `loyalties`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT untuk tabel `migrations`
+-- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
--- AUTO_INCREMENT untuk tabel `pairwise_comparisons`
+-- AUTO_INCREMENT for table `pairwise_comparisons`
 --
 ALTER TABLE `pairwise_comparisons`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT untuk tabel `permissions`
+-- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
--- AUTO_INCREMENT untuk tabel `personal_access_tokens`
+-- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `recommendations`
+-- AUTO_INCREMENT for table `recommendations`
 --
 ALTER TABLE `recommendations`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `roles`
+-- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
--- AUTO_INCREMENT untuk tabel `services`
+-- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `style_preference`
+-- AUTO_INCREMENT for table `style_preference`
 --
 ALTER TABLE `style_preference`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `tipe_rambut`
+-- AUTO_INCREMENT for table `tipe_rambut`
 --
 ALTER TABLE `tipe_rambut`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `transactions`
+-- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `bookings`
+-- Constraints for table `bookings`
 --
 ALTER TABLE `bookings`
   ADD CONSTRAINT `bookings_hairstyle_id_foreign` FOREIGN KEY (`hairstyle_id`) REFERENCES `hairstyles` (`id`) ON DELETE SET NULL,
@@ -1688,60 +1715,60 @@ ALTER TABLE `bookings`
   ADD CONSTRAINT `bookings_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `hairstyle_bentuk_kepala`
+-- Constraints for table `hairstyle_bentuk_kepala`
 --
 ALTER TABLE `hairstyle_bentuk_kepala`
   ADD CONSTRAINT `hairstyle_bentuk_kepala_ibfk_1` FOREIGN KEY (`hairstyle_id`) REFERENCES `hairstyles` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `hairstyle_bentuk_kepala_ibfk_2` FOREIGN KEY (`bentuk_kepala_id`) REFERENCES `bentuk_kepala` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `hairstyle_scores`
+-- Constraints for table `hairstyle_scores`
 --
 ALTER TABLE `hairstyle_scores`
   ADD CONSTRAINT `hairstyle_scores_criterion_id_foreign` FOREIGN KEY (`criterion_id`) REFERENCES `criteria` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `hairstyle_scores_hairstyle_id_foreign` FOREIGN KEY (`hairstyle_id`) REFERENCES `hairstyles` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `hairstyle_style_preference`
+-- Constraints for table `hairstyle_style_preference`
 --
 ALTER TABLE `hairstyle_style_preference`
   ADD CONSTRAINT `hairstyle_style_preference_ibfk_1` FOREIGN KEY (`hairstyle_id`) REFERENCES `hairstyles` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `hairstyle_style_preference_ibfk_2` FOREIGN KEY (`style_preference_id`) REFERENCES `style_preference` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `hairstyle_tipe_rambut`
+-- Constraints for table `hairstyle_tipe_rambut`
 --
 ALTER TABLE `hairstyle_tipe_rambut`
   ADD CONSTRAINT `hairstyle_tipe_rambut_ibfk_1` FOREIGN KEY (`hairstyle_id`) REFERENCES `hairstyles` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `hairstyle_tipe_rambut_ibfk_2` FOREIGN KEY (`tipe_rambut_id`) REFERENCES `tipe_rambut` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `loyalties`
+-- Constraints for table `loyalties`
 --
 ALTER TABLE `loyalties`
   ADD CONSTRAINT `loyalties_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `model_has_permissions`
+-- Constraints for table `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
   ADD CONSTRAINT `model_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `model_has_roles`
+-- Constraints for table `model_has_roles`
 --
 ALTER TABLE `model_has_roles`
   ADD CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `pairwise_comparisons`
+-- Constraints for table `pairwise_comparisons`
 --
 ALTER TABLE `pairwise_comparisons`
   ADD CONSTRAINT `pairwise_comparisons_criterion_id_1_foreign` FOREIGN KEY (`criterion_id_1`) REFERENCES `criteria` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `pairwise_comparisons_criterion_id_2_foreign` FOREIGN KEY (`criterion_id_2`) REFERENCES `criteria` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `role_has_permissions`
+-- Constraints for table `role_has_permissions`
 --
 ALTER TABLE `role_has_permissions`
   ADD CONSTRAINT `role_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,

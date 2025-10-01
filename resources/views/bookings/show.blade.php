@@ -281,11 +281,26 @@
 
                         {{-- Print Receipt (if completed) --}}
                         @if ($booking->status === 'completed')
-                            <button onclick="printReceipt()"
-                                class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                                <i class="fas fa-print mr-2"></i>
-                                Print Receipt
-                            </button>
+                            {{-- Feedback Button --}}
+                            @php
+                                $existingFeedback = \App\Models\Feedback::where('user_id', auth()->id())
+                                    ->where('booking_id', $booking->id)
+                                    ->first();
+                            @endphp
+
+                            @if ($existingFeedback)
+                                <a href="{{ route('feedback.show', $existingFeedback->id) }}"
+                                    class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-lg shadow transition duration-200">
+                                    <i class="fas fa-star mr-2"></i>
+                                    Lihat Feedback
+                                </a>
+                            @else
+                                <button type="button" onclick="openFeedbackModal()"
+                                    class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-lg shadow transition duration-200">
+                                    <i class="fas fa-comment mr-2"></i>
+                                    Berikan Feedback
+                                </button>
+                            @endif
                         @endif
 
                         {{-- Create New Booking --}}
@@ -344,5 +359,157 @@
         </script>
     @endif
 
+    {{-- Feedback Modal Script --}}
+    @if ($booking->status === 'completed')
+        <script>
+            function openFeedbackModal() {
+                Swal.fire({
+                    title: 'Berikan Feedback',
+                    html: `
+                        <div class="text-left">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+                                <div class="flex justify-center space-x-1" id="rating-stars">
+                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="1"></i>
+                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="2"></i>
+                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="3"></i>
+                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="4"></i>
+                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="5"></i>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Komentar</label>
+                                <textarea id="feedback-comment" class="w-full p-3 border border-gray-300 rounded-lg resize-none" 
+                                         rows="4" placeholder="Bagikan pengalaman Anda..."></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="feedback-public" class="mr-2">
+                                    <span class="text-sm text-gray-700">Tampilkan feedback ini secara publik</span>
+                                </label>
+                            </div>
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Kirim Feedback',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#3b82f6',
+                    cancelButtonColor: '#6b7280',
+                    width: '500px',
+                    didOpen: () => {
+                        let selectedRating = 0;
+                        const stars = document.querySelectorAll('#rating-stars i');
+
+                        stars.forEach((star, index) => {
+                            star.addEventListener('click', () => {
+                                selectedRating = index + 1;
+                                updateStars(selectedRating);
+                            });
+
+                            star.addEventListener('mouseenter', () => {
+                                updateStars(index + 1);
+                            });
+                        });
+
+                        document.getElementById('rating-stars').addEventListener('mouseleave', () => {
+                            updateStars(selectedRating);
+                        });
+
+                        function updateStars(rating) {
+                            stars.forEach((star, index) => {
+                                if (index < rating) {
+                                    star.classList.remove('text-gray-300');
+                                    star.classList.add('text-yellow-400');
+                                } else {
+                                    star.classList.remove('text-yellow-400');
+                                    star.classList.add('text-gray-300');
+                                }
+                            });
+                        }
+
+                        // Store selected rating globally for access in preConfirm
+                        window.selectedRating = selectedRating;
+
+                        // Update selectedRating when stars are clicked
+                        stars.forEach((star, index) => {
+                            star.addEventListener('click', () => {
+                                window.selectedRating = index + 1;
+                            });
+                        });
+                    },
+                    preConfirm: () => {
+                        const rating = window.selectedRating || 0;
+                        const comment = document.getElementById('feedback-comment').value;
+                        const isPublic = document.getElementById('feedback-public').checked;
+
+                        if (rating === 0) {
+                            Swal.showValidationMessage('Silakan berikan rating');
+                            return false;
+                        }
+
+                        if (!comment.trim()) {
+                            Swal.showValidationMessage('Silakan berikan komentar');
+                            return false;
+                        }
+
+                        return {
+                            rating,
+                            comment,
+                            isPublic
+                        };
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        submitFeedback(result.value.rating, result.value.comment, result.value.isPublic);
+                    }
+                });
+            }
+
+            function submitFeedback(rating, comment, isPublic) {
+                fetch('{{ route('feedback.store') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            booking_id: {{ $booking->id }},
+                            rating: rating,
+                            comment: comment,
+                            is_public: isPublic
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Terima kasih!',
+                                text: 'Feedback Anda telah berhasil dikirim',
+                                confirmButtonColor: '#3b82f6'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops!',
+                                text: data.message || 'Terjadi kesalahan saat mengirim feedback',
+                                confirmButtonColor: '#dc2626'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops!',
+                            text: 'Terjadi kesalahan saat mengirim feedback',
+                            confirmButtonColor: '#dc2626'
+                        });
+                    });
+            }
+        </script>
+    @endif
 
 @endpush

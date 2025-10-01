@@ -5,330 +5,162 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-                    <i class="fas fa-cogs mr-3"></i>
-                    Services Management
+                    <i class="fas fa-comments mr-3"></i>
+                    Feedback Management
                 </h1>
-
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage services available at Wox’s Barbershop
+                    Manage customer feedback and testimonials
                 </p>
             </div>
         </div>
     </section>
 
-    <section class="section min-h-screen main-section ">
-        <!-- Export Toolbar -->
-
+    <section class="section min-h-screen main-section">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <a href="{{ route('admin.services.create') }}"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
-                            <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                            Create Service
-                        </a>
-                    </div>
-
-                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Customer Feedback</h3>
             </div>
 
-            <div class="card-content ">
-                <table id="services-table">
-                    <thead>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th>#
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Customer
                             </th>
-                            <th>Name</th>
-                            <th>
-                                Description</th>
-                            <th>Price
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Booking
                             </th>
-                            <th>Actions</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Rating
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Comment
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        @forelse($feedbacks as $feedback)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ $feedback->user->name }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 dark:text-white">
+                                        #{{ $feedback->booking->id }} - {{ $feedback->booking->service->name ?? 'N/A' }}
+                                    </div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $feedback->booking->booking_date }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <i
+                                                class="fas fa-star {{ $i <= $feedback->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                                        @endfor
+                                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                                            ({{ $feedback->rating }}/5)
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900 dark:text-white max-w-xs truncate">
+                                        {{ $feedback->comment ?? 'No comment' }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex flex-col space-y-1">
+                                        <span
+                                            class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $feedback->is_public ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                            {{ $feedback->is_public ? 'Public' : 'Private' }}
+                                        </span>
+                                        <span
+                                            class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $feedback->is_active ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ $feedback->is_active ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <a href="{{ route('admin.feedbacks.show', $feedback) }}"
+                                            class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        <form action="{{ route('admin.feedbacks.toggle-public', $feedback) }}"
+                                            method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit"
+                                                class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                                                title="{{ $feedback->is_public ? 'Make Private' : 'Make Public' }}">
+                                                <i class="fas {{ $feedback->is_public ? 'fa-eye-slash' : 'fa-eye' }}"></i>
+                                            </button>
+                                        </form>
+
+                                        <form action="{{ route('admin.feedbacks.destroy', $feedback) }}" method="POST"
+                                            class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                                onclick="return confirm('Are you sure you want to delete this feedback?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center">
+                                    <div class="text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-comments text-4xl mb-4"></i>
+                                        <p class="text-lg font-medium">No feedback found</p>
+                                        <p class="text-sm">Customer feedback will appear here once they start rating your
+                                            services.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            @if ($feedbacks->hasPages())
+                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                    {{ $feedbacks->links() }}
+                </div>
+            @endif
         </div>
     </section>
 @endsection
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            let table = $('#services-table').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('admin.services.index') }}',
-                    data: function(d) {
-                        d.month_filter = $('#monthFilter').val();
-                        d.year_filter = $('#yearFilter').val();
-                    }
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        className: 'text-center'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'description',
-                        name: 'description'
-                    },
-                    {
-                        data: 'price',
-                        name: 'price'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center'
-                    },
-                ],
-                dom: "<'hidden'B>" +
-                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf>" +
-                    "<'overflow-x-auto't>" +
-                    "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
-                buttons: [{
-                        extend: 'csv',
-                        className: 'dt-btn dt-btn-csv',
-                        text: '<i class="mdi mdi-file-delimited mr-2"></i>CSV'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'dt-btn dt-btn-excel',
-                        text: '<i class="mdi mdi-file-excel mr-2"></i>Excel'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'dt-btn dt-btn-pdf',
-                        text: '<i class="mdi mdi-file-pdf mr-2"></i>PDF'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'dt-btn dt-btn-print',
-                        text: '<i class="mdi mdi-printer mr-2"></i>Print'
-                    },
-                ],
-                initComplete: function() {
-                    $('.dt-buttons').appendTo('#export-buttons');
-                },
-                language: {
-                    info: "Showing _START_ to _END_ of _TOTAL_ services",
-                    infoEmpty: "No services found",
-                    zeroRecords: "No matching services",
-                    emptyTable: "No services available",
-                    processing: `<div class="flex items-center justify-center py-4">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
-                    </div>`,
-                    paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i>',
-                        next: '<i class="mdi mdi-chevron-right"></i>'
-                    }
-                },
-                responsive: true,
-                pageLength: 10,
-                order: [
-                    [1, 'asc']
-                ],
-            });
-
-            // Filter event listeners
-            $('#monthFilter, #yearFilter').on('change', function() {
-                table.ajax.reload();
-            });
-
-            // Reset filter button
-            $('#resetFilter').on('click', function() {
-                $('#monthFilter').val('');
-                $('#yearFilter').val('');
-                table.ajax.reload();
-            });
-
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: '{{ session('success') }}',
-                    timer: 3000,
-                    showConfirmButton: false
-                });
-            @endif
-
-            // Delete Service
-            $(document).on('click', '.deleteBtn', function() {
-                const id = $(this).data('id');
-                const deleteUrl = '{{ route('admin.services.destroy', ':id') }}'.replace(':id', id);
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "This will permanently delete the service.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: deleteUrl,
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Deleted!',
-                                    text: response.message,
-                                    timer: 3000,
-                                    showConfirmButton: false
-                                });
-                                table.ajax.reload();
-                            },
-                            error: function(xhr) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: xhr.responseJSON?.message ||
-                                        'Something went wrong.',
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        });
+        // Auto-refresh every 30 seconds
+        setInterval(function() {
+            if (document.visibilityState === 'visible') {
+                location.reload();
+            }
+        }, 30000);
     </script>
-@endpush
-
-@push('styles')
-    <style>
-        /* Filter styling */
-        #monthFilter,
-        #yearFilter {
-            min-width: 120px;
-        }
-
-        #resetFilter {
-            min-width: 80px;
-        }
-
-        /* Responsive filter layout */
-        @media (max-width: 640px) {
-            .flex.flex-col.sm\\:flex-row {
-                align-items: stretch;
-            }
-
-            .flex.items-center.space-x-2 {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            #monthFilter,
-            #yearFilter,
-            #resetFilter {
-                width: 100%;
-            }
-        }
-
-        th.text-center {
-            text-align: center !important;
-        }
-
-        th.text-left {
-            text-align: left !important;
-        }
-
-        /* Styling untuk tombol DataTable dengan warna yang lebih modern */
-        .dt-buttons .dt-button.dt-btn-copy {
-            background-color: #e0e7ff !important;
-            /* Indigo soft */
-            color: #312e81 !important;
-            /* Indigo dark untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-copy:hover {
-            background-color: #c7d2fe !important;
-            /* Indigo lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-csv {
-            background-color: #34d399 !important;
-            /* Emerald green */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-csv:hover {
-            background-color: #6ee7b7 !important;
-            /* Emerald lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-excel {
-            background-color: #10b981 !important;
-            /* Green untuk Excel */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-excel:hover {
-            background-color: #34d399 !important;
-            /* Green lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-pdf {
-            background-color: #f87171 !important;
-            /* Red soft untuk PDF */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-pdf:hover {
-            background-color: #fca5a5 !important;
-            /* Red lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-print {
-            background-color: #60a5fa !important;
-            /* Blue soft untuk print */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-print:hover {
-            background-color: #93c5fd !important;
-            /* Blue lebih terang saat hover */
-        }
-
-        /* Styling umum untuk tombol */
-        .dt-buttons .dt-button {
-            border-radius: 0.375rem !important;
-            padding: 0.5rem 0.75rem !important;
-            font-size: 0.875rem !important;
-            font-weight: 500 !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 0.5rem !important;
-            transition: background-color 0.2s ease-in-out !important;
-        }
-
-
-
-        /* Styling untuk tabel */
-        #roles-table {
-            width: 100% !important;
-            table-layout: auto !important;
-        }
-    </style>
 @endpush
