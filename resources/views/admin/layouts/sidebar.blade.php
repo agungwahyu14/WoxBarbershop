@@ -64,14 +64,6 @@
                         <span class="menu-item-label">Transactions</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('admin.reports.index') }}">
-                        <span class="icon"><i class="mdi mdi-file-chart"></i></span> <!-- ikon report -->
-
-                        <span class="menu-item-label">Reports</span>
-                    </a>
-                </li>
-
 
                 <li>
                     <a href="{{ route('admin.system.index') }}">

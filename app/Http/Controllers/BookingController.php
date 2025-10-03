@@ -828,12 +828,31 @@ class BookingController extends Controller
     }
 
 
-    public function exportCsv(): StreamedResponse
+    public function exportCsv(Request $request): StreamedResponse
 {
-    $fileName = 'bookings_' . now()->format('Ymd_His') . '.csv';
+    $month = $request->get('month');
+    $year = $request->get('year');
+    
+    $period = '';
+    if ($month && $year) {
+        $period = '_' . \Carbon\Carbon::create($year, $month)->format('M_Y');
+    } elseif ($year) {
+        $period = '_' . $year;
+    }
+    
+    $fileName = 'bookings' . $period . '_' . now()->format('Ymd_His') . '.csv';
 
-    // Eager load relasi user, service, hairstyle
-    $bookings = Booking::with(['user', 'service', 'hairstyle'])->get();
+    // Query with filter
+    $query = Booking::with(['user', 'service', 'hairstyle']);
+    
+    if ($month && $year) {
+        $query->whereYear('date_time', $year)
+              ->whereMonth('date_time', $month);
+    } elseif ($year) {
+        $query->whereYear('date_time', $year);
+    }
+    
+    $bookings = $query->get();
 
     $headers = [
         'Content-Type' => 'text/csv',
@@ -866,15 +885,35 @@ class BookingController extends Controller
 }
 
     /**
-     * Export all users to PDF
+     * Export bookings to PDF with filter
      */
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
-        $bookings = Booking::with('user')->get();
+        $month = $request->get('month');
+        $year = $request->get('year');
+        
+        $period = '';
+        if ($month && $year) {
+            $period = '_' . \Carbon\Carbon::create($year, $month)->format('M_Y');
+        } elseif ($year) {
+            $period = '_' . $year;
+        }
 
-        $pdf = Pdf::loadView('admin.bookings.export_pdf', compact('bookings'))
+        // Query with filter
+        $query = Booking::with(['user', 'service', 'hairstyle']);
+        
+        if ($month && $year) {
+            $query->whereYear('date_time', $year)
+                  ->whereMonth('date_time', $month);
+        } elseif ($year) {
+            $query->whereYear('date_time', $year);
+        }
+        
+        $bookings = $query->get();
+
+        $pdf = Pdf::loadView('admin.bookings.export_pdf', compact('bookings', 'month', 'year'))
             ->setPaper('a4', 'landscape');
 
-        return $pdf->download('bookings_' . now()->format('Ymd_His') . '.pdf');
+        return $pdf->download('bookings' . $period . '_' . now()->format('Ymd_His') . '.pdf');
     }
 }

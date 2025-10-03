@@ -7,7 +7,6 @@ use App\Http\Controllers\Admin\HairstyleRekomendasiController;
 use App\Http\Controllers\Admin\LoyaltyController as AdminLoyaltyController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\SystemController;
@@ -39,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     /** ===================== DASHBOARD ===================== */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/data', [DashboardController::class, 'getDashboardData'])->name('dashboard.data');
+    Route::post('/dashboard/export', [DashboardController::class, 'exportReport'])->name('dashboard.export');
 
     /** ===================== MENU SCROLL ===================== */
     Route::redirect('/beranda', '/#beranda')->name('beranda');
@@ -234,14 +234,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/products/{product}/toggle-status', [AdminProductController::class, 'toggleStatus'])
             ->name('admin.products.toggle-status');
 
-        // Reports Management
-        Route::prefix('reports')->name('admin.reports.')->group(function () {
-            Route::get('/', [ReportController::class, 'index'])->name('index');
-            Route::get('/financial', [ReportController::class, 'financial'])->name('financial');
-            Route::get('/bookings', [ReportController::class, 'bookings'])->name('bookings');
-            Route::get('/customers', [ReportController::class, 'customers'])->name('customers');
-            Route::post('/export-financial', [ReportController::class, 'exportFinancial'])->name('export-financial');
-        });
+
 
         // System Management
         Route::prefix('system')->name('admin.system.')->group(function () {

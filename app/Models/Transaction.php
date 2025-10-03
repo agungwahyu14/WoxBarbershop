@@ -20,4 +20,13 @@ class Transaction extends Model
         'name',
         'email',
     ];
+
+    /**
+     * Relasi ke Booking menggunakan order_id sebagai foreign key
+     * order_id di transaction = id di booking
+     */
+    public function booking()
+    {
+        return $this->belongsTo(\App\Models\Booking::class, 'order_id', 'id');
+    }
 }

@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Models\Booking;
 use App\Traits\ExportTrait;
 use App\Exports\TransactionsExport;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -174,12 +175,31 @@ public function update(Request $request, Transaction $transaction)
     }
 
     // Export methods
-   public function exportCsv(): StreamedResponse
+   public function exportCsv(Request $request): StreamedResponse
 {
-    $fileName = 'transactions_' . now()->format('Ymd_His') . '.csv';
+    $month = $request->get('month');
+    $year = $request->get('year');
+    
+    $period = '';
+    if ($month && $year) {
+        $period = '_' . Carbon::create($year, $month)->format('M_Y');
+    } elseif ($year) {
+        $period = '_' . $year;
+    }
+    
+    $fileName = 'transactions' . $period . '_' . now()->format('Ymd_His') . '.csv';
 
-    // Eager load relasi user dan transaction details
-    $transactions = Transaction::all();
+    // Query with filter
+    $query = Transaction::query();
+    
+    if ($month && $year) {
+        $query->whereYear('transaction_time', $year)
+              ->whereMonth('transaction_time', $month);
+    } elseif ($year) {
+        $query->whereYear('transaction_time', $year);
+    }
+    
+    $transactions = $query->get();
 
     $headers = [
         'Content-Type' => 'text/csv',
@@ -230,16 +250,36 @@ protected function getPaymentType($paymentType)
 
 
     /**
-     * Export all users to PDF
+     * Export transactions to PDF with filter
      */
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
-        $transactions = Transaction::all();
+        $month = $request->get('month');
+        $year = $request->get('year');
+        
+        $period = '';
+        if ($month && $year) {
+            $period = '_' . Carbon::create($year, $month)->format('M_Y');
+        } elseif ($year) {
+            $period = '_' . $year;
+        }
 
-        $pdf = Pdf::loadView('admin.transactions.export_pdf', compact('transactions'))
+        // Query with filter
+        $query = Transaction::query();
+        
+        if ($month && $year) {
+            $query->whereYear('transaction_time', $year)
+                  ->whereMonth('transaction_time', $month);
+        } elseif ($year) {
+            $query->whereYear('transaction_time', $year);
+        }
+        
+        $transactions = $query->get();
+
+        $pdf = Pdf::loadView('admin.transactions.export_pdf', compact('transactions', 'month', 'year'))
             ->setPaper('a4', 'landscape');
 
-        return $pdf->download('transactions_' . now()->format('Ymd_His') . '.pdf');
+        return $pdf->download('transactions' . $period . '_' . now()->format('Ymd_His') . '.pdf');
     }
 
     protected function getModelName(): string

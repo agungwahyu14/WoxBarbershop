@@ -71,6 +71,19 @@
 
 <body>
     <h1>Booking Export</h1>
+    @if ($month && $year)
+        <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
+            Periode: {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}
+        </p>
+    @elseif($year)
+        <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
+            Periode: Tahun {{ $year }}
+        </p>
+    @else
+        <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
+            Periode: Semua Data
+        </p>
+    @endif
     <table>
         <thead>
             <tr>

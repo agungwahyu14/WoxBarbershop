@@ -201,105 +201,238 @@
                 </div>
             </div>
         </div>
-        {{-- @role('admin')
-            <!-- Charts Row -->
-            <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
-                <!-- Booking Status Chart -->
-                <div class="card">
-                    <header class="card-header bg-gradient-to-r from-blue-50 to-indigo-50">
-                        <p class="card-header-title text-gray-800">
-                            <span class="icon text-blue-600"><i class="mdi mdi-chart-donut"></i></span>
-                            Booking Status Distribution
-                        </p>
-                        <div class="card-header-icon">
-                            <button class="button is-small is-white" onclick="refreshBookingChart()">
-                                <i class="mdi mdi-refresh"></i>
-                            </button>
-                        </div>
-                    </header>
-                    <div class="card-content">
-                        <canvas id="bookingStatusChart" width="400" height="200"></canvas>
+        <!-- Analytics and Charts Section -->
+        <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
+            <!-- Booking Status Chart -->
+            <div class="card">
+                <header class="card-header bg-gradient-to-r from-blue-50 to-indigo-50">
+                    <p class="card-header-title text-gray-800">
+                        <span class="icon text-blue-600"><i class="mdi mdi-chart-donut"></i></span>
+                        Status Booking
+                    </p>
+                    <div class="card-header-icon">
+                        <button class="button is-small is-white" onclick="refreshBookingChart()">
+                            <i class="mdi mdi-refresh"></i>
+                        </button>
                     </div>
+                </header>
+                <div class="card-content">
+                    <canvas id="bookingStatusChart" width="400" height="200"></canvas>
                 </div>
+            </div>
 
-                <!-- Monthly Revenue Chart -->
-                <div class="card">
-                    <header class="card-header bg-gradient-to-r from-green-50 to-emerald-50">
-                        <p class="card-header-title text-gray-800">
-                            <span class="icon text-green-600"><i class="mdi mdi-chart-line"></i></span>
-                            Monthly Revenue Trend
-                        </p>
-                        <div class="card-header-icon">
-                            <button class="button is-small is-white" onclick="refreshRevenueChart()">
-                                <i class="mdi mdi-refresh"></i>
-                            </button>
+            <!-- Monthly Revenue Chart -->
+            <div class="card">
+                <header class="card-header bg-gradient-to-r from-green-50 to-emerald-50">
+                    <p class="card-header-title text-gray-800">
+                        <span class="icon text-green-600"><i class="mdi mdi-chart-line"></i></span>
+                        Tren Pendapatan Bulanan
+                    </p>
+                    <div class="card-header-icon">
+                        <button class="button is-small is-white" onclick="refreshRevenueChart()">
+                            <i class="mdi mdi-refresh"></i>
+                        </button>
+                    </div>
+                </header>
+                <div class="card-content">
+                    <canvas id="revenueChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Categories -->
+        <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-8">
+            <!-- Financial Reports -->
+            <div class="card hover:shadow-lg transition-shadow duration-200">
+                <div class="card-content p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 bg-green-100 rounded-full mr-4">
+                            <i class="mdi mdi-chart-line text-green-600 text-xl"></i>
                         </div>
-                    </header>
-                    <div class="card-content">
-                        <canvas id="revenueChart" width="400" height="200"></canvas>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Laporan Keuangan</h3>
+                            <p class="text-sm text-gray-600">Analisis pendapatan dan transaksi</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-700">Pendapatan Hari Ini</span>
+                            <span class="font-medium text-green-600"
+                                id="daily-revenue">Rp{{ number_format($dailyRevenue ?? 0, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-700">Pendapatan Bulan Ini</span>
+                            <span class="font-medium text-green-600"
+                                id="monthly-revenue">Rp{{ number_format($monthlyRevenue ?? 0, 0, ',', '.') }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
-                <!-- Booking Status Chart -->
-                <div class="card">
-                    <header class="card-header bg-gradient-to-r from-purple-50 to-purple-100">
-                        <p class="card-header-title text-gray-800">
-                            <span class="icon text-purple-600"><i class="mdi mdi-chart-bar"></i></span>
-                            User Activity (Monthly)
-                        </p>
-                    </header>
-                    <div class="card-content">
-                        <canvas id="userActivityChart" height="400"></canvas>
+            <!-- Booking Analytics -->
+            <div class="card hover:shadow-lg transition-shadow duration-200">
+                <div class="card-content p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 bg-blue-100 rounded-full mr-4">
+                            <i class="mdi mdi-calendar-check text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Analisis Booking</h3>
+                            <p class="text-sm text-gray-600">Status dan tren booking</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        @php
+                            $bookingStats = \App\Models\Booking::selectRaw('status, COUNT(*) as count')
+                                ->groupBy('status')
+                                ->get();
+                            $total = $bookingStats->sum('count');
+                            $statusColors = [
+                                'pending' => 'text-yellow-600',
+                                'confirmed' => 'text-blue-600',
+                                'completed' => 'text-green-600',
+                                'cancelled' => 'text-red-600',
+                            ];
+                        @endphp
+                        @foreach ($bookingStats->take(2) as $stat)
+                            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <span class="text-sm text-gray-700">{{ ucfirst($stat->status) }}</span>
+                                <span
+                                    class="font-medium {{ $statusColors[$stat->status] ?? 'text-gray-600' }}">{{ $stat->count }}</span>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
+            </div>
 
-                <!-- Monthly Revenue Chart -->
-                <div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">
-                            <span class="icon text-blue-600"><i class="mdi mdi-trending-up"></i></span>
-                            Booking Status
-                        </p>
-                    </header>
-                    <div class="card-content">
-                        <div class="space-y-4">
-                            @php
-                                $bookingStats = \App\Models\Booking::selectRaw('status, COUNT(*) as count')
-                                    ->groupBy('status')
-                                    ->get();
-                                $total = $bookingStats->sum('count');
-
-                                $statusColors = [
-                                    'pending' => 'bg-yellow-100 text-yellow-800',
-                                    'confirmed' => 'bg-blue-100 text-blue-800',
-                                    'completed' => 'bg-green-100 text-green-800',
-                                    'cancelled' => 'bg-red-100 text-red-800',
-                                ];
-                            @endphp
-                            @foreach ($bookingStats as $stat)
-                                @php
-                                    $percentage = $total > 0 ? round(($stat->count / $total) * 100, 1) : 0;
-                                @endphp
-                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <div class="flex items-center">
-                                        <span
-                                            class="px-3 py-1 rounded-full text-xs font-medium {{ $statusColors[$stat->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                            {{ ucfirst($stat->status) }}
-                                        </span>
-                                    </div>
-                                    <div class="text-right">
-                                        <div class="font-semibold text-gray-800">{{ $stat->count }}</div>
-                                        <div class="text-xs text-gray-500">{{ $percentage }}%</div>
-                                    </div>
-                                </div>
-                            @endforeach
+            <!-- Customer Analytics -->
+            <div class="card hover:shadow-lg transition-shadow duration-200">
+                <div class="card-content p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 bg-purple-100 rounded-full mr-4">
+                            <i class="mdi mdi-account-group text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Data Pelanggan</h3>
+                            <p class="text-sm text-gray-600">Statistik pelanggan</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-700">Pelanggan Baru</span>
+                            <span class="font-medium text-purple-600" id="new-customers">{{ $newCustomers ?? 0 }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <span class="text-sm text-gray-700">Total Pelanggan</span>
+                            <span class="font-medium text-purple-600"
+                                id="total-customers-count">{{ $totalCustomersCount ?? 0 }}</span>
                         </div>
                     </div>
                 </div>
             </div>
-        @endrole --}}
+        </div>
+
+        <!-- Export Options -->
+        <div class="card mb-8">
+            <header class="card-header bg-gradient-to-r from-gray-50 to-gray-100">
+                <p class="card-header-title text-gray-800">
+                    <span class="icon text-gray-600"><i class="mdi mdi-download"></i></span>
+                    Ekspor Data & Laporan
+                </p>
+            </header>
+            <div class="card-content">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="openExportModal('financial', 'Ekspor Laporan Keuangan')"
+                        class="inline-flex items-center justify-center px-4 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
+                        <i class="mdi mdi-file-excel mr-2"></i>
+                        Ekspor Keuangan
+                    </button>
+                    <button onclick="openExportModal('bookings', 'Ekspor Laporan Booking')"
+                        class="inline-flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
+                        <i class="mdi mdi-file-csv mr-2"></i>
+                        Ekspor Booking
+                    </button>
+                    <button onclick="openExportModal('customers', 'Ekspor Laporan Pelanggan')"
+                        class="inline-flex items-center justify-center px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
+                        <i class="mdi mdi-file-pdf mr-2"></i>
+                        Ekspor Pelanggan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Filter Modal -->
+        <div id="exportModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900" id="modalTitle">Ekspor Laporan</h3>
+                    <button onclick="closeExportModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="mdi mdi-close text-xl"></i>
+                    </button>
+                </div>
+
+                <form id="exportForm" method="POST" action="{{ route('dashboard.export') }}">
+                    @csrf
+                    <input type="hidden" id="exportType" name="type" value="">
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Format Export</label>
+                        <select name="format" id="exportFormat"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="pdf">PDF</option>
+                            <option value="excel">Excel (XLSX)</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Filter Periode</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <select name="month" id="exportMonth"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Semua Bulan</option>
+                                    <option value="1">Januari</option>
+                                    <option value="2">Februari</option>
+                                    <option value="3">Maret</option>
+                                    <option value="4">April</option>
+                                    <option value="5">Mei</option>
+                                    <option value="6">Juni</option>
+                                    <option value="7">Juli</option>
+                                    <option value="8">Agustus</option>
+                                    <option value="9">September</option>
+                                    <option value="10">Oktober</option>
+                                    <option value="11">November</option>
+                                    <option value="12">Desember</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select name="year" id="exportYear"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Semua Tahun</option>
+                                    @for ($year = date('Y'); $year >= date('Y') - 5; $year--)
+                                        <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
+                                            {{ $year }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeExportModal()"
+                            class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
+                            <i class="mdi mdi-download mr-2"></i>
+                            Export
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Statistics and Recent Activity -->
         {{-- <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-6">
@@ -587,6 +720,103 @@
                 // Di sini bisa tambahkan logic refresh chart sebenarnya
                 // fetchRevenueData().then(data => updateChart(revenueChart, data));
             };
+
+            // Export Modal Functions
+            window.openExportModal = function(type, title) {
+                document.getElementById('exportType').value = type;
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('exportModal').classList.remove('hidden');
+                document.getElementById('exportModal').classList.add('flex');
+
+                // Set current month and year as default
+                document.getElementById('exportMonth').value = new Date().getMonth() + 1;
+                document.getElementById('exportYear').value = new Date().getFullYear();
+            };
+
+            window.closeExportModal = function() {
+                document.getElementById('exportModal').classList.add('hidden');
+                document.getElementById('exportModal').classList.remove('flex');
+            };
+
+            // Handle form submission with loading indicator
+            document.getElementById('exportForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const type = formData.get('type');
+
+                Swal.fire({
+                    title: 'Memproses Export...',
+                    text: `Sedang menyiapkan laporan ${type}`,
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Use XMLHttpRequest for better file download handling
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', this.action);
+                xhr.responseType = 'blob';
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        // Create download link
+                        const blob = xhr.response;
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+
+                        // Generate filename
+                        const format = formData.get('format');
+                        const extension = format === 'excel' ? 'xlsx' : (format === 'csv' ? 'csv' :
+                            'pdf');
+                        a.download = `${type}_report.${extension}`;
+
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Laporan berhasil diunduh',
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                            timer: 2000
+                        });
+
+                        closeExportModal();
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Terjadi kesalahan saat export',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                };
+
+                xhr.onerror = function() {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan saat export',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                };
+
+                // Set headers
+                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content'));
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+                // Send form data
+                xhr.send(formData);
+            });
 
             // Auto-refresh data every 3 seconds - this is now handled by the main refresh function above
             // setInterval(function() {

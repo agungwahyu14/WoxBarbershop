@@ -10,6 +10,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
@@ -90,6 +92,22 @@ class DashboardController extends Controller
             ->orderBy('date_time', 'asc')
             ->get();
 
+        // Additional data for analytics section
+        $dailyRevenue = Transaction::where('transaction_status', 'settlement')
+            ->whereDate('created_at', today())
+            ->sum('gross_amount');
+
+        $monthlyRevenue = Transaction::where('transaction_status', 'settlement')
+            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->sum('gross_amount');
+
+        $newCustomers = User::role('pelanggan')
+            ->whereDate('created_at', today())
+            ->count();
+
+        $totalCustomersCount = User::role('pelanggan')->count();
+
         return view('admin.dashboard', compact(
             'totalCustomers',
             'totalBookings',
@@ -104,7 +122,11 @@ class DashboardController extends Controller
             'userActivity',
             'monthLabels',
             'revenueData',
-            'todayBookingsData'
+            'todayBookingsData',
+            'dailyRevenue',
+            'monthlyRevenue',
+            'newCustomers',
+            'totalCustomersCount'
         ));
     }
 
@@ -239,5 +261,110 @@ class DashboardController extends Controller
     public function destroy(Dashboard $dashboard)
     {
         //
+    }
+
+    /**
+     * Export reports with date filter
+     */
+    public function exportReport(Request $request)
+    {
+        $type = $request->get('type');
+        $month = $request->get('month');
+        $year = $request->get('year');
+        $format = $request->get('format', 'pdf'); // pdf, excel, csv
+
+        $filename = $this->generateFilename($type, $month, $year, $format);
+
+        switch ($type) {
+            case 'financial':
+                return $this->exportFinancial($month, $year, $format, $filename);
+            case 'bookings':
+                return $this->exportBookings($month, $year, $format, $filename);
+            case 'customers':
+                return $this->exportCustomers($month, $year, $format, $filename);
+            default:
+                return response()->json(['error' => 'Invalid export type'], 400);
+        }
+    }
+
+    private function generateFilename($type, $month, $year, $format)
+    {
+        $period = '';
+        if ($month && $year) {
+            $period = '_' . Carbon::create($year, $month)->format('M_Y');
+        } elseif ($year) {
+            $period = '_' . $year;
+        } else {
+            $period = '_' . Carbon::now()->format('M_Y');
+        }
+
+        $extension = $format === 'excel' ? 'xlsx' : ($format === 'csv' ? 'csv' : 'pdf');
+        return ucfirst($type) . '_Report' . $period . '.' . $extension;
+    }
+
+    private function exportFinancial($month, $year, $format, $filename)
+    {
+        $query = Transaction::where('transaction_status', 'settlement')
+            ->with(['booking.user', 'booking.service']);
+
+        if ($month && $year) {
+            $query->whereYear('created_at', $year)
+                  ->whereMonth('created_at', $month);
+        } elseif ($year) {
+            $query->whereYear('created_at', $year);
+        }
+
+        $transactions = $query->orderBy('created_at', 'desc')->get();
+        $totalRevenue = $transactions->sum('gross_amount');
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('exports.financial-pdf', compact('transactions', 'totalRevenue', 'month', 'year'));
+            return $pdf->download($filename);
+        }
+
+        // For Excel/CSV
+        return Excel::download(new \App\Exports\FinancialExport($transactions, $month, $year), $filename);
+    }
+
+    private function exportBookings($month, $year, $format, $filename)
+    {
+        $query = Booking::with(['user', 'service']);
+
+        if ($month && $year) {
+            $query->whereYear('date_time', $year)
+                  ->whereMonth('date_time', $month);
+        } elseif ($year) {
+            $query->whereYear('date_time', $year);
+        }
+
+        $bookings = $query->orderBy('date_time', 'desc')->get();
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('exports.bookings-pdf', compact('bookings', 'month', 'year'));
+            return $pdf->download($filename);
+        }
+
+        return Excel::download(new \App\Exports\BookingsExport($bookings, $month, $year), $filename);
+    }
+
+    private function exportCustomers($month, $year, $format, $filename)
+    {
+        $query = User::role('pelanggan')->with(['bookings']);
+
+        if ($month && $year) {
+            $query->whereYear('created_at', $year)
+                  ->whereMonth('created_at', $month);
+        } elseif ($year) {
+            $query->whereYear('created_at', $year);
+        }
+
+        $customers = $query->orderBy('created_at', 'desc')->get();
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('exports.customers-pdf', compact('customers', 'month', 'year'));
+            return $pdf->download($filename);
+        }
+
+        return Excel::download(new \App\Exports\CustomersExport($customers, $month, $year), $filename);
     }
 }

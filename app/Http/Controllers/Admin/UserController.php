@@ -665,11 +665,31 @@ if ($request->filled('status_filter')) {
     }
 
 
-    public function exportCsv(): StreamedResponse
+    public function exportCsv(Request $request): StreamedResponse
 {
-    $fileName = 'users_' . now()->format('Ymd_His') . '.csv';
+    $month = $request->get('month');
+    $year = $request->get('year');
+    
+    $period = '';
+    if ($month && $year) {
+        $period = '_' . \Carbon\Carbon::create($year, $month)->format('M_Y');
+    } elseif ($year) {
+        $period = '_' . $year;
+    }
+    
+    $fileName = 'users' . $period . '_' . now()->format('Ymd_His') . '.csv';
 
-    $users = User::with('roles')->get();
+    // Query with filter
+    $query = User::with('roles');
+    
+    if ($month && $year) {
+        $query->whereYear('created_at', $year)
+              ->whereMonth('created_at', $month);
+    } elseif ($year) {
+        $query->whereYear('created_at', $year);
+    }
+    
+    $users = $query->get();
 
     $headers = [
         'Content-Type' => 'text/csv',
@@ -702,15 +722,35 @@ if ($request->filled('status_filter')) {
 }
 
     /**
-     * Export all users to PDF
+     * Export users to PDF with filter
      */
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
-        $users = User::with('roles')->get();
+        $month = $request->get('month');
+        $year = $request->get('year');
+        
+        $period = '';
+        if ($month && $year) {
+            $period = '_' . \Carbon\Carbon::create($year, $month)->format('M_Y');
+        } elseif ($year) {
+            $period = '_' . $year;
+        }
 
-        $pdf = Pdf::loadView('admin.users.export_pdf', compact('users'))
+        // Query with filter
+        $query = User::with('roles');
+        
+        if ($month && $year) {
+            $query->whereYear('created_at', $year)
+                  ->whereMonth('created_at', $month);
+        } elseif ($year) {
+            $query->whereYear('created_at', $year);
+        }
+        
+        $users = $query->get();
+
+        $pdf = Pdf::loadView('admin.users.export_pdf', compact('users', 'month', 'year'))
             ->setPaper('a4', 'landscape');
 
-        return $pdf->download('users_' . now()->format('Ymd_His') . '.pdf');
+        return $pdf->download('users' . $period . '_' . now()->format('Ymd_His') . '.pdf');
     }
 }
