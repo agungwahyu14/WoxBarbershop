@@ -236,12 +236,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
-        // System Management
+        // System Management - Backup & Restore Only
         Route::prefix('system')->name('admin.system.')->group(function () {
             Route::get('/', [SystemController::class, 'index'])->name('index');
-            Route::post('/settings', [SystemController::class, 'updateSettings'])->name('settings');
             Route::post('/backup', [SystemController::class, 'backup'])->name('backup');
-            Route::post('/clear-cache', [SystemController::class, 'clear-cache'])->name('clear-cache');
+            Route::post('/restore', [SystemController::class, 'restore'])->name('restore');
+            Route::get('/backup-history', [SystemController::class, 'getBackupHistory'])->name('backup-history');
         });
 
     });

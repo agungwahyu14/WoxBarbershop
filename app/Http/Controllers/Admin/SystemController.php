@@ -5,119 +5,193 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Response;
 
 class SystemController extends Controller
 {
     /**
-     * Display system settings
+     * Display backup & restore page
      */
     public function index()
     {
-        $systemInfo = [
-            'app_name' => config('app.name'),
-            'app_version' => '1.0.0',
-            'php_version' => PHP_VERSION,
-            'laravel_version' => app()->version(),
-            'database_size' => $this->getDatabaseSize(),
-            'storage_usage' => $this->getStorageUsage(),
-        ];
-
-        return view('admin.system.index', compact('systemInfo'));
+        return view('admin.system.index');
     }
 
     /**
-     * Update system settings
+     * Create database backup
      */
-    public function updateSettings(Request $request)
+    public function backup(Request $request)
+    {
+        try {
+            $type = $request->input('type', 'full'); // full or partial
+            $timestamp = date('Y-m-d_H-i-s');
+            $filename = "backup_{$type}_{$timestamp}.sql";
+            
+            // Get database configuration
+            $database = env('DB_DATABASE');
+            $username = env('DB_USERNAME');
+            $password = env('DB_PASSWORD');
+            $host = env('DB_HOST', 'localhost');
+            
+            // Create backup directory if not exists
+            $backupPath = storage_path('app/backups');
+            if (!is_dir($backupPath)) {
+                mkdir($backupPath, 0755, true);
+            }
+            
+            $filePath = $backupPath . '/' . $filename;
+            
+            // Create mysqldump command
+            $command = "mysqldump --user={$username} --password={$password} --host={$host} {$database}";
+            
+            if ($type === 'partial') {
+                // Only backup data, not structure
+                $command .= " --no-create-info";
+            }
+            
+            $command .= " > {$filePath}";
+            
+            // Execute backup command
+            exec($command, $output, $return_code);
+            
+            if ($return_code === 0 && file_exists($filePath)) {
+                // Return file for download
+                return response()->download($filePath)->deleteFileAfterSend(true);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal membuat backup database'
+                ], 500);
+            }
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Restore database from backup
+     */
+    public function restore(Request $request)
     {
         $request->validate([
-            'app_name' => 'required|string|max:255',
-            'maintenance_mode' => 'boolean',
+            'backup_file' => 'required|file|mimes:sql,zip|max:102400' // max 100MB
         ]);
 
-        // Update .env file or config
-        // This is a simplified version, in production you might want to use a proper package
-        
-        return redirect()->back()
-            ->with('success', 'Pengaturan sistem berhasil diperbarui.');
-    }
-
-    /**
-     * Backup database
-     */
-    public function backup()
-    {
         try {
-            // Create backup
-            $filename = 'backup_' . date('Y-m-d_H-i-s') . '.sql';
+            $file = $request->file('backup_file');
+            $filename = time() . '_' . $file->getClientOriginalName();
             
-            // Run backup command (this is simplified)
-            Artisan::call('backup:run');
+            // Store uploaded file temporarily
+            $path = $file->storeAs('temp', $filename);
+            $fullPath = storage_path('app/' . $path);
             
-            return redirect()->back()
-                ->with('success', 'Backup berhasil dibuat.');
+            // Get database configuration
+            $database = env('DB_DATABASE');
+            $username = env('DB_USERNAME');
+            $password = env('DB_PASSWORD');
+            $host = env('DB_HOST', 'localhost');
+            
+            // Handle different file types
+            if ($file->getClientOriginalExtension() === 'zip') {
+                // Extract ZIP file (simplified - you might want to use ZipArchive)
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ZIP files not supported yet. Please use .sql files.'
+                ], 400);
+            }
+            
+            // Restore from SQL file
+            $command = "mysql --user={$username} --password={$password} --host={$host} {$database} < {$fullPath}";
+            
+            exec($command, $output, $return_code);
+            
+            // Clean up temporary file
+            unlink($fullPath);
+            
+            if ($return_code === 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Database berhasil dipulihkan dari backup'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal melakukan restore database'
+                ], 500);
+            }
+            
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal membuat backup: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
         }
     }
 
     /**
-     * Clear application cache
+     * Get backup history
      */
-    public function clearCache()
+    public function getBackupHistory()
     {
         try {
-            Artisan::call('cache:clear');
-            Artisan::call('config:clear');
-            Artisan::call('view:clear');
-            Artisan::call('route:clear');
-
-            return redirect()->back()
-                ->with('success', 'Cache berhasil dibersihkan.');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal membersihkan cache: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Get database size
-     */
-    private function getDatabaseSize()
-    {
-        try {
-            $size = \DB::select("SELECT 
-                ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS 'DB Size in MB' 
-                FROM information_schema.tables 
-                WHERE table_schema='" . env('DB_DATABASE') . "'")[0];
+            $backupPath = storage_path('app/backups');
             
-            return $size->{'DB Size in MB'} . ' MB';
-        } catch (\Exception $e) {
-            return 'N/A';
-        }
-    }
-
-    /**
-     * Get storage usage
-     */
-    private function getStorageUsage()
-    {
-        try {
-            $bytes = 0;
-            $path = storage_path('app');
+            if (!is_dir($backupPath)) {
+                return response()->json([
+                    'success' => true,
+                    'backups' => []
+                ]);
+            }
             
-            if (is_dir($path)) {
-                foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path)) as $file) {
-                    $bytes += $file->getSize();
+            $files = scandir($backupPath);
+            $backups = [];
+            
+            foreach ($files as $file) {
+                if ($file !== '.' && $file !== '..' && pathinfo($file, PATHINFO_EXTENSION) === 'sql') {
+                    $filePath = $backupPath . '/' . $file;
+                    $backups[] = [
+                        'filename' => $file,
+                        'size' => $this->formatBytes(filesize($filePath)),
+                        'created_at' => date('Y-m-d H:i:s', filemtime($filePath))
+                    ];
                 }
             }
             
-            return round($bytes / 1024 / 1024, 2) . ' MB';
+            // Sort by creation date (newest first)
+            usort($backups, function($a, $b) {
+                return strtotime($b['created_at']) - strtotime($a['created_at']);
+            });
+            
+            return response()->json([
+                'success' => true,
+                'backups' => array_slice($backups, 0, 10) // Last 10 backups
+            ]);
+            
         } catch (\Exception $e) {
-            return 'N/A';
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
         }
+    }
+
+    /**
+     * Format bytes to human readable format
+     */
+    private function formatBytes($bytes, $precision = 2)
+    {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+        for ($i = 0; $bytes > 1024; $i++) {
+            $bytes /= 1024;
+        }
+
+        return round($bytes, $precision) . ' ' . $units[$i];
     }
 }

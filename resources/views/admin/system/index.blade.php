@@ -1,373 +1,197 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Pengaturan Sistem')
+@section('title', 'Backup & Restore Data')
 
 @section('content')
-    <div class="min-h-screen bg-gray-50 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            {{-- Header --}}
-            <div class="mb-8">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Pengaturan Sistem</h1>
-                        <p class="mt-2 text-gray-600">Kelola konfigurasi sistem dan maintenance</p>
-                    </div>
-                    <div class="flex space-x-3">
-                        <button onclick="refreshSystemInfo()"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                            <i class="fas fa-sync-alt mr-2"></i>
-                            Refresh
-                        </button>
-                    </div>
-                </div>
+    <section class="is-hero-bar">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+            <div>
+                <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
+                    <i class="fas fa-box mr-3"></i> Backup & Restore Data
+                </h1>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                    Kelola backup dan restore database sistem
+                </p>
             </div>
+        </div>
+    </section>
 
-            {{-- System Information Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Aplikasi</p>
-                            <p class="text-lg font-bold text-gray-900">{{ $systemInfo['app_name'] ?? 'WOX Barbershop' }}</p>
-                            <p class="text-sm text-gray-500">v{{ $systemInfo['app_version'] ?? '1.0.0' }}</p>
-                        </div>
-                        <div class="p-3 bg-blue-100 rounded-full">
-                            <i class="fas fa-cog text-blue-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Laravel</p>
-                            <p class="text-lg font-bold text-green-600">{{ $systemInfo['laravel_version'] ?? '10.x' }}</p>
-                            <p class="text-sm text-gray-500">Framework</p>
-                        </div>
-                        <div class="p-3 bg-green-100 rounded-full">
-                            <i class="fab fa-laravel text-green-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
+    <section class="section min-h-screen main-section">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-8">
 
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">PHP</p>
-                            <p class="text-lg font-bold text-purple-600">{{ $systemInfo['php_version'] ?? '8.x' }}</p>
-                            <p class="text-sm text-gray-500">Runtime</p>
-                        </div>
-                        <div class="p-3 bg-purple-100 rounded-full">
-                            <i class="fab fa-php text-purple-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- System Management Sections --}}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-                {{-- Application Settings --}}
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
-                        <i class="fas fa-sliders-h text-blue-600 mr-3"></i>
-                        Pengaturan Aplikasi
-                    </h3>
-
-                    <form onsubmit="updateSystemSettings(event)" class="space-y-4">
-                        <div>
-                            <label for="app_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Aplikasi</label>
-                            <input type="text" id="app_name" name="app_name"
-                                value="{{ $systemInfo['app_name'] ?? 'WOX Barbershop' }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-
-                        <div>
-                            <label for="app_version" class="block text-sm font-medium text-gray-700 mb-2">Versi
-                                Aplikasi</label>
-                            <input type="text" id="app_version" name="app_version"
-                                value="{{ $systemInfo['app_version'] ?? '1.0.0' }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-
-                        <div class="flex items-center">
-                            <input type="checkbox" id="maintenance_mode" name="maintenance_mode" class="mr-2">
-                            <label for="maintenance_mode" class="text-sm text-gray-700">Mode Maintenance</label>
-                        </div>
-
-                        <button type="submit"
-                            class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                            <i class="fas fa-save mr-2"></i>
-                            Simpan Pengaturan
-                        </button>
-                    </form>
-                </div>
-
-                {{-- System Maintenance --}}
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
-                        <i class="fas fa-tools text-orange-600 mr-3"></i>
-                        Maintenance Sistem
-                    </h3>
-
-                    <div class="space-y-4">
-                        <div class="border rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-medium text-gray-900">Cache Aplikasi</span>
-                                <button onclick="clearCache('config')"
-                                    class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                    Clear Cache
-                                </button>
+                <!-- Backup and Restore Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Backup Section -->
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-download text-white" aria-hidden="true"></i>
                             </div>
-                            <p class="text-sm text-gray-600">Bersihkan cache konfigurasi dan route</p>
+                            <h3 class="text-lg font-bold text-gray-900">Backup Database</h3>
                         </div>
-
-                        <div class="border rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-medium text-gray-900">Optimize Application</span>
-                                <button onclick="optimizeApp()"
-                                    class="text-green-600 hover:text-green-800 text-sm font-medium">
-                                    Optimize
-                                </button>
-                            </div>
-                            <p class="text-sm text-gray-600">Optimasi performa aplikasi</p>
-                        </div>
-
-                        <div class="border rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-medium text-gray-900">Storage Cleanup</span>
-                                <button onclick="cleanupStorage()"
-                                    class="text-purple-600 hover:text-purple-800 text-sm font-medium">
-                                    Cleanup
-                                </button>
-                            </div>
-                            <p class="text-sm text-gray-600">Bersihkan file temporary dan logs lama</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- Backup & Restore Section --}}
-            <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
-                    <i class="fas fa-database text-green-600 mr-3"></i>
-                    Backup & Restore Data
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {{-- Backup Section --}}
-                    <div class="border rounded-lg p-4">
-                        <h4 class="font-semibold text-gray-900 mb-3">Backup Database</h4>
-                        <p class="text-sm text-gray-600 mb-4">
-                            Buat backup lengkap database untuk keamanan data
+                        <p class="text-gray-600 mb-6">
+                            Buat backup database untuk melindungi data penting dari kehilangan atau kerusakan.
                         </p>
                         <div class="space-y-3">
                             <button onclick="createBackup('full')"
-                                class="w-full inline-flex justify-center items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                                <i class="fas fa-download mr-2"></i>
-                                Backup Lengkap
+                                class="w-full inline-flex justify-center items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                                aria-label="Backup Lengkap (Database + Files)">
+                                <i class="fas fa-database mr-3" aria-hidden="true"></i>
+                                Backup Lengkap (Database + Files)
                             </button>
                             <button onclick="createBackup('partial')"
-                                class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                                <i class="fas fa-archive mr-2"></i>
+                                class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                                aria-label="Backup Data Saja">
+                                <i class="fas fa-archive mr-3" aria-hidden="true"></i>
                                 Backup Data Saja
                             </button>
+                            <div class="text-xs text-gray-500 text-center mt-3">
+                                Backup akan disimpan dengan timestamp untuk identifikasi
+                            </div>
                         </div>
                     </div>
 
-                    {{-- Restore Section --}}
-                    <div class="border rounded-lg p-4">
-                        <h4 class="font-semibold text-gray-900 mb-3">Restore Database</h4>
-                        <p class="text-sm text-gray-600 mb-4">
-                            Pulihkan data dari file backup sebelumnya
+                    <!-- Restore Section -->
+                    <div class="bg-gradient-to-br from-red-50 to-pink-50 border border-red-200 rounded-xl p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas fa-upload text-white" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900">Restore Database</h3>
+                        </div>
+                        <p class="text-gray-600 mb-6">
+                            Pulihkan database dari file backup. <strong>Perhatian:</strong> Ini akan mengganti semua data
+                            yang ada.
                         </p>
-                        <div class="space-y-3">
-                            <input type="file" id="restore_file" accept=".sql,.zip"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="restore_file" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Pilih File Backup (.sql, .zip)
+                                </label>
+                                <input type="file" id="restore_file" accept=".sql,.zip"
+                                    class="w-full px-4 py-3 border-2 border-dashed border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-center cursor-pointer hover:border-red-400 transition-colors"
+                                    aria-label="Pilih file backup untuk restore">
+                            </div>
                             <button onclick="restoreBackup()"
-                                class="w-full inline-flex justify-center items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                                <i class="fas fa-upload mr-2"></i>
-                                Restore Data
+                                class="w-full inline-flex justify-center items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                                aria-label="Restore Database">
+                                <i class="fas fa-exclamation-triangle mr-3" aria-hidden="true"></i>
+                                Restore Database
                             </button>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                <div class="flex items-center">
+                                    <i class="fas fa-exclamation-triangle text-yellow-600 mr-2" aria-hidden="true"></i>
+                                    <span class="text-xs text-yellow-800">
+                                        <strong>Peringatan:</strong> Proses restore akan menghapus semua data saat ini!
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backup History Section -->
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-history text-gray-600 mr-3" aria-hidden="true"></i>
+                        Riwayat Backup Terbaru
+                    </h4>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="text-center text-gray-500">
+                            <i class="fas fa-folder-open text-3xl mb-2" aria-hidden="true"></i>
+                            <p>Belum ada riwayat backup</p>
+                            <p class="text-sm">Backup pertama akan muncul di sini</p>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {{-- System Status --}}
-            <div class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
-                    <i class="fas fa-heartbeat text-red-600 mr-3"></i>
-                    Status Sistem
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="text-center p-4 bg-green-50 rounded-lg">
-                        <div class="text-green-600 text-2xl mb-2">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="text-sm font-medium text-gray-900">Database</div>
-                        <div class="text-xs text-green-600">Online</div>
-                    </div>
-
-                    <div class="text-center p-4 bg-green-50 rounded-lg">
-                        <div class="text-green-600 text-2xl mb-2">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="text-sm font-medium text-gray-900">Storage</div>
-                        <div class="text-xs text-green-600">{{ $systemInfo['storage_usage'] ?? '50MB' }} Tersedia</div>
-                    </div>
-
-                    <div class="text-center p-4 bg-blue-50 rounded-lg">
-                        <div class="text-blue-600 text-2xl mb-2">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="text-sm font-medium text-gray-900">Memory</div>
-                        <div class="text-xs text-blue-600">Normal</div>
-                    </div>
-
-                    <div class="text-center p-4 bg-green-50 rounded-lg">
-                        <div class="text-green-600 text-2xl mb-2">
-                            <i class="fas fa-wifi"></i>
-                        </div>
-                        <div class="text-sm font-medium text-gray-900">Connection</div>
-                        <div class="text-xs text-green-600">Stable</div>
-                    </div>
-                </div>
-            </div>
-
         </div>
-    </div>
+    </section>
 
     @push('scripts')
         <script>
-            function refreshSystemInfo() {
-                Swal.fire({
-                    title: 'Memperbarui Info Sistem...',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            }
-
-            function updateSystemSettings(event) {
-                event.preventDefault();
-
-                Swal.fire({
-                    title: 'Menyimpan Pengaturan...',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: 'Pengaturan sistem berhasil disimpan',
-                        confirmButtonColor: '#3b82f6'
-                    });
-                }, 2000);
-            }
-
-            function clearCache(type) {
-                Swal.fire({
-                    title: 'Membersihkan Cache...',
-                    text: 'Proses ini mungkin membutuhkan beberapa detik',
-                    icon: 'info',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Cache Dibersihkan!',
-                        text: 'Cache aplikasi berhasil dibersihkan',
-                        confirmButtonColor: '#3b82f6'
-                    });
-                }, 3000);
-            }
-
-            function optimizeApp() {
-                Swal.fire({
-                    title: 'Mengoptimasi Aplikasi...',
-                    text: 'Proses optimasi sedang berjalan',
-                    icon: 'info',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Optimasi Selesai!',
-                        text: 'Aplikasi berhasil dioptimasi',
-                        confirmButtonColor: '#10b981'
-                    });
-                }, 4000);
-            }
-
-            function cleanupStorage() {
-                Swal.fire({
-                    title: 'Membersihkan Storage...',
-                    text: 'Menghapus file temporary dan logs lama',
-                    icon: 'info',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Storage Dibersihkan!',
-                        text: 'File temporary berhasil dihapus',
-                        confirmButtonColor: '#8b5cf6'
-                    });
-                }, 3000);
-            }
-
             function createBackup(type) {
-                const typeText = type === 'full' ? 'backup lengkap' : 'backup data';
+                const typeText = type === 'full' ? 'backup lengkap (database + files)' : 'backup data saja';
 
                 Swal.fire({
-                    title: `Membuat ${typeText}...`,
-                    text: 'Proses backup sedang berjalan, mohon tunggu',
-                    icon: 'info',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
+                    title: 'Konfirmasi Backup',
+                    text: `Apakah Anda yakin ingin membuat ${typeText}?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#10b981',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ya, Buat Backup!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: `Membuat ${typeText}...`,
+                            html: `
+                                <div class="text-center">
+                                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+                                    <p>Proses backup sedang berjalan, mohon tunggu...</p>
+                                    <p class="text-sm text-gray-600 mt-2">Jangan tutup halaman ini!</p>
+                                </div>
+                            `,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                        });
+
+                        // Create form data for backup
+                        const formData = new FormData();
+                        formData.append('type', type);
+                        formData.append('_token', '{{ csrf_token() }}');
+
+                        // Send backup request
+                        fetch('{{ route('admin.system.backup') }}', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.blob();
+                                }
+                                throw new Error('Backup gagal');
+                            })
+                            .then(blob => {
+                                // Create download link
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.style.display = 'none';
+                                a.href = url;
+                                a.download =
+                                    `backup_${type}_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.sql`;
+                                document.body.appendChild(a);
+                                a.click();
+                                window.URL.revokeObjectURL(url);
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Backup Berhasil!',
+                                    html: `
+                                    <div class="text-center">
+                                        <p class="mb-2">${typeText} berhasil dibuat!</p>
+                                        <p class="text-sm text-gray-600">File backup telah diunduh otomatis</p>
+                                    </div>
+                                `,
+                                    confirmButtonColor: '#10b981',
+                                    confirmButtonText: 'OK'
+                                });
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Backup Gagal!',
+                                    text: 'Terjadi kesalahan saat membuat backup',
+                                    confirmButtonColor: '#dc2626'
+                                });
+                            });
                     }
                 });
-
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Backup Berhasil!',
-                        text: `${typeText} berhasil dibuat dan diunduh`,
-                        confirmButtonColor: '#10b981'
-                    });
-                }, 5000);
             }
 
             function restoreBackup() {
@@ -383,41 +207,132 @@
                     return;
                 }
 
+                const fileName = fileInput.files[0].name;
+                const fileSize = (fileInput.files[0].size / 1024 / 1024).toFixed(2);
+
                 Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: 'Restore akan mengganti semua data yang ada!',
+                    title: 'PERINGATAN PENTING!',
+                    html: `
+                        <div class="text-left">
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+                                    <span class="font-bold text-red-800">Proses ini akan menghapus SEMUA data yang ada!</span>
+                                </div>
+                                <ul class="text-sm text-red-700 ml-6 list-disc">
+                                    <li>Semua data user, booking, dan transaksi akan diganti</li>
+                                    <li>Perubahan ini TIDAK dapat dibatalkan</li>
+                                    <li>Pastikan Anda memiliki backup data saat ini</li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-3">
+                                <p class="text-sm"><strong>File:</strong> ${fileName}</p>
+                                <p class="text-sm"><strong>Ukuran:</strong> ${fileSize} MB</p>
+                            </div>
+                        </div>
+                    `,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#dc2626',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Ya, Restore!',
+                    confirmButtonText: 'Ya, Saya Yakin Restore!',
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
-                            title: 'Melakukan Restore...',
-                            text: 'Proses restore sedang berjalan, JANGAN tutup halaman ini!',
-                            icon: 'warning',
+                            title: 'Melakukan Restore Database...',
+                            html: `
+                                <div class="text-center">
+                                    <div class="animate-pulse">
+                                        <div class="bg-red-100 rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-4">
+                                            <i class="fas fa-database text-red-600 text-2xl"></i>
+                                        </div>
+                                    </div>
+                                    <p class="font-semibold text-red-600">Proses restore sedang berjalan...</p>
+                                    <p class="text-sm text-gray-600 mt-2">JANGAN tutup halaman ini atau browser!</p>
+                                    <div class="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                        <p class="text-xs text-yellow-800">Estimasi waktu: 2-5 menit tergantung ukuran file</p>
+                                    </div>
+                                </div>
+                            `,
                             allowOutsideClick: false,
                             showConfirmButton: false,
-                            willOpen: () => {
-                                Swal.showLoading();
-                            }
                         });
 
-                        setTimeout(() => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Restore Selesai!',
-                                text: 'Data berhasil dipulihkan dari backup',
-                                confirmButtonColor: '#10b981'
-                            }).then(() => {
-                                location.reload();
+                        // Create form data for restore
+                        const formData = new FormData();
+                        formData.append('backup_file', fileInput.files[0]);
+                        formData.append('_token', '{{ csrf_token() }}');
+
+                        // Send restore request
+                        fetch('{{ route('admin.system.restore') }}', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Restore Selesai!',
+                                        html: `
+                                        <div class="text-center">
+                                            <p class="mb-2">Database berhasil dipulihkan dari backup!</p>
+                                            <p class="text-sm text-gray-600">File: <code>${fileName}</code></p>
+                                            <div class="mt-4 bg-green-50 border border-green-200 rounded-lg p-3">
+                                                <p class="text-sm text-green-800">Halaman akan dimuat ulang untuk menerapkan perubahan</p>
+                                            </div>
+                                        </div>
+                                    `,
+                                        confirmButtonColor: '#10b981',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Restore Gagal!',
+                                        text: data.message || 'Terjadi kesalahan saat melakukan restore',
+                                        confirmButtonColor: '#dc2626'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Restore Gagal!',
+                                    text: 'Terjadi kesalahan saat melakukan restore',
+                                    confirmButtonColor: '#dc2626'
+                                });
                             });
-                        }, 7000);
                     }
                 });
             }
+
+            // Enhanced file input styling
+            document.addEventListener('DOMContentLoaded', function() {
+                const fileInput = document.getElementById('restore_file');
+
+                fileInput.addEventListener('change', function(e) {
+                    if (e.target.files.length > 0) {
+                        const file = e.target.files[0];
+                        const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                        e.target.style.borderColor = '#10b981';
+                        e.target.style.backgroundColor = '#f0fdf4';
+
+                        // Show file info
+                        const existingInfo = document.querySelector('.file-info');
+                        if (existingInfo) existingInfo.remove();
+
+                        const fileInfo = document.createElement('div');
+                        fileInfo.className = 'file-info text-xs text-green-700 mt-2 text-center';
+                        fileInfo.innerHTML =
+                            `<i class="fas fa-check-circle mr-1"></i> ${file.name} (${fileSize} MB)`;
+                        e.target.parentNode.appendChild(fileInfo);
+                    }
+                });
+            });
         </script>
     @endpush
 

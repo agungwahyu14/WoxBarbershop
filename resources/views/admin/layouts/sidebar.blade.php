@@ -67,14 +67,14 @@
 
                 <li>
                     <a href="{{ route('admin.system.index') }}">
-                        <span class="icon"><i class="mdi mdi-monitor"></i></span>
-                        <span class="menu-item-label">System</span>
+                        <span class="icon"><i class="mdi mdi-backup-restore"></i></span>
+                        <span class="menu-item-label">Backup & Restore</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.feedbacks.index') }}">
                         <span class="icon"><i class="mdi mdi-comment-text-outline"></i></span>
-                        <span class="menu-item-label">Manage Feedbacks</span>
+                        <span class="menu-item-label">Feedbacks</span>
                     </a>
                 </li>
 

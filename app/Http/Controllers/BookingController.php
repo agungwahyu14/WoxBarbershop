@@ -182,7 +182,7 @@ class BookingController extends Controller
 
                         // View details button
                         $actions .= '<a href="'.$showUrl.'" 
-                  class=" inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-colors duration-200" 
+                  class=" inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-colors duration-200" 
                   title="View Details">
                 <i class="fas fa-eye text-sm"></i>
             </a>';
@@ -838,6 +838,9 @@ class BookingController extends Controller
         $period = '_' . \Carbon\Carbon::create($year, $month)->format('M_Y');
     } elseif ($year) {
         $period = '_' . $year;
+    } elseif ($month) {
+        $monthName = \Carbon\Carbon::create(null, $month)->format('M');
+        $period = '_' . $monthName;
     }
     
     $fileName = 'bookings' . $period . '_' . now()->format('Ymd_His') . '.csv';
@@ -850,6 +853,8 @@ class BookingController extends Controller
               ->whereMonth('date_time', $month);
     } elseif ($year) {
         $query->whereYear('date_time', $year);
+    } elseif ($month) {
+        $query->whereMonth('date_time', $month);
     }
     
     $bookings = $query->get();
@@ -897,6 +902,9 @@ class BookingController extends Controller
             $period = '_' . \Carbon\Carbon::create($year, $month)->format('M_Y');
         } elseif ($year) {
             $period = '_' . $year;
+        } elseif ($month) {
+            $monthName = \Carbon\Carbon::create(null, $month)->format('M');
+            $period = '_' . $monthName;
         }
 
         // Query with filter
@@ -907,6 +915,8 @@ class BookingController extends Controller
                   ->whereMonth('date_time', $month);
         } elseif ($year) {
             $query->whereYear('date_time', $year);
+        } elseif ($month) {
+            $query->whereMonth('date_time', $month);
         }
         
         $bookings = $query->get();

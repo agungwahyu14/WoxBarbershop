@@ -17,7 +17,7 @@
         </div>
     </section>
 
-    <section class="section main-section">
+    <section class="section min-h-screen main-section">
         <!-- Transaction Status Card -->
         <div class="mb-6">
             @php

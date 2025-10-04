@@ -101,7 +101,7 @@ class TransactionController extends Controller
             ->addColumn('action', function ($row) {
                 $actions = '<div class="flex justify-center space-x-2">
                     <a href="'.route('admin.transactions.show', $row->id).'" 
-                        class="btn btn-sm bg-blue-100 text-blue-600 rounded px-2 py-1 hover:bg-blue-200" 
+                        class="btn btn-sm bg-green-100 text-green-600 rounded px-2 py-1 hover:bg-green-200" 
                         title="Lihat Detail">
                         <i class="mdi mdi-eye"></i>
                     </a>';
@@ -179,27 +179,45 @@ public function update(Request $request, Transaction $transaction)
 {
     $month = $request->get('month');
     $year = $request->get('year');
+    $status = $request->get('status');
     
-    $period = '';
+    // Build filename with filters
+    $periodParts = [];
     if ($month && $year) {
-        $period = '_' . Carbon::create($year, $month)->format('M_Y');
+        $periodParts[] = Carbon::create($year, $month)->format('M_Y');
     } elseif ($year) {
-        $period = '_' . $year;
+        $periodParts[] = $year;
+    } elseif ($month) {
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        $periodParts[] = $monthNames[$month - 1];
     }
     
+    if ($status) {
+        $periodParts[] = ucfirst($status);
+    }
+    
+    $period = !empty($periodParts) ? '_' . implode('_', $periodParts) : '';
     $fileName = 'transactions' . $period . '_' . now()->format('Ymd_His') . '.csv';
 
-    // Query with filter
+    // Query with filters
     $query = Transaction::query();
     
+    // Date filters
     if ($month && $year) {
-        $query->whereYear('transaction_time', $year)
-              ->whereMonth('transaction_time', $month);
+        $query->whereYear('created_at', $year)
+              ->whereMonth('created_at', $month);
     } elseif ($year) {
-        $query->whereYear('transaction_time', $year);
+        $query->whereYear('created_at', $year);
+    } elseif ($month) {
+        $query->whereMonth('created_at', $month);
     }
     
-    $transactions = $query->get();
+    // Status filter
+    if ($status) {
+        $query->where('transaction_status', $status);
+    }
+    
+    $transactions = $query->orderBy('created_at', 'desc')->get();
 
     $headers = [
         'Content-Type' => 'text/csv',
@@ -256,25 +274,44 @@ protected function getPaymentType($paymentType)
     {
         $month = $request->get('month');
         $year = $request->get('year');
+        $status = $request->get('status');
         
-        $period = '';
+        // Build filename with filters
+        $periodParts = [];
         if ($month && $year) {
-            $period = '_' . Carbon::create($year, $month)->format('M_Y');
+            $periodParts[] = Carbon::create($year, $month)->format('M_Y');
         } elseif ($year) {
-            $period = '_' . $year;
+            $periodParts[] = $year;
+        } elseif ($month) {
+            $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            $periodParts[] = $monthNames[$month - 1];
         }
+        
+        if ($status) {
+            $periodParts[] = ucfirst($status);
+        }
+        
+        $period = !empty($periodParts) ? '_' . implode('_', $periodParts) : '';
 
-        // Query with filter
+        // Query with filters
         $query = Transaction::query();
         
+        // Date filters
         if ($month && $year) {
-            $query->whereYear('transaction_time', $year)
-                  ->whereMonth('transaction_time', $month);
+            $query->whereYear('created_at', $year)
+                  ->whereMonth('created_at', $month);
         } elseif ($year) {
-            $query->whereYear('transaction_time', $year);
+            $query->whereYear('created_at', $year);
+        } elseif ($month) {
+            $query->whereMonth('created_at', $month);
         }
         
-        $transactions = $query->get();
+        // Status filter
+        if ($status) {
+            $query->where('transaction_status', $status);
+        }
+        
+        $transactions = $query->orderBy('created_at', 'desc')->get();
 
         $pdf = Pdf::loadView('admin.transactions.export_pdf', compact('transactions', 'month', 'year'))
             ->setPaper('a4', 'landscape');

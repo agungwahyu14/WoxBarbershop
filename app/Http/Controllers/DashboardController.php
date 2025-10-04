@@ -268,22 +268,47 @@ class DashboardController extends Controller
      */
     public function exportReport(Request $request)
     {
-        $type = $request->get('type');
-        $month = $request->get('month');
-        $year = $request->get('year');
-        $format = $request->get('format', 'pdf'); // pdf, excel, csv
+        try {
+            $type = $request->get('type');
+            $month = $request->get('month');
+            $year = $request->get('year');
+            $format = $request->get('format', 'pdf'); // pdf, excel, csv
 
-        $filename = $this->generateFilename($type, $month, $year, $format);
+            // Debug logging
+            \Log::info('Export Request:', [
+                'type' => $type,
+                'month' => $month,
+                'year' => $year,
+                'format' => $format
+            ]);
 
-        switch ($type) {
-            case 'financial':
-                return $this->exportFinancial($month, $year, $format, $filename);
-            case 'bookings':
-                return $this->exportBookings($month, $year, $format, $filename);
-            case 'customers':
-                return $this->exportCustomers($month, $year, $format, $filename);
-            default:
-                return response()->json(['error' => 'Invalid export type'], 400);
+            if (!$type) {
+                return response()->json(['error' => 'Type parameter is required'], 400);
+            }
+
+            $filename = $this->generateFilename($type, $month, $year, $format);
+
+            switch ($type) {
+                case 'financial':
+                    return $this->exportFinancial($month, $year, $format, $filename);
+                case 'bookings':
+                    return $this->exportBookings($month, $year, $format, $filename);
+                case 'customers':
+                    return $this->exportCustomers($month, $year, $format, $filename);
+                default:
+                    return response()->json(['error' => 'Invalid export type: ' . $type], 400);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Export Error:', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'error' => 'Export failed: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -304,67 +329,116 @@ class DashboardController extends Controller
 
     private function exportFinancial($month, $year, $format, $filename)
     {
-        $query = Transaction::where('transaction_status', 'settlement')
-            ->with(['booking.user', 'booking.service']);
+        try {
+            $query = Transaction::where('transaction_status', 'settlement')
+                ->with(['booking.user', 'booking.service']);
 
-        if ($month && $year) {
-            $query->whereYear('created_at', $year)
-                  ->whereMonth('created_at', $month);
-        } elseif ($year) {
-            $query->whereYear('created_at', $year);
+            if ($month && $year) {
+                $query->whereYear('created_at', $year)
+                      ->whereMonth('created_at', $month);
+            } elseif ($year) {
+                $query->whereYear('created_at', $year);
+            }
+
+            $transactions = $query->orderBy('created_at', 'desc')->get();
+            
+            \Log::info('Financial Export Data:', [
+                'transactions_count' => $transactions->count(),
+                'month' => $month,
+                'year' => $year,
+                'format' => $format
+            ]);
+
+            $totalRevenue = $transactions->sum('gross_amount');
+
+            if ($format === 'pdf') {
+                $pdf = Pdf::loadView('exports.financial-pdf', compact('transactions', 'totalRevenue', 'month', 'year'));
+                return $pdf->download($filename);
+            }
+
+            // For Excel/CSV
+            return Excel::download(new \App\Exports\FinancialExport($transactions, $month, $year), $filename);
+            
+        } catch (\Exception $e) {
+            \Log::error('Export Financial Error:', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine()
+            ]);
+            throw $e;
         }
-
-        $transactions = $query->orderBy('created_at', 'desc')->get();
-        $totalRevenue = $transactions->sum('gross_amount');
-
-        if ($format === 'pdf') {
-            $pdf = Pdf::loadView('exports.financial-pdf', compact('transactions', 'totalRevenue', 'month', 'year'));
-            return $pdf->download($filename);
-        }
-
-        // For Excel/CSV
-        return Excel::download(new \App\Exports\FinancialExport($transactions, $month, $year), $filename);
     }
 
     private function exportBookings($month, $year, $format, $filename)
     {
-        $query = Booking::with(['user', 'service']);
+        try {
+            $query = Booking::with(['user', 'service']);
 
-        if ($month && $year) {
-            $query->whereYear('date_time', $year)
-                  ->whereMonth('date_time', $month);
-        } elseif ($year) {
-            $query->whereYear('date_time', $year);
+            if ($month && $year) {
+                $query->whereYear('date_time', $year)
+                      ->whereMonth('date_time', $month);
+            } elseif ($year) {
+                $query->whereYear('date_time', $year);
+            }
+
+            $bookings = $query->orderBy('date_time', 'desc')->get();
+            
+            \Log::info('Bookings Export Data:', [
+                'bookings_count' => $bookings->count(),
+                'month' => $month,
+                'year' => $year,
+                'format' => $format
+            ]);
+
+            if ($format === 'pdf') {
+                $pdf = Pdf::loadView('exports.bookings-pdf', compact('bookings', 'month', 'year'));
+                return $pdf->download($filename);
+            }
+
+            return Excel::download(new \App\Exports\BookingsExport($bookings, $month, $year), $filename);
+            
+        } catch (\Exception $e) {
+            \Log::error('Export Bookings Error:', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine()
+            ]);
+            throw $e;
         }
-
-        $bookings = $query->orderBy('date_time', 'desc')->get();
-
-        if ($format === 'pdf') {
-            $pdf = Pdf::loadView('exports.bookings-pdf', compact('bookings', 'month', 'year'));
-            return $pdf->download($filename);
-        }
-
-        return Excel::download(new \App\Exports\BookingsExport($bookings, $month, $year), $filename);
     }
 
     private function exportCustomers($month, $year, $format, $filename)
     {
-        $query = User::role('pelanggan')->with(['bookings']);
+        try {
+            $query = User::role('pelanggan')->with(['bookings']);
 
-        if ($month && $year) {
-            $query->whereYear('created_at', $year)
-                  ->whereMonth('created_at', $month);
-        } elseif ($year) {
-            $query->whereYear('created_at', $year);
+            if ($month && $year) {
+                $query->whereYear('created_at', $year)
+                      ->whereMonth('created_at', $month);
+            } elseif ($year) {
+                $query->whereYear('created_at', $year);
+            }
+
+            $customers = $query->orderBy('created_at', 'desc')->get();
+            
+            \Log::info('Customers Export Data:', [
+                'customers_count' => $customers->count(),
+                'month' => $month,
+                'year' => $year,
+                'format' => $format
+            ]);
+
+            if ($format === 'pdf') {
+                $pdf = Pdf::loadView('exports.customers-pdf', compact('customers', 'month', 'year'));
+                return $pdf->download($filename);
+            }
+
+            return Excel::download(new \App\Exports\CustomersExport($customers, $month, $year), $filename);
+            
+        } catch (\Exception $e) {
+            \Log::error('Export Customers Error:', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine()
+            ]);
+            throw $e;
         }
-
-        $customers = $query->orderBy('created_at', 'desc')->get();
-
-        if ($format === 'pdf') {
-            $pdf = Pdf::loadView('exports.customers-pdf', compact('customers', 'month', 'year'));
-            return $pdf->download($filename);
-        }
-
-        return Excel::download(new \App\Exports\CustomersExport($customers, $month, $year), $filename);
     }
 }

@@ -16,7 +16,7 @@
     </section>
 
 
-    <section class="section main-section">
+    <section class="section min-h-screen main-section">
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <!-- Card Header -->
             <div class="bg-gradient-to-r from-gray-50 to-white px-8 py-6 border-b border-gray-200">

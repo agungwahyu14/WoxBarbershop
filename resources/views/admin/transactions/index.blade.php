@@ -47,18 +47,15 @@
                                     <option value="{{ $year }}">{{ $year }}</option>
                                 @endfor
                             </select>
-                            <select id="statusFilter"
-                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                <option value="">All Status</option>
-                                <option value="pending">Menunggu</option>
-                                <option value="settlement">Sukses</option>
-                                <option value="cancel">Batal</option>
-                            </select>
 
                             <button id="resetFilter"
                                 class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
                                 <i class="mdi mdi-refresh mr-1"></i>Reset
                             </button>
+                            <div id="filterIndicator" class="hidden px-3 py-2 bg-blue-100 text-blue-800 text-sm rounded-md">
+                                <i class="mdi mdi-filter mr-1"></i>
+                                <span id="filterText"></span>
+                            </div>
                         @endif
                     </div>
 
@@ -68,14 +65,14 @@
 
                         @if (Auth::user()->hasRole('admin'))
                             <div class="flex flex-wrap gap-2">
-                                <a href="{{ route('admin.transactions.export.csv') }}"
+                                <button id="exportCsvBtn" type="button"
                                     class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                    <i class="mdi mdi-file-delimited mr-2"></i> CSV
-                                </a>
-                                <a href="{{ route('admin.transactions.export.pdf') }}"
+                                    <i class="mdi mdi-file-delimited mr-2"></i> Export CSV
+                                </button>
+                                <button id="exportPdfBtn" type="button"
                                     class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                    <i class="mdi mdi-file mr-2"></i> PDF
-                                </a>
+                                    <i class="mdi mdi-file mr-2"></i> Export PDF
+                                </button>
                             </div>
                         @endif
                     </div>
@@ -212,6 +209,10 @@
                 $('#yearFilter').val('');
                 $('#statusFilter').val('');
                 table.ajax.reload();
+
+                // Update export links and hide filter indicator
+                updateExportLinks();
+                updateFilterIndicator();
             });
 
         });
@@ -261,6 +262,120 @@
                 }
             });
         }
+
+        // Export functionality with dynamic filters
+        function updateExportLinks() {
+            const csvBtn = $('#exportCsvBtn');
+            const pdfBtn = $('#exportPdfBtn');
+
+            // Build URL with current filters
+            const baseUrlCsv = '{{ route('admin.transactions.export.csv') }}';
+            const baseUrlPdf = '{{ route('admin.transactions.export.pdf') }}';
+
+            const csvUrl = buildExportUrl(baseUrlCsv);
+            const pdfUrl = buildExportUrl(baseUrlPdf);
+
+            // Update button text with filter info
+            const filterText = getFilterText();
+            if (filterText) {
+                csvBtn.html('<i class="mdi mdi-file-excel mr-2"></i>Export CSV ' + filterText);
+                pdfBtn.html('<i class="mdi mdi-file-pdf mr-2"></i>Export PDF ' + filterText);
+            } else {
+                csvBtn.html('<i class="mdi mdi-file-excel mr-2"></i>Export CSV');
+                pdfBtn.html('<i class="mdi mdi-file-pdf mr-2"></i>Export PDF');
+            }
+
+            // Store URLs in data attributes
+            csvBtn.data('url', csvUrl);
+            pdfBtn.data('url', pdfUrl);
+        }
+
+        function buildExportUrl(baseUrl) {
+            const params = new URLSearchParams();
+
+            const month = $('#monthFilter').val();
+            const year = $('#yearFilter').val();
+            const status = $('#statusFilter').val();
+
+            if (month) params.append('month', month);
+            if (year) params.append('year', year);
+            if (status) params.append('status', status);
+
+            return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
+        }
+
+        function getFilterText() {
+            const month = $('#monthFilter').val();
+            const year = $('#yearFilter').val();
+            const status = $('#statusFilter').val();
+
+            let parts = [];
+
+            if (month && year) {
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+                    'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+                ];
+                parts.push(`${monthNames[month - 1]} ${year}`);
+            } else if (year) {
+                parts.push(year);
+            } else if (month) {
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
+                    'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+                ];
+                parts.push(`${monthNames[month - 1]}`);
+            }
+
+            if (status) {
+                const statusText = {
+                    'pending': 'Pending',
+                    'paid': 'Dibayar',
+                    'cancelled': 'Dibatalkan'
+                };
+                parts.push(statusText[status] || status);
+            }
+
+            return parts.length > 0 ? `(${parts.join(', ')})` : '';
+        }
+
+        function updateFilterIndicator() {
+            const filterText = getFilterText();
+            const indicator = $('#filterIndicator');
+            const textSpan = $('#filterText');
+
+            if (filterText) {
+                textSpan.text(`Filter aktif: ${filterText}`);
+                indicator.removeClass('hidden');
+            } else {
+                indicator.addClass('hidden');
+            }
+        }
+
+        // Event handlers
+        $('#exportCsvBtn').click(function() {
+            const url = $(this).data('url');
+            if (url) {
+                window.location.href = url;
+            }
+        });
+
+        $('#exportPdfBtn').click(function() {
+            const url = $(this).data('url');
+            if (url) {
+                window.location.href = url;
+            }
+        });
+
+        // Update export links and indicator when filters change
+        $('#monthFilter, #yearFilter, #statusFilter').change(function() {
+            updateExportLinks();
+            updateFilterIndicator();
+        });
+
+        // Initialize export links and filter indicator
+        $(document).ready(function() {
+            updateExportLinks();
+            updateFilterIndicator();
+        });
     </script>
 @endpush
 

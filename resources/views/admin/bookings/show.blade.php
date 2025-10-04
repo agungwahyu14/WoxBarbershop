@@ -180,21 +180,39 @@
                                             {{ $booking->hairstyle->description ?? 'Classic hairstyle' }}</p>
                                     </div>
                                     <div class="grid grid-cols-1 gap-3">
-                                        @if ($booking->bentuk_kepala->name)
+
+                                        {{-- Bentuk Kepala --}}
+                                        @if ($booking->hairstyle && $booking->hairstyle->bentuk_kepala->isNotEmpty())
                                             <div class="flex justify-between">
                                                 <span class="text-gray-600 dark:text-gray-400">Face Shape:</span>
-                                                <span
-                                                    class="font-medium text-gray-900 dark:text-white">{{ $booking->bentuk_kepala->name }}</span>
+                                                <span class="font-medium text-gray-900 dark:text-white">
+                                                    {{ $booking->hairstyle->bentuk_kepala->pluck('nama')->join(', ') }}
+                                                </span>
                                             </div>
                                         @endif
-                                        @if ($booking->tipe_rambut->name)
+
+                                        {{-- Tipe Rambut --}}
+                                        @if ($booking->hairstyle && $booking->hairstyle->tipe_rambut->isNotEmpty())
                                             <div class="flex justify-between">
                                                 <span class="text-gray-600 dark:text-gray-400">Hair Type:</span>
-                                                <span
-                                                    class="font-medium text-gray-900 dark:text-white">{{ $booking->tipe_rambut->name }}</span>
+                                                <span class="font-medium text-gray-900 dark:text-white">
+                                                    {{ $booking->hairstyle->tipe_rambut->pluck('nama')->join(', ') }}
+                                                </span>
                                             </div>
                                         @endif
+
+                                        {{-- Style Preference --}}
+                                        @if ($booking->hairstyle && $booking->hairstyle->style_preference->isNotEmpty())
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-600 dark:text-gray-400">Style Preference:</span>
+                                                <span class="font-medium text-gray-900 dark:text-white">
+                                                    {{ $booking->hairstyle->style_preference->pluck('nama')->join(', ') }}
+                                                </span>
+                                            </div>
+                                        @endif
+
                                     </div>
+
                                 </div>
                             </div>
                         </div>

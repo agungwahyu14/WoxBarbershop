@@ -14,7 +14,7 @@
         </div>
     </section>
 
-    <section class="section main-section">
+    <section class="section min-h-screen main-section">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
 
