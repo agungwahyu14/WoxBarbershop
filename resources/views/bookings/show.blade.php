@@ -470,7 +470,8 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
                         },
                         body: JSON.stringify({
                             booking_id: {{ $booking->id }},
@@ -479,7 +480,20 @@
                             is_public: isPublic
                         })
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        // Check if response is ok (status 200-299)
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        // Check if response is JSON
+                        const contentType = response.headers.get("content-type");
+                        if (!contentType || !contentType.includes("application/json")) {
+                            throw new Error("Response is not JSON");
+                        }
+
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
                             Swal.fire({
@@ -500,11 +514,11 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        console.error('Error details:', error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops!',
-                            text: 'Terjadi kesalahan saat mengirim feedback',
+                            text: 'Terjadi kesalahan saat mengirim feedback. Silakan coba lagi.',
                             confirmButtonColor: '#dc2626'
                         });
                     });
