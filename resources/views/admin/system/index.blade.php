@@ -3,7 +3,7 @@
 @section('title', 'Backup & Restore Data')
 
 @section('content')
-
+    <!-- Page Header -->
     <section class="is-hero-bar">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
@@ -16,8 +16,7 @@
             </div>
         </div>
     </section>
-
-
+    <!-- Main Section -->
     <section class="section min-h-screen main-section">
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -111,7 +110,7 @@
             </div>
         </div>
     </section>
-
+ 
     @push('scripts')
         <script>
             function createBackup(type) {
@@ -335,5 +334,4 @@
             });
         </script>
     @endpush
-
 @endsection
