@@ -37,11 +37,11 @@ public function style_preference()
         return $this->hasMany(Booking::class);
     }
 
-    // Relasi ke user jika diperlukan
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    // // Relasi ke user jika diperlukan
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 
     // Relasi ke scores
     public function scores()

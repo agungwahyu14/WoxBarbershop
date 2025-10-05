@@ -1,0 +1,175 @@
+classDiagram
+    %% Core Models
+    class User {
+        +int id
+        +string name
+        +string email
+        +string no_telepon
+        +string password
+        +datetime email_verified_at
+        +boolean is_active
+        +datetime last_login_at
+        +string profile_photo
+        +hasRole()
+        +bookings()
+        +feedbacks()
+        +loyalty()
+    }
+
+    class Service {
+        +int id
+        +string name
+        +string description
+        +decimal price
+        +int duration
+        +boolean is_active
+        +bookings()
+        +scopeActive()
+    }
+
+    class Product {
+        +int id
+        +string name
+        +string description
+        +decimal price
+        +string category
+        +string image
+        +int stock
+        +boolean is_active
+        +getImageUrlAttribute()
+        +scopeActive()
+    }
+
+    class Hairstyle {
+        +int id
+        +string name
+        +string description
+        +string image
+        +bookings()
+        +bentukKepala()
+        +tipeRambut()
+        +stylePreference()
+    }
+
+    %% Business Logic Models
+    class Booking {
+        +int id
+        +int user_id
+        +string name
+        +int service_id
+        +int hairstyle_id
+        +datetime date_time
+        +int queue_number
+        +string description
+        +string payment_method
+        +string status
+        +decimal total_price
+        +user()
+        +service()
+        +hairstyle()
+        +transactions()
+        +transaction()
+        +feedback()
+    }
+
+    class Transaction {
+        +int id
+        +int order_id
+        +string transaction_status
+        +string payment_type
+        +decimal gross_amount
+        +datetime transaction_time
+        +string bank
+        +string va_number
+        +string name
+        +string email
+        +booking()
+    }
+
+    class Feedback {
+        +int id
+        +int user_id
+        +int booking_id
+        +int rating
+        +string comment
+        +boolean is_public
+        +boolean is_active
+        +user()
+        +booking()
+        +scopePublic()
+        +scopeActive()
+    }
+
+    class Loyalty {
+        +int id
+        +int user_id
+        +int points
+        +user()
+    }
+
+    %% Recommendation System Models
+    class BentukKepala {
+        +int id
+        +string nama
+        +hairstyles()
+    }
+
+    class TipeRambut {
+        +int id
+        +string nama
+        +hairstyles()
+    }
+
+    class StylePreference {
+        +int id
+        +string nama
+        +hairstyles()
+    }
+
+    class HairstyleScore {
+        +int id
+        +int hairstyle_id
+        +int criteria_id
+        +decimal score
+        +hairstyle()
+        +criteria()
+    }
+
+    class Criteria {
+        +int id
+        +string name
+        +string type
+        +hairstyleScores()
+    }
+
+    %% Relationships
+    User ||--o{ Booking : "has many"
+    User ||--o{ Feedback : "has many"
+    User ||--|| Loyalty : "has one"
+    
+    Service ||--o{ Booking : "has many"
+    Hairstyle ||--o{ Booking : "has many"
+    
+    Booking ||--o{ Transaction : "has many"
+    Booking ||--|| Feedback : "has one"
+    
+    User ||--o{ Transaction : "through booking"
+    
+    %% Many-to-Many Relationships
+    Hairstyle }|--|| BentukKepala : "belongs to many"
+    Hairstyle }|--|| TipeRambut : "belongs to many"
+    Hairstyle }|--|| StylePreference : "belongs to many"
+    
+    %% Scoring System
+    Hairstyle ||--o{ HairstyleScore : "has many"
+    Criteria ||--o{ HairstyleScore : "has many"
+
+    %% Role System (Tanpa Permission)
+    class Role {
+        +int id
+        +string name  // admin, pegawai, pelanggan
+        +string description
+        +users()
+    }
+
+    User }|--|| Role : "belongs to"

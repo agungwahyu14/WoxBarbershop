@@ -80,7 +80,7 @@
                 <li>
                     <a href="{{ route('admin.roles.index') }}">
                         <span class="icon"><i class="mdi mdi-shield-key"></i></span>
-                        <span class="menu-item-label">Role</span>
+                        <span class="menu-item-label">Roles</span>
                     </a>
                 </li>
 
