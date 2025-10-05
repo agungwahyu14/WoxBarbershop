@@ -77,17 +77,14 @@
                         <span class="menu-item-label">Feedbacks</span>
                     </a>
                 </li>
-
-
-            </ul>
-
-            <ul class="menu-list">
                 <li>
                     <a href="{{ route('admin.roles.index') }}">
                         <span class="icon"><i class="mdi mdi-shield-key"></i></span>
                         <span class="menu-item-label">Role</span>
                     </a>
                 </li>
+
+
             </ul>
         @endhasrole
 

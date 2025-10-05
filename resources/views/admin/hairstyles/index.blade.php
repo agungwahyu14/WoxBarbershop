@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Hairstyle Management')
+@section('title', 'Hairstyle ')
 
 @section('content')
     <section class="is-hero-bar">
@@ -8,7 +8,7 @@
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                     <i class="fas fa-cut mr-3"></i>
-                    Hairstyle Management
+                    Hairstyle 
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     Manage hairstyle recommendations for Wox’s Barbershop

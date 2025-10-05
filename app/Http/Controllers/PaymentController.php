@@ -68,13 +68,79 @@ class PaymentController extends Controller
     public function downloadReceipt($orderId)
     {
         try {
-            $transaction = \Midtrans\Transaction::status($orderId);
+            // Get local transaction data first
+            $localTransaction = \App\Models\Transaction::where('order_id', $orderId)->first();
+            
+            // Get booking data with relationships
+            $booking = Booking::with(['user', 'service', 'hairstyle'])->find($orderId);
+            
+            if (!$booking) {
+                return back()->with('error', 'Data booking tidak ditemukan');
+            }
 
-            $pdf = Pdf::loadView('receipt.transaction', ['transaction' => $transaction]);
+            // Prepare transaction data for the invoice
+            $transactionData = [];
+            
+            if ($localTransaction) {
+                // Use local transaction data
+                $transactionData = [
+                    'order_id' => $localTransaction->order_id,
+                    'transaction_status' => $localTransaction->transaction_status,
+                    'payment_type' => $localTransaction->payment_type,
+                    'gross_amount' => $localTransaction->gross_amount,
+                    'transaction_time' => $localTransaction->transaction_time,
+                    'bank' => $localTransaction->bank,
+                    'va_number' => $localTransaction->va_number,
+                    'name' => $localTransaction->name,
+                    'email' => $localTransaction->email,
+                ];
+            } else {
+                // Fallback to Midtrans API if local transaction not found
+                try {
+                    $midtransTransaction = \Midtrans\Transaction::status($orderId);
+                    $transactionData = [
+                        'order_id' => $orderId,
+                        'transaction_status' => $midtransTransaction->transaction_status ?? 'unknown',
+                        'payment_type' => $midtransTransaction->payment_type ?? 'N/A',
+                        'gross_amount' => $midtransTransaction->gross_amount ?? $booking->total_price,
+                        'transaction_time' => $midtransTransaction->transaction_time ?? $booking->created_at,
+                        'bank' => $midtransTransaction->va_numbers[0]->bank ?? null,
+                        'va_number' => $midtransTransaction->va_numbers[0]->va_number ?? null,
+                        'name' => $booking->name,
+                        'email' => $booking->user->email,
+                    ];
+                } catch (\Exception $e) {
+                    // If Midtrans API also fails, use booking data as fallback
+                    $transactionData = [
+                        'order_id' => $orderId,
+                        'transaction_status' => $booking->payment_status === 'paid' ? 'settlement' : 'pending',
+                        'payment_type' => 'N/A',
+                        'gross_amount' => $booking->total_price,
+                        'transaction_time' => $booking->created_at,
+                        'bank' => null,
+                        'va_number' => null,
+                        'name' => $booking->name,
+                        'email' => $booking->user->email,
+                    ];
+                }
+            }
 
-            return $pdf->download('bukti_transaksi_'.$orderId.'.pdf');
+            // Generate PDF
+            $pdf = Pdf::loadView('receipt.transaction', [
+                'transaction' => $transactionData,
+                'booking' => $booking
+            ]);
+
+            // Set PDF options
+            $pdf->setPaper('A4', 'portrait');
+            
+            $fileName = 'Invoice_WOX_' . $orderId . '_' . date('Ymd') . '.pdf';
+
+            return $pdf->download($fileName);
+            
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal mengambil data transaksi');
+            Log::error('Download receipt error: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh bukti pembayaran: ' . $e->getMessage());
         }
     }
 

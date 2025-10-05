@@ -1,6 +1,6 @@
     @extends('admin.layouts.app')
 
-    @section('title', 'Booking Management')
+    @section('title', 'Booking ')
     @section('meta_description', 'Comprehensive booking management system for WOX Barbershop')
 
     @section('content')
@@ -9,7 +9,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div>
                     <h1 class="text-4xl font-bold mb-2">
-                        <i class="fas fa-calendar-check mr-3"></i>Booking Management
+                        <i class="fas fa-calendar-check mr-3"></i>Booking 
                     </h1>
                     <p class="text-blacktext-lg">
                         Manage all customer appointments and reservations

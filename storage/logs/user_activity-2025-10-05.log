@@ -1,310 +1,508 @@
-[2025-10-05 01:24:47] local.INFO: User login attempt {"email":"emily@example.com","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:24:47] local.INFO: User last login updated {"user_id":53,"email":"emily@example.com","previous_login":null,"current_login":"2025-10-05 01:24:47"} 
-[2025-10-05 01:24:47] local.INFO: User login successful {"user_id":53,"email":"emily@example.com","last_login_at":"2025-10-05 01:24:47","ip":"127.0.0.1"} 
-[2025-10-05 01:25:00] local.INFO: BookingRequest business logic validation {"user_id":53,"requested_datetime":"2025-10-05 14:35:00","day_of_week":0,"hour":14,"service_id":"4"} 
-[2025-10-05 01:25:00] local.WARNING: Booking attempt on closed day {"user_id":53,"requested_date":"2025-10-05","day_name":"Sunday"} 
-[2025-10-05 01:25:00] local.ERROR: Business logic validation failed {"user_id":53,"errors":{"date_time":["Maaf, kami tutup pada hari Minggu."]},"category":"closed_day","datetime":"2025-10-05 14:35:00"} 
-[2025-10-05 01:30:20] local.ERROR: Unhandled exception {"exception":"Psy\\Exception\\ParseErrorException","message":"PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1","file":"/Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/Exception/ParseErrorException.php","line":44,"trace":"#0 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
-#1 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php \\\\ = App\\\\M...', false)
-#2 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
-#3 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/Shell.php(881): Psy\\Shell->addCode('\\\\ = App\\\\Models\\\\...', true)
-#4 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/Shell.php(1390): Psy\\Shell->setCode('\\\\ = App\\\\Models\\\\...', true)
-#5 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy\\Shell->execute('\\\\ = App\\\\Models\\\\...')
-#6 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
-#7 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#8 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#9 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#10 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#11 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
-#12 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#13 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#14 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#15 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#16 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#17 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#18 /Users/appkey/Desktop/agungappkey/tugas-akhir/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#19 {main}","url":"http://127.0.0.1:8000","method":"GET","ip":"127.0.0.1","user_agent":"Symfony","user_id":null} 
-[2025-10-05 01:30:20] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 at /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
-[stacktrace]
-#0 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/CodeCleaner.php(306): Psy\\Exception\\ParseErrorException::fromParseError(Object(PhpParser\\Error))
-#1 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/CodeCleaner.php(240): Psy\\CodeCleaner->parse('<?php \\\\ = App\\\\M...', false)
-#2 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/Shell.php(852): Psy\\CodeCleaner->clean(Array, false)
-#3 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/Shell.php(881): Psy\\Shell->addCode('\\\\ = App\\\\Models\\\\...', true)
-#4 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/psy/psysh/src/Shell.php(1390): Psy\\Shell->setCode('\\\\ = App\\\\Models\\\\...', true)
-#5 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/tinker/src/Console/TinkerCommand.php(76): Psy\\Shell->execute('\\\\ = App\\\\Models\\\\...')
-#6 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel\\Tinker\\Console\\TinkerCommand->handle()
-#7 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#8 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
-#9 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
-#10 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Container/Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
-#11 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
-#12 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/symfony/console/Command/Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#13 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
-#14 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/symfony/console/Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#15 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/symfony/console/Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(Laravel\\Tinker\\Console\\TinkerCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#16 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#17 /Users/appkey/Desktop/agungappkey/tugas-akhir/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#18 /Users/appkey/Desktop/agungappkey/tugas-akhir/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
-#19 {main}
-"} 
-[2025-10-05 01:31:24] local.INFO: User login attempt {"email":"admin@woxbarbershop.com","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:31:24] local.INFO: User last login updated {"user_id":45,"email":"admin@woxbarbershop.com","previous_login":"2025-10-04 15:57:38","current_login":"2025-10-05 01:31:24"} 
-[2025-10-05 01:31:24] local.INFO: User login successful {"user_id":45,"email":"admin@woxbarbershop.com","last_login_at":"2025-10-05 01:31:24","ip":"127.0.0.1"} 
-[2025-10-05 01:31:51] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:31:51] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:31:51] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:31:51] local.INFO: Bookings data retrieved successfully {"total_records":100} 
-[2025-10-05 01:32:03] local.INFO: BookingRequest business logic validation {"user_id":53,"requested_datetime":"2025-10-05 13:28:00","day_of_week":0,"hour":13,"service_id":"6"} 
-[2025-10-05 01:32:03] local.WARNING: Booking attempt on closed day {"user_id":53,"requested_date":"2025-10-05","day_name":"Sunday"} 
-[2025-10-05 01:32:03] local.ERROR: Business logic validation failed {"user_id":53,"errors":{"date_time":["Maaf, kami tutup pada hari Minggu."]},"category":"closed_day","datetime":"2025-10-05 13:28:00"} 
-[2025-10-05 01:32:21] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:32:21] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:32:21] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:32:21] local.INFO: Bookings data retrieved successfully {"total_records":100} 
-[2025-10-05 01:32:34] local.INFO: BookingRequest business logic validation {"user_id":53,"requested_datetime":"2025-10-05 14:00:00","day_of_week":0,"hour":14,"service_id":"6"} 
-[2025-10-05 01:32:34] local.WARNING: Booking attempt on closed day {"user_id":53,"requested_date":"2025-10-05","day_name":"Sunday"} 
-[2025-10-05 01:32:34] local.ERROR: Business logic validation failed {"user_id":53,"errors":{"date_time":["Maaf, kami tutup pada hari Minggu."]},"category":"closed_day","datetime":"2025-10-05 14:00:00"} 
-[2025-10-05 01:32:51] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:32:51] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:32:51] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:32:51] local.INFO: Bookings data retrieved successfully {"total_records":100} 
-[2025-10-05 01:32:56] local.INFO: BookingRequest business logic validation {"user_id":53,"requested_datetime":"2025-10-06 15:34:00","day_of_week":1,"hour":15,"service_id":"5"} 
-[2025-10-05 01:32:56] local.INFO: BookingRequest validation passed {"user_id":53,"datetime":"2025-10-06 15:34:00"} 
-[2025-10-05 01:32:56] local.INFO: Booking store attempt {"user_id":53,"validated_data":{"name":"Freya Holt","service_id":"5","hairstyle_id":"34","description":"Dolores molestiae ea","payment_method":"cash","date_time":"2025-10-06 15:34:00"},"ip":"127.0.0.1"} 
-[2025-10-05 01:32:56] local.INFO: Booking creation attempt {"user_id":53,"service_id":"5","requested_datetime":"2025-10-06 15:34:00","service_duration":25,"payment_method":"cash"} 
-[2025-10-05 01:32:56] local.INFO: Business day check {"date":"2025-10-06","day_of_week":1,"day_name":"Monday","is_business_day":true} 
-[2025-10-05 01:32:56] local.INFO: Business hours check {"datetime":"2025-10-06 15:34:00","hour":15,"minute":34,"open_time":9,"close_time":21,"is_within_hours":true} 
-[2025-10-05 01:32:56] local.INFO: Business hours check {"datetime":"2025-10-06 15:58:00","hour":15,"minute":58,"open_time":9,"close_time":21,"is_within_hours":true} 
-[2025-10-05 01:32:56] local.INFO: Booking created successfully {"booking_id":101,"user_id":53,"queue_number":2,"datetime":"2025-10-06 15:34:00","service":"Beard Trimming","total_price":"20000.00","payment_method":"cash"} 
-[2025-10-05 01:32:56] local.INFO: Booking created successfully {"booking_id":101,"user_id":53,"date_time":"2025-10-06 15:34:00","service_id":"5","queue_number":2} 
-[2025-10-05 01:33:07] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:08] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:08] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:33:08] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:33:15] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"1","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759627995461"}} 
-[2025-10-05 01:33:33] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:33] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:33] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:33:33] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:33:35] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:35] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:35] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:33:35] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:33:38] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:38] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:33:38] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:33:40] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:40] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:33:40] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:33:41] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:41] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:33:41] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:33:54] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:54] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:33:54] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:33:56] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:33:56] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:33:56] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:34:14] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:34:14] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:34:14] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:34:14] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:34:29] local.INFO: Business day check {"date":"2025-10-05","day_of_week":0,"day_name":"Sunday","is_business_day":false} 
-[2025-10-05 01:34:29] local.INFO: Business day check {"date":"2025-10-06","day_of_week":1,"day_name":"Monday","is_business_day":true} 
-[2025-10-05 01:34:29] local.INFO: Business day check {"date":"2025-10-07","day_of_week":2,"day_name":"Tuesday","is_business_day":true} 
-[2025-10-05 01:34:29] local.INFO: Business day check {"date":"2025-10-08","day_of_week":3,"day_name":"Wednesday","is_business_day":true} 
-[2025-10-05 01:34:29] local.INFO: Business day check {"date":"2025-10-09","day_of_week":4,"day_name":"Thursday","is_business_day":true} 
-[2025-10-05 01:34:29] local.INFO: Business day check {"date":"2025-10-10","day_of_week":5,"day_name":"Friday","is_business_day":true} 
-[2025-10-05 01:34:29] local.INFO: Business day check {"date":"2025-10-11","day_of_week":6,"day_name":"Saturday","is_business_day":true} 
-[2025-10-05 01:34:29] local.INFO: Business day check {"date":"2025-10-12","day_of_week":0,"day_name":"Sunday","is_business_day":false} 
-[2025-10-05 01:34:29] local.WARNING: Failed to get recommendations {"booking_id":101,"error":"Method App\\Http\\Controllers\\BookingController::getServiceRecommendations does not exist."} 
-[2025-10-05 01:34:29] local.INFO: Booking details viewed {"booking_id":101,"viewed_by":45,"user_role":"admin","booking_status":"pending"} 
-[2025-10-05 01:34:35] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:34:36] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:34:36] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:34:36] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:34:55] local.INFO: Booking status updated {"booking_id":101,"new_status":"confirmed","user_id":45} 
-[2025-10-05 01:34:55] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:34:55] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:34:55] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:34:55] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:35:09] local.INFO: Business day check {"date":"2025-10-05","day_of_week":0,"day_name":"Sunday","is_business_day":false} 
-[2025-10-05 01:35:09] local.INFO: Business day check {"date":"2025-10-06","day_of_week":1,"day_name":"Monday","is_business_day":true} 
-[2025-10-05 01:35:09] local.INFO: Business day check {"date":"2025-10-07","day_of_week":2,"day_name":"Tuesday","is_business_day":true} 
-[2025-10-05 01:35:09] local.INFO: Business day check {"date":"2025-10-08","day_of_week":3,"day_name":"Wednesday","is_business_day":true} 
-[2025-10-05 01:35:09] local.INFO: Business day check {"date":"2025-10-09","day_of_week":4,"day_name":"Thursday","is_business_day":true} 
-[2025-10-05 01:35:09] local.INFO: Business day check {"date":"2025-10-10","day_of_week":5,"day_name":"Friday","is_business_day":true} 
-[2025-10-05 01:35:09] local.INFO: Business day check {"date":"2025-10-11","day_of_week":6,"day_name":"Saturday","is_business_day":true} 
-[2025-10-05 01:35:09] local.INFO: Business day check {"date":"2025-10-12","day_of_week":0,"day_name":"Sunday","is_business_day":false} 
-[2025-10-05 01:35:09] local.WARNING: Failed to get recommendations {"booking_id":101,"error":"Method App\\Http\\Controllers\\BookingController::getServiceRecommendations does not exist."} 
-[2025-10-05 01:35:09] local.INFO: Booking details viewed {"booking_id":101,"viewed_by":53,"user_role":"pelanggan","booking_status":"confirmed"} 
-[2025-10-05 01:35:14] local.INFO: Booking status updated {"booking_id":101,"new_status":"in_progress","user_id":45} 
-[2025-10-05 01:35:14] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:35:15] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:35:15] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:35:15] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:35:29] local.INFO: Fungsi completeBooking dipanggil {"booking_id":101,"waktu":"2025-10-05 01:35:29"} 
-[2025-10-05 01:35:29] local.WARNING: Booking sudah completed sebelumnya {"booking_id":101} 
-[2025-10-05 01:35:29] local.INFO: Status booking diubah menjadi completed {"booking_id":101} 
-[2025-10-05 01:35:29] local.INFO: User belum memiliki loyalty {"user_id":53} 
-[2025-10-05 01:35:29] local.INFO: Loyalty baru dibuat untuk user {"user_id":53} 
-[2025-10-05 01:35:29] local.INFO: Loyalty berhasil di tambahkan {"booking_id":101} 
-[2025-10-05 01:35:29] local.INFO: Booking status updated {"booking_id":101,"new_status":"completed","user_id":45} 
-[2025-10-05 01:35:29] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:35:29] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:35:29] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:35:29] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:35:31] local.WARNING: Failed to get recommendations {"booking_id":101,"error":"Method App\\Http\\Controllers\\BookingController::getServiceRecommendations does not exist."} 
-[2025-10-05 01:35:31] local.INFO: Booking details viewed {"booking_id":101,"viewed_by":53,"user_role":"pelanggan","booking_status":"completed"} 
-[2025-10-05 01:35:58] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:35:58] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:35:58] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:35:58] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:36:02] local.WARNING: Failed to get recommendations {"booking_id":101,"error":"Method App\\Http\\Controllers\\BookingController::getServiceRecommendations does not exist."} 
-[2025-10-05 01:36:02] local.INFO: Booking details viewed {"booking_id":101,"viewed_by":53,"user_role":"pelanggan","booking_status":"in_progress"} 
-[2025-10-05 01:36:35] local.INFO: Fetching hairstyles for DataTable  
-[2025-10-05 01:36:35] local.INFO: Hairstyles fetched for DataTable {"total":13,"first_item":"Textured Crop"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":47,"name":"Textured Crop"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":47,"bentuk_kepala":"Hati"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":47,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":47,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":46,"name":"Long Fringe"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":46,"bentuk_kepala":"Hati"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":46,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":46,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":45,"name":"Side Swept Fringe"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":45,"bentuk_kepala":"Segitiga"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":45,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":45,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":44,"name":"Caesar Cut"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":44,"bentuk_kepala":"Persegi Panjang"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":44,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":44,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":43,"name":"Fringe"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":43,"bentuk_kepala":"Persegi Panjang"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":43,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":43,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":42,"name":"Undercut"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":42,"bentuk_kepala":"Kotak, Segitiga"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":42,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":42,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":41,"name":"Crew Cut"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":41,"bentuk_kepala":"Kotak"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":41,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":41,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":40,"name":"Tapper Fade"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":40,"bentuk_kepala":"Bulat, Kotak"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":40,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":40,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":39,"name":"Buzzcut"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":39,"bentuk_kepala":"Oval, Bulat, Kotak"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":39,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":39,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":38,"name":"Quiff"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":38,"bentuk_kepala":"Oval, Segitiga"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":38,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":38,"style_preference":"Klasik, Modern"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":37,"name":"Pompadour"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":37,"bentuk_kepala":"Oval, Bulat, Segitiga"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":37,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":37,"style_preference":"Klasik, Modern"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":36,"name":"Side Part"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":36,"bentuk_kepala":"Persegi Panjang, Hati"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":36,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":36,"style_preference":"Klasik, Modern, Kasual"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing name column {"hairstyle_id":34,"name":"French Crop"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":34,"bentuk_kepala":"Oval, Bulat, Persegi Panjang, Hati"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing tipe_rambut {"hairstyle_id":34,"tipe_rambut":"Lurus, Bergelombang"} 
-[2025-10-05 01:36:35] local.DEBUG: Processing style_preference {"hairstyle_id":34,"style_preference":"Klasik, Modern"} 
-[2025-10-05 01:36:37] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:36:38] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:36:38] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:36:38] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:36:43] local.INFO: Fungsi completeBooking dipanggil {"booking_id":101,"waktu":"2025-10-05 01:36:43"} 
-[2025-10-05 01:36:43] local.WARNING: Booking sudah completed sebelumnya {"booking_id":101} 
-[2025-10-05 01:36:43] local.INFO: Status booking diubah menjadi completed {"booking_id":101} 
-[2025-10-05 01:36:43] local.INFO: User sudah memiliki loyalty {"user_id":53,"points":1} 
-[2025-10-05 01:36:43] local.INFO: Loyalty ditemukan, point sebelumnya: 1 {"user_id":53} 
-[2025-10-05 01:36:43] local.INFO: Loyalty diupdate, point sekarang: 2 {"user_id":53} 
-[2025-10-05 01:36:43] local.INFO: Loyalty berhasil di tambahkan {"booking_id":101} 
-[2025-10-05 01:36:43] local.INFO: Booking status updated {"booking_id":101,"new_status":"completed","user_id":45} 
-[2025-10-05 01:36:43] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:36:43] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:36:43] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:36:43] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:37:10] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:37:10] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:37:10] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:37:10] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:37:41] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:37:41] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:37:41] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:37:41] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:38:08] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:38:09] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:38:09] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:38:09] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:38:39] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:38:39] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:38:39] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:38:39] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:39:10] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:39:10] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:39:10] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:39:10] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:39:39] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:39:40] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:39:40] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:39:40] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:40:09] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:40:10] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:40:10] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:40:10] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:40:39] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:40:40] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:40:40] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:40:40] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:41:21] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:41:22] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:41:22] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:41:22] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:41:22] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:41:22] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:41:22] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:41:22] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:41:52] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:41:53] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:41:53] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:41:53] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:42:22] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:42:23] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:42:23] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:42:23] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:42:44] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:42:44] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:42:44] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:42:44] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:43:14] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:43:14] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:43:14] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:43:14] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:43:22] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:43:22] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:43:22] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:43:22] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:43:46] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:43:46] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:43:46] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:43:46] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:44:02] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:44:03] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:44:03] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:44:03] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:44:33] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:44:34] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:44:34] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:44:34] local.INFO: Bookings data retrieved successfully {"total_records":101} 
-[2025-10-05 01:45:03] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:45:03] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
-[2025-10-05 01:45:03] local.INFO: Processing AJAX request for bookings datatable  
-[2025-10-05 01:45:03] local.INFO: Bookings data retrieved successfully {"total_records":101} 
+[2025-10-05 01:46:58] local.INFO: Export Request: {"type":"financial","month":"10","year":"2025","format":"pdf"} 
+[2025-10-05 01:46:58] local.INFO: Financial Export Data: {"transactions_count":4,"month":"10","year":"2025","format":"pdf"} 
+[2025-10-05 01:52:09] local.ERROR: Download receipt error: Call to undefined relationship [services] on model [App\Models\Booking].  
+[2025-10-05 02:17:49] local.INFO: Fetching hairstyles for DataTable  
+[2025-10-05 02:17:49] local.INFO: Hairstyles fetched for DataTable {"total":13,"first_item":"Textured Crop"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":47,"name":"Textured Crop"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":47,"bentuk_kepala":"Hati"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":47,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":47,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":46,"name":"Long Fringe"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":46,"bentuk_kepala":"Hati"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":46,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":46,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":45,"name":"Side Swept Fringe"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":45,"bentuk_kepala":"Segitiga"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":45,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":45,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":44,"name":"Caesar Cut"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":44,"bentuk_kepala":"Persegi Panjang"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":44,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":44,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":43,"name":"Fringe"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":43,"bentuk_kepala":"Persegi Panjang"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":43,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":43,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":42,"name":"Undercut"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":42,"bentuk_kepala":"Kotak, Segitiga"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":42,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":42,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":41,"name":"Crew Cut"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":41,"bentuk_kepala":"Kotak"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":41,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":41,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":40,"name":"Tapper Fade"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":40,"bentuk_kepala":"Bulat, Kotak"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":40,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":40,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":39,"name":"Buzzcut"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":39,"bentuk_kepala":"Oval, Bulat, Kotak"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":39,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":39,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":38,"name":"Quiff"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":38,"bentuk_kepala":"Oval, Segitiga"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":38,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":38,"style_preference":"Klasik, Modern"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":37,"name":"Pompadour"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":37,"bentuk_kepala":"Oval, Bulat, Segitiga"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":37,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":37,"style_preference":"Klasik, Modern"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":36,"name":"Side Part"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":36,"bentuk_kepala":"Persegi Panjang, Hati"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":36,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":36,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing name column {"hairstyle_id":34,"name":"French Crop"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":34,"bentuk_kepala":"Oval, Bulat, Persegi Panjang, Hati"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing tipe_rambut {"hairstyle_id":34,"tipe_rambut":"Lurus, Bergelombang"} 
+[2025-10-05 02:17:49] local.DEBUG: Processing style_preference {"hairstyle_id":34,"style_preference":"Klasik, Modern"} 
+[2025-10-05 02:27:20] local.INFO: Fetching hairstyle scores for DataTable  
+[2025-10-05 02:27:20] local.INFO: Hairstyle scores fetched for DataTable {"total":39,"first_item":90} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":90,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":90,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":90,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":89,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":89,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":89,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":88,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":88,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":88,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":87,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":87,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":87,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":86,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":86,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":86,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":85,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":85,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":85,"score_value":7.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":84,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":84,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":84,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":83,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":83,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":83,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":82,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":82,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":82,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":81,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":81,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":81,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":80,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":80,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":80,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":79,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":79,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":79,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":78,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":78,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":78,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":77,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":77,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":77,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":76,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":76,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":76,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":75,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":75,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":75,"score_value":9.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":74,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":74,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":74,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":73,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":73,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":73,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":72,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":72,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":72,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":71,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":71,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":71,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":70,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":70,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":70,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":69,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":69,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":69,"score_value":9.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":68,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":68,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":68,"score_value":9.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":67,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":67,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":67,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":66,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":66,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":66,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":65,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":65,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":65,"score_value":9.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":64,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":64,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":64,"score_value":7.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":63,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":63,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":63,"score_value":9.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":62,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":62,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":62,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":61,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":61,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":61,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":60,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":60,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":60,"score_value":9.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":59,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":59,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":59,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":58,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":58,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":58,"score_value":8.5} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":54,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":54,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":54,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":53,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":53,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":53,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":52,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":52,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":52,"score_value":8.0} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":57,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":57,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":57,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":56,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":56,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":56,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:20] local.DEBUG: Processing hairstyle column {"score_id":55,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing criterion column {"score_id":55,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:20] local.DEBUG: Processing score column {"score_id":55,"score_value":8.300000000000000710542735760100185871124267578125} 
+[2025-10-05 02:27:28] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
+[2025-10-05 02:27:29] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
+[2025-10-05 02:27:29] local.INFO: Processing AJAX request for bookings datatable  
+[2025-10-05 02:27:29] local.INFO: Bookings data retrieved successfully {"total_records":101} 
+[2025-10-05 02:27:34] local.INFO: Fetching hairstyle scores for DataTable  
+[2025-10-05 02:27:34] local.INFO: Hairstyle scores fetched for DataTable {"total":39,"first_item":90} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":90,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":90,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":90,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":89,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":89,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":89,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":88,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":88,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":88,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":87,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":87,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":87,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":86,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":86,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":86,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":85,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":85,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":85,"score_value":7.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":84,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":84,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":84,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":83,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":83,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":83,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":82,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":82,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":82,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":81,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":81,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":81,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":80,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":80,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":80,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":79,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":79,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":79,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":78,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":78,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":78,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":77,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":77,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":77,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":76,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":76,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":76,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":75,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":75,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":75,"score_value":9.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":74,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":74,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":74,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":73,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":73,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":73,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":72,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":72,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":72,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":71,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":71,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":71,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":70,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":70,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":70,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":69,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":69,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":69,"score_value":9.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":68,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":68,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":68,"score_value":9.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":67,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":67,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":67,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":66,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":66,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":66,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":65,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":65,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":65,"score_value":9.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":64,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":64,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":64,"score_value":7.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":63,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":63,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":63,"score_value":9.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":62,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":62,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":62,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":61,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":61,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":61,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":60,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":60,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":60,"score_value":9.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":59,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":59,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":59,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":58,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":58,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":58,"score_value":8.5} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":54,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":54,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":54,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":53,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":53,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":53,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":52,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":52,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":52,"score_value":8.0} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":57,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":57,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":57,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":56,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":56,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":56,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:27:34] local.DEBUG: Processing hairstyle column {"score_id":55,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing criterion column {"score_id":55,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:27:34] local.DEBUG: Processing score column {"score_id":55,"score_value":8.300000000000000710542735760100185871124267578125} 
+[2025-10-05 02:35:33] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
+[2025-10-05 02:35:33] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
+[2025-10-05 02:35:33] local.INFO: Processing AJAX request for bookings datatable  
+[2025-10-05 02:35:33] local.INFO: Bookings data retrieved successfully {"total_records":101} 
+[2025-10-05 02:59:25] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"1","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633165000"}} 
+[2025-10-05 02:59:26] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"1","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633166566"}} 
+[2025-10-05 02:59:49] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"1","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633189500"}} 
+[2025-10-05 02:59:52] local.INFO: Fetching hairstyles for DataTable  
+[2025-10-05 02:59:52] local.INFO: Hairstyles fetched for DataTable {"total":13,"first_item":"Textured Crop"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":47,"name":"Textured Crop"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":47,"bentuk_kepala":"Hati"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":47,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":47,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":46,"name":"Long Fringe"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":46,"bentuk_kepala":"Hati"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":46,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":46,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":45,"name":"Side Swept Fringe"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":45,"bentuk_kepala":"Segitiga"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":45,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":45,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":44,"name":"Caesar Cut"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":44,"bentuk_kepala":"Persegi Panjang"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":44,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":44,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":43,"name":"Fringe"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":43,"bentuk_kepala":"Persegi Panjang"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":43,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":43,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":42,"name":"Undercut"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":42,"bentuk_kepala":"Kotak, Segitiga"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":42,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":42,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":41,"name":"Crew Cut"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":41,"bentuk_kepala":"Kotak"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":41,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":41,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":40,"name":"Tapper Fade"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":40,"bentuk_kepala":"Bulat, Kotak"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":40,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":40,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":39,"name":"Buzzcut"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":39,"bentuk_kepala":"Oval, Bulat, Kotak"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":39,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":39,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":38,"name":"Quiff"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":38,"bentuk_kepala":"Oval, Segitiga"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":38,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":38,"style_preference":"Klasik, Modern"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":37,"name":"Pompadour"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":37,"bentuk_kepala":"Oval, Bulat, Segitiga"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":37,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":37,"style_preference":"Klasik, Modern"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":36,"name":"Side Part"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":36,"bentuk_kepala":"Persegi Panjang, Hati"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":36,"tipe_rambut":"Lurus, Bergelombang, Keriting"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":36,"style_preference":"Klasik, Modern, Kasual"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing name column {"hairstyle_id":34,"name":"French Crop"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing bentuk_kepala {"hairstyle_id":34,"bentuk_kepala":"Oval, Bulat, Persegi Panjang, Hati"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing tipe_rambut {"hairstyle_id":34,"tipe_rambut":"Lurus, Bergelombang"} 
+[2025-10-05 02:59:52] local.DEBUG: Processing style_preference {"hairstyle_id":34,"style_preference":"Klasik, Modern"} 
+[2025-10-05 02:59:53] local.INFO: Fetching hairstyle scores for DataTable  
+[2025-10-05 02:59:53] local.INFO: Hairstyle scores fetched for DataTable {"total":39,"first_item":90} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":90,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":90,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":90,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":89,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":89,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":89,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":88,"hairstyle_id":47,"hairstyle_name":"Textured Crop"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":88,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":88,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":87,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":87,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":87,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":86,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":86,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":86,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":85,"hairstyle_id":46,"hairstyle_name":"Long Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":85,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":85,"score_value":7.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":84,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":84,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":84,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":83,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":83,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":83,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":82,"hairstyle_id":45,"hairstyle_name":"Side Swept Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":82,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":82,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":81,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":81,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":81,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":80,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":80,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":80,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":79,"hairstyle_id":44,"hairstyle_name":"Caesar Cut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":79,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":79,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":78,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":78,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":78,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":77,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":77,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":77,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":76,"hairstyle_id":43,"hairstyle_name":"Fringe"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":76,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":76,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":75,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":75,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":75,"score_value":9.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":74,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":74,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":74,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":73,"hairstyle_id":42,"hairstyle_name":"Undercut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":73,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":73,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":72,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":72,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":72,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":71,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":71,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":71,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":70,"hairstyle_id":41,"hairstyle_name":"Crew Cut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":70,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":70,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":69,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":69,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":69,"score_value":9.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":68,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":68,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":68,"score_value":9.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":67,"hairstyle_id":40,"hairstyle_name":"Tapper Fade"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":67,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":67,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":66,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":66,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":66,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":65,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":65,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":65,"score_value":9.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":64,"hairstyle_id":39,"hairstyle_name":"Buzzcut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":64,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":64,"score_value":7.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":63,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":63,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":63,"score_value":9.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":62,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":62,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":62,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":61,"hairstyle_id":38,"hairstyle_name":"Quiff"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":61,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":61,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":60,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":60,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":60,"score_value":9.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":59,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":59,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":59,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":58,"hairstyle_id":37,"hairstyle_name":"Pompadour"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":58,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":58,"score_value":8.5} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":54,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":54,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":54,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":53,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":53,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":53,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":52,"hairstyle_id":34,"hairstyle_name":"French Crop"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":52,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":52,"score_value":8.0} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":57,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":57,"criterion_id":10,"criterion_name":"Preferensi Gaya"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":57,"score_value":8.699999999999999289457264239899814128875732421875} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":56,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":56,"criterion_id":9,"criterion_name":"Tipe Rambut"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":56,"score_value":8.199999999999999289457264239899814128875732421875} 
+[2025-10-05 02:59:53] local.DEBUG: Processing hairstyle column {"score_id":55,"hairstyle_id":36,"hairstyle_name":"Side Part"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing criterion column {"score_id":55,"criterion_id":8,"criterion_name":"Bentuk Kepala"} 
+[2025-10-05 02:59:53] local.DEBUG: Processing score column {"score_id":55,"score_value":8.300000000000000710542735760100185871124267578125} 
+[2025-10-05 02:59:54] local.INFO: BookingController@index accessed {"is_ajax":false,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
+[2025-10-05 02:59:54] local.INFO: BookingController@index accessed {"is_ajax":true,"user_id":45,"ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"} 
+[2025-10-05 02:59:54] local.INFO: Processing AJAX request for bookings datatable  
+[2025-10-05 02:59:54] local.INFO: Bookings data retrieved successfully {"total_records":101} 
+[2025-10-05 03:00:12] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"1","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633212126"}} 
+[2025-10-05 03:00:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"2","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633212127"}} 
+[2025-10-05 03:01:13] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"3","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633212128"}} 
+[2025-10-05 03:01:43] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"4","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633212129"}} 
+[2025-10-05 03:02:13] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"5","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633212130"}} 
+[2025-10-05 03:02:43] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"6","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633212131"}} 
+[2025-10-05 03:03:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"7","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633212132"}} 
+[2025-10-05 03:04:03] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"1","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443218"}} 
+[2025-10-05 03:04:33] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"2","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443219"}} 
+[2025-10-05 03:05:04] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"3","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443220"}} 
+[2025-10-05 03:05:34] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"4","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443221"}} 
+[2025-10-05 03:06:04] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"5","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443222"}} 
+[2025-10-05 03:06:33] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"6","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443223"}} 
+[2025-10-05 03:07:41] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"7","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443224"}} 
+[2025-10-05 03:08:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"8","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443225"}} 
+[2025-10-05 03:09:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"9","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443226"}} 
+[2025-10-05 03:10:41] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"10","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443227"}} 
+[2025-10-05 03:11:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"11","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443228"}} 
+[2025-10-05 03:12:41] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"12","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443229"}} 
+[2025-10-05 03:13:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"13","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443230"}} 
+[2025-10-05 03:14:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"14","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443231"}} 
+[2025-10-05 03:15:41] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"15","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443232"}} 
+[2025-10-05 03:16:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"16","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443233"}} 
+[2025-10-05 03:17:41] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"17","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443234"}} 
+[2025-10-05 03:18:42] local.INFO: DataTable AJAX request received {"user_id":45,"request_data":{"draw":"18","columns":[{"data":"DT_RowIndex","name":"DT_RowIndex","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"name","name":"name","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"no_telepon","name":"no_telepon","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"roles","name":"roles","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"status","name":"status","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"loyalty_points","name":"loyalty_points","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"created_at","name":"created_at","searchable":"true","orderable":"true","search":{"value":null,"regex":"false"}},{"data":"action","name":"action","searchable":"false","orderable":"false","search":{"value":null,"regex":"false"}}],"order":[{"column":"1","dir":"asc","name":"name"}],"start":"0","length":"10","search":{"value":null,"regex":"false"},"_":"1759633443235"}} 

@@ -434,54 +434,7 @@
             </div>
         </div>
 
-        <!-- Statistics and Recent Activity -->
-        {{-- <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-6">
-            <!-- Booking Status Details -->
-            <!-- Popular Services -->
-            <div class="card">
-                <header class="card-header">
-                    <p class="card-header-title">
-                        <span class="icon text-purple-600"><i class="mdi mdi-star-circle"></i></span>
-                        Popular Services
-                    </p>
-                </header>
-                <div class="card-content">
-                    <div class="space-y-4">
-                        @php
-                            $popularServices = \App\Models\Booking::select('service_id')
-                                ->selectRaw('COUNT(*) as booking_count')
-                                ->with('service')
-                                ->groupBy('service_id')
-                                ->orderBy('booking_count', 'desc')
-                                ->limit(5)
-                                ->get();
-                        @endphp
-                        @foreach ($popularServices as $index => $bookingService)
-                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center">
-                                    <div
-                                        class="w-8 h-8 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-bold mr-3">
-                                        {{ $index + 1 }}
-                                    </div>
-                                    <div>
-                                        <div class="font-medium text-gray-800">
-                                            {{ $bookingService->service->name ?? 'N/A' }}</div>
-                                        <div class="text-sm text-gray-500">
-                                            Rp{{ number_format($bookingService->service->price ?? 0, 0, ',', '.') }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="font-semibold text-gray-800">{{ $bookingService->booking_count }}</div>
-                                    <div class="text-xs text-gray-500">bookings</div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-        </div> --}}
+      
 
     </section>
 @endsection

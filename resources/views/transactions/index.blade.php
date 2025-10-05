@@ -120,10 +120,10 @@
 
                                     {{-- Download Receipt for Successful Transactions --}}
                                     @if (in_array($tx['status'], ['settlement', 'capture']))
-                                        <a onclick="window.open('{{ route('transaction.download', $tx['order_id']) }}', '_blank')"
+                                        <a href="{{ route('transaction.download', $tx['order_id']) }}" target="_blank"
                                             class="w-full inline-flex justify-center items-center px-4 py-2 hover:bg-green-600 bg-green-500 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                                             <i class="fas fa-download mr-2"></i>
-                                            Unduh Bukti Pembayaran
+                                            Unduh Invoice
                                         </a>
                                     @endif
                                 </div>
