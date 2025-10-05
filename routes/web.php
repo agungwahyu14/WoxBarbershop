@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', fn () => view('welcome'))->name('home');
+Route::get('/', [DashboardController::class, 'welcome'])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 

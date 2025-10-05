@@ -101,6 +101,9 @@ class BookingController extends Controller
                             </div>
                         </div>' : '<span class="text-gray-400">No customer</span>';
                     })
+                    ->addColumn('name', function ($row) {
+                        return $row->name ;
+                    })
                     ->addColumn('contact_info', function ($row) {
                         return $row->user && $row->user->no_telepon ?
                             '<div class="flex items-center space-x-2">

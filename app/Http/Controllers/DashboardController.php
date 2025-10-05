@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Feedback;
 use App\Models\Hairstyle;
+use App\Models\Product;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
@@ -134,8 +136,15 @@ class DashboardController extends Controller
     $services = Service::all();
     $hairstyles = Hairstyle::all();
     $users = User::all();
+    $products = Product::active()->take(6)->get();
+    $testimonials = Feedback::active()
+        ->public()
+        ->with(['user', 'booking'])
+        ->orderBy('created_at', 'desc')
+        ->take(6)
+        ->get();
 
-    return view('dashboard', compact('services', 'hairstyles', 'users'));
+    return view('dashboard', compact('services', 'hairstyles', 'users', 'products', 'testimonials'));
 }
 
 
@@ -440,5 +449,23 @@ class DashboardController extends Controller
             ]);
             throw $e;
         }
+    }
+
+    /**
+     * Display welcome page with dynamic data
+     */
+    public function welcome()
+    {
+        $services = Service::all();
+        $hairstyles = Hairstyle::all();
+        $products = Product::active()->take(6)->get();
+        $testimonials = Feedback::active()
+            ->public()
+            ->with(['user', 'booking'])
+            ->orderBy('created_at', 'desc')
+            ->take(6)
+            ->get();
+
+        return view('welcome', compact('services', 'hairstyles', 'products', 'testimonials'));
     }
 }

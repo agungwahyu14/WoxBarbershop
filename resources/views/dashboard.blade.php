@@ -159,48 +159,29 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Product 1 -->
-                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                            alt="Hair Product" class="w-full h-full object-cover">
+                @forelse($products as $product)
+                    <div class="bg-white overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2">{{ $product->name }}</h3>
+                            <p class="text-sm sm:text-base md:text-lg text-gray-600 mb-4">
+                                {{ Str::limit($product->description, 100) }}
+                            </p>
+                            @if ($product->price)
+                                <span class="font-bold text-lg font-playfair text-secondary">Rp
+                                    {{ number_format($product->price, 0, ',', '.') }}</span>
+                            @endif
+                        </div>
                     </div>
-                    <div class="p-6">
-                        <!-- Contoh pada Produk -->
-                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2">Shampoo & Conditioner</h3>
-                        <p class="text-sm sm:text-base md:text-lg text-gray-600 mb-4">
-                            Membersihkan dan melembabkan rambut dengan formula khusus.
-                        </p>
-
+                @empty
+                    <!-- Fallback jika tidak ada produk -->
+                    <div class="col-span-3 text-center py-8">
+                        <p class="text-gray-600">Belum ada produk yang tersedia.</p>
                     </div>
-                </div>
-
-                <!-- Product 2 -->
-                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                            alt="Hair Styling" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Beard Oil</h3>
-                        <p class="text-gray-600 mb-4">Minyak jenggot dengan bahan alami untuk jenggot sehat dan
-                            lembut.</p>
-
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="bg-white  overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                            alt="Hair Styling" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold mb-2">Hair Styling Wax</h3>
-                        <p class="text-gray-600 mb-4">Wax styling dengan hold kuat namun mudah dibentuk.</p>
-
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -217,37 +198,30 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="bg-white p-8  shadow-md rounded-lg">
-
-                    <p class="text-gray-600 italic mb-6">
-                        "Pengalaman cukur terbaik yang pernah saya dapatkan. Barber sangat profesional dan hasilnya
-                        sempurna!"
-                    </p>
-                    <div class="font-bold">Andi Wijaya</div>
-                    <div class="text-gray-500 text-sm">Pelanggan sejak 2018</div>
-                </div>
-
-                <!-- Testimonial 2 -->
-                <div class="bg-white p-8  shadow-md rounded-lg">
-
-                    <p class="text-gray-600 italic mb-6">
-                        "Produk perawatan jenggot mereka sangat bagus. Jenggot saya jadi lebih sehat dan mudah
-                        diatur."
-                    </p>
-                    <div class="font-bold">Budi Santoso</div>
-                    <div class="text-gray-500 text-sm">Pelanggan sejak 2020</div>
-                </div>
-
-                <!-- Testimonial 3 -->
-                <div class="bg-white p-8  shadow-md rounded-lg">
-
-                    <p class="text-gray-600 italic mb-6">
-                        "Atmosfernya sangat nyaman dan stafnya ramah. Potongan rambutnya selalu sesuai permintaan."
-                    </p>
-                    <div class="font-bold">Rudi Hartono</div>
-                    <div class="text-gray-500 text-sm">Pelanggan sejak 2015</div>
-                </div>
+                @forelse($testimonials as $testimonial)
+                    <div class="bg-white p-8 shadow-md rounded-lg">
+                        <div class="flex items-center mb-4">
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($i <= $testimonial->rating)
+                                    <i class="fas fa-star text-yellow-400"></i>
+                                @else
+                                    <i class="fas fa-star text-gray-300"></i>
+                                @endif
+                            @endfor
+                            <span class="ml-2 text-sm text-gray-600">({{ $testimonial->rating }}/5)</span>
+                        </div>
+                        <p class="text-gray-600 italic mb-6">
+                            "{{ $testimonial->comment }}"
+                        </p>
+                        <div class="font-bold">{{ $testimonial->user->name }}</div>
+                        <div class="text-gray-500 text-sm">{{ $testimonial->created_at->format('d M Y') }}</div>
+                    </div>
+                @empty
+                    <!-- Fallback jika tidak ada testimonial -->
+                    <div class="col-span-3 text-center py-8">
+                        <p class="text-gray-600">Belum ada testimoni yang tersedia.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>

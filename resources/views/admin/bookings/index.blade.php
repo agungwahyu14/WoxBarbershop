@@ -149,6 +149,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Customer</th>
+                                <th>Booking Name</th>
                                 <th>Contact</th>
                                 <th>Service</th>
                                 <th>Hairstyle</th>
@@ -193,6 +194,11 @@
                         {
                             data: 'customer_info',
                             name: 'user.name',
+                            className: 'text-left'
+                        },
+                        {
+                            data: 'name',
+                            name: 'name',
                             className: 'text-left'
                         },
                         {
