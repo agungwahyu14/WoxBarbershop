@@ -154,7 +154,7 @@
         @if (session('success'))
             Swal.fire({
                 icon: 'success',
-                title: 'Success!',
+                title: '{{ __('admin.success_title') }}',
                 text: '{{ session('success') }}',
                 timer: 4000,
                 showConfirmButton: true,
@@ -168,18 +168,18 @@
             @php $bookingData = session('booking_success'); @endphp
             Swal.fire({
                 icon: 'success',
-                title: 'Booking Berhasil!',
+                title: '{{ __('booking.booking_success_title') }}',
                 html: `
                 <div class="text-left">
-                    <p><strong>Nama:</strong> {{ $bookingData['name'] }}</p>
-                    <p><strong>Nomor Antrian:</strong> <span class="text-2xl font-bold text-blue-600">{{ $bookingData['queue_number'] }}</span></p>
-                    <p><strong>Waktu:</strong> {{ $bookingData['date_time'] ?? '' }}</p>
-                    <p><strong>Layanan:</strong> {{ $bookingData['service_name'] ?? '' }}</p>
+                    <p><strong>{{ __('booking.booking_success_name') }}:</strong> {{ $bookingData['name'] }}</p>
+                    <p><strong>{{ __('booking.booking_success_queue') }}:</strong> <span class="text-2xl font-bold text-blue-600">{{ $bookingData['queue_number'] }}</span></p>
+                    <p><strong>{{ __('booking.booking_success_time') }}:</strong> {{ $bookingData['date_time'] ?? '' }}</p>
+                    <p><strong>{{ __('booking.booking_success_service') }}:</strong> {{ $bookingData['service_name'] ?? '' }}</p>
                 </div>
                 <div class="mt-4 p-3 bg-blue-50 rounded-lg">
                     <p class="text-sm text-blue-800">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Mohon hadir 10 menit sebelum waktu booking Anda
+                        {{ __('booking.booking_success_note') }}
                     </p>
                 </div>
             `,
@@ -193,23 +193,23 @@
         @if (session('error') && session('error_type') === 'business_hours')
             Swal.fire({
                 icon: 'error',
-                title: 'Jam Operasional',
+                title: '{{ __('admin.business_hours_title') }}',
                 html: `
                 <div class="text-left">
                     <p class="mb-3">{{ session('error') }}</p>
                     <div class="bg-red-50 p-3 rounded-lg">
                         <h4 class="font-semibold text-red-800 mb-2">
-                            <i class="fas fa-clock mr-1"></i> Jam Operasional:
+                            <i class="fas fa-clock mr-1"></i> {{ __('admin.business_hours_title') }}:
                         </h4>
                         <p class="text-red-700">
-                            <strong>Senin - Sabtu:</strong> 09:00 - 21:00<br>
-                            <strong>Minggu:</strong> Tutup
+                            <strong>{{ __('admin.business_hours_daily') }}</strong><br>
+                            <strong>{{ __('admin.business_hours_no_holiday') }}</strong>
                         </p>
                     </div>
                 </div>
             `,
                 showConfirmButton: true,
-                confirmButtonText: 'Pilih Waktu Lain',
+                confirmButtonText: '{{ __('admin.choose_other_time') }}',
                 confirmButtonColor: '#DC2626'
             });
         @endif
@@ -218,20 +218,20 @@
         @if (session('warning') && session('error_type') === 'time_conflict')
             Swal.fire({
                 icon: 'warning',
-                title: 'Waktu Tidak Tersedia',
+                title: '{{ __('admin.time_unavailable') }}',
                 html: `
                 <div class="text-left">
                     <p class="mb-3">{{ session('warning') }}</p>
                     <div class="bg-yellow-50 p-3 rounded-lg">
                         <p class="text-yellow-800">
                             <i class="fas fa-lightbulb mr-1"></i>
-                            <strong>Tip:</strong> Coba pilih waktu 30 menit sebelum atau sesudah waktu yang diminta
+                            {{ __('admin.time_conflict_tip') }}
                         </p>
                     </div>
                 </div>
             `,
                 showConfirmButton: true,
-                confirmButtonText: 'Coba Lagi',
+                confirmButtonText: '{{ __('admin.try_again') }}',
                 confirmButtonColor: '#F59E0B'
             });
         @endif
@@ -240,7 +240,7 @@
         @if (session('error') && !session('error_type'))
             Swal.fire({
                 icon: 'error',
-                title: 'Error!',
+                title: '{{ __('admin.error_title') }}',
                 text: '{{ session('error') }}',
                 timer: 5000,
                 showConfirmButton: true,
@@ -270,8 +270,8 @@
                                     <i class="fas fa-clock mr-1"></i> Jam Operasional Barbershop:
                                 </h4>
                                 <div class="text-red-700">
-                                    <p><strong>Senin - Sabtu:</strong> 09:00 - 21:00</p>
-                                    <p><strong>Minggu:</strong> <span class="text-red-600 font-semibold">TUTUP</span></p>
+                                    <p><strong>Setiap Hari:</strong> 11:00 - 22:00</p>
+                                    <p><strong>Tidak Ada Libur</strong> <span class="text-green-600 font-semibold">BUKA SETIAP HARI</span></p>
                                 </div>
                                 <div class="mt-3 p-2 bg-red-100 rounded text-red-800 text-sm">
                                     <i class="fas fa-info-circle mr-1"></i>

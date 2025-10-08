@@ -6,9 +6,9 @@
 class BookingFormValidator {
     constructor() {
         this.businessHours = {
-            open: 9,
-            close: 21,
-            closedDays: [0] // Sunday
+            open: 11,
+            close: 22,
+            closedDays: [] // Open every day, no holidays
         };
 
         this.validationRules = {

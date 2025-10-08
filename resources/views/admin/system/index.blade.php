@@ -8,10 +8,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    <i class="fas fa-box mr-3"></i> Backup & Restore Data
+                    <i class="fas fa-box mr-3"></i> {{ __('admin.system_page_title') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Kelola backup dan restore database sistem
+                    {{ __('admin.system_page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -30,23 +30,23 @@
                             <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
                                 <i class="fas fa-download text-white" aria-hidden="true"></i>
                             </div>
-                            <h3 class="text-lg font-bold text-gray-900">Backup Database</h3>
+                            <h3 class="text-lg font-bold text-gray-900">{{ __('admin.backup_database') }}</h3>
                         </div>
                         <p class="text-gray-600 mb-6">
-                            Buat backup database untuk melindungi data penting dari kehilangan atau kerusakan.
+                            {{ __('admin.backup_description') }}
                         </p>
                         <div class="space-y-3">
                             <button onclick="createBackup('full')"
                                 class="w-full inline-flex justify-center items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                                 aria-label="Backup Lengkap (Database + Files)">
                                 <i class="fas fa-database mr-3" aria-hidden="true"></i>
-                                Backup Lengkap (Database + Files)
+                                {{ __('admin.backup_full') }}
                             </button>
                             <button onclick="createBackup('partial')"
                                 class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                                 aria-label="Backup Data Saja">
                                 <i class="fas fa-archive mr-3" aria-hidden="true"></i>
-                                Backup Data Saja
+                                {{ __('admin.backup_partial') }}
                             </button>
                             <div class="text-xs text-gray-500 text-center mt-3">
                                 Backup akan disimpan dengan timestamp untuk identifikasi
@@ -110,7 +110,7 @@
             </div>
         </div>
     </section>
- 
+
     @push('scripts')
         <script>
             function createBackup(type) {

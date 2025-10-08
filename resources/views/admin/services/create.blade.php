@@ -6,10 +6,10 @@
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                     <i class="fas fa-cogs mr-3"></i>
-                    Create Service
+                    {{ __('admin.create_service_title') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Add a new service for Wox's Barbershop
+                    {{ __('admin.create_service_subtitle') }}
                 </p>
             </div>
         </div>
@@ -25,8 +25,8 @@
                         <i class="fas fa-cogs text-white text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Service Information</h2>
-                        <p class="text-gray-600 mt-1">Please fill in all required service information</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.service_information') }}</h2>
+                        <p class="text-gray-600 mt-1">{{ __('admin.fill_required_info') }}</p>
                     </div>
                 </div>
             </div>
@@ -39,11 +39,11 @@
                     <!-- Service Name -->
                     <div>
                         <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-tag mr-2 text-blue-600"></i>Service Name
+                            <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.service_name') }}
                         </label>
                         <input type="text" name="name" id="name" value="{{ old('name') }}"
                             class="form-control w-full @error('name') border-red-500 @enderror"
-                            placeholder="Enter service name" required>
+                            placeholder="{{ __('admin.enter_service_name') }}" required>
                         @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -55,7 +55,7 @@
                             <i class="fas fa-align-left mr-2 text-blue-600"></i>Description
                         </label>
                         <textarea name="description" id="description" rows="3"
-                            class="form-control w-full @error('description') border-red-500 @enderror" placeholder="Optional">{{ old('description') }}</textarea>
+                            class="form-control w-full @error('description') border-red-500 @enderror" placeholder="{{ __('admin.optional') }}">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -67,8 +67,8 @@
                             <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i>Price (Rp)
                         </label>
                         <input type="number" name="price" id="price" value="{{ old('price') }}"
-                            class="form-control w-full @error('price') border-red-500 @enderror" placeholder="Enter price"
-                            required>
+                            class="form-control w-full @error('price') border-red-500 @enderror"
+                            placeholder="{{ __('admin.enter_price') }}" required>
                         @error('price')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -83,7 +83,7 @@
                             </a>
                             <button type="submit"
                                 class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                                <i class="fas fa-save mr-2"></i>Create Service
+                                <i class="fas fa-save mr-2"></i>{{ __('admin.create_service_btn') }}
                             </button>
                         </div>
                     </div>

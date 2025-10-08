@@ -5,9 +5,9 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white"><i
-                        class="fas fa-receipt mr-3"></i>Transactions </h1>
+                        class="fas fa-receipt mr-3"></i>{{ __('admin.transactions_page_title') }}</h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Latest payment transactions from Wox's Barbershop
+                    {{ __('admin.transactions_page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -90,21 +90,21 @@
                                 #
                             </th>
                             <th>
-                                Name
+                                {{ __('admin.name_column') }}
                             </th>
                             <th>
                                 Email
                             </th>
-                            <th>Date</th>
-                            <th>Order ID
+                            <th>{{ __('admin.date_column') }}</th>
+                            <th>{{ __('admin.transaction_id_column') }}
                             </th>
 
                             <th>Type</th>
-                            <th>Status
+                            <th>{{ __('admin.status_column') }}
                             </th>
-                            <th>Amount
+                            <th>{{ __('admin.amount_column') }}
                             </th>
-                            <th>Action
+                            <th>{{ __('admin.actions_column') }}
                             </th>
                         </tr>
                     </thead>

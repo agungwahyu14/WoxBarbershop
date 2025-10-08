@@ -5,10 +5,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    <i class="fas fa-user-shield mr-3"></i> Role Management
+                    <i class="fas fa-user-shield mr-3"></i> {{ __('admin.roles_page_title') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage user roles and permissions across your system
+                    {{ __('admin.roles_page_subtitle') }}
                 </p>
             </div>
 
@@ -24,7 +24,7 @@
                     <a href="{{ route('admin.roles.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                         <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                        Create Role
+                        {{ __('admin.create_role_btn') }}
                     </a>
 
                 </div>
@@ -41,10 +41,10 @@
                                 #
                             </th>
                             <th>
-                                Role Name
+                                {{ __('admin.role_name') }}
                             </th>
                             <th>
-                                Action
+                                {{ __('admin.actions_column') }}
                             </th>
                         </tr>
                     </thead>

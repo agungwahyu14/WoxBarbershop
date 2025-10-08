@@ -5,10 +5,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    <i class="fas fa-box mr-3"></i> Product 
+                    <i class="fas fa-box mr-3"></i> {{ __('admin.products_page_title') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage barbershop products and inventory
+                    {{ __('admin.products_page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -23,7 +23,7 @@
                     <a href="{{ route('admin.products.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                         <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                        Add Product
+                        {{ __('admin.create_product_btn') }}
                     </a>
                 </div>
             </div>
@@ -34,12 +34,12 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Product</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>{{ __('admin.name_column') }}</th>
+                            <th>{{ __('admin.category_column') }}</th>
+                            <th>{{ __('admin.price_column') }}</th>
+                            <th>{{ __('admin.stock_column') }}</th>
+                            <th>{{ __('admin.status_column') }}</th>
+                            <th>{{ __('admin.actions_column') }}</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -217,7 +217,7 @@
                             showConfirmButton: false
                         }).then(() => {
                             window.location.href =
-                            '{{ route('admin.products.index') }}';
+                                '{{ route('admin.products.index') }}';
                         });
                     },
                     error: function(xhr) {

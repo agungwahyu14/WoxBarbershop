@@ -7,10 +7,10 @@
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center mb-4">
                     <i class="fas fa-cogs mr-3"></i>
-                    Edit Service
+                    {{ __('admin.edit_service_title') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Update Wox's Barbershop service data
+                    {{ __('admin.edit_service_subtitle') }}
                 </p>
             </div>
         </div>
@@ -26,8 +26,8 @@
                         <i class="fas fa-edit text-white text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Service Information</h2>
-                        <p class="text-gray-600 mt-1">Update all required service fields</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.service_information') }}</h2>
+                        <p class="text-gray-600 mt-1">{{ __('admin.fill_required_info') }}</p>
                     </div>
                 </div>
             </div>

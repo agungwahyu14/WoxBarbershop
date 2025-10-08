@@ -20,7 +20,7 @@ class Booking extends Model
         'payment_method',
         'status',
         'total_price',
-
+        'is_loyalty_redeem',
     ];
 
     protected $casts = [

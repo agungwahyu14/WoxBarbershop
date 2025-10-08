@@ -11,10 +11,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
             <div>
                 <h1 class="title">
-                    <i class="fas fa-user-plus mr-3"></i> Create New User
+                    <i class="fas fa-user-plus mr-3"></i> {{ __('admin.create_user_btn') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Add a new user to the system with roles and permissions
+                    {{ __('admin.user_information_subtitle') }}
                 </p>
             </div>
         </div>
@@ -47,7 +47,7 @@
                             </label>
                             <input type="text" name="name" id="name"
                                 class="form-control w-full @error('name') border-red-500 @enderror"
-                                value="{{ old('name') }}" placeholder="Enter  name" required>
+                                value="{{ old('name') }}" placeholder="{{ __('admin.enter_name') }}" required>
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -60,7 +60,7 @@
                             </label>
                             <input type="email" name="email" id="email"
                                 class="form-control w-full @error('email') border-red-500 @enderror"
-                                value="{{ old('email') }}" placeholder="Enter email address" required>
+                                value="{{ old('email') }}" placeholder="{{ __('admin.enter_email') }}" required>
                             @error('email')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -165,7 +165,7 @@
                             </a>
                             <button type="submit"
                                 class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                <i class="fas fa-save mr-2"></i>Create User
+                                <i class="fas fa-save mr-2"></i>{{ __('admin.create_user_btn') }}
                             </button>
                         </div>
                     </div>

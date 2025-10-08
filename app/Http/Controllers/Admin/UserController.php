@@ -753,4 +753,81 @@ if ($request->filled('status_filter')) {
 
         return $pdf->download('users' . $period . '_' . now()->format('Ymd_His') . '.pdf');
     }
+
+    /**
+     * Redeem loyalty points for free service
+     */
+    public function redeemLoyalty(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+            $loyalty = $user->loyalty;
+
+            if (!$loyalty || !$loyalty->canRedeemFreeService()) {
+                return back()->with('error', 'Anda tidak memiliki poin yang cukup untuk redeem gratis (minimum 10 poin).');
+            }
+
+            $request->validate([
+                'service_id' => 'required|exists:services,id',
+                'hairstyle_id' => 'required|exists:hairstyles,id',
+                'date_time' => 'required|date|after:now',
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string|max:500'
+            ]);
+
+            $service = \App\Models\Service::findOrFail($request->service_id);
+
+            // Create free booking
+            $booking = \App\Models\Booking::create([
+                'user_id' => $user->id,
+                'name' => $request->name,
+                'service_id' => $request->service_id,
+                'hairstyle_id' => $request->hairstyle_id,
+                'date_time' => $request->date_time,
+                'queue_number' => $this->generateQueueNumber($request->date_time),
+                'description' => $request->description,
+                'status' => 'pending',
+                'total_price' => 0, // FREE!
+                'payment_method' => 'loyalty_redeem',
+                'is_loyalty_redeem' => true
+            ]);
+
+            // Redeem loyalty points (reset to 0)
+            $loyalty->redeemFreeService();
+
+            DB::commit();
+
+            Log::info('Loyalty points redeemed for free service', [
+                'user_id' => $user->id,
+                'booking_id' => $booking->id,
+                'points_before' => 10,
+                'points_after' => $loyalty->points
+            ]);
+
+            return redirect()->route('bookings.index')
+                ->with('success', "Berhasil! Anda telah menggunakan 10 poin untuk potong rambut gratis. Nomor antrian: {$booking->queue_number}");
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Failed to redeem loyalty points', [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage()
+            ]);
+
+            return back()->with('error', 'Gagal melakukan redeem: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Generate queue number for given date
+     */
+    private function generateQueueNumber($dateTime)
+    {
+        $date = \Carbon\Carbon::parse($dateTime)->format('Y-m-d');
+        $maxQueue = \App\Models\Booking::whereDate('date_time', $date)->max('queue_number');
+        return $maxQueue ? $maxQueue + 1 : 1;
+    }
 }

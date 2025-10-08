@@ -98,6 +98,87 @@
                     $('.dt-buttons').appendTo('#export-buttons');
                 }
             });
+
+            // Handle reset points
+            $(document).on('click', '.resetPointsBtn', function() {
+                const loyaltyId = $(this).data('id');
+                const userName = $(this).data('user');
+                const points = $(this).data('points');
+
+                Swal.fire({
+                    title: 'Reset Loyalty Points?',
+                    html: `
+                        <div class="text-left">
+                            <p class="mb-2"><strong>Pelanggan:</strong> ${userName}</p>
+                            <p class="mb-2"><strong>Points Saat Ini:</strong> ${points} poin</p>
+                            <p class="text-sm text-gray-600">Dengan mereset poin, pelanggan akan mendapat potong gratis dan poin akan kembali ke 0.</p>
+                        </div>
+                    `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#10b981',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: '<i class="fas fa-gift mr-2"></i>Ya, Berikan Potong Gratis',
+                    cancelButtonText: '<i class="fas fa-times mr-2"></i>Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading
+                        Swal.fire({
+                            title: 'Memproses...',
+                            text: 'Mereset loyalty points...',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        // Ajax request to reset points
+                        $.ajax({
+                            url: `/admin/loyalty/${loyaltyId}/reset`,
+                            type: 'POST',
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr('content'),
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#10b981'
+                                    });
+                                    table.ajax.reload();
+                                } else {
+                                    Swal.fire({
+                                        title: 'Gagal!',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonColor: '#ef4444'
+                                    });
+                                }
+                            },
+                            error: function(xhr) {
+                                let errorMessage =
+                                    'Terjadi kesalahan saat mereset poin.';
+
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                }
+
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: errorMessage,
+                                    icon: 'error',
+                                    confirmButtonColor: '#ef4444'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
         });
     </script>
 @endpush

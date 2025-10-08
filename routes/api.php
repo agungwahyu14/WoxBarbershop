@@ -56,9 +56,9 @@ Route::middleware('auth')->group(function () {
                 'success' => true,
                 'validation' => $validation,
                 'business_hours' => [
-                    'open' => '09:00',
-                    'close' => '21:00',
-                    'closed_days' => ['Sunday']
+                    'open' => '11:00',
+                    'close' => '22:00',
+                    'closed_days' => [] // Open every day, no holidays
                 ]
             ]);
 

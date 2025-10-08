@@ -13,12 +13,12 @@
                 @auth
                     <a href="{{ route('dashboard') }}"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Beranda
+                        {{ __('general.home') }}
                     </a>
                 @else
                     <a href="#beranda"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Beranda
+                        {{ __('general.home') }}
                     </a>
                 @endauth
 
@@ -26,12 +26,12 @@
                 @auth
                     <a href="{{ route('dashboard') }}#layanan"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Layanan
+                        {{ __('general.services') }}
                     </a>
                 @else
                     <a href="#layanan"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Layanan
+                        {{ __('general.services') }}
                     </a>
                 @endauth
 
@@ -39,7 +39,7 @@
                 @auth
                     <a href="{{ route('dashboard') }}#tentang"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Tentang
+                        {{ __('general.about') }}
                     </a>
                 @else
                     <a href="#tentang"
@@ -81,8 +81,11 @@
                 </a>
             </div>
 
-            <!-- Right Section: User Profile Circle -->
+            <!-- Right Section: Language Switcher & User Profile -->
             <div class="flex items-center space-x-4 flex-shrink-0">
+                <!-- Language Switcher -->
+                @include('components.language-switcher')
+
                 @auth
                     <div class="relative" x-data="{ open: false }" x-init="open = false">
                         <!-- Profile Circle Button -->
@@ -173,11 +176,11 @@
                     <div class="flex items-center space-x-3">
                         <a href="{{ route('login') }}"
                             class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
-                            Masuk
+                            {{ __('auth.login') }}
                         </a>
                         <a href="{{ route('register') }}"
                             class="px-4 py-2 text-sm font-medium bg-[#d4af37] text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200">
-                            Daftar
+                            {{ __('auth.register') }}
                         </a>
                     </div>
                 @endauth

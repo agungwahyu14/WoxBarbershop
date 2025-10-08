@@ -9,6 +9,8 @@ use App\Traits\ExportTrait;
 use App\Exports\TransactionsExport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -331,25 +333,73 @@ protected function getPaymentType($paymentType)
 
     public function markAsSettlement($id)
     {
-        $transaction = Transaction::findOrFail($id);
+        DB::beginTransaction();
         
-        // Update transaction status to settlement
-        $transaction->update([
-            'transaction_status' => 'settlement'
-        ]);
-
-        // Update related booking if exists
-        $booking = Booking::where('id', $transaction->order_id)->first();
-        if ($booking) {
-            $booking->update([
-                'status' => 'completed',
-                'payment_status' => 'paid'
+        try {
+            $transaction = Transaction::findOrFail($id);
+            
+            // Update transaction status to settlement
+            $transaction->update([
+                'transaction_status' => 'settlement'
             ]);
-        }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Transaksi berhasil dikonfirmasi sebagai settlement.'
-        ]);
+            // Update related booking if exists
+            $booking = Booking::where('id', $transaction->order_id)->first();
+            if ($booking && $booking->status !== 'completed') {
+                $booking->update([
+                    'status' => 'completed',
+                    'payment_status' => 'paid'
+                ]);
+
+                // Add loyalty points when transaction is settled and booking is completed
+                // Always add loyalty points for completed paid bookings
+                {
+                    $user = $booking->user;
+                    $loyalty = $user->loyalty;
+
+                    if (!$loyalty) {
+                        Log::info('Creating new loyalty record for user on settlement', ['user_id' => $user->id]);
+                        
+                        $loyalty = \App\Models\Loyalty::create([
+                            'user_id' => $user->id,
+                            'points' => 0
+                        ]);
+                    }
+
+                    // Add 1 point for completed haircut
+                    $oldPoints = $loyalty->points;
+                    $loyalty->addPoints(1);
+
+                    Log::info('Loyalty points added on transaction settlement', [
+                        'user_id' => $user->id,
+                        'booking_id' => $booking->id,
+                        'transaction_id' => $transaction->id,
+                        'old_points' => $oldPoints,
+                        'new_points' => $loyalty->points,
+                        'can_redeem' => $loyalty->canRedeemFreeService()
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Transaksi berhasil dikonfirmasi sebagai settlement dan loyalty points telah ditambahkan.'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Failed to mark transaction as settlement', [
+                'transaction_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengkonfirmasi settlement: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

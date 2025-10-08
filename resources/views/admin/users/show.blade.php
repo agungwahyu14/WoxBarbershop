@@ -12,10 +12,10 @@
             <div class="text-center md:text-left">
                 <h1 class="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center md:justify-start">
                     <i class="fas fa-user mr-3 text-gray-700"></i>
-                    User Details
+                    {{ __('admin.user_details_title') }}
                 </h1>
                 <p class="text-gray-700 text-lg">
-                    Comprehensive user information and activity overview
+                    {{ __('admin.user_details_subtitle') }}
                 </p>
             </div>
 
@@ -23,23 +23,23 @@
             <div class="flex flex-wrap gap-3 justify-center md:justify-end">
                 <a href="{{ route('admin.users.edit', $user) }}"
                     class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                    <i class="fas fa-edit mr-2"></i>Edit User
+                    <i class="fas fa-edit mr-2"></i>{{ __('admin.edit_user_btn') }}
                 </a>
 
                 <a href="{{ route('admin.users.index') }}"
                     class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Users
+                    <i class="fas fa-arrow-left mr-2"></i>{{ __('admin.back_to_users_btn') }}
                 </a>
 
                 @if ($user->is_active ?? true)
                     <button type="button" onclick="toggleUserStatus('deactivate')"
                         class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
-                        <i class="fas fa-user-slash mr-2"></i>Deactivate Account
+                        <i class="fas fa-user-slash mr-2"></i>{{ __('admin.deactivate_account_btn') }}
                     </button>
                 @else
                     <button type="button" onclick="toggleUserStatus('activate')"
                         class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200">
-                        <i class="fas fa-user-check mr-2"></i>Activate Account
+                        <i class="fas fa-user-check mr-2"></i>{{ __('admin.activate_account_btn') }}
                     </button>
                 @endif
             </div>

@@ -9,10 +9,10 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div>
                     <h1 class="text-4xl font-bold mb-2">
-                        <i class="fas fa-calendar-check mr-3"></i>Booking 
+                        <i class="fas fa-calendar-check mr-3"></i>{{ __('admin.booking_page_title') }}
                     </h1>
                     <p class="text-blacktext-lg">
-                        Manage all customer appointments and reservations
+                        {{ __('admin.booking_page_subtitle') }}
                     </p>
                 </div>
                 <div class="flex items-center space-x-4 mt-4 md:mt-0">
@@ -30,7 +30,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm font-medium">Today's Bookings</p>
+                            <p class="text-gray-600 text-sm font-medium">{{ __('admin.todays_bookings') }}</p>
                             <p class="text-3xl font-bold text-blue-600" id="today-bookings">
                                 {{ \App\Models\Booking::whereDate('date_time', today())->count() }}</p>
                         </div>
@@ -43,7 +43,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm font-medium">Pending Approval</p>
+                            <p class="text-gray-600 text-sm font-medium">{{ __('admin.pending_approval') }}</p>
                             <p class="text-3xl font-bold text-yellow-600" id="pending-bookings">
                                 {{ \App\Models\Booking::where('status', 'pending')->count() }}</p>
                         </div>
@@ -56,7 +56,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm font-medium">In Progress</p>
+                            <p class="text-gray-600 text-sm font-medium">{{ __('admin.in_progress') }}</p>
                             <p class="text-3xl font-bold text-orange-600" id="progress-bookings">
                                 {{ \App\Models\Booking::where('status', 'in_progress')->count() }}</p>
                         </div>
@@ -69,7 +69,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 card-hover transition-all duration-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm font-medium">Completed Today</p>
+                            <p class="text-gray-600 text-sm font-medium">{{ __('admin.completed_today') }}</p>
                             <p class="text-3xl font-bold text-green-600" id="completed-bookings">
                                 {{ \App\Models\Booking::where('status', 'completed')->whereDate('date_time', today())->count() }}
                             </p>

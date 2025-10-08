@@ -289,9 +289,9 @@
                             errorMessage += '• Maaf, kami tutup pada hari Minggu\n';
                         }
 
-                        if (hours < 9 || hours >= 21) {
+                        if (hours < 11 || hours >= 22) {
                             hasError = true;
-                            errorMessage += '• Booking hanya dapat dilakukan antara jam 09:00 - 21:00\n';
+                            errorMessage += '• Booking hanya dapat dilakukan antara jam 11:00 - 22:00\n';
                         }
                     }
 

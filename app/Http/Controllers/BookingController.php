@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BookingRequest;
 use App\Models\Booking;
-use App\Models\Loyalty;
 use App\Models\Service;
 use App\Models\User;
 use App\Services\BookingService;
@@ -680,14 +679,6 @@ class BookingController extends Controller
         try {
             $this->bookingService->updateBookingStatus($booking, $request->status);
 
-            // ✅ Tambahkan ini jika status = completed
-            if ($request->status === 'completed') {
-                $this->completeBooking($booking->id);
-                Log::info('Loyalty berhasil di tambahkan', [
-                    'booking_id' => $booking->id,
-                ]);
-            }
-
             // Clear caches
             $this->cacheService->clearBookingCaches($booking->date_time);
             $this->cacheService->clearDashboardStats();
@@ -715,84 +706,6 @@ class BookingController extends Controller
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 422);
-        }
-    }
-
-    public function completeBooking($bookingId)
-    {
-        Log::info('Fungsi completeBooking dipanggil', [
-            'booking_id' => $bookingId,
-            'waktu' => now()->toDateTimeString(),
-        ]);
-
-        DB::beginTransaction();
-
-        try {
-            $booking = Booking::findOrFail($bookingId);
-
-            if ($booking->status === 'completed') {
-                Log::warning('Booking sudah completed sebelumnya', [
-                    'booking_id' => $booking->id,
-                ]);
-                // return back()->with('warning', 'Booking sudah selesai sebelumnya.');
-            }
-
-            $booking->status = 'completed';
-            $booking->save();
-
-            Log::info('Status booking diubah menjadi completed', [
-                'booking_id' => $booking->id,
-            ]);
-
-            $user = $booking->user;
-
-            // Tambahan log sebelum cek loyalty
-            if ($user->loyalty) {
-                Log::info('User sudah memiliki loyalty', [
-                    'user_id' => $user->id,
-                    'points' => $user->loyalty->points,
-                ]);
-            } else {
-                Log::info('User belum memiliki loyalty', [
-                    'user_id' => $user->id,
-                ]);
-            }
-
-            $loyalty = $user->loyalty;
-
-            if (! $loyalty) {
-                Log::info('Loyalty baru dibuat untuk user', ['user_id' => $user->id]);
-
-                Loyalty::create([
-                    'user_id' => $user->id,
-                    'points' => 1,
-                ]);
-            } else {
-                Log::info('Loyalty ditemukan, point sebelumnya: '.$loyalty->points, ['user_id' => $user->id]);
-
-                $loyalty->points = ($loyalty->points ?? 0) + 1;
-
-                if ($loyalty->points >= 10) {
-                    Log::info('Point mencapai 10, reset ke 0 dan berikan reward (jika ada)', ['user_id' => $user->id]);
-                    $loyalty->points = 0;
-                }
-
-                $loyalty->save();
-
-                Log::info('Loyalty diupdate, point sekarang: '.$loyalty->points, ['user_id' => $user->id]);
-            }
-
-            DB::commit();
-
-            return back()->with('success', 'Booking selesai dan loyalty diupdate!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Gagal menyelesaikan booking', [
-                'booking_id' => $bookingId,
-                'error' => $e->getMessage(),
-            ]);
-
-            return back()->with('error', 'Terjadi kesalahan: '.$e->getMessage());
         }
     }
 

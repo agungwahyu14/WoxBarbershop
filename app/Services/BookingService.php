@@ -69,16 +69,16 @@ class BookingService
     }
 
     /**
-     * Check if time is within business hours (9 AM - 9 PM)
+     * Check if time is within business hours (11 AM - 10 PM)
      */
     public function isWithinBusinessHours(Carbon $dateTime): bool
     {
         $hour = $dateTime->hour;
         $minute = $dateTime->minute;
         
-        // Business hours: 09:00 - 21:00 (9 PM)
-        $openTime = 9; // 09:00
-        $closeTime = 21; // 21:00 (9 PM)
+        // Business hours: 11:00 - 22:00 (10 PM)
+        $openTime = 11; // 11:00 (11 AM)
+        $closeTime = 22; // 22:00 (10 PM)
         
         // Check if current time is within business hours
         $isWithinHours = $hour >= $openTime && $hour < $closeTime;
@@ -96,13 +96,13 @@ class BookingService
     }
 
     /**
-     * Check if date is a business day (Monday-Saturday)
+     * Check if date is a business day (Open every day, no holidays)
      */
     public function isBusinessDay(Carbon $date): bool
     {
         $dayOfWeek = $date->dayOfWeek;
         $dayName = $date->format('l');
-        $isBusinessDay = $dayOfWeek !== Carbon::SUNDAY;
+        $isBusinessDay = true; // Open every day, no holidays
         
         Log::info('Business day check', [
             'date' => $date->format('Y-m-d'),
@@ -139,43 +139,26 @@ class BookingService
             return $result;
         }
 
-        // Check business day
-        if (!$this->isBusinessDay($dateTime)) {
-            $result['is_valid'] = false;
-            $result['errors'][] = 'Maaf, barbershop tutup pada hari Minggu';
-            $result['suggestions'][] = 'Silakan pilih hari Senin - Sabtu';
-            
-            // Suggest next business day
-            $nextBusinessDay = $dateTime->copy();
-            while (!$this->isBusinessDay($nextBusinessDay)) {
-                $nextBusinessDay->addDay();
-            }
-            $result['suggestions'][] = 'Hari kerja berikutnya: ' . $nextBusinessDay->format('l, d F Y');
-            
-            Log::warning('Booking attempt on non-business day', [
-                'requested_date' => $dateTime->format('Y-m-d'),
-                'day_name' => $dateTime->format('l'),
-                'next_business_day' => $nextBusinessDay->format('Y-m-d')
-            ]);
-        }
+        // Check business day (No longer needed as we are open every day)
+        // Barbershop is now open every day, no holidays
 
         // Check business hours
         if (!$this->isWithinBusinessHours($dateTime)) {
             $result['is_valid'] = false;
             
             $hour = $dateTime->hour;
-            if ($hour < 9) {
-                $result['errors'][] = 'Barbershop belum buka. Jam operasional: 09:00 - 21:00';
-                $result['suggestions'][] = 'Silakan pilih waktu mulai jam 09:00';
-            } elseif ($hour >= 21) {
-                $result['errors'][] = 'Barbershop sudah tutup. Jam operasional: 09:00 - 21:00';
-                $result['suggestions'][] = 'Silakan pilih waktu sebelum jam 21:00';
+            if ($hour < 11) {
+                $result['errors'][] = 'Barbershop belum buka. Jam operasional: 11:00 - 22:00';
+                $result['suggestions'][] = 'Silakan pilih waktu mulai jam 11:00';
+            } elseif ($hour >= 22) {
+                $result['errors'][] = 'Barbershop sudah tutup. Jam operasional: 11:00 - 22:00';
+                $result['suggestions'][] = 'Silakan pilih waktu sebelum jam 22:00';
             }
             
             Log::warning('Booking attempt outside business hours', [
                 'requested_time' => $dateTime->format('H:i'),
                 'requested_hour' => $hour,
-                'business_hours' => '09:00 - 21:00'
+                'business_hours' => '11:00 - 22:00'
             ]);
         }
 
@@ -245,7 +228,7 @@ class BookingService
                 'end_time' => $bookingEndTime->format('H:i')
             ]);
             
-            throw new \Exception('Layanan akan berakhir setelah jam tutup (21:00). Silakan pilih waktu yang lebih awal.', 422);
+            throw new \Exception('Layanan akan berakhir setelah jam tutup (22:00). Silakan pilih waktu yang lebih awal.', 422);
         }
 
         // Validasi ketersediaan slot waktu

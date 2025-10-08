@@ -38,10 +38,10 @@ public function style_preference()
     }
 
     // // Relasi ke user jika diperlukan
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Relasi ke scores
     public function scores()

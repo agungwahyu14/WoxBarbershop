@@ -25,8 +25,12 @@ class ProfileController extends Controller
                 'user' => $user,
             ]);
         } elseif ($user->hasRole(['pelanggan', 'customer'])) {
+            // Check if user can redeem loyalty points
+            $canRedeem = $user->loyalty && $user->loyalty->canRedeemFreeService();
+            
             return view('profile.edit', [
                 'user' => $user,
+                'canRedeem' => $canRedeem,
             ]);
         }
 

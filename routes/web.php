@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FeedbackController as CustomerFeedbackService;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecommendationController;
@@ -30,6 +31,23 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+/*
+|--------------------------------------------------------------------------
+| Language Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('language')->name('language.')->group(function () {
+    Route::get('/switch/{language}', [LanguageController::class, 'switchLanguage'])
+        ->name('switch')
+        ->where('language', 'id|en');
+    
+    Route::post('/switch', [LanguageController::class, 'switchLanguageAjax'])
+        ->name('switch.ajax');
+    
+    Route::get('/current', [LanguageController::class, 'getLanguageData'])
+        ->name('current');
+});
 
 Route::get('/', [DashboardController::class, 'welcome'])->name('home');
 
@@ -73,6 +91,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Recommendation
         Route::resource('rekomendasi', RecommendationController::class);
+
+        // Loyalty Redeem removed - now handled manually by admin
 
         // Customer Feedback
         Route::prefix('feedback')->name('feedback.')->group(function () {
@@ -178,6 +198,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'update' => 'admin.loyalty.update',
             'destroy' => 'admin.loyalty.destroy',
         ]);
+        
+        // Additional loyalty routes
+        Route::post('loyalty/{loyalty}/reset', [AdminLoyaltyController::class, 'resetPoints'])->name('admin.loyalty.reset');
 
          Route::resource('users', UserController::class)->names([
             'index' => 'admin.users.index',

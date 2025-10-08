@@ -48,6 +48,54 @@
             --border-color: #e5e7eb;
         }
 
+        /* Language Switcher Styles */
+        #language-dropdown .navbar-link {
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+
+        #language-dropdown .navbar-link:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        #language-dropdown .navbar-dropdown {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0;
+            z-index: 9999;
+        }
+
+        #language-dropdown .navbar-dropdown .navbar-item:hover {
+            background-color: #f3f4f6;
+            border-radius: 0.375rem;
+            margin: 0 0.5rem;
+        }
+
+        #language-dropdown .navbar-dropdown .navbar-item.is-active {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-radius: 0.375rem;
+            margin: 0 0.5rem;
+            color: #3b82f6;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            #language-dropdown.is-active .navbar-dropdown {
+                display: block !important;
+            }
+
+            #language-dropdown .navbar-dropdown {
+                display: none;
+                position: static !important;
+                box-shadow: none;
+                background-color: rgba(0, 0, 0, 0.02);
+                border: none;
+                border-radius: 0;
+                margin-top: 0.5rem;
+            }
+        }
+
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -286,7 +334,7 @@
         @if (session('success'))
             Swal.fire({
                 icon: 'success',
-                title: 'Success!',
+                title: '{{ __('admin.success_title') }}',
                 text: '{{ session('success') }}',
                 timer: 3000,
                 showConfirmButton: false,
@@ -300,7 +348,7 @@
         @if (session('error'))
             Swal.fire({
                 icon: 'error',
-                title: 'Error!',
+                title: '{{ __('admin.error_title') }}',
                 text: '{{ session('error') }}',
                 timer: 5000,
                 showConfirmButton: true,
@@ -330,7 +378,7 @@
                                 <h4 class="font-semibold text-red-800 mb-2">
                                     <i class="fas fa-clock mr-1"></i> Jam Operasional:
                                 </h4>
-                                <p class="text-red-700"><strong>Senin - Sabtu:</strong> 09:00 - 21:00<br><strong>Minggu:</strong> Tutup</p>
+                                <p class="text-red-700"><strong>Setiap Hari:</strong> 11:00 - 22:00<br><strong>Tidak Ada Libur - Buka Setiap Hari</strong></p>
                             </div>
                         </div>
                     `,

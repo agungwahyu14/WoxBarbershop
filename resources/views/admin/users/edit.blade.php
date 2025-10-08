@@ -9,10 +9,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
             <div>
                 <h1 class="title">
-                    <i class="fas fa-user-edit mr-3"></i> Edit User
+                    <i class="fas fa-user-edit mr-3"></i> {{ __('admin.edit_user_title') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Update user information, roles and permissions for {{ $user->name }}
+                    {{ __('admin.edit_user_subtitle') }} {{ $user->name }}
                 </p>
             </div>
         </div>
@@ -27,8 +27,8 @@
                         <i class="fas fa-user-edit text-white text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">User Information</h2>
-                        <p class="text-gray-600 mt-1">Update user details and permissions</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.user_information_title') }}</h2>
+                        <p class="text-gray-600 mt-1">{{ __('admin.user_information_subtitle') }}</p>
                     </div>
                     {{-- <div class="ml-auto">
                         <span

@@ -5,10 +5,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    <i class="fas fa-comments mr-3"></i> Feedback 
+                    <i class="fas fa-comments mr-3"></i> {{ __('admin.feedbacks_page_title') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage customer feedback and testimonials
+                    {{ __('admin.feedbacks_page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -20,7 +20,8 @@
             <!-- Table Header -->
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Customer Feedback</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.feedbacks_page_title') }}
+                    </h3>
                 </div>
             </div>
 
@@ -30,14 +31,14 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Customer</th>
-                            <th>Booking</th>
-                            <th>Rating</th>
-                            <th>Comment</th>
-                            <th>Visibility</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Action</th>
+                            <th>{{ __('admin.customer_column') }}</th>
+                            <th>{{ __('admin.booking_column') }}</th>
+                            <th>{{ __('admin.rating_column') }}</th>
+                            <th>{{ __('admin.comment_column') }}</th>
+                            <th>{{ __('admin.visibility_column') }}</th>
+                            <th>{{ __('admin.status_column') }}</th>
+                            <th>{{ __('admin.date_column') }}</th>
+                            <th>{{ __('admin.actions_column') }}</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -160,7 +161,7 @@
             $(document).on('click', '.deleteBtn', function() {
                 const feedbackId = $(this).data('id');
                 const deleteUrl = '{{ route('admin.feedbacks.destroy', ':id') }}'.replace(':id',
-                feedbackId);
+                    feedbackId);
 
                 Swal.fire({
                     title: 'Are you sure?',

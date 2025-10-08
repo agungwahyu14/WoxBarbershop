@@ -5,10 +5,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
             <div>
                 <h1 class="title">
-                    <i class="fas fa-users mr-3"></i> Users 
+                    <i class="fas fa-users mr-3"></i> {{ __('admin.users_page_title') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage user roles and permissions across your system
+                    {{ __('admin.users_page_subtitle') }}
                 </p>
             </div>
         </div>
@@ -24,7 +24,7 @@
                     <a href="{{ route('admin.users.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                         <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                        Create User
+                        {{ __('admin.create_user_btn') }}
                     </a>
 
                     <!-- Kanan: Filter + Export -->
@@ -33,11 +33,11 @@
 
                             <a href="{{ route('admin.users.export.csv') }}"
                                 class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                <i class="mdi mdi-file-delimited mr-2"></i> CSV
+                                <i class="mdi mdi-file-delimited mr-2"></i> {{ __('admin.export_csv') }}
                             </a>
                             <a href="{{ route('admin.users.export.pdf') }}"
                                 class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                <i class="mdi mdi-file mr-2"></i> PDF
+                                <i class="mdi mdi-file mr-2"></i> {{ __('admin.export_pdf') }}
                             </a>
 
                         </div>
@@ -54,24 +54,24 @@
                                 #
                             </th>
                             <th>
-                                Name
+                                {{ __('admin.name_column') }}
                             </th>
                             <th>
-                                No Telepon
+                                {{ __('admin.phone_column') }}
                             </th>
                             <th>
-                                Roles
+                                {{ __('admin.roles_column') }}
                             </th>
 
                             <th>
-                                Status
+                                {{ __('admin.status_column') }}
                             </th>
-                            <th>Loyalty Points</th> <!-- Kolom baru -->
+                            <th>{{ __('admin.loyalty_points_column') }}</th>
                             <th>
-                                Created Date
+                                {{ __('admin.created_date_column') }}
                             </th>
                             <th>
-                                Actions
+                                {{ __('admin.actions_column') }}
                             </th>
                         </tr>
                     </thead>
@@ -143,10 +143,10 @@
                     }
                 ],
                 language: {
-                    info: "Showing _START_ to _END_ of _TOTAL_ users",
-                    infoEmpty: "No users found",
-                    zeroRecords: "No matching users",
-                    emptyTable: "No users available",
+                    info: "{{ __('admin.showing_entries') }}",
+                    infoEmpty: "{{ __('admin.no_users_found') }}",
+                    zeroRecords: "{{ __('admin.no_matching_users') }}",
+                    emptyTable: "{{ __('admin.no_users_available') }}",
                 },
                 responsive: true,
                 pageLength: 10,
