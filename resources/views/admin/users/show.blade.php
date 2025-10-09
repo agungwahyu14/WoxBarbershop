@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'User Details - ' . $user->name)
+@section('title', __('admin.user_details') . ' - ' . $user->name)
 
 @section('content')
     <!-- Enhanced Page Header -->
@@ -56,7 +56,7 @@
                 <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                     <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-900 flex items-center">
-                            <i class="fas fa-address-book mr-3 text-blue-600"></i>User Information
+                            <i class="fas fa-address-book mr-3 text-blue-600"></i>{{ __('admin.user_information') }}
                         </h3>
                     </div>
                     <div class="p-6">
@@ -66,7 +66,7 @@
                                     <i class="fas fa-user text-blue-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Name</p>
+                                    <p class="text-sm text-gray-500">{{ __('admin.name') }}</p>
                                     <p class="font-medium text-gray-900">{{ $user->name }}</p>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                                     <i class="fas fa-user-tie text-blue-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Roles</p>
+                                    <p class="text-sm text-gray-500">{{ __('admin.roles') }}</p>
                                     <p class="font-medium text-gray-900">
                                     <div class="flex flex-wrap justify-center md:justify-start gap-2">
                                         @foreach ($user->roles as $role)
@@ -89,7 +89,7 @@
                                 {{ $user->hasVerifiedEmail() ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
                                             <i
                                                 class="fas fa-{{ $user->hasVerifiedEmail() ? 'check-circle' : 'exclamation-triangle' }} mr-1"></i>
-                                            {{ $user->hasVerifiedEmail() ? 'Email Verified' : 'Email Unverified' }}
+                                            {{ $user->hasVerifiedEmail() ? __('admin.email_verified') : __('admin.email_unverified') }}
                                         </span> --}}
                                     </div>
                                     </p>
@@ -100,7 +100,7 @@
                                     <i class="fas fa-envelope text-blue-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Email Address</p>
+                                    <p class="text-sm text-gray-500">{{ __('admin.email_address') }}</p>
                                     <p class="font-medium text-gray-900">{{ $user->email }}</p>
                                 </div>
                             </div>
@@ -110,8 +110,9 @@
                                     <i class="fas fa-phone text-green-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500">Phone Number</p>
-                                    <p class="font-medium text-gray-900">{{ $user->no_telepon ?: 'Not provided' }}</p>
+                                    <p class="text-sm text-gray-500">{{ __('admin.phone_number') }}</p>
+                                    <p class="font-medium text-gray-900">
+                                        {{ $user->no_telepon ?: __('admin.not_provided') }}</p>
                                 </div>
                             </div>
                             <!-- Bagian Poin Loyalitas (diubah ke format ternary) -->
@@ -121,9 +122,9 @@
                                         <i class="fas fa-star text-yellow-600"></i>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-500">Points</p>
+                                        <p class="text-sm text-gray-500">{{ __('admin.loyalty_points') }}</p>
                                         <p class="font-medium text-gray-900">
-                                            {{ number_format($user->loyalty->points) }} poin
+                                            {{ number_format($user->loyalty->points) }} {{ __('admin.points') }}
                                         </p>
                                     </div>
                                 </div>
@@ -133,8 +134,8 @@
                                         <i class="fas fa-star text-gray-400"></i>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-500">Points</p>
-                                        <p class="font-medium text-gray-900">Not provided</p>
+                                        <p class="text-sm text-gray-500">{{ __('admin.loyalty_points') }}</p>
+                                        <p class="font-medium text-gray-900">{{ __('admin.not_provided') }}</p>
                                     </div>
                                 </div>
                             @endif
@@ -146,7 +147,7 @@
                 <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                     <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-900 flex items-center">
-                            <i class="fas fa-user-check mr-3 text-blue-600"></i>Account Status
+                            <i class="fas fa-user-check mr-3 text-blue-600"></i>{{ __('admin.account_information') }}
                         </h3>
                     </div>
                     <div class="p-6">
@@ -156,9 +157,9 @@
                                     class="text-2xl font-bold {{ $user->is_active ?? true ? 'text-green-600' : 'text-red-600' }} mb-2">
                                     <i class="fas fa-{{ $user->is_active ?? true ? 'check-circle' : 'times-circle' }}"></i>
                                 </div>
-                                <p class="text-sm text-gray-500">Account Status</p>
+                                <p class="text-sm text-gray-500">{{ __('admin.user_status') }}</p>
                                 <p class="font-medium {{ $user->is_active ?? true ? 'text-green-900' : 'text-red-900' }}">
-                                    {{ $user->is_active ?? true ? 'Active' : 'Inactive' }}
+                                    {{ $user->is_active ?? true ? __('admin.active') : __('admin.inactive') }}
                                 </p>
                             </div>
                             <div class="text-center p-4 bg-gray-50 rounded-lg">
@@ -167,19 +168,19 @@
                                     <i
                                         class="fas fa-{{ $user->hasVerifiedEmail() ? 'check-circle' : 'exclamation-triangle' }}"></i>
                                 </div>
-                                <p class="text-sm text-gray-500">Email Status</p>
+                                <p class="text-sm text-gray-500">{{ __('admin.email_address') }}</p>
                                 <p
                                     class="font-medium {{ $user->hasVerifiedEmail() ? 'text-green-900' : 'text-yellow-900' }}">
-                                    {{ $user->hasVerifiedEmail() ? 'Verified' : 'Unverified' }}
+                                    {{ $user->hasVerifiedEmail() ? __('admin.verified') : __('admin.unverified') }}
                                 </p>
                             </div>
                             <div class="text-center p-4 bg-gray-50 rounded-lg">
                                 <div class="text-2xl font-bold text-blue-600 mb-2">
                                     <i class="fas fa-calendar-alt"></i>
                                 </div>
-                                <p class="text-sm text-gray-500">Last Login</p>
+                                <p class="text-sm text-gray-500">{{ __('admin.last_login') }}</p>
                                 <p class="font-medium text-gray-900">
-                                    {{ $user->last_login_at ? $user->last_login_at->format('M d, Y') : 'Never' }}
+                                    {{ $user->last_login_at ? $user->last_login_at->format('M d, Y') : __('admin.never') }}
                                 </p>
                             </div>
                         </div>
@@ -190,7 +191,7 @@
                 <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                     <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-900 flex items-center">
-                            <i class="fas fa-shield-alt mr-3 text-blue-600"></i>Roles
+                            <i class="fas fa-shield-alt mr-3 text-blue-600"></i>{{ __('admin.roles') }}
                         </h3>
                     </div>
                     <div class="p-6">
@@ -198,7 +199,7 @@
                             <!-- Roles -->
                             <div>
                                 <h4 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                                    <i class="fas fa-users-cog mr-2 text-blue-500"></i>Assigned Roles
+                                    <i class="fas fa-users-cog mr-2 text-blue-500"></i>{{ __('admin.assigned_roles') }}
                                 </h4>
                                 <div class="space-y-3">
                                     @forelse($user->roles as $role)
@@ -218,7 +219,7 @@
                                     @empty
                                         <div class="text-center py-8 text-gray-500">
                                             <i class="fas fa-user-times text-4xl mb-4"></i>
-                                            <p>No roles assigned</p>
+                                            <p>{{ __('admin.no_roles_assigned') }}</p>
                                         </div>
                                     @endforelse
                                 </div>
@@ -295,7 +296,7 @@
                     <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                         <div class="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-200">
                             <h3 class="text-xl font-semibold text-gray-900 flex items-center">
-                                <i class="fas fa-chart-bar mr-3 text-blue-600"></i>Account Statistics
+                                <i class="fas fa-chart-bar mr-3 text-blue-600"></i>{{ __('admin.account_statistics') }}
                             </h3>
                         </div>
                         <div class="p-6 space-y-6">
@@ -303,14 +304,14 @@
                                 <div class="text-3xl font-bold text-blue-600 mb-2">
                                     {{ $user->bookings ? $user->bookings->count() : 0 }}
                                 </div>
-                                <p class="text-sm text-gray-500">Total Bookings</p>
+                                <p class="text-sm text-gray-500">{{ __('admin.total_bookings') }}</p>
                             </div>
 
                             <div class="text-center">
                                 <div class="text-3xl font-bold text-purple-600 mb-2">
                                     {{ $user->created_at->diffInDays(now()) }}
                                 </div>
-                                <p class="text-sm text-gray-500">Days as Member</p>
+                                <p class="text-sm text-gray-500">{{ __('admin.days_as_member') }}</p>
                             </div>
                         </div>
                     </div>
@@ -325,16 +326,39 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const translations = {
+            reset_password_title: @json(__('admin.reset_password_title')),
+            reset_password_text: @json(__('admin.reset_password_text')),
+            yes_send_reset_email: @json(__('admin.yes_send_reset_email')),
+            cancel: @json(__('admin.cancel')),
+            activate_account_title: @json(__('admin.activate_account_title')),
+            deactivate_account_title: @json(__('admin.deactivate_account_title')),
+            activate_account_text: @json(__('admin.activate_account_text')),
+            deactivate_account_text: @json(__('admin.deactivate_account_text')),
+            yes_activate: @json(__('admin.yes_activate')),
+            yes_deactivate: @json(__('admin.yes_deactivate')),
+            password_reset: @json(__('admin.password_reset')),
+            password_reset_success: @json(__('admin.password_reset_success')),
+            account_updated: @json(__('admin.account_updated')),
+            user_account_activated: @json(__('admin.user_account_activated')),
+            user_account_deactivated: @json(__('admin.user_account_deactivated')),
+            error: @json(__('admin.error')),
+            failed_send_reset_email: @json(__('admin.failed_send_reset_email')),
+            failed_activate_account: @json(__('admin.failed_activate_account')),
+            failed_deactivate_account: @json(__('admin.failed_deactivate_account'))
+        };
+
         function resetUserPassword() {
             Swal.fire({
-                title: 'Reset Password?',
-                text: 'This will send a password reset email to the user.',
+                title: translations.reset_password_title,
+                text: translations.reset_password_text,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#f59e0b',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Yes, Send Reset Email',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: translations.yes_send_reset_email,
+                cancelButtonText: translations.cancel
             }).then((result) => {
                 if (result.isConfirmed) {
                     showLoading();
@@ -344,12 +368,12 @@
                         })
                         .done(function(response) {
                             hideLoading();
-                            showNotification('success', 'Password Reset',
-                                'Password reset email has been sent successfully');
+                            showNotification('success', translations.password_reset,
+                                translations.password_reset_success);
                         })
                         .fail(function() {
                             hideLoading();
-                            showNotification('error', 'Error', 'Failed to send password reset email');
+                            showNotification('error', translations.error, translations.failed_send_reset_email);
                         });
                 }
             });
@@ -357,11 +381,9 @@
 
         function toggleUserStatus(action) {
             const isActivating = action === 'activate';
-            const title = isActivating ? 'Activate Account?' : 'Deactivate Account?';
-            const text = isActivating ?
-                'This will activate the user account and restore access.' :
-                'This will deactivate the user account and prevent login.';
-            const confirmText = isActivating ? 'Yes, Activate' : 'Yes, Deactivate';
+            const title = isActivating ? translations.activate_account_title : translations.deactivate_account_title;
+            const text = isActivating ? translations.activate_account_text : translations.deactivate_account_text;
+            const confirmText = isActivating ? translations.yes_activate : translations.yes_deactivate;
             const color = isActivating ? '#10b981' : '#ef4444';
 
             Swal.fire({
@@ -372,7 +394,7 @@
                 confirmButtonColor: color,
                 cancelButtonColor: '#6b7280',
                 confirmButtonText: confirmText,
-                cancelButtonText: 'Cancel'
+                cancelButtonText: translations.cancel
             }).then((result) => {
                 if (result.isConfirmed) {
                     showLoading();
@@ -383,8 +405,9 @@
                         })
                         .done(function(response) {
                             hideLoading();
-                            showNotification('success', 'Account Updated',
-                                `User account has been ${action}d successfully`);
+                            const successMessage = isActivating ? translations.user_account_activated :
+                                translations.user_account_deactivated;
+                            showNotification('success', translations.account_updated, successMessage);
 
                             // Reload the page to reflect changes
                             setTimeout(() => {
@@ -393,7 +416,9 @@
                         })
                         .fail(function() {
                             hideLoading();
-                            showNotification('error', 'Error', `Failed to ${action} user account`);
+                            const errorMessage = isActivating ? translations.failed_activate_account :
+                                translations.failed_deactivate_account;
+                            showNotification('error', translations.error, errorMessage);
                         });
                 }
             });

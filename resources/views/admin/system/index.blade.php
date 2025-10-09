@@ -49,7 +49,7 @@
                                 {{ __('admin.backup_partial') }}
                             </button>
                             <div class="text-xs text-gray-500 text-center mt-3">
-                                Backup akan disimpan dengan timestamp untuk identifikasi
+                                {{ __('admin.backup_timestamp_info') }}
                             </div>
                         </div>
                     </div>
@@ -60,16 +60,15 @@
                             <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center mr-3">
                                 <i class="fas fa-upload text-white" aria-hidden="true"></i>
                             </div>
-                            <h3 class="text-lg font-bold text-gray-900">Restore Database</h3>
+                            <h3 class="text-lg font-bold text-gray-900">{{ __('admin.restore_database') }}</h3>
                         </div>
                         <p class="text-gray-600 mb-6">
-                            Pulihkan database dari file backup. <strong>Perhatian:</strong> Ini akan mengganti semua data
-                            yang ada.
+                            {{ __('admin.restore_description') }}
                         </p>
                         <div class="space-y-4">
                             <div>
                                 <label for="restore_file" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Pilih File Backup (.sql, .zip)
+                                    {{ __('admin.select_backup_file') }}
                                 </label>
                                 <input type="file" id="restore_file" accept=".sql,.zip"
                                     class="w-full px-4 py-3 border-2 border-dashed border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-center cursor-pointer hover:border-red-400 transition-colors"
@@ -79,13 +78,13 @@
                                 class="w-full inline-flex justify-center items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                                 aria-label="Restore Database">
                                 <i class="fas fa-exclamation-triangle mr-3" aria-hidden="true"></i>
-                                Restore Database
+                                {{ __('admin.restore_database') }}
                             </button>
                             <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                                 <div class="flex items-center">
                                     <i class="fas fa-exclamation-triangle text-yellow-600 mr-2" aria-hidden="true"></i>
                                     <span class="text-xs text-yellow-800">
-                                        <strong>Peringatan:</strong> Proses restore akan menghapus semua data saat ini!
+                                        {{ __('admin.restore_warning') }}
                                     </span>
                                 </div>
                             </div>
@@ -97,13 +96,13 @@
                 <div class="mt-8 pt-8 border-t border-gray-200">
                     <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                         <i class="fas fa-history text-gray-600 mr-3" aria-hidden="true"></i>
-                        Riwayat Backup Terbaru
+                        {{ __('admin.backup_history') }}
                     </h4>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="text-center text-gray-500">
                             <i class="fas fa-folder-open text-3xl mb-2" aria-hidden="true"></i>
-                            <p>Belum ada riwayat backup</p>
-                            <p class="text-sm">Backup pertama akan muncul di sini</p>
+                            <p>{{ __('admin.no_backup_history') }}</p>
+                            <p class="text-sm">{{ __('admin.first_backup_message') }}</p>
                         </div>
                     </div>
                 </div>
@@ -113,27 +112,63 @@
 
     @push('scripts')
         <script>
+            // Translation variables
+            const translations = {
+                confirm_backup: @json(__('admin.confirm_backup')),
+                backup_question: @json(__('admin.backup_question')),
+                yes_create_backup: @json(__('admin.yes_create_backup')),
+                cancel: @json(__('admin.cancel')),
+                creating_backup: @json(__('admin.creating_backup')),
+                backup_process_wait: @json(__('admin.backup_process_wait')),
+                dont_close_page: @json(__('admin.dont_close_page')),
+                backup_failed: @json(__('admin.backup_failed')),
+                backup_success: @json(__('admin.backup_success')),
+                backup_created_successfully: @json(__('admin.backup_created_successfully')),
+                file_downloaded: @json(__('admin.file_downloaded')),
+                backup_error: @json(__('admin.backup_error')),
+                file_not_selected: @json(__('admin.file_not_selected')),
+                select_backup_first: @json(__('admin.select_backup_first')),
+                important_warning: @json(__('admin.important_warning')),
+                restore_warning_text: @json(__('admin.restore_warning_text')),
+                data_will_be_replaced: @json(__('admin.data_will_be_replaced')),
+                changes_irreversible: @json(__('admin.changes_irreversible')),
+                ensure_current_backup: @json(__('admin.ensure_current_backup')),
+                file_label: @json(__('admin.file_label')),
+                size_label: @json(__('admin.size_label')),
+                yes_sure_restore: @json(__('admin.yes_sure_restore')),
+                restoring_database: @json(__('admin.restoring_database')),
+                restore_in_progress: @json(__('admin.restore_in_progress')),
+                estimated_time: @json(__('admin.estimated_time')),
+                restore_complete: @json(__('admin.restore_complete')),
+                database_restored: @json(__('admin.database_restored')),
+                page_will_reload: @json(__('admin.page_will_reload')),
+                restore_failed: @json(__('admin.restore_failed')),
+                restore_error: @json(__('admin.restore_error')),
+                backup_full_desc: @json(__('admin.backup_full_desc')),
+                backup_partial_desc: @json(__('admin.backup_partial_desc'))
+            };
+
             function createBackup(type) {
-                const typeText = type === 'full' ? 'backup lengkap (database + files)' : 'backup data saja';
+                const typeText = type === 'full' ? translations.backup_full_desc : translations.backup_partial_desc;
 
                 Swal.fire({
-                    title: 'Konfirmasi Backup',
-                    text: `Apakah Anda yakin ingin membuat ${typeText}?`,
+                    title: translations.confirm_backup,
+                    text: translations.backup_question.replace(':type', typeText),
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#10b981',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Ya, Buat Backup!',
-                    cancelButtonText: 'Batal'
+                    confirmButtonText: translations.yes_create_backup,
+                    cancelButtonText: translations.cancel
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
-                            title: `Membuat ${typeText}...`,
+                            title: translations.creating_backup.replace(':type', typeText),
                             html: `
                                 <div class="text-center">
                                     <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-                                    <p>Proses backup sedang berjalan, mohon tunggu...</p>
-                                    <p class="text-sm text-gray-600 mt-2">Jangan tutup halaman ini!</p>
+                                    <p>${translations.backup_process_wait}</p>
+                                    <p class="text-sm text-gray-600 mt-2">${translations.dont_close_page}</p>
                                 </div>
                             `,
                             allowOutsideClick: false,
@@ -154,7 +189,7 @@
                                 if (response.ok) {
                                     return response.blob();
                                 }
-                                throw new Error('Backup gagal');
+                                throw new Error(translations.backup_failed);
                             })
                             .then(blob => {
                                 // Create download link
@@ -170,11 +205,11 @@
 
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Backup Berhasil!',
+                                    title: translations.backup_success,
                                     html: `
                                     <div class="text-center">
-                                        <p class="mb-2">${typeText} berhasil dibuat!</p>
-                                        <p class="text-sm text-gray-600">File backup telah diunduh otomatis</p>
+                                        <p class="mb-2">${translations.backup_created_successfully.replace(':type', typeText)}</p>
+                                        <p class="text-sm text-gray-600">${translations.file_downloaded}</p>
                                     </div>
                                 `,
                                     confirmButtonColor: '#10b981',
@@ -184,8 +219,8 @@
                             .catch(error => {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Backup Gagal!',
-                                    text: 'Terjadi kesalahan saat membuat backup',
+                                    title: translations.backup_failed,
+                                    text: translations.backup_error,
                                     confirmButtonColor: '#dc2626'
                                 });
                             });
@@ -199,8 +234,8 @@
                 if (!fileInput.files.length) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'File Tidak Dipilih',
-                        text: 'Silakan pilih file backup terlebih dahulu',
+                        title: translations.file_not_selected,
+                        text: translations.select_backup_first,
                         confirmButtonColor: '#f59e0b'
                     });
                     return;
@@ -210,23 +245,23 @@
                 const fileSize = (fileInput.files[0].size / 1024 / 1024).toFixed(2);
 
                 Swal.fire({
-                    title: 'PERINGATAN PENTING!',
+                    title: translations.important_warning,
                     html: `
                         <div class="text-left">
                             <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                                 <div class="flex items-center mb-2">
                                     <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
-                                    <span class="font-bold text-red-800">Proses ini akan menghapus SEMUA data yang ada!</span>
+                                    <span class="font-bold text-red-800">${translations.restore_warning_text}</span>
                                 </div>
                                 <ul class="text-sm text-red-700 ml-6 list-disc">
-                                    <li>Semua data user, booking, dan transaksi akan diganti</li>
-                                    <li>Perubahan ini TIDAK dapat dibatalkan</li>
-                                    <li>Pastikan Anda memiliki backup data saat ini</li>
+                                    <li>${translations.data_will_be_replaced}</li>
+                                    <li>${translations.changes_irreversible}</li>
+                                    <li>${translations.ensure_current_backup}</li>
                                 </ul>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-3">
-                                <p class="text-sm"><strong>File:</strong> ${fileName}</p>
-                                <p class="text-sm"><strong>Ukuran:</strong> ${fileSize} MB</p>
+                                <p class="text-sm"><strong>${translations.file_label}:</strong> ${fileName}</p>
+                                <p class="text-sm"><strong>${translations.size_label}:</strong> ${fileSize} MB</p>
                             </div>
                         </div>
                     `,
@@ -234,12 +269,12 @@
                     showCancelButton: true,
                     confirmButtonColor: '#dc2626',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Ya, Saya Yakin Restore!',
-                    cancelButtonText: 'Batal'
+                    confirmButtonText: translations.yes_sure_restore,
+                    cancelButtonText: translations.cancel
                 }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
-                            title: 'Melakukan Restore Database...',
+                            title: translations.restoring_database,
                             html: `
                                 <div class="text-center">
                                     <div class="animate-pulse">
@@ -247,10 +282,10 @@
                                             <i class="fas fa-database text-red-600 text-2xl"></i>
                                         </div>
                                     </div>
-                                    <p class="font-semibold text-red-600">Proses restore sedang berjalan...</p>
-                                    <p class="text-sm text-gray-600 mt-2">JANGAN tutup halaman ini atau browser!</p>
+                                    <p class="font-semibold text-red-600">${translations.restore_in_progress}</p>
+                                    <p class="text-sm text-gray-600 mt-2">${translations.dont_close_page}</p>
                                     <div class="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                                        <p class="text-xs text-yellow-800">Estimasi waktu: 2-5 menit tergantung ukuran file</p>
+                                        <p class="text-xs text-yellow-800">${translations.estimated_time}</p>
                                     </div>
                                 </div>
                             `,
@@ -273,13 +308,13 @@
                                 if (data.success) {
                                     Swal.fire({
                                         icon: 'success',
-                                        title: 'Restore Selesai!',
+                                        title: translations.restore_complete,
                                         html: `
                                         <div class="text-center">
-                                            <p class="mb-2">Database berhasil dipulihkan dari backup!</p>
-                                            <p class="text-sm text-gray-600">File: <code>${fileName}</code></p>
+                                            <p class="mb-2">${translations.database_restored}</p>
+                                            <p class="text-sm text-gray-600">${translations.file_label}: <code>${fileName}</code></p>
                                             <div class="mt-4 bg-green-50 border border-green-200 rounded-lg p-3">
-                                                <p class="text-sm text-green-800">Halaman akan dimuat ulang untuk menerapkan perubahan</p>
+                                                <p class="text-sm text-green-800">${translations.page_will_reload}</p>
                                             </div>
                                         </div>
                                     `,
@@ -291,8 +326,8 @@
                                 } else {
                                     Swal.fire({
                                         icon: 'error',
-                                        title: 'Restore Gagal!',
-                                        text: data.message || 'Terjadi kesalahan saat melakukan restore',
+                                        title: translations.restore_failed,
+                                        text: data.message || translations.restore_error,
                                         confirmButtonColor: '#dc2626'
                                     });
                                 }
@@ -300,8 +335,8 @@
                             .catch(error => {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Restore Gagal!',
-                                    text: 'Terjadi kesalahan saat melakukan restore',
+                                    title: translations.restore_failed,
+                                    text: translations.restore_error,
                                     confirmButtonColor: '#dc2626'
                                 });
                             });

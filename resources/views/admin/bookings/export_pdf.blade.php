@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Export</title>
+    <title>{{ __('admin.booking_export') }}</title>
     <style>
         body {
             font-family: "DejaVu Sans", Arial, sans-serif;
@@ -70,31 +70,31 @@
 </head>
 
 <body>
-    <h1>Booking Export</h1>
+    <h1>{{ __('admin.booking_export') }}</h1>
     @if ($month && $year)
         <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
-            Periode: {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}
+            {{ __('admin.period') }}: {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}
         </p>
     @elseif($year)
         <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
-            Periode: Tahun {{ $year }}
+            {{ __('admin.period') }}: {{ __('admin.year') }} {{ $year }}
         </p>
     @else
         <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
-            Periode: Semua Data
+            {{ __('admin.period') }}: {{ __('admin.all_data') }}
         </p>
     @endif
     <table>
         <thead>
             <tr>
-                <th style="width:5%">No</th>
-                <th style="width:15%">Booking ID</th>
-                <th style="width:20%">User Name</th>
-                <th style="width:20%">Service</th>
-                <th style="width:15%">Hairstyle</th>
-                <th style="width:15%">Booking Date</th>
-                <th style="width:15%">Status</th>
-                <th style="width:15%">Created At</th>
+                <th style="width:5%">{{ __('admin.no') }}</th>
+                <th style="width:15%">{{ __('admin.booking_id') }}</th>
+                <th style="width:20%">{{ __('admin.user_name') }}</th>
+                <th style="width:20%">{{ __('admin.service') }}</th>
+                <th style="width:15%">{{ __('admin.hairstyle') }}</th>
+                <th style="width:15%">{{ __('admin.booking_date') }}</th>
+                <th style="width:15%">{{ __('admin.status') }}</th>
+                <th style="width:15%">{{ __('admin.created_at') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -121,7 +121,7 @@
     </table>
 
     <footer>
-        Dicetak pada {{ now()->format('d/m/Y H:i') }}
+        {{ __('admin.printed_on') }} {{ now()->format('d/m/Y H:i') }}
     </footer>
 </body>
 

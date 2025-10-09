@@ -25,24 +25,24 @@
                         @if (Auth::user()->hasRole('admin'))
                             <select id="monthFilter"
                                 class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                <option value="">All Months</option>
-                                <option value="01">January</option>
-                                <option value="02">February</option>
-                                <option value="03">March</option>
-                                <option value="04">April</option>
-                                <option value="05">May</option>
-                                <option value="06">June</option>
-                                <option value="07">July</option>
-                                <option value="08">August</option>
-                                <option value="09">September</option>
-                                <option value="10">October</option>
-                                <option value="11">November</option>
-                                <option value="12">December</option>
+                                <option value="">{{ __('admin.all_months') }}</option>
+                                <option value="01">{{ __('admin.january') }}</option>
+                                <option value="02">{{ __('admin.february') }}</option>
+                                <option value="03">{{ __('admin.march') }}</option>
+                                <option value="04">{{ __('admin.april') }}</option>
+                                <option value="05">{{ __('admin.may') }}</option>
+                                <option value="06">{{ __('admin.june') }}</option>
+                                <option value="07">{{ __('admin.july') }}</option>
+                                <option value="08">{{ __('admin.august') }}</option>
+                                <option value="09">{{ __('admin.september') }}</option>
+                                <option value="10">{{ __('admin.october') }}</option>
+                                <option value="11">{{ __('admin.november') }}</option>
+                                <option value="12">{{ __('admin.december') }}</option>
                             </select>
 
                             <select id="yearFilter"
                                 class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                <option value="">All Years</option>
+                                <option value="">{{ __('admin.all_years') }}</option>
                                 @for ($year = date('Y'); $year >= 2020; $year--)
                                     <option value="{{ $year }}">{{ $year }}</option>
                                 @endfor
@@ -50,7 +50,7 @@
 
                             <button id="resetFilter"
                                 class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                <i class="mdi mdi-refresh mr-1"></i>Reset
+                                <i class="mdi mdi-refresh mr-1"></i>{{ __('admin.reset') }}
                             </button>
                             <div id="filterIndicator" class="hidden px-3 py-2 bg-blue-100 text-blue-800 text-sm rounded-md">
                                 <i class="mdi mdi-filter mr-1"></i>
@@ -67,11 +67,11 @@
                             <div class="flex flex-wrap gap-2">
                                 <button id="exportCsvBtn" type="button"
                                     class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                    <i class="mdi mdi-file-delimited mr-2"></i> Export CSV
+                                    <i class="mdi mdi-file-delimited mr-2"></i> {{ __('admin.export_csv') }}
                                 </button>
                                 <button id="exportPdfBtn" type="button"
                                     class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                    <i class="mdi mdi-file mr-2"></i> Export PDF
+                                    <i class="mdi mdi-file mr-2"></i> {{ __('admin.export_pdf') }}
                                 </button>
                             </div>
                         @endif
@@ -93,13 +93,13 @@
                                 {{ __('admin.name_column') }}
                             </th>
                             <th>
-                                Email
+                                {{ __('admin.email') }}
                             </th>
                             <th>{{ __('admin.date_column') }}</th>
                             <th>{{ __('admin.transaction_id_column') }}
                             </th>
 
-                            <th>Type</th>
+                            <th>{{ __('admin.type') }}</th>
                             <th>{{ __('admin.status_column') }}
                             </th>
                             <th>{{ __('admin.amount_column') }}
@@ -118,6 +118,50 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const translations = {
+            showing: @json(__('admin.showing')),
+            to: @json(__('admin.to')),
+            of: @json(__('admin.of')),
+            transactions: @json(__('admin.transactions')),
+            no_transactions_found: @json(__('admin.no_transactions_found')),
+            no_matching_transactions: @json(__('admin.no_matching_transactions')),
+            no_transactions_available: @json(__('admin.no_transactions_available')),
+            confirm_delete: @json(__('admin.confirm_delete')),
+            delete_warning: @json(__('admin.delete_warning')),
+            yes_delete: @json(__('admin.yes_delete')),
+            cancel: @json(__('admin.cancel')),
+            deleted: @json(__('admin.deleted')),
+            transaction_deleted: @json(__('admin.transaction_deleted')),
+            error: @json(__('admin.error')),
+            delete_error: @json(__('admin.delete_error')),
+            success: @json(__('admin.success')),
+            filtered_by: @json(__('admin.filtered_by')),
+            month: @json(__('admin.month')),
+            year: @json(__('admin.year')),
+            and: @json(__('admin.and')),
+            confirm_settlement: @json(__('admin.confirm_settlement')),
+            settlement_warning: @json(__('admin.settlement_warning')),
+            yes_settlement: @json(__('admin.yes_settlement')),
+            update_error: @json(__('admin.update_error')),
+            jan: @json(__('admin.jan')),
+            feb: @json(__('admin.feb')),
+            mar: @json(__('admin.mar')),
+            apr: @json(__('admin.apr')),
+            may: @json(__('admin.may')),
+            jun: @json(__('admin.jun')),
+            jul: @json(__('admin.jul')),
+            aug: @json(__('admin.aug')),
+            sep: @json(__('admin.sep')),
+            oct: @json(__('admin.oct')),
+            nov: @json(__('admin.nov')),
+            dec: @json(__('admin.dec')),
+            pending: @json(__('admin.pending')),
+            paid: @json(__('admin.paid')),
+            cancelled: @json(__('admin.cancelled')),
+            filter_active: @json(__('admin.filter_active'))
+        };
+
         $(document).ready(function() {
             let table = $('#transactions-table').DataTable({
                 processing: true,
@@ -186,11 +230,11 @@
                     $('.dt-buttons').appendTo('#export-buttons');
                 },
                 language: {
-
-                    info: "Showing _START_ to _END_ of _TOTAL_ transactions",
-                    infoEmpty: "No transactions found",
-                    zeroRecords: "No matching transactions",
-                    emptyTable: "No transactions available",
+                    info: translations.showing + " _START_ " + translations.to + " _END_ " + translations
+                        .of + " _TOTAL_ " + translations.transactions,
+                    infoEmpty: translations.no_transactions_found,
+                    zeroRecords: translations.no_matching_transactions,
+                    emptyTable: translations.no_transactions_available,
                     paginate: {
                         previous: '<i class="mdi mdi-chevron-left"></i>',
                         next: '<i class="mdi mdi-chevron-right"></i>'
@@ -220,14 +264,14 @@
         // Function to confirm settlement
         function confirmSettlement(transactionId) {
             Swal.fire({
-                title: 'Konfirmasi Settlement',
-                text: 'Apakah Anda yakin ingin mengubah status transaksi menjadi settlement?',
+                title: translations.confirm_settlement,
+                text: translations.settlement_warning,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#22c55e',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Ya, Settlement',
-                cancelButtonText: 'Batal',
+                confirmButtonText: translations.yes_settlement,
+                cancelButtonText: translations.cancel,
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -241,7 +285,7 @@
                         success: function(response) {
                             if (response.success) {
                                 Swal.fire({
-                                    title: 'Berhasil!',
+                                    title: translations.success,
                                     text: response.message,
                                     icon: 'success',
                                     confirmButtonColor: '#22c55e'
@@ -252,8 +296,8 @@
                         },
                         error: function(xhr) {
                             Swal.fire({
-                                title: 'Error!',
-                                text: 'Terjadi kesalahan saat mengupdate transaksi.',
+                                title: translations.error,
+                                text: translations.update_error,
                                 icon: 'error',
                                 confirmButtonColor: '#ef4444'
                             });
@@ -319,17 +363,19 @@
             } else if (year) {
                 parts.push(year);
             } else if (month) {
-                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-                    'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+                const monthNames = [translations.jan, translations.feb, translations.mar, translations.apr, translations
+                    .may, translations.jun,
+                    translations.jul, translations.aug, translations.sep, translations.oct, translations.nov,
+                    translations.dec
                 ];
                 parts.push(`${monthNames[month - 1]}`);
             }
 
             if (status) {
                 const statusText = {
-                    'pending': 'Pending',
-                    'paid': 'Dibayar',
-                    'cancelled': 'Dibatalkan'
+                    'pending': translations.pending,
+                    'paid': translations.paid,
+                    'cancelled': translations.cancelled
                 };
                 parts.push(statusText[status] || status);
             }
@@ -343,7 +389,7 @@
             const textSpan = $('#filterText');
 
             if (filterText) {
-                textSpan.text(`Filter aktif: ${filterText}`);
+                textSpan.text(`${translations.filter_active}: ${filterText}`);
                 indicator.removeClass('hidden');
             } else {
                 indicator.addClass('hidden');

@@ -86,6 +86,19 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Translation variables
+            const translations = {
+                success_title: @json(__('admin.success_title')),
+                are_you_sure: @json(__('admin.are_you_sure')),
+                delete_user_warning: @json(__('admin.delete_user_warning')),
+                yes_delete_it: @json(__('admin.yes_delete_it')),
+                cancel: @json(__('admin.cancel')),
+                deleted_success_title: @json(__('admin.deleted_success_title')),
+                user_deleted_successfully: @json(__('admin.user_deleted_successfully')),
+                error: @json(__('admin.error')),
+                delete_failed: @json(__('admin.delete_failed'))
+            };
+
             // Setup CSRF token for all Ajax requests
             $.ajaxSetup({
                 headers: {
@@ -196,7 +209,7 @@
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success!',
+                    title: translations.success_title,
                     text: '{{ session('success') }}',
                     timer: 3000,
                     showConfirmButton: false,
@@ -214,13 +227,13 @@
                 const deleteUrl = '{{ route('admin.users.destroy', ':id') }}'.replace(':id', userId);
 
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "This will permanently delete the user.",
+                    title: translations.are_you_sure,
+                    text: translations.delete_user_warning,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!',
+                    confirmButtonText: translations.yes_delete_it,
                     customClass: {
                         popup: 'swal2-desktop-popup',
                         title: 'text-xl',
@@ -239,8 +252,9 @@
                             success: function(response) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Deleted!',
-                                    text: response.message,
+                                    title: translations.deleted_success_title,
+                                    text: response.message || translations
+                                        .user_deleted_successfully,
                                     timer: 3000,
                                     showConfirmButton: false,
                                     toast: true,
@@ -254,9 +268,74 @@
                             error: function(xhr) {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Error!',
+                                    title: translations.error_title,
                                     text: xhr.responseJSON?.message ||
-                                        'Something went wrong.',
+                                        translations.something_went_wrong,
+                                    toast: true,
+                                    position: 'top-end',
+                                    customClass: {
+                                        popup: 'swal2-desktop-toast'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Reset Loyalty Points
+            $(document).on('click', '.resetLoyaltyBtn', function() {
+                const userId = $(this).data('user-id');
+                const userName = $(this).data('user-name');
+                const points = $(this).data('points');
+                const resetUrl = '{{ route('admin.users.reset-loyalty-points', ':id') }}'.replace(':id',
+                    userId);
+
+                Swal.fire({
+                    title: 'Reset Poin Loyalty?',
+                    text: `Apakah Anda yakin ingin mereset ${points} poin loyalty milik ${userName}? Pelanggan akan mendapat potong gratis.`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#f59e0b',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ya, Reset Poin!',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        popup: 'swal2-desktop-popup',
+                        title: 'text-xl',
+                        content: 'text-base',
+                        confirmButton: 'px-6 py-3',
+                        cancelButton: 'px-6 py-3'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: resetUrl,
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Poin Berhasil Direset!',
+                                    text: response.message,
+                                    timer: 4000,
+                                    showConfirmButton: false,
+                                    toast: true,
+                                    position: 'top-end',
+                                    customClass: {
+                                        popup: 'swal2-desktop-toast'
+                                    }
+                                });
+                                table.ajax.reload();
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal Reset Poin',
+                                    text: xhr.responseJSON?.message ||
+                                        'Terjadi kesalahan saat mereset poin',
                                     toast: true,
                                     position: 'top-end',
                                     customClass: {

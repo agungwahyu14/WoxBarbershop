@@ -5,16 +5,12 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-                    <i class="fas fa-edit mr-3"></i> Edit Product
+                    <i class="fas fa-edit mr-3"></i> {{ __('admin.edit_product_btn') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Update product information for {{ $product->name }}
+                    {{ __('admin.edit_product_subtitle', ['name' => $product->name]) ?? "Update product information for $product->name" }}
                 </p>
             </div>
-            <a href="{{ route('admin.products.index') }}"
-                class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
-                <i class="fas fa-arrow-left mr-2"></i> Back to Products
-            </a>
         </div>
     </section>
 
@@ -27,8 +23,8 @@
                         <i class="fas fa-edit text-white text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Edit Product</h2>
-                        <p class="text-gray-600 mt-1">Update product information and settings</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.edit_product_btn') }}</h2>
+                        <p class="text-gray-600 mt-1">{{ __('admin.product_info_sub') }}</p>
                     </div>
                 </div>
             </div>
@@ -47,14 +43,15 @@
                                 <div id="current-image" class="w-full h-full flex items-center justify-center bg-gray-100">
                                     <div class="text-center">
                                         <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
-                                        <p class="text-gray-500">No image</p>
+                                        <p class="text-gray-500">{{ __('No image') }}</p>
                                     </div>
                                 </div>
                             @endif
                         </div>
                         <div>
                             <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-upload mr-2 text-blue-600"></i>Update Image (Optional)
+                                <i
+                                    class="fas fa-upload mr-2 text-blue-600"></i>{{ __('admin.update_image_optional') ?? 'Update Image (Optional)' }}
                             </label>
                             <input type="file" id="image" name="image" accept="image/*"
                                 class="form-control w-full @error('image') border-red-500 @enderror"
@@ -68,12 +65,12 @@
                         </div>
                         <div>
                             <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-tag mr-2 text-blue-600"></i>Product Name <span
-                                    class="text-red-500">*</span>
+                                <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.name') }} <span
+                                    class="text-red-500">{{ __('admin.required') }}</span>
                             </label>
                             <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}"
                                 class="form-control w-full @error('name') border-red-500 @enderror"
-                                placeholder="Enter product name" required aria-label="Product Name">
+                                placeholder="{{ __('admin.product_name') }}" required aria-label="Product Name">
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -83,12 +80,12 @@
                             <!-- Category -->
                             <div>
                                 <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-folder mr-2 text-blue-600"></i>Category
+                                    <i class="fas fa-folder mr-2 text-blue-600"></i>{{ __('admin.category') }}
                                 </label>
                                 <input type="text" id="category" name="category"
                                     value="{{ old('category', $product->category) }}"
                                     class="form-control w-full @error('category') border-red-500 @enderror"
-                                    placeholder="e.g., Hair Care, Styling" aria-label="Category">
+                                    placeholder="{{ __('admin.product_category') }}" aria-label="Category">
                                 @error('category')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -97,13 +94,13 @@
                             <!-- Price -->
                             <div>
                                 <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i>Price (Rp) <span
-                                        class="text-red-500">*</span>
+                                    <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i>{{ __('admin.price') }} <span
+                                        class="text-red-500">{{ __('admin.required') }}</span>
                                 </label>
                                 <input type="number" id="price" name="price"
                                     value="{{ old('price', $product->price) }}" min="0" step="100"
                                     class="form-control w-full @error('price') border-red-500 @enderror"
-                                    placeholder="Enter price" required aria-label="Price">
+                                    placeholder="{{ __('admin.price') }}" required aria-label="Price">
                                 @error('price')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -114,13 +111,13 @@
                             <!-- Stock -->
                             <div>
                                 <label for="stock" class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-warehouse mr-2 text-blue-600"></i>Stock Quantity <span
-                                        class="text-red-500">*</span>
+                                    <i class="fas fa-warehouse mr-2 text-blue-600"></i>{{ __('admin.stock') }} <span
+                                        class="text-red-500">{{ __('admin.required') }}</span>
                                 </label>
                                 <input type="number" id="stock" name="stock"
                                     value="{{ old('stock', $product->stock) }}" min="0"
                                     class="form-control w-full @error('stock') border-red-500 @enderror"
-                                    placeholder="Enter stock quantity" required aria-label="Stock Quantity">
+                                    placeholder="{{ __('admin.stock') }}" required aria-label="Stock Quantity">
                                 @error('stock')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -129,7 +126,7 @@
                             <!-- Status -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-toggle-on mr-2 text-blue-600"></i>Status
+                                    <i class="fas fa-toggle-on mr-2 text-blue-600"></i>{{ __('admin.status') ?? 'Status' }}
                                 </label>
                                 <div class="flex items-center space-x-4 pt-2">
                                     <label class="flex items-center">
@@ -137,14 +134,15 @@
                                             {{ old('is_active', $product->is_active) == 1 ? 'checked' : '' }}
                                             class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                             aria-label="Active Status">
-                                        <span class="ml-2 text-sm text-gray-700">Active</span>
+                                        <span class="ml-2 text-sm text-gray-700">{{ __('admin.active') }}</span>
                                     </label>
                                     <label class="flex items-center">
                                         <input type="radio" name="is_active" value="0"
                                             {{ old('is_active', $product->is_active) == 0 ? 'checked' : '' }}
                                             class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                             aria-label="Inactive Status">
-                                        <span class="ml-2 text-sm text-gray-700">Inactive</span>
+                                        <span
+                                            class="ml-2 text-sm text-gray-700">{{ __('admin.inactive') ?? 'Inactive' }}</span>
                                     </label>
                                 </div>
                                 @error('is_active')
@@ -156,11 +154,11 @@
                         <!-- Description -->
                         <div>
                             <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-align-left mr-2 text-blue-600"></i>Description
+                                <i class="fas fa-align-left mr-2 text-blue-600"></i>{{ __('admin.description') }}
                             </label>
                             <textarea id="description" name="description" rows="4"
                                 class="form-control w-full @error('description') border-red-500 @enderror"
-                                placeholder="Describe the product features, benefits, usage instructions..." aria-label="Product Description">{{ old('description', $product->description) }}</textarea>
+                                placeholder="{{ __('admin.description') }}" aria-label="Product Description">{{ old('description', $product->description) }}</textarea>
                             @error('description')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -171,11 +169,11 @@
                     <div class="mt-6 flex justify-end space-x-4">
                         <a href="{{ route('admin.products.index') }}"
                             class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                            <i class="fas fa-times mr-2"></i>Cancel
+                            <i class="fas fa-times mr-2"></i>{{ __('admin.cancel') }}
                         </a>
                         <button type="submit"
                             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                            <i class="fas fa-save mr-2"></i>Update Product
+                            <i class="fas fa-save mr-2"></i>{{ __('admin.edit_product_btn') }}
                         </button>
                     </div>
                 </form>

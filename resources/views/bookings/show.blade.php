@@ -5,8 +5,9 @@
         <div class="container mx-auto px-4">
             {{-- Header --}}
             <div class="text-center mb-12 mt-8">
-                <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">Detail Booking</h2>
-                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Lihat dan kelola detail booking Anda.</p>
+                <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">
+                    {{ __('booking.booking_detail_title') }}</h2>
+                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">{{ __('booking.booking_detail_subtitle') }}</p>
             </div>
 
             {{-- Booking Card --}}
@@ -17,7 +18,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                         {{-- Customer Name --}}
                         <div>
-                            <h4 class="text-sm text-gray-500 uppercase mb-1">Pelanggan</h4>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.customer') }}</h4>
                             <p class="text-xl font-semibold text-gray-800">
                                 <i class="fas fa-user mr-2 text-blue-600"></i>
                                 {{ $booking->name }}
@@ -38,7 +39,7 @@
 
                         {{-- Tanggal Booking --}}
                         <div>
-                            <h4 class="text-sm text-gray-500 uppercase mb-1">Tanggal Booking</h4>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.booking_date') }}</h4>
                             <p class="text-xl font-semibold text-gray-800">
                                 <i class="fas fa-calendar-alt mr-2 text-green-600"></i>
                                 {{ $booking->date_time->format('d M Y') }}
@@ -48,7 +49,7 @@
 
                         {{-- Status --}}
                         <div>
-                            <h4 class="text-sm text-gray-500 uppercase mb-1">Status</h4>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.status') }}</h4>
                             <span
                                 class="inline-block px-3 py-1 rounded-full text-sm font-medium
                                 @switch($booking->status)
@@ -92,7 +93,7 @@
 
                         {{-- Payment Status & Total --}}
                         <div>
-                            <h4 class="text-sm text-gray-500 uppercase mb-1">Pembayaran</h4>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.payment') }}</h4>
                             <div class="space-y-1">
                                 <span
                                     class="inline-block px-3 py-1 rounded-full text-sm font-medium
@@ -108,15 +109,15 @@
         @endswitch">
                                     @switch($booking->payment_method)
                                         @case('cash')
-                                            Cash
+                                            {{ __('booking.payment_method_cash') }}
                                         @break
 
                                         @case('bank')
-                                            Bank
+                                            {{ __('booking.payment_method_bank') }}
                                         @break
 
                                         @default
-                                            {{ ucfirst($booking->payment_method) }}
+                                            {{ __('booking.payment_method_' . $booking->payment_method) }}
                                     @endswitch
                                 </span>
 
@@ -134,7 +135,7 @@
                     {{-- Service and Hairstyle Details --}}
                     @if (isset($booking->service) || isset($booking->hairstyle))
                         <div class="border-t pt-6">
-                            <h4 class="text-lg font-semibold text-gray-800 mb-4">Detail Layanan</h4>
+                            <h4 class="text-lg font-semibold text-gray-800 mb-4">{{ __('booking.service_details') }}</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @if (isset($booking->service))
                                     <div>
@@ -152,18 +153,16 @@
 
                             @if (isset($booking->description) && $booking->description)
                                 <div class="mt-4">
-                                    <h5 class="text-sm text-gray-500 uppercase mb-1">Catatan</h5>
+                                    <h5 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.notes') }}</h5>
                                     <p class="text-gray-700">{{ $booking->description }}</p>
                                 </div>
                             @endif
 
                             @if (isset($booking->description) && $booking->description)
                                 <div class="mt-4">
-                                    <h5 class="text-sm text-gray-500 uppercase mb-1">Gaya Rambut</h5>
+                                    <h5 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.hairstyle') }}</h5>
                                     <p class="text-lg font-medium text-gray-800">{{ $booking->hairstyle->name }}</p>
                                     @if (isset($booking->hairstyle->price))
-                                        <p class="text-sm text-gray-500">Rp
-                                            {{ number_format($booking->hairstyle->price, 0, ',', '.') }}</p>
                                     @endif
                                 </div>
                             @endif
@@ -177,7 +176,7 @@
                         <a href="{{ route('bookings.index') }}"
                             class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition duration-200">
                             <i class="fas fa-arrow-left mr-2"></i>
-                            Kembali
+                            {{ __('booking.back') }}
                         </a>
 
                         {{-- Edit Booking (only if status allows) --}}
@@ -185,7 +184,7 @@
                             <a href="{{ route('bookings.edit', $booking->id) }}"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
                                 <i class="fas fa-edit mr-2"></i>
-                                Edit Booking
+                                {{ __('booking.edit_booking') }}
                             </a>
                         @endif
 
@@ -195,7 +194,7 @@
                                 class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition duration-200"
                                 onclick="confirmCancel({{ $booking->id }})">
                                 <i class="fas fa-times mr-2"></i>
-                                Batalkan
+                                {{ __('booking.cancel') }}
                             </button>
 
                             <form id="cancel-form-{{ $booking->id }}"
@@ -208,24 +207,29 @@
 
                         <script>
                             function confirmCancel(bookingId) {
+                                const translations = {
+                                    are_you_sure: @json(__('booking.are_you_sure')),
+                                    booking_will_be_cancelled: @json(__('booking.booking_will_be_cancelled')),
+                                    yes_cancel: @json(__('booking.yes_cancel')),
+                                    cancel: @json(__('booking.cancel'))
+                                };
+
                                 Swal.fire({
-                                    title: 'Apakah Anda yakin?',
-                                    text: "Booking akan dibatalkan!",
+                                    title: translations.are_you_sure,
+                                    text: translations.booking_will_be_cancelled,
                                     icon: 'warning',
                                     showCancelButton: true,
                                     confirmButtonColor: '#d33',
                                     cancelButtonColor: '#6c757d',
-                                    confirmButtonText: 'Ya, batalkan!',
-                                    cancelButtonText: 'Batal'
+                                    confirmButtonText: translations.yes_cancel,
+                                    cancelButtonText: translations.cancel
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         document.getElementById('cancel-form-' + bookingId).submit();
                                     }
                                 })
                             }
-                        </script>
-
-                        {{-- Payment Button (only show if booking is not completed and payment is not paid) --}}
+                        </script> {{-- Payment Button (only show if booking is not completed and payment is not paid) --}}
                         @if (!in_array($booking->status, ['completed', 'cancelled']))
                             @if ($booking->payment_method === 'bank')
                                 <!-- Tombol untuk Midtrans (Bank) -->
@@ -233,7 +237,7 @@
                                     onclick="initiatePayment({{ $booking->id }})"
                                     class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
                                     <i class="fas fa-credit-card mr-2"></i>
-                                    Bayar Sekarang
+                                    {{ __('booking.pay_now') }}
                                 </button>
                             @elseif ($booking->payment_method === 'cash')
                                 <!-- Tombol untuk Cash -->
@@ -244,7 +248,7 @@
                                     <button type="submit"
                                         class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200">
                                         <i class="fas fa-money-bill-wave mr-2"></i>
-                                        Bayar Tunai
+                                        {{ __('booking.pay_cash') }}
                                     </button>
                                 </form>
                             @endif
@@ -292,13 +296,13 @@
                                 <a href="{{ route('feedback.show', $existingFeedback->id) }}"
                                     class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-lg shadow transition duration-200">
                                     <i class="fas fa-star mr-2"></i>
-                                    Lihat Feedback
+                                    {{ __('booking.view_feedback') }}
                                 </a>
                             @else
                                 <button type="button" onclick="openFeedbackModal()"
                                     class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-lg shadow transition duration-200">
                                     <i class="fas fa-comment mr-2"></i>
-                                    Berikan Feedback
+                                    {{ __('booking.give_feedback') }}
                                 </button>
                             @endif
                         @endif
@@ -307,7 +311,7 @@
                         <a href="{{ route('dashboard') }}#reservasi"
                             class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition duration-200">
                             <i class="fas fa-plus mr-2"></i>
-                            Booking Baru
+                            {{ __('booking.new_booking') }}
                         </a>
 
                     </div>
@@ -332,7 +336,7 @@
             document.addEventListener('DOMContentLoaded', function() {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Berhasil!',
+                    title: '{{ __('booking.success') }}!',
                     text: '{{ session('success') }}',
                     confirmButtonColor: '#2563eb',
                     showClass: {
@@ -351,7 +355,7 @@
             document.addEventListener('DOMContentLoaded', function() {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Oops!',
+                    title: '{{ __('booking.oops') }}!',
                     text: '{{ session('error') }}',
                     confirmButtonColor: '#dc2626'
                 });
@@ -363,8 +367,19 @@
     @if ($booking->status === 'completed')
         <script>
             function openFeedbackModal() {
+                const translations = {
+                    give_feedback: @json(__('booking.give_feedback')),
+                    rating: @json(__('booking.rating')),
+                    comment: @json(__('booking.comment')),
+                    public_feedback: @json(__('booking.public_feedback')),
+                    submit_feedback: @json(__('booking.submit_feedback')),
+                    cancel: @json(__('booking.cancel')),
+                    rating_required: @json(__('booking.rating_required')),
+                    comment_required: @json(__('booking.comment_required'))
+                };
+
                 Swal.fire({
-                    title: 'Berikan Feedback',
+                    title: translations.give_feedback,
                     html: `
                         <div class="text-left">
                             <div class="mb-4">

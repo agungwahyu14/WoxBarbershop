@@ -32,34 +32,37 @@
                     <img src="{{ asset('images/Logo.png') }}" alt="WOX'S Barbershop Logo"
                         class="h-40 w-auto object-contain mx-auto mb-4">
                 </div>
-                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Daftar Akun</h2>
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">{{ __('auth.register_account') }}</h2>
 
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
 
                     <div class="mb-4">
-                        <label for="name" class="block text-gray-700 font-medium mb-1">Nama Lengkap</label>
+                        <label for="name" class="block text-gray-700 font-medium mb-1">{{ __('auth.name') }}</label>
                         <input type="text" name="name" id="name"
                             class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
                             value="{{ old('name') }}" required autofocus>
                     </div>
 
                     <div class="mb-4">
-                        <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
+                        <label for="email"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.email') }}</label>
                         <input type="email" name="email" id="email"
                             class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
                             value="{{ old('email') }}" required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="no_telepon" class="block text-gray-700 font-medium mb-1">No Telepon</label>
+                        <label for="no_telepon"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.phone') }}</label>
                         <input type="text" name="no_telepon" id="no_telepon"
                             class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
                             value="{{ old('no_telepon') }}">
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="block text-gray-700 font-medium mb-1">Kata Sandi</label>
+                        <label for="password"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.password') }}</label>
                         <div class="relative">
                             <input type="password" name="password" id="password"
                                 class="w-full px-4 py-3 pr-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
@@ -85,9 +88,8 @@
                     </div>
 
                     <div class="mb-6">
-                        <label for="password_confirmation" class="block text-gray-700 font-medium mb-1">Konfirmasi
-                            Kata Sandi
-                        </label>
+                        <label for="password_confirmation"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.password_confirmation') }}</label>
                         <div class="relative">
                             <input type="password" name="password_confirmation" id="password_confirmation"
                                 class="w-full px-4 py-3 pr-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
@@ -114,12 +116,13 @@
 
                     <button type="submit"
                         class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-semibold transition rounded-lg duration-300 ">
-                        Daftar
+                        {{ __('auth.register') }}
                     </button>
 
                     <p class="mt-4 text-sm text-center text-gray-600">
-                        Sudah punya akun?
-                        <a href="{{ route('login') }}" class="text-[#d4af37] hover:underline">Masuk di sini</a>
+                        {{ __('auth.already_have_account') }}
+                        <a href="{{ route('login') }}"
+                            class="text-[#d4af37] hover:underline">{{ __('auth.login_here') }}</a>
                     </p>
                 </form>
             </div>
@@ -128,6 +131,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Translation variables
+            const translations = {
+                success: @json(__('auth.success')),
+                registration_failed: @json(__('auth.registration_failed')),
+                error_occurred: @json(__('auth.error_occurred')),
+                information: @json(__('auth.information')),
+                warning: @json(__('auth.warning')),
+                registration_success: @json(__('auth.registration_success')),
+                ok: @json(__('auth.ok')),
+                try_again: @json(__('auth.try_again'))
+            };
+
             // Toggle password visibility
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
@@ -162,10 +177,10 @@
             @if (session('status'))
                 Swal.fire({
                     icon: 'success',
-                    title: 'Berhasil!',
+                    title: translations.success,
                     text: '{{ session('status') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
+                    confirmButtonText: translations.ok
                 });
             @endif
 
@@ -178,10 +193,10 @@
 
                 Swal.fire({
                     icon: 'error',
-                    title: 'Pendaftaran Gagal!',
+                    title: translations.registration_failed,
                     text: errorMessage,
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Coba Lagi'
+                    confirmButtonText: translations.try_again
                 });
             @endif
 
@@ -189,10 +204,10 @@
             @if (session('error'))
                 Swal.fire({
                     icon: 'error',
-                    title: 'Terjadi Kesalahan!',
+                    title: translations.error_occurred,
                     text: '{{ session('error') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
+                    confirmButtonText: translations.ok
                 });
             @endif
 
@@ -200,10 +215,10 @@
             @if (session('info'))
                 Swal.fire({
                     icon: 'info',
-                    title: 'Informasi',
+                    title: translations.information,
                     text: '{{ session('info') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
+                    confirmButtonText: translations.ok
                 });
             @endif
 
@@ -211,10 +226,10 @@
             @if (session('warning'))
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Peringatan!',
+                    title: translations.warning,
                     text: '{{ session('warning') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
+                    confirmButtonText: translations.ok
                 });
             @endif
 
@@ -222,10 +237,10 @@
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: 'Pendaftaran Berhasil!',
+                    title: translations.registration_success,
                     text: '{{ session('success') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
+                    confirmButtonText: translations.ok
                 });
             @endif
         });

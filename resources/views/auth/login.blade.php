@@ -49,7 +49,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="block text-gray-700 font-medium mb-1">Kata Sandi</label>
+                        <label for="password"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.password') }}</label>
                         <div class="relative">
                             <input id="password" type="password" name="password" required
                                 autocomplete="current-password"
@@ -96,19 +97,20 @@
                         @if (Route::has('password.request'))
                             <a class="text-sm text-[#d4af37] hover:underline hover:text-[#111111] transition-colors duration-200"
                                 href="{{ route('password.request') }}">
-                                Lupa password?
+                                {{ __('auth.forgot_password') }}
                             </a>
                         @endif
                     </div>
 
                     <button type="submit"
                         class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-semibold transition duration-300 rounded-lg">
-                        Masuk
+                        {{ __('auth.login_button') }}
                     </button>
 
                     <p class="mt-4 text-sm text-center text-gray-600">
-                        Belum punya akun?
-                        <a href="{{ route('register') }}" class="text-[#d4af37] hover:underline">Daftar di sini</a>
+                        {{ __('auth.no_account') }}
+                        <a href="{{ route('register') }}"
+                            class="text-[#d4af37] hover:underline">{{ __('auth.register_here') }}</a>
                     </p>
                 </form>
             </div>

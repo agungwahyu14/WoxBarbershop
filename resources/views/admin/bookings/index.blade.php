@@ -1,6 +1,6 @@
     @extends('admin.layouts.app')
 
-    @section('title', 'Booking ')
+    @section('title', __('admin.bookings'))
     @section('meta_description', 'Comprehensive booking management system for WOX Barbershop')
 
     @section('content')
@@ -92,23 +92,23 @@
                             <div class="flex flex-wrap items-center gap-2">
                                 <select id="monthFilter"
                                     class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                    <option value="">All Months</option>
-                                    <option value="01">January</option>
-                                    <option value="02">February</option>
-                                    <option value="03">March</option>
-                                    <option value="04">April</option>
-                                    <option value="05">May</option>
-                                    <option value="06">June</option>
-                                    <option value="07">July</option>
-                                    <option value="08">August</option>
-                                    <option value="09">September</option>
-                                    <option value="10">October</option>
-                                    <option value="11">November</option>
-                                    <option value="12">December</option>
+                                    <option value="">{{ __('admin.all_months') }}</option>
+                                    <option value="01">{{ __('admin.january') }}</option>
+                                    <option value="02">{{ __('admin.february') }}</option>
+                                    <option value="03">{{ __('admin.march') }}</option>
+                                    <option value="04">{{ __('admin.april') }}</option>
+                                    <option value="05">{{ __('admin.may') }}</option>
+                                    <option value="06">{{ __('admin.june') }}</option>
+                                    <option value="07">{{ __('admin.july') }}</option>
+                                    <option value="08">{{ __('admin.august') }}</option>
+                                    <option value="09">{{ __('admin.september') }}</option>
+                                    <option value="10">{{ __('admin.october') }}</option>
+                                    <option value="11">{{ __('admin.november') }}</option>
+                                    <option value="12">{{ __('admin.december') }}</option>
                                 </select>
                                 <select id="yearFilter"
                                     class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
-                                    <option value="">All Years</option>
+                                    <option value="">{{ __('admin.all_years') }}</option>
                                     @for ($year = date('Y'); $year >= 2020; $year--)
                                         <option value="{{ $year }}">{{ $year }}</option>
                                     @endfor
@@ -116,7 +116,7 @@
                                 <div class="flex items-center space-x-2">
                                     <button id="resetFilter"
                                         class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                        <i class="mdi mdi-refresh mr-1"></i>Reset
+                                        <i class="mdi mdi-refresh mr-1"></i> {{ __('admin.reset') }}
                                     </button>
                                     <div id="filterIndicator"
                                         class="hidden px-3 py-2 bg-blue-100 text-blue-800 text-sm rounded-md">
@@ -130,11 +130,11 @@
                                 <div class="flex flex-wrap gap-2">
                                     <button id="exportCsvBtn" type="button"
                                         class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                        <i class="mdi mdi-file-delimited mr-2"></i> Export CSV
+                                        <i class="mdi mdi-file-delimited mr-2"></i> {{ __('admin.export_csv') }}
                                     </button>
                                     <button id="exportPdfBtn" type="button"
                                         class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                        <i class="mdi mdi-file mr-2"></i> Export PDF
+                                        <i class="mdi mdi-file mr-2"></i> {{ __('admin.export_pdf') }}
                                     </button>
                                 </div>
                             </div>
@@ -148,15 +148,15 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Customer</th>
-                                <th>Booking Name</th>
-                                <th>Contact</th>
-                                <th>Service</th>
-                                <th>Hairstyle</th>
-                                <th>Date & Time</th>
-                                <th>Queue</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>{{ __('admin.customer') }}</th>
+                                <th>{{ __('admin.booking_name') }}</th>
+                                <th>{{ __('admin.contact') }}</th>
+                                <th>{{ __('admin.service') }}</th>
+                                <th>{{ __('admin.hairstyle') }}</th>
+                                <th>{{ __('admin.date_time') }}</th>
+                                <th>{{ __('admin.queue') }}</th>
+                                <th>{{ __('admin.status') }}</th>
+                                <th>{{ __('admin.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -170,6 +170,26 @@
 
     @push('scripts')
         <script>
+            // Translation variables
+            const translations = {
+                success: @json(__('admin.success')),
+                error: @json(__('admin.error')),
+                confirm: @json(__('admin.confirm')),
+                cancel: @json(__('admin.cancel')),
+                yes: @json(__('admin.yes')),
+                no: @json(__('admin.no')),
+                confirmBooking: @json(__('admin.confirm_booking')),
+                startService: @json(__('admin.start_service')),
+                completeService: @json(__('admin.complete_service')),
+                cancelBooking: @json(__('admin.cancel_booking')),
+                confirmBookingMessage: @json(__('admin.confirm_booking_message')),
+                startServiceMessage: @json(__('admin.start_service_message')),
+                completeServiceMessage: @json(__('admin.complete_service_message')),
+                cancelBookingMessage: @json(__('admin.cancel_booking_message')),
+                processing: @json(__('admin.processing')),
+                errorOccurred: @json(__('admin.error_occurred'))
+            };
+
             $(document).ready(function() {
                 // Enhanced DataTable configuration
                 let table = $('#bookings-table').DataTable({
@@ -461,48 +481,48 @@
 
                 // Success notification
                 @if (session('success'))
-                    showNotification('success', 'Success!', '{{ session('success') }}');
+                    showNotification('success', translations.success, '{{ session('success') }}');
                 @endif
 
                 // Error notification
                 @if (session('error'))
-                    showNotification('error', 'Error!', '{{ session('error') }}');
+                    showNotification('error', translations.error, '{{ session('error') }}');
                 @endif
             });
 
             // Booking status update functions
             function confirmBooking(bookingId) {
-                updateBookingStatus(bookingId, 'confirmed', 'confirm this booking');
+                updateBookingStatus(bookingId, 'confirmed', translations.confirmBookingMessage);
             }
 
             function startService(bookingId) {
-                updateBookingStatus(bookingId, 'in_progress', 'start the service for this booking');
+                updateBookingStatus(bookingId, 'in_progress', translations.startServiceMessage);
             }
 
             function completeService(bookingId) {
-                updateBookingStatus(bookingId, 'completed', 'mark this booking as completed');
+                updateBookingStatus(bookingId, 'completed', translations.completeServiceMessage);
             }
 
             function cancelBooking(bookingId) {
-                updateBookingStatus(bookingId, 'cancelled', 'cancel this booking');
+                updateBookingStatus(bookingId, 'cancelled', translations.cancelBookingMessage);
             }
 
             function updateBookingStatus(bookingId, status, action) {
                 Swal.fire({
-                    title: 'Konfirmasi',
-                    text: `Apakah Anda yakin ingin ${action}?`,
+                    title: translations.confirm,
+                    text: `${translations.confirm} ${action}?`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#d4af37',
                     cancelButtonColor: '#aaa',
-                    confirmButtonText: 'Ya, lanjutkan',
-                    cancelButtonText: 'Batal'
+                    confirmButtonText: translations.yes,
+                    cancelButtonText: translations.cancel
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Show loading
                         Swal.fire({
-                            title: 'Processing...',
-                            text: 'Sedang memproses permintaan Anda',
+                            title: translations.processing,
+                            text: translations.processing + '...',
                             allowOutsideClick: false,
                             didOpen: () => {
                                 Swal.showLoading()
@@ -531,7 +551,7 @@
                                 console.log('Response data:', data);
                                 Swal.close();
                                 if (data.success) {
-                                    showNotification('success', 'Success!', data.message);
+                                    showNotification('success', translations.success, data.message);
                                     // Reload DataTable instead of whole page for better UX
                                     if (typeof table !== 'undefined' && table.ajax) {
                                         table.ajax.reload(null, false); // Keep pagination
@@ -541,14 +561,15 @@
                                     // Update statistics
                                     updateStatistics();
                                 } else {
-                                    showNotification('error', 'Error!', data.message || 'Terjadi kesalahan');
+                                    showNotification('error', translations.error, data.message || translations
+                                        .errorOccurred);
                                 }
                             })
                             .catch(error => {
                                 Swal.close();
                                 console.error('Error details:', error);
-                                showNotification('error', 'Error!',
-                                    'Terjadi kesalahan saat update status booking: ' + error.message);
+                                showNotification('error', translations.error,
+                                    translations.errorOccurred + ': ' + error.message);
                             });
                     }
                 });

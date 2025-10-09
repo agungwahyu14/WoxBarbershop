@@ -101,7 +101,7 @@ class ServiceController extends Controller
                 ->editColumn('price', function ($row) {
                     return '<div class="text-right">
                         <div class="text-lg font-bold text-green-600">Rp '.number_format($row->price, 0, ',', '.').'</div>
-                        <div class="text-xs text-gray-500">Price</div>
+                
                     </div>';
                 })
                 ->editColumn('duration', function ($row) {

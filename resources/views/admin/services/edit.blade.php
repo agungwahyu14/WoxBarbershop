@@ -41,7 +41,7 @@
                     <!-- Service Name -->
                     <div>
                         <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-tag mr-2 text-blue-600"></i>Service Name
+                            <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.service_name') }}
                         </label>
                         <input type="text" name="name" id="name" value="{{ old('name', $service->name) }}"
                             class="form-control w-full @error('name') border-red-500 @enderror"
@@ -54,7 +54,7 @@
                     <!-- Description -->
                     <div>
                         <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-align-left mr-2 text-blue-600"></i>Description
+                            <i class="fas fa-align-left mr-2 text-blue-600"></i>{{ __('admin.description_column') }}
                         </label>
                         <textarea name="description" id="description" rows="3"
                             class="form-control w-full @error('description') border-red-500 @enderror" placeholder="Optional">{{ old('description', $service->description) }}</textarea>
@@ -66,7 +66,7 @@
                     <!-- Price -->
                     <div>
                         <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i>Price (Rp)
+                            <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i>{{ __('admin.price_column') }} (Rp)
                         </label>
                         <input type="number" name="price" id="price" value="{{ old('price', $service->price) }}"
                             class="form-control w-full @error('price') border-red-500 @enderror" placeholder="Enter price"
@@ -81,11 +81,11 @@
                         <div class="flex justify-end space-x-4">
                             <a href="{{ route('admin.services.index') }}"
                                 class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-times mr-2"></i>Cancel
+                                <i class="fas fa-times mr-2"></i>{{ __('admin.cancel_action') }}
                             </a>
                             <button type="submit"
                                 class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                                <i class="fas fa-save mr-2"></i>Update Service
+                                <i class="fas fa-save mr-2"></i>{{ __('admin.edit_service_title') }}
                             </button>
                         </div>
                     </div>

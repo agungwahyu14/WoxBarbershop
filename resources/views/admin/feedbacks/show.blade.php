@@ -6,10 +6,10 @@
             <!-- Title Section -->
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    <i class="fas fa-comment-dots mr-3"></i> Feedback Details
+                    <i class="fas fa-comment-dots mr-3"></i> {{ __('admin.feedback_details') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    View detailed customer feedback and ratings
+                    {{ __('admin.feedback_details_subtitle') }}
                 </p>
             </div>
 
@@ -23,7 +23,7 @@
                     {{ $feedback->is_public ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700' }} 
                     text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                         <i class="fas {{ $feedback->is_public ? 'fa-eye-slash' : 'fa-eye' }} mr-2"></i>
-                        {{ $feedback->is_public ? 'Make Private' : 'Make Public' }}
+                        {{ $feedback->is_public ? __('admin.make_private') : __('admin.make_public') }}
                     </button>
                 </form>
 
@@ -31,12 +31,11 @@
                 <form action="{{ route('admin.feedbacks.destroy', $feedback) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit"
-                        onclick="return confirm('Are you sure you want to delete this feedback? This action cannot be undone.')"
+                    <button type="submit" onclick="return confirm('{{ __('admin.delete_feedback_confirm') }}')"
                         class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 
                     text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                         <i class="fas fa-trash mr-2"></i>
-                        Delete Feedback
+                        {{ __('admin.delete_feedback') }}
                     </button>
                 </form>
 
@@ -45,18 +44,18 @@
                     class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 
                 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                     <i class="fas fa-arrow-left mr-2"></i>
-                    Back to Feedbacks
+                    {{ __('admin.back_to_feedbacks') }}
                 </a>
             </div>
         </div>
     </section>
-    
+
     <section class="section min-h-screen main-section">
         <!-- Feedback Rating Card -->
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Customer Rating</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.customer_rating') }}</h3>
             </div>
             <div class="p-6">
                 <div class="text-center">
@@ -71,15 +70,15 @@
                     </div>
                     <div class="text-lg text-gray-600 dark:text-gray-400">
                         @if ($feedback->rating == 5)
-                            Excellent Service
+                            {{ __('admin.excellent_service') }}
                         @elseif($feedback->rating >= 4)
-                            Good Service
+                            {{ __('admin.good_service') }}
                         @elseif($feedback->rating >= 3)
-                            Average Service
+                            {{ __('admin.average_service') }}
                         @elseif($feedback->rating >= 2)
-                            Below Average
+                            {{ __('admin.below_average_service') }}
                         @else
-                            Poor Service
+                            {{ __('admin.poor_service') }}
                         @endif
                     </div>
                 </div>
@@ -91,7 +90,8 @@
             <div
                 class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Customer Information</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.customer_information') }}
+                    </h3>
                 </div>
                 <div class="p-6 space-y-4">
                     @if ($feedback->user)
@@ -115,7 +115,7 @@
                     @else
                         <div class="text-center py-4">
                             <i class="fas fa-user-slash text-3xl text-gray-400 mb-2"></i>
-                            <p class="text-gray-500 dark:text-gray-400">Customer information not available</p>
+                            <p class="text-gray-500 dark:text-gray-400">{{ __('admin.customer_info_not_available') }}</p>
                         </div>
                     @endif
                 </div>
@@ -125,13 +125,14 @@
             <div
                 class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Booking Information</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.booking_information') }}
+                    </h3>
                 </div>
                 <div class="p-6 space-y-4">
                     @if ($feedback->booking)
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Booking ID
+                                {{ __('admin.booking_id') }}
                             </label>
                             <div class="flex items-center gap-2">
                                 <span
@@ -144,7 +145,7 @@
                         @if ($feedback->booking->service)
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Service
+                                    {{ __('admin.service') }}
                                 </label>
                                 <p class="text-gray-900 dark:text-white font-medium">
                                     {{ $feedback->booking->service->name }}
@@ -154,16 +155,16 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Booking Date
+                                {{ __('admin.booking_date') }}
                             </label>
                             <p class="text-gray-900 dark:text-white">
-                                {{ $feedback->booking->booking_date ? \Carbon\Carbon::parse($feedback->booking->booking_date)->format('d M Y, H:i') : 'Not scheduled' }}
+                                {{ $feedback->booking->booking_date ? \Carbon\Carbon::parse($feedback->booking->booking_date)->format('d M Y, H:i') : __('admin.not_scheduled') }}
                             </p>
                         </div>
                     @else
                         <div class="text-center py-4">
                             <i class="fas fa-calendar-times text-3xl text-gray-400 mb-2"></i>
-                            <p class="text-gray-500 dark:text-gray-400">No booking information available</p>
+                            <p class="text-gray-500 dark:text-gray-400">{{ __('admin.no_booking_info_available') }}</p>
                         </div>
                     @endif
                 </div>
@@ -174,7 +175,7 @@
         <div
             class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Feedback Content</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.feedback_content') }}</h3>
             </div>
             <div class="p-6">
                 @if ($feedback->comment)
@@ -192,8 +193,8 @@
                 @else
                     <div class="text-center py-8">
                         <i class="fas fa-comment-slash text-3xl text-gray-400 mb-2"></i>
-                        <p class="text-gray-500 dark:text-gray-400">No written feedback provided</p>
-                        <p class="text-sm text-gray-400 dark:text-gray-500">Customer only provided a rating</p>
+                        <p class="text-gray-500 dark:text-gray-400">{{ __('admin.no_written_feedback') }}</p>
+                        <p class="text-sm text-gray-400 dark:text-gray-500">{{ __('admin.rating_only_feedback') }}</p>
                     </div>
                 @endif
             </div>
@@ -203,30 +204,30 @@
         <div
             class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Settings & Actions</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.settings_and_actions') }}</h3>
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Visibility Status -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Visibility
+                            {{ __('admin.visibility') }}
                         </label>
                         <div class="flex items-center gap-2">
                             @if ($feedback->is_public)
                                 <span
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                                     <i class="fas fa-eye mr-1"></i>
-                                    Public
+                                    {{ __('admin.public') }}
                                 </span>
-                                <span class="text-xs text-gray-500">Visible to customers</span>
+                                <span class="text-xs text-gray-500">{{ __('admin.visible_to_customers') }}</span>
                             @else
                                 <span
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
                                     <i class="fas fa-eye-slash mr-1"></i>
-                                    Private
+                                    {{ __('admin.private') }}
                                 </span>
-                                <span class="text-xs text-gray-500">Admin only</span>
+                                <span class="text-xs text-gray-500">{{ __('admin.admin_only') }}</span>
                             @endif
                         </div>
                     </div>
@@ -234,20 +235,20 @@
                     <!-- Active Status -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Status
+                            {{ __('admin.status') }}
                         </label>
                         <div class="flex items-center gap-2">
                             @if ($feedback->is_active)
                                 <span
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                                     <div class="w-2 h-2 rounded-full bg-green-600 mr-1"></div>
-                                    Active
+                                    {{ __('admin.active') }}
                                 </span>
                             @else
                                 <span
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
                                     <div class="w-2 h-2 rounded-full bg-red-600 mr-1"></div>
-                                    Inactive
+                                    {{ __('admin.inactive') }}
                                 </span>
                             @endif
                         </div>

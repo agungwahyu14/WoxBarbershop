@@ -16,11 +16,11 @@
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="{{ route('dashboard') }}#reservasi"
                     class="rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 shadow-lg uppercase">
-                    RESERVASI
+                    {{ __('welcome.reservation_button') }}
                 </a>
                 <a href="{{ route('dashboard') }}#layanan"
                     class="rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 uppercase">
-                    LIHAT LAYANAN
+                    {{ __('welcome.view_services') }}
                 </a>
             </div>
         </div>
@@ -41,10 +41,10 @@
             <div class="text-center mb-16 animate-slide-up mt-8">
                 <!-- Contoh pada Section Judul -->
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">
-                    Layanan Kami
+                    {{ __('welcome.our_services') }}
                 </h2>
                 <p class="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-                    Berbagai layanan profesional untuk penampilan terbaik Anda
+                    {{ __('welcome.services_description') }}
                 </p>
             </div>
 
@@ -55,12 +55,13 @@
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         01</div>
-                    <h3 class="text-xl font-bold mb-4">Potongan Rambut</h3>
+                    <h3 class="text-xl font-bold mb-4">{{ __('welcome.haircut') }}</h3>
                     <p class="text-gray-600 mb-4">
-                        Potongan rambut klasik atau modern oleh barber profesional kami dengan teknik terbaik.
+                        {{ __('welcome.haircut_description') }}
                     </p>
-                    <a href="{{ route('dashboard') }}#reservasi" class="text-secondary font-medium flex items-center group">
-                        Pesan Sekarang
+                    <a href="{{ route('dashboard') }}#reservasi"
+                        class="text-secondary font-medium flex items-center group">
+                        {{ __('welcome.book_now') }}
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
                 </div>
@@ -71,12 +72,12 @@
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         02</div>
-                    <h3 class="text-xl font-bold mb-4">Produk Kami</h3>
+                    <h3 class="text-xl font-bold mb-4">{{ __('welcome.our_products') }}</h3>
                     <p class="text-gray-600 mb-4">
-                        Kami mempercayakan hanya produk-produk pilihan yang telah teruji kualitasnya.
+                        {{ __('welcome.products_description') }}
                     </p>
                     <a href="{{ route('dashboard') }}#produk" class="text-secondary font-medium flex items-center group">
-                        Pesan Sekarang
+                        {{ __('welcome.book_now') }}
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
                 </div>
@@ -87,12 +88,12 @@
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         03</div>
-                    <h3 class="text-xl font-bold mb-4">Rekomendasi Gaya</h3>
+                    <h3 class="text-xl font-bold mb-4">{{ __('welcome.style_recommendations') }}</h3>
                     <p class="text-gray-600 mb-4">
-                        Rekomendasi gaya rambut berdasarkan wajah, tren sesuai dengan keinginan.
+                        {{ __('welcome.recommendations_description') }}
                     </p>
                     <a href="{{ route('rekomendasi.index') }}" class="text-secondary font-medium flex items-center group">
-                        Pesan Sekarang
+                        {{ __('welcome.book_now') }}
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
                 </div>
@@ -103,13 +104,13 @@
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         04</div>
-                    <h3 class="text-xl font-bold mb-4">Loyalty</h3>
+                    <h3 class="text-xl font-bold mb-4">{{ __('welcome.loyalty') }}</h3>
                     <p class="text-gray-600 mb-4">
-                        Gratis 1x cukur setelah 10 kali kunjungan.Apresiasi kami untuk pelanggan setia!
+                        {{ __('welcome.loyalty_description') }}
                     </p>
                     <a href="{{ route('dashboard') }}#reservasi"
                         class="text-secondary font-medium flex items-center group">
-                        Pesan Sekarang
+                        {{ __('welcome.book_now') }}
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>
                 </div>
@@ -122,40 +123,32 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col lg:flex-row items-center gap-12 ">
                 <div class="lg:w-1/2 animate-slide-up">
-                    <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-6">Tentang Wox's Barbershop</h2>
+                    <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-6">{{ __('welcome.about_wox') }}</h2>
                     <p class="text-gray-600 mb-6 text-justify">
-                        Wox’s Barbershop, yang berlokasi strategis di Jalan Raya Semabaung, Gianyar, didirikan pada
-                        tahun 2023 dengan misi memberikan pengalaman grooming terbaik bagi pria modern. Meskipun
-                        tergolong baru, Wox's Barbershop telah berhasil menarik perhatian pelanggan dengan menggabungkan
-                        teknik barber tradisional dan gaya kontemporer, menghasilkan potongan rambut yang stylish dan
-                        sesuai tren terkini.
+                        {{ __('welcome.about_paragraph_1') }}
                     </p>
                     <p class="text-gray-600 mb-8 text-justify">
-                        Setiap barber yang bertugas merupakan tenaga profesional berpengalaman yang terus mengikuti
-                        perkembangan gaya dan kebutuhan pelanggan. Untuk menjaga kualitas layanan, Wox’s Barbershop
-                        hanya menggunakan produk-produk perawatan rambut yang telah teruji dan berkualitas tinggi,
-                        sehingga menjamin hasil optimal bagi setiap pelanggan.
+                        {{ __('welcome.about_paragraph_2') }}
                     </p>
                     <a href="{{ route('dashboard') }}#reservasi"
                         class="rounded-lg bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3  font-medium transition-all duration-300 inline-block transform hover:-translate-y-1 shadow-lg">
-                        RESERVASI
+                        {{ __('welcome.reservation_button') }}
                     </a>
-                </div>
-                <div class="lg:w-1/2 relative animate-fade-in ">
-                    <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
-                        alt="Barbershop interior" class=" shadow-xl w-full h-auto rounded-lg">
+                    <div class="lg:w-1/2 relative animate-fade-in ">
+                        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
+                            alt="Barbershop interior" class=" shadow-xl w-full h-auto rounded-lg">
+                    </div>
                 </div>
             </div>
-        </div>
     </section>
 
     <!-- Menu Section -->
     <section id="produk" class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 mt-8">
-                <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Produk Kami</h2>
+                <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">{{ __('welcome.our_products') }}</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-                    Produk-produk premium untuk perawatan rambut dan jenggot Anda
+                    {{ __('welcome.premium_products_description') }}
                 </p>
             </div>
 
@@ -180,7 +173,7 @@
                 @empty
                     <!-- Fallback jika tidak ada produk -->
                     <div class="col-span-3 text-center py-8">
-                        <p class="text-gray-600">Belum ada produk yang tersedia.</p>
+                        <p class="text-gray-600">{{ __('welcome.no_products_available') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -192,9 +185,10 @@
     <section class="py-20 bg-light">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 mt-8">
-                <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Testimoni Pelanggan</h2>
+                <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">{{ __('welcome.customer_testimonials') }}
+                </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Apa kata mereka tentang Wox's Barbershop
+                    {{ __('welcome.testimonials_description') }}
                 </p>
             </div>
 
@@ -220,7 +214,7 @@
                 @empty
                     <!-- Fallback jika tidak ada testimonial -->
                     <div class="col-span-3 text-center py-8">
-                        <p class="text-gray-600">Belum ada testimoni yang tersedia.</p>
+                        <p class="text-gray-600">{{ __('welcome.no_testimonials_available') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -232,9 +226,9 @@
     <section id="reservasi" class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 animate-slide-up">
-                <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Reservasi</h2>
+                <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">{{ __('welcome.reservation') }}</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Buat janji untuk pengalaman grooming terbaik di Wox's Barbershop
+                    {{ __('welcome.reservation_description') }}
                 </p>
             </div>
 
@@ -315,7 +309,7 @@
                         <!-- Nama -->
                         <div>
                             <label for="name"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">Nama</label>
+                                class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.name') }}</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
                                 class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                             @error('name')
@@ -327,10 +321,10 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="service_id"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Layanan</label>
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.service') }}</label>
                                 <select id="service_id" name="service_id"
                                     class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
-                                    <option value="">Pilih Layanan</option>
+                                    <option value="">{{ __('welcome.choose_service') }}</option>
 
                                 </select>
                                 @error('service_id')
@@ -341,11 +335,10 @@
 
                             <div>
                                 <label for="hairstyle_id"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Pilih Gaya
-                                    Rambut</label>
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.choose_hairstyle') }}</label>
                                 <select id="hairstyle_id" name="hairstyle_id"
                                     class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
-                                    <option value="">Pilih Gaya</option>
+                                    <option value="">{{ __('welcome.choose_style') }}</option>
 
                                 </select>
                                 @error('hairstyle_id')
@@ -359,13 +352,15 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="payment_method"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Pembayaran</label>
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.payment') }}</label>
                                 <select id="payment_method" name="payment_method"
                                     class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
-                                    <option value="">Pilih Metode Pembayaran</option>
-                                    <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Cash
+                                    <option value="">{{ __('welcome.choose_payment_method') }}</option>
+                                    <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>
+                                        {{ __('welcome.cash') }}
                                     </option>
-                                    <option value="bank" {{ old('payment_method') == 'bank' ? 'selected' : '' }}>Bank
+                                    <option value="bank" {{ old('payment_method') == 'bank' ? 'selected' : '' }}>
+                                        {{ __('welcome.bank') }}
                                     </option>
                                 </select>
                                 @error('payment_method')
@@ -375,8 +370,7 @@
 
                             <div>
                                 <label for="date_time"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">Tanggal &
-                                    Waktu</label>
+                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.date_time') }}</label>
                                 <input type="datetime-local" id="date_time" name="date_time"
                                     value="{{ old('date_time') }}"
                                     class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
@@ -389,7 +383,7 @@
                         <!-- Deskripsi -->
                         <div>
                             <label for="description"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">Deskripsi</label>
+                                class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.description') }}</label>
                             <textarea id="description" name="description" rows="3"
                                 class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">{{ old('description') }}</textarea>
                             @error('description')
@@ -418,7 +412,8 @@
     <!-- Gallery Section -->
     <section class="py-12 bg-white ">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center">Galeri Kami</h2>
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center">{{ __('welcome.our_gallery') }}
+            </h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <a href="#"
                     class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
@@ -452,7 +447,7 @@
         <script>
             Swal.fire({
                 icon: 'error',
-                title: 'Booking Gagal!',
+                title: @json(__('welcome.booking_failed')),
                 text: '{{ session('booking_error') }}',
                 confirmButtonColor: '#d33',
             });

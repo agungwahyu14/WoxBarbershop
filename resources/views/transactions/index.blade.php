@@ -5,8 +5,9 @@
         <div class="container mx-auto px-4">
             {{-- Header --}}
             <div class="text-center mb-10 mt-8">
-                <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">Riwayat Transaksi</h2>
-                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">Lihat semua transaksi pembayaran Anda di sini.</p>
+                <h2 class="text-3xl md:text-4xl font-bold font-playfair text-gray-900">
+                    {{ __('transactions.transaction_history') }}</h2>
+                <p class="text-lg text-gray-600 max-w-xl mx-auto mt-2">{{ __('transactions.view_all_transactions') }}</p>
             </div>
 
             @if (count($transactions) > 0)
@@ -37,7 +38,8 @@
 
                                 {{-- Customer Information --}}
                                 <div class="mb-4 pb-4 border-b border-gray-100">
-                                    <h4 class="text-sm font-medium text-gray-900 mb-2">Informasi Pelanggan</h4>
+                                    <h4 class="text-sm font-medium text-gray-900 mb-2">
+                                        {{ __('transactions.customer_information') }}</h4>
                                     <div class="space-y-1">
                                         <div class="flex items-center justify-between">
                                             <span class="text-sm text-gray-600">Nama:</span>
@@ -138,8 +140,8 @@
                         <div class="mb-4">
                             <i class="fas fa-receipt text-6xl text-gray-300"></i>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum Ada Transaksi</h3>
-                        <p class="text-gray-500">Anda belum memiliki riwayat transaksi.</p>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">{{ __('transactions.no_transactions') }}</h3>
+                        <p class="text-gray-500">{{ __('transactions.no_transaction_history') }}</p>
                     </div>
                 </div>
             @endif
@@ -153,10 +155,10 @@
             // Show success message if exists
             @if (session('success'))
                 Swal.fire({
-                    title: 'Berhasil!',
+                    title: @json(__('transactions.success')),
                     text: '{{ session('success') }}',
                     icon: 'success',
-                    confirmButtonText: 'OK',
+                    confirmButtonText: @json(__('transactions.ok')),
                     customClass: {
                         popup: 'rounded-lg',
                         confirmButton: 'bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600'
@@ -168,10 +170,10 @@
             // Show error message if exists
             @if (session('error'))
                 Swal.fire({
-                    title: 'Error!',
+                    title: @json(__('transactions.error')),
                     text: '{{ session('error') }}',
                     icon: 'error',
-                    confirmButtonText: 'OK',
+                    confirmButtonText: @json(__('transactions.ok')),
                     customClass: {
                         popup: 'rounded-lg',
                         confirmButton: 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600'
@@ -191,17 +193,17 @@
                         .then(data => {
                             if (data.payment_type === 'bank_transfer' && data.va_number) {
                                 Swal.fire({
-                                    title: 'Pembayaran Virtual Account',
+                                    title: @json(__('transactions.virtual_account_payment')),
                                     html: `
-            <p class="mb-2">Silakan transfer ke rekening berikut:</p>
+            <p class="mb-2">${@json(__('transactions.transfer_instruction'))}</p>
             <div style="background-color:#f1f1f1;padding:10px;border-radius:8px;margin-bottom:10px">
-                <strong>Bank:</strong> ${data.bank}<br>
-                <strong>Nomor VA:</strong><br>
+                <strong>${@json(__('transactions.bank'))}:</strong> ${data.bank}<br>
+                <strong>${@json(__('transactions.va_number'))}:</strong><br>
                 <span style="font-size:1.5em;font-weight:bold;">${data.va_number}</span>
             </div>
         `,
                                     icon: 'info',
-                                    confirmButtonText: 'Tutup',
+                                    confirmButtonText: @json(__('transactions.close')),
                                     customClass: {
                                         popup: 'rounded-lg',
                                         confirmButton: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
@@ -210,13 +212,13 @@
                                 });
                             } else if (data.payment_type === 'qris' && data.qr_url) {
                                 Swal.fire({
-                                    title: 'Pembayaran QRIS',
+                                    title: @json(__('transactions.qris_payment')),
                                     html: `
-            <p class="mb-2">Scan kode QR berikut menggunakan aplikasi e-wallet Anda:</p>
+            <p class="mb-2">${@json(__('transactions.scan_qr_instruction'))}</p>
             <img src="${data.qr_url}" alt="QRIS" class="mx-auto rounded shadow-md" style="max-width: 250px;">
         `,
                                     icon: 'info',
-                                    confirmButtonText: 'Tutup',
+                                    confirmButtonText: @json(__('transactions.close')),
                                     customClass: {
                                         popup: 'rounded-lg',
                                         confirmButton: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
@@ -226,12 +228,12 @@
                             } else if (['gopay', 'shopeepay', 'other_e_wallets'].includes(data
                                     .payment_type) && data.redirect_url) {
                                 Swal.fire({
-                                    title: 'Lanjut ke Pembayaran',
-                                    html: `<p>Klik tombol di bawah untuk menyelesaikan pembayaran melalui ${data.payment_type.toUpperCase()}.</p>`,
+                                    title: @json(__('transactions.continue_payment')),
+                                    html: `<p>${@json(__('transactions.complete_payment_instruction'))} ${data.payment_type.toUpperCase()}.</p>`,
                                     icon: 'info',
                                     showCancelButton: true,
-                                    confirmButtonText: 'Bayar Sekarang',
-                                    cancelButtonText: 'Batal',
+                                    confirmButtonText: @json(__('transactions.pay_now')),
+                                    cancelButtonText: @json(__('transactions.cancel')),
                                     customClass: {
                                         popup: 'rounded-lg',
                                         confirmButton: 'bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600',
@@ -244,13 +246,14 @@
                                     }
                                 });
                             } else {
-                                Swal.fire('Info',
-                                    'Metode pembayaran tidak didukung atau tidak ditemukan.',
+                                Swal.fire(@json(__('transactions.info')),
+                                    @json(__('transactions.payment_method_not_supported')),
                                     'info');
                             }
                         })
                         .catch(err => {
-                            Swal.fire('Error', 'Gagal mengambil data VA', 'error');
+                            Swal.fire(@json(__('transactions.error')),
+                                @json(__('transactions.failed_to_get_va_data')), 'error');
                         });
                 });
             });

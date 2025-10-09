@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Booking Details - #' . $booking->id)
+@section('title', __('admin.booking_details') . ' - #' . $booking->id)
 @section('meta_description', 'Detailed booking information for administrative management')
 
 @section('content')
@@ -8,10 +8,11 @@
         <div class="flex flex-col md:flex-row justify-between items-center">
             <div>
                 <h1 class="text-4xl font-bold mb-2">
-                    <i class="fas fa-calendar-check mr-3"></i>Booking Details
+                    <i class="fas fa-calendar-check mr-3"></i>{{ __('admin.booking_details') }}
                 </h1>
                 <p class="text-lg">
-                    Manage booking #{{ $booking->id }} - {{ $booking->user->name ?? 'Unknown Customer' }}
+                    {{ __('admin.manage_booking') }} #{{ $booking->id }} -
+                    {{ $booking->user->name ?? __('admin.unknown_customer') }}
                 </p>
             </div>
             <div class="flex items-center space-x-4 mt-4 md:mt-0">
@@ -52,7 +53,7 @@
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                         <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
                             <i class="fas fa-info-circle mr-3 text-blue-600"></i>
-                            Booking Overview
+                            {{ __('admin.booking_overview') }}
                         </h2>
                     </div>
                     <div class="p-6">
@@ -65,7 +66,8 @@
                                         <i class="fas fa-calendar-alt text-green-600"></i>
                                     </div>
                                     <div>
-                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Appointment</h3>
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                            {{ __('admin.appointment') }}</h3>
                                         <p class="text-gray-600 dark:text-gray-300">
                                             {{ \Carbon\Carbon::parse($booking->date_time)->format('l, M d, Y') }}</p>
                                         <p class="text-lg font-bold text-green-600">
@@ -79,11 +81,13 @@
                                             <i class="fas fa-users text-blue-600"></i>
                                         </div>
                                         <div>
-                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Queue Position
+                                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                                {{ __('admin.queue_position') }}
                                             </h3>
                                             <p class="text-2xl font-bold text-blue-600">#{{ $queuePosition }}</p>
                                             @if ($estimatedWaitTime && $estimatedWaitTime > 0)
-                                                <p class="text-sm text-gray-500">Est. wait: {{ $estimatedWaitTime }} min</p>
+                                                <p class="text-sm text-gray-500">Est. wait: {{ $estimatedWaitTime }} min
+                                                </p>
                                             @endif
                                         </div>
                                     </div>
@@ -97,7 +101,8 @@
                                         <i class="fas fa-dollar-sign text-green-600"></i>
                                     </div>
                                     <div>
-                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Total Amount</h3>
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                            {{ __('admin.total_amount') }}</h3>
                                         <p class="text-2xl font-bold text-green-600">
                                             Rp
                                             {{ number_format($booking->total_price ?? ($booking->service->price ?? 0), 0, ',', '.') }}
@@ -110,9 +115,10 @@
                                         <i class="fas fa-clock text-purple-600"></i>
                                     </div>
                                     <div>
-                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Duration</h3>
+                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                            {{ __('admin.duration') }}</h3>
                                         <p class="text-lg font-bold text-purple-600">
-                                            {{ $booking->service->duration ?? 30 }} minutes</p>
+                                            {{ $booking->service->duration ?? 30 }} {{ __('admin.minutes') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +138,7 @@
                                 class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                                 <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
                                     <i class="fas fa-cut mr-3 text-green-600"></i>
-                                    Service Details
+                                    {{ __('admin.service_details') }}
                                 </h3>
                             </div>
                             <div class="p-6">
@@ -145,12 +151,13 @@
                                     </div>
                                     <div class="grid grid-cols-2 gap-4">
                                         <div>
-                                            <span class="text-gray-600 dark:text-gray-400">Price:</span>
+                                            <span class="text-gray-600 dark:text-gray-400">{{ __('admin.price') }}:</span>
                                             <p class="font-bold text-green-600">Rp
                                                 {{ number_format($booking->service->price, 0, ',', '.') }}</p>
                                         </div>
                                         <div>
-                                            <span class="text-gray-600 dark:text-gray-400">Duration:</span>
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400">{{ __('admin.duration') }}:</span>
                                             <p class="font-bold text-blue-600">{{ $booking->service->duration ?? 30 }} min
                                             </p>
                                         </div>
@@ -168,7 +175,7 @@
                                 class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                                 <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
                                     <i class="fas fa-user-tie mr-3 text-purple-600"></i>
-                                    Hairstyle Details
+                                    {{ __('admin.hairstyle_details') }}
                                 </h3>
                             </div>
                             <div class="p-6">
@@ -184,7 +191,8 @@
                                         {{-- Bentuk Kepala --}}
                                         @if ($booking->hairstyle && $booking->hairstyle->bentuk_kepala->isNotEmpty())
                                             <div class="flex justify-between">
-                                                <span class="text-gray-600 dark:text-gray-400">Face Shape:</span>
+                                                <span
+                                                    class="text-gray-600 dark:text-gray-400">{{ __('admin.face_shape') }}:</span>
                                                 <span class="font-medium text-gray-900 dark:text-white">
                                                     {{ $booking->hairstyle->bentuk_kepala->pluck('nama')->join(', ') }}
                                                 </span>
@@ -194,7 +202,8 @@
                                         {{-- Tipe Rambut --}}
                                         @if ($booking->hairstyle && $booking->hairstyle->tipe_rambut->isNotEmpty())
                                             <div class="flex justify-between">
-                                                <span class="text-gray-600 dark:text-gray-400">Hair Type:</span>
+                                                <span
+                                                    class="text-gray-600 dark:text-gray-400">{{ __('admin.hair_type') }}:</span>
                                                 <span class="font-medium text-gray-900 dark:text-white">
                                                     {{ $booking->hairstyle->tipe_rambut->pluck('nama')->join(', ') }}
                                                 </span>
@@ -204,7 +213,8 @@
                                         {{-- Style Preference --}}
                                         @if ($booking->hairstyle && $booking->hairstyle->style_preference->isNotEmpty())
                                             <div class="flex justify-between">
-                                                <span class="text-gray-600 dark:text-gray-400">Style Preference:</span>
+                                                <span
+                                                    class="text-gray-600 dark:text-gray-400">{{ __('admin.style_preference') }}:</span>
                                                 <span class="font-medium text-gray-900 dark:text-white">
                                                     {{ $booking->hairstyle->style_preference->pluck('nama')->join(', ') }}
                                                 </span>
@@ -229,7 +239,7 @@
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
                             <i class="fas fa-user mr-3 text-blue-600"></i>
-                            Customer Information
+                            {{ __('admin.customer_information') }}
                         </h3>
                     </div>
                     <div class="p-6">
@@ -258,7 +268,7 @@
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
                         <i class="fas fa-cogs mr-3 text-green-600"></i>
-                        Actions
+                        {{ __('admin.actions') }}
                     </h3>
                 </div>
                 <div class="p-6 space-y-3">
@@ -268,19 +278,19 @@
                         <button onclick="confirmBooking({{ $booking->id }})"
                             class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                             <i class="fas fa-check mr-2"></i>
-                            Confirm Booking
+                            {{ __('admin.confirm_booking') }}
                         </button>
                     @elseif($booking->status === 'confirmed')
                         <button onclick="startService({{ $booking->id }})"
                             class="w-full bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
                             <i class="fas fa-play mr-2"></i>
-                            Start Service
+                            {{ __('admin.start_service') }}
                         </button>
                     @elseif($booking->status === 'in_progress')
                         <button onclick="completeService({{ $booking->id }})"
                             class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                             <i class="fas fa-check-circle mr-2"></i>
-                            Complete Service
+                            {{ __('admin.complete_service') }}
                         </button>
                     @endif
 
@@ -288,7 +298,7 @@
                         <button onclick="cancelBooking({{ $booking->id }})"
                             class="w-full border border-red-300 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors">
                             <i class="fas fa-times mr-2"></i>
-                            Cancel Booking
+                            {{ __('admin.cancel_booking') }}
                         </button>
                     @endif
 
@@ -296,7 +306,7 @@
                     <a href="{{ route('admin.bookings.index') }}"
                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
                         <i class="fas fa-arrow-left mr-2"></i>
-                        Back to Bookings
+                        {{ __('admin.back_to_bookings') }}
                     </a>
 
                 </div>
@@ -306,33 +316,48 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const translations = {
+            success: @json(__('admin.success')),
+            error: @json(__('admin.error')),
+            confirm: @json(__('admin.confirm')),
+            cancel: @json(__('admin.cancel')),
+            yes: @json(__('admin.yes')),
+            no: @json(__('admin.no')),
+            confirmBookingMessage: @json(__('admin.confirm_booking_message')),
+            startServiceMessage: @json(__('admin.start_service_message')),
+            completeServiceMessage: @json(__('admin.complete_service_message')),
+            cancelBookingMessage: @json(__('admin.cancel_booking_message')),
+            errorOccurred: @json(__('admin.error_occurred'))
+        };
+
         // Booking status update functions
         function confirmBooking(bookingId) {
-            updateBookingStatus(bookingId, 'confirmed', 'confirm this booking');
+            updateBookingStatus(bookingId, 'confirmed', translations.confirmBookingMessage);
         }
 
         function startService(bookingId) {
-            updateBookingStatus(bookingId, 'in_progress', 'start the service for this booking');
+            updateBookingStatus(bookingId, 'in_progress', translations.startServiceMessage);
         }
 
         function completeService(bookingId) {
-            updateBookingStatus(bookingId, 'completed', 'mark this booking as completed');
+            updateBookingStatus(bookingId, 'completed', translations.completeServiceMessage);
         }
 
         function cancelBooking(bookingId) {
-            updateBookingStatus(bookingId, 'cancelled', 'cancel this booking');
+            updateBookingStatus(bookingId, 'cancelled', translations.cancelBookingMessage);
         }
 
         function updateBookingStatus(bookingId, status, action) {
             Swal.fire({
-                title: 'Konfirmasi',
+                title: translations.confirm,
                 text: action,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#d4af37',
                 cancelButtonColor: '#aaa',
-                confirmButtonText: 'Ya, lanjutkan',
-                cancelButtonText: 'Batal'
+                confirmButtonText: translations.yes,
+                cancelButtonText: translations.cancel
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(`/bookings/${bookingId}/status`, {
@@ -348,16 +373,16 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                showNotification('success', 'Success!', data.message);
+                                showNotification('success', translations.success, data.message);
                                 location.reload();
                             } else {
-                                showNotification('error', 'Error!', data.message);
+                                showNotification('error', translations.error, data.message);
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            showNotification('error', 'Error!',
-                                'Terjadi kesalahan saat update status booking.');
+                            showNotification('error', translations.error,
+                                translations.errorOccurred);
                         });
                 }
             });

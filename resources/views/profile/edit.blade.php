@@ -6,16 +6,17 @@
             <!-- Loyalty Info -->
             <div class="p-4 sm:p-8 bg-white shadow rounded-lg mt-8">
                 <div class="max-w-xl">
-                    <h2 class="text-lg font-bold mb-4">Kesetiaan Kamu</h2>
+                    <h2 class="text-lg font-bold mb-4">{{ __('profile.your_loyalty') }}</h2>
                     @php
                         $points = Auth::user()->loyalty ? Auth::user()->loyalty->points : 0;
                     @endphp
                     <div class=" rounded-lg bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-2">
-                        <span class="font-semibold text-yellow-700">Kunjungan: {{ $points }} / 10</span>
+                        <span class="font-semibold text-yellow-700">{{ __('profile.visits') }}: {{ $points }} /
+                            10</span>
                         @if ($points == 9)
-                            <div class="text-yellow-800 mt-2">Satu kali lagi booking, kamu dapat gratis potong rambut!</div>
+                            <div class="text-yellow-800 mt-2">{{ __('profile.one_more_booking_free') }}</div>
                         @elseif($points == 0 && Auth::user()->loyalty)
-                            <div class="text-green-700 mt-2">Selamat! Kamu mendapatkan gratis potong rambut!</div>
+                            <div class="text-green-700 mt-2">{{ __('profile.congratulations_free_haircut') }}</div>
                         @endif
                     </div>
                 </div>

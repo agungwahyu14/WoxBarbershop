@@ -6,10 +6,10 @@
             {{-- Judul --}}
             <div class="text-center mb-16 mt-8">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">
-                    Rekomendasi Gaya Rambut
+                    {{ __('recommendations.title') }}
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-                    Pilih bentuk wajah dan jenis rambut Anda untuk mendapatkan gaya terbaik yang direkomendasikan.
+                    {{ __('recommendations.description') }}
                 </p>
             </div>
 
@@ -18,13 +18,14 @@
                 <div class="flex flex-col lg:flex-row lg:items-end gap-4">
                     {{-- Bentuk Wajah --}}
                     <div class="lg:w-1/4 w-full">
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Bentuk Wajah</label>
+                        <label
+                            class="block mb-2 text-sm font-medium text-gray-700">{{ __('recommendations.face_shape') }}</label>
                         <select name="bentuk_kepala" class="w-full border px-4 py-3 rounded-md">
-                            <option value="">Pilih bentuk wajah</option>
+                            <option value="">{{ __('recommendations.choose_face_shape') }}</option>
                             @foreach (['oval', 'bulat', 'persegi panjang', 'hati', 'kotak', 'segitiga'] as $shape)
                                 <option value="{{ $shape }}"
                                     {{ request('bentuk_kepala') == $shape ? 'selected' : '' }}>
-                                    {{ ucfirst($shape) }}
+                                    {{ __('recommendations.face_' . str_replace(' ', '_', $shape)) }}
                                 </option>
                             @endforeach
                         </select>
@@ -32,12 +33,14 @@
 
                     {{-- Tipe Rambut --}}
                     <div class="lg:w-1/4 w-full">
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Jenis Rambut</label>
+                        <label
+                            class="block mb-2 text-sm font-medium text-gray-700">{{ __('recommendations.hair_type') }}</label>
                         <select name="tipe_rambut" class="w-full border px-4 py-3 rounded-md">
-                            <option value="">Pilih jenis rambut</option>
+                            <option value="">{{ __('recommendations.choose_hair_type') }}</option>
                             @foreach (['lurus', 'bergelombang', 'keriting'] as $hair)
-                                <option value="{{ $hair }}" {{ request('tipe_rambut') == $hair ? 'selected' : '' }}>
-                                    {{ ucfirst($hair) }}
+                                <option value="{{ $hair }}"
+                                    {{ request('tipe_rambut') == $hair ? 'selected' : '' }}>
+                                    {{ __('recommendations.hair_' . $hair) }}
                                 </option>
                             @endforeach
                         </select>
@@ -45,13 +48,14 @@
 
                     {{-- Preferensi Gaya --}}
                     <div class="lg:w-1/4 w-full">
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Preferensi Gaya</label>
+                        <label
+                            class="block mb-2 text-sm font-medium text-gray-700">{{ __('recommendations.style_preference') }}</label>
                         <select name="preferensi_gaya" class="w-full border px-4 py-3 rounded-md">
-                            <option value="">Pilih preferensi gaya</option>
+                            <option value="">{{ __('recommendations.choose_style_preference') }}</option>
                             @foreach (['modern', 'klasik', 'kasual'] as $style)
                                 <option value="{{ $style }}"
                                     {{ request('preferensi_gaya') == $style ? 'selected' : '' }}>
-                                    {{ ucfirst($style) }}
+                                    {{ __('recommendations.style_' . $style) }}
                                 </option>
                             @endforeach
                         </select>
@@ -61,7 +65,7 @@
                     <div class="lg:w-1/4 w-full">
                         <button type="submit"
                             class="mt-6 bg-[#d4af37] text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition w-full">
-                            Terapkan Filter
+                            {{ __('recommendations.apply_filter') }}
                         </button>
                     </div>
                 </div>
@@ -93,7 +97,7 @@
                 </div>
             @else
                 <p class="text-center text-gray-500 mt-16">
-                    Tidak ada gaya rambut yang cocok dengan filter yang dipilih.
+                    {{ __('recommendations.no_results') }}
                 </p>
             @endif
         </div>

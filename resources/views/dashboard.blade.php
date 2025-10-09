@@ -8,19 +8,19 @@
         <div class="container mx-auto px-4 animate-fade-in relative z-10">
             <!-- Contoh pada Hero Section -->
             <h1 class="font-playfair font-bold text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight">
-                Tampilan Rapi, Gaya Terbaik <br> di Setiap Potongan
+                {{ __('dashboard.hero_title') }}
             </h1>
             <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto opacity-90">
-                Pangkas rambut profesional untuk gaya yang sempurna. Rasakan pengalaman barbershop premium kami.
+                {{ __('dashboard.hero_subtitle') }}
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="{{ route('dashboard') }}#reservasi"
                     class="rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 shadow-lg uppercase">
-                    RESERVASI
+                    {{ __('dashboard.reservation_button') }}
                 </a>
                 <a href="{{ route('dashboard') }}#layanan"
                     class="rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 uppercase">
-                    LIHAT LAYANAN
+                    {{ __('dashboard.view_services') }}
                 </a>
             </div>
         </div>
@@ -107,7 +107,8 @@
                     <p class="text-gray-600 mb-4">
                         Gratis 1x cukur setelah 10 kali kunjungan.Apresiasi kami untuk pelanggan setia!
                     </p>
-                    <a href="{{ route('dashboard') }}#reservasi" class="text-secondary font-medium flex items-center group">
+                    <a href="{{ route('dashboard') }}#reservasi"
+                        class="text-secondary font-medium flex items-center group">
                         Pesan Sekarang
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
                     </a>

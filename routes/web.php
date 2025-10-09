@@ -198,9 +198,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'update' => 'admin.loyalty.update',
             'destroy' => 'admin.loyalty.destroy',
         ]);
-        
-        // Additional loyalty routes
-        Route::post('loyalty/{loyalty}/reset', [AdminLoyaltyController::class, 'resetPoints'])->name('admin.loyalty.reset');
 
          Route::resource('users', UserController::class)->names([
             'index' => 'admin.users.index',
@@ -232,6 +229,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('admin.users.reset-password');
         Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])
             ->name('admin.users.toggle-status');
+        Route::post('/users/{user}/reset-loyalty-points', [UserController::class, 'resetLoyaltyPoints'])
+            ->name('admin.users.reset-loyalty-points');
         Route::get('/users/stats', [UserController::class, 'getStats'])->name('admin.users.stats');
 
         // Feedback Management

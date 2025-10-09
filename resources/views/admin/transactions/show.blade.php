@@ -5,13 +5,13 @@
         <div class="flex flex-col md:flex-row justify-between items-center">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white"> <i class="fas fa-receipt mr-3"></i>
-                    Transaction Detail</h1>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">View complete transaction information</p>
+                    {{ __('admin.transaction_detail') }}</h1>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{ __('admin.transaction_detail_subtitle') }}</p>
             </div>
             <div class="flex items-center space-x-4 mt-4 md:mt-0">
                 <a href="{{ route('admin.transactions.index') }}"
                     class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Transactions
+                    <i class="fas fa-arrow-left mr-2"></i>{{ __('admin.back_to_transactions') }}
                 </a>
             </div>
         </div>
@@ -22,23 +22,28 @@
         <div class="mb-6">
             @php
                 $status = strtolower($transaction->transaction_status ?? '');
-                $badgeText = 'Tidak Diketahui';
+                $badgeText = __('admin.unknown_status');
                 $badgeClass = 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
                 $iconClass = 'fas fa-question-circle';
                 $cardClass = 'border-gray-300 dark:border-gray-600';
 
                 if ($status === 'pending') {
-                    $badgeText = 'Menunggu Pembayaran';
+                    $badgeText = __('admin.pending_payment');
                     $badgeClass = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
                     $iconClass = 'fas fa-clock';
                     $cardClass = 'border-yellow-300 dark:border-yellow-600';
                 } elseif (in_array($status, ['cancel', 'failure', 'expire', 'deny'])) {
-                    $badgeText = $status === 'cancel' ? 'Dibatalkan' : ($status === 'expire' ? 'Kedaluwarsa' : 'Gagal');
+                    $badgeText =
+                        $status === 'cancel'
+                            ? __('admin.cancelled')
+                            : ($status === 'expire'
+                                ? __('admin.expired')
+                                : __('admin.failed'));
                     $badgeClass = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
                     $iconClass = 'fas fa-times-circle';
                     $cardClass = 'border-red-300 dark:border-red-600';
                 } elseif (in_array($status, ['settlement', 'capture'])) {
-                    $badgeText = 'Pembayaran Berhasil';
+                    $badgeText = __('admin.payment_success');
                     $badgeClass = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
                     $iconClass = 'fas fa-check-circle';
                     $cardClass = 'border-green-300 dark:border-green-600';
@@ -76,17 +81,19 @@
                     <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg mr-3">
                         <i class="fas fa-user text-blue-600 dark:text-blue-300"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Customer Information</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.customer_information') }}
+                    </h3>
                 </div>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Name</span>
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.name') }}</span>
                         <span
                             class="text-sm text-gray-900 dark:text-white font-medium">{{ $transaction->customer_name ?? '-' }}</span>
                     </div>
                     <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</span>
-                        <span class="text-sm text-gray-900 dark:text-white">{{ $transaction->customer_email ?? '-' }}</span>
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.email') }}</span>
+                        <span
+                            class="text-sm text-gray-900 dark:text-white">{{ $transaction->customer_email ?? '-' }}</span>
                     </div>
 
                 </div>
@@ -98,7 +105,7 @@
                     <div class="p-2 bg-green-100 dark:bg-green-900 rounded-lg mr-3">
                         <i class="fas fa-credit-card text-green-600 dark:text-green-300"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Payment Details</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.payment_details') }}</h3>
                 </div>
                 <div class="space-y-3">
                     @php
@@ -107,25 +114,25 @@
 
                         switch (strtolower($paymentType)) {
                             case 'credit_card':
-                                $paymentMethod = 'Kartu Kredit';
+                                $paymentMethod = __('admin.credit_card');
                                 break;
                             case 'bank_transfer':
-                                $paymentMethod = 'Transfer Bank';
+                                $paymentMethod = __('admin.bank_transfer');
                                 break;
                             case 'echannel':
-                                $paymentMethod = 'Mandiri Bill';
+                                $paymentMethod = __('admin.mandiri_bill');
                                 break;
                             case 'bca_va':
-                                $paymentMethod = 'BCA Virtual Account';
+                                $paymentMethod = __('admin.bca_virtual_account');
                                 break;
                             case 'bni_va':
-                                $paymentMethod = 'BNI Virtual Account';
+                                $paymentMethod = __('admin.bni_virtual_account');
                                 break;
                             case 'bri_va':
-                                $paymentMethod = 'BRI Virtual Account';
+                                $paymentMethod = __('admin.bri_virtual_account');
                                 break;
                             case 'permata':
-                                $paymentMethod = 'Permata Virtual Account';
+                                $paymentMethod = __('admin.permata_virtual_account');
                                 break;
                             case 'gopay':
                                 $paymentMethod = 'GoPay';
@@ -148,13 +155,14 @@
                     @endphp
 
                     <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Method</span>
+                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.method') }}</span>
                         <span class="text-sm text-gray-900 dark:text-white font-medium">{{ $paymentMethod }}</span>
                     </div>
 
                     @if ($transaction->va_number ?? false)
                         <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">VA Number</span>
+                            <span
+                                class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.va_number') }}</span>
                             <span
                                 class="text-sm text-gray-900 dark:text-white font-mono">{{ $transaction->va_number }}</span>
                         </div>
@@ -162,7 +170,8 @@
 
                     @if ($transaction->biller_code ?? false)
                         <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Biller Code</span>
+                            <span
+                                class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.biller_code') }}</span>
                             <span
                                 class="text-sm text-gray-900 dark:text-white font-mono">{{ $transaction->biller_code }}</span>
                         </div>
@@ -170,7 +179,8 @@
 
                     @if ($transaction->bill_key ?? false)
                         <div class="flex justify-between items-center py-2">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Bill Key</span>
+                            <span
+                                class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.bill_key') }}</span>
                             <span
                                 class="text-sm text-gray-900 dark:text-white font-mono">{{ $transaction->bill_key }}</span>
                         </div>
@@ -178,7 +188,8 @@
 
                     @if ($transaction->fraud_status ?? false)
                         <div class="flex justify-between items-center py-2">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Fraud Status</span>
+                            <span
+                                class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.fraud_status') }}</span>
                             @php
                                 $fraudStatus = strtolower($transaction->fraud_status);
                                 $fraudClass =
@@ -202,13 +213,15 @@
                     <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg mr-3">
                         <i class="fas fa-history text-purple-600 dark:text-purple-300"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Transaction Timeline</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.transaction_timeline') }}
+                    </h3>
                 </div>
                 <div class="space-y-4">
                     <div class="flex items-start space-x-3">
                         <div class="w-3 h-3 bg-blue-500 rounded-full mt-1.5"></div>
                         <div>
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Transaction Created</p>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                {{ __('admin.transaction_created') }}</p>
                             <p class="text-xs text-gray-600 dark:text-gray-400">
                                 {{ \Carbon\Carbon::parse($transaction->transaction_time)->format('d M Y, H:i:s') }}
                             </p>
@@ -219,7 +232,8 @@
                         <div class="flex items-start space-x-3">
                             <div class="w-3 h-3 bg-green-500 rounded-full mt-1.5"></div>
                             <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">Payment Settled</p>
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ __('admin.payment_settled') }}</p>
                                 <p class="text-xs text-gray-600 dark:text-gray-400">
                                     {{ \Carbon\Carbon::parse($transaction->settlement_time)->format('d M Y, H:i:s') }}
                                 </p>
@@ -232,7 +246,8 @@
                             class="w-3 h-3 {{ in_array($status, ['settlement', 'capture']) ? 'bg-green-500' : (in_array($status, ['cancel', 'failure', 'expire']) ? 'bg-red-500' : 'bg-yellow-500') }} rounded-full mt-1.5">
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Current Status</p>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ __('admin.current_status') }}
+                            </p>
                             <p class="text-xs text-gray-600 dark:text-gray-400">{{ $badgeText }}</p>
                         </div>
                     </div>
@@ -296,11 +311,11 @@
             <div class="mt-6 flex justify-end space-x-4">
                 <button onclick="confirmAction('cancel')"
                     class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
-                    <i class="fas fa-times mr-2"></i>Cancel Transaction
+                    <i class="fas fa-times mr-2"></i>{{ __('admin.cancel_transaction') }}
                 </button>
                 <button onclick="refreshStatus()"
                     class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
-                    <i class="fas fa-sync-alt mr-2"></i>Refresh Status
+                    <i class="fas fa-sync-alt mr-2"></i>{{ __('admin.refresh_status') }}
                 </button>
             </div>
         @endif

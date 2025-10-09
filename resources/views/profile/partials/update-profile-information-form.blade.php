@@ -1,10 +1,10 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            Informasi Profil
+            {{ __('profile.profile_information') }}
         </h2>
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Perbarui informasi profil dan alamat email akun Anda.') }}
+            {{ __('profile.update_profile_description') }}
         </p>
     </header>
 
@@ -50,7 +50,7 @@
         <!-- Name Field -->
         <div>
             <label for="name" class="block font-medium text-sm text-gray-700">
-                Nama
+                {{ __('profile.name') }}
             </label>
             <input id="name" name="name" type="text"
                 class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]"
@@ -65,11 +65,12 @@
         <!-- Phone Field -->
         <div>
             <label for="no_telepon" class="block font-medium text-sm text-gray-700">
-                Nomor Telepon
+                {{ __('profile.phone_number') }}
             </label>
             <input id="no_telepon" name="no_telepon" type="tel"
                 class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]"
-                value="{{ old('no_telepon', $user->no_telepon) }}" autocomplete="tel" placeholder="+62 123-4567-8901">
+                value="{{ old('no_telepon', $user->no_telepon) }}" autocomplete="tel"
+                placeholder="{{ __('profile.phone_placeholder') }}">
             @if ($errors->get('no_telepon'))
                 <p class="mt-2 text-sm text-red-600">
                     {{ $errors->first('no_telepon') }}
@@ -80,7 +81,7 @@
         <!-- Email Field -->
         <div>
             <label for="email" class="block font-medium text-sm text-gray-700">
-                Email
+                {{ __('profile.email') }}
             </label>
             <input id="email" name="email" type="email"
                 class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]"
@@ -94,17 +95,17 @@
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                 <div class="mt-2">
                     <p class="text-sm text-gray-800">
-                        {{ __('Alamat email Anda belum terverifikasi.') }}
+                        {{ __('profile.email_unverified') }}
 
                         <button type="submit" form="send-verification"
                             class="underline text-sm text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#d4af37]">
-                            {{ __('Klik di sini untuk mengirim ulang email verifikasi.') }}
+                            {{ __('profile.resend_verification') }}
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('Tautan verifikasi baru telah dikirim ke alamat email Anda.') }}
+                            {{ __('profile.verification_sent') }}
                         </p>
                     @endif
                 </div>
@@ -115,13 +116,13 @@
         <div class="flex items-center gap-4">
             <button type="submit"
                 class="rounded-lg inline-flex items-center px-4 py-2 bg-[#d4af37] border border-transparent font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#c19b2e] focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2 transition ease-in-out duration-150">
-                {{ __('Simpan') }}
+                {{ __('profile.save') }}
             </button>
 
             @if (session('status') === 'profile-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
                     class="rounded-lg text-sm text-gray-600">
-                    {{ __('Tersimpan.') }}
+                    {{ __('profile.saved') }}
                 </p>
             @endif
         </div>
@@ -137,8 +138,8 @@
             if (file.size > 2 * 1024 * 1024) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'File Too Large',
-                    text: 'Please select a file smaller than 2MB.',
+                    title: @json(__('profile.file_too_large')),
+                    text: @json(__('profile.select_smaller_file')),
                     toast: true,
                     position: 'top-end',
                     timer: 3000,
@@ -153,8 +154,8 @@
             if (!allowedTypes.includes(file.type)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Invalid File Type',
-                    text: 'Please select a valid image file (JPG, PNG, or GIF).',
+                    title: @json(__('profile.invalid_file_type')),
+                    text: @json(__('profile.select_valid_image')),
                     toast: true,
                     position: 'top-end',
                     timer: 3000,
@@ -169,8 +170,8 @@
                 document.getElementById('profile-preview').src = e.target.result;
                 Swal.fire({
                     icon: 'success',
-                    title: 'Photo Selected',
-                    text: 'Click Save to upload your new profile photo.',
+                    title: @json(__('profile.photo_selected')),
+                    text: @json(__('profile.click_save_upload')),
                     toast: true,
                     position: 'top-end',
                     timer: 2000,

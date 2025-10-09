@@ -8,9 +8,9 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center mb-4">
-                    <i class="fas fa-cogs mr-3"></i>Tambah Hairstyle Score
+                    <i class="fas fa-cogs mr-3"></i>{{ __('admin.add_hairstyle_score') }}
                 </h1>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add a new score for a hairstyle recommendation</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{ __('admin.add_new_score_recommendation') }}</p>
             </div>
         </div>
     </section>
@@ -25,8 +25,8 @@
                         <i class="fas fa-tag text-white text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Score Information</h2>
-                        <p class="text-gray-600 mt-1">Please fill in the required score details</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.score_information') }}</h2>
+                        <p class="text-gray-600 mt-1">{{ __('admin.fill_required_score_details') }}</p>
                     </div>
                 </div>
             </div>
@@ -39,11 +39,11 @@
                     <!-- Hairstyle Dropdown -->
                     <div class="space-y-2">
                         <label for="hairstyle_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            <i class="fas fa-tag mr-2 text-blue-600"></i>Hairstyle
+                            <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.hairstyle') }}
                         </label>
                         <select name="hairstyle_id" id="hairstyle_id"
                             class="block w-full h-12 px-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm transition">
-                            <option value="">Pilih Hairstyle</option>
+                            <option value="">{{ __('admin.select_hairstyle') }}</option>
                             @foreach ($hairstyles as $h)
                                 <option value="{{ $h->id }}">{{ $h->name }}</option>
                             @endforeach
@@ -56,11 +56,11 @@
                     <!-- Criterion Dropdown -->
                     <div class="space-y-2">
                         <label for="criterion_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            <i class="fas fa-align-left mr-2 text-blue-600"></i>Kriteria
+                            <i class="fas fa-align-left mr-2 text-blue-600"></i>{{ __('admin.criteria') }}
                         </label>
                         <select name="criterion_id" id="criterion_id"
                             class="block w-full h-12 px-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm transition">
-                            <option value="">Pilih Kriteria</option>
+                            <option value="">{{ __('admin.select_criteria') }}</option>
                             @foreach ($criteria as $c)
                                 <option value="{{ $c->id }}">{{ $c->name }}</option>
                             @endforeach
@@ -73,7 +73,7 @@
                     <!-- Score Input -->
                     <div class="space-y-2">
                         <label for="score" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            <i class="fas fa-star mr-2 text-blue-600"></i>Score
+                            <i class="fas fa-star mr-2 text-blue-600"></i>{{ __('admin.score') }}
                         </label>
                         <input type="number" name="score" id="score" step="0.01" min="0"
                             class="block w-full h-12 px-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm transition"
@@ -87,11 +87,11 @@
                     <div class="flex justify-end space-x-4 pt-4">
                         <a href="{{ route('admin.hairstyles.score.index') }}"
                             class="inline-flex items-center px-6 py-3 h-12 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                            <i class="fas fa-times mr-2"></i>Cancel
+                            <i class="fas fa-times mr-2"></i>{{ __('admin.cancel') }}
                         </a>
                         <button type="submit"
                             class="inline-flex items-center px-6 py-3 h-12 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                            <i class="fas fa-save mr-2"></i>Save Score
+                            <i class="fas fa-save mr-2"></i>{{ __('admin.save_score') }}
                         </button>
                     </div>
                 </form>

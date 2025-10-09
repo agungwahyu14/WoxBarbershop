@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction Export</title>
+    <title>{{ __('admin.transaction_export') }}</title>
     <style>
         body {
             font-family: "DejaVu Sans", Arial, sans-serif;
@@ -70,32 +70,32 @@
 </head>
 
 <body>
-    <h1>Transaction Export</h1>
+    <h1>{{ __('admin.transaction_export') }}</h1>
     @if ($month && $year)
         <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
-            Periode: {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}
+            {{ __('admin.period') }}: {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}
         </p>
     @elseif($year)
         <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
-            Periode: Tahun {{ $year }}
+            {{ __('admin.period') }}: {{ __('admin.year') }} {{ $year }}
         </p>
     @else
         <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
-            Periode: Semua Data
+            {{ __('admin.period') }}: {{ __('admin.all_data') }}
         </p>
     @endif
     <table>
         <thead>
             <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Date</th>
-                <th>Order ID</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Amount</th>
-                <th>Action</th>
+                <th>{{ __('admin.name') }}</th>
+                <th>{{ __('admin.email') }}</th>
+                <th>{{ __('admin.date') }}</th>
+                <th>{{ __('admin.order_id') }}</th>
+                <th>{{ __('admin.type') }}</th>
+                <th>{{ __('admin.status') }}</th>
+                <th>{{ __('admin.amount') }}</th>
+                <th>{{ __('admin.action') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -109,15 +109,15 @@
                     <td>
                         @switch($transaction->payment_type)
                             @case('bank_transfer')
-                                Bank Transfer
+                                {{ __('admin.bank_transfer') }}
                             @break
 
                             @case('cash')
-                                Cash
+                                {{ __('admin.cash') }}
                             @break
 
                             @default
-                                Unknown
+                                {{ __('admin.unknown') }}
                         @endswitch
                     </td>
                     <td
@@ -139,7 +139,7 @@
     </table>
 
     <footer>
-        Dicetak pada {{ now()->format('d/m/Y H:i') }}
+        {{ __('admin.printed_on') }} {{ now()->format('d/m/Y H:i') }}
     </footer>
 </body>
 

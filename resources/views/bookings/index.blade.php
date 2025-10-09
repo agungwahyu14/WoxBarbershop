@@ -18,7 +18,7 @@
                         {{-- Card Header --}}
                         <div class="bg-black px-6 py-4">
                             <h3 class="text-white font-semibold text-lg">{{ $booking->name }}</h3>
-                            <p class="text-blue-100 text-sm">{{ __('booking.booking_number') }}{{ $booking->id }}</p>
+                            <p class="text-blue-100 text-sm">{{ __('booking.booking_number') }} {{ $booking->id }}</p>
                         </div>
 
                         {{-- Card Body --}}
@@ -48,7 +48,7 @@
                                                     ? 'bg-green-100 text-green-700'
                                                     : 'bg-gray-100 text-gray-600') }}">
                                         <i class="fas fa-circle mr-2 text-xs "></i>
-                                        {{ ucfirst($booking->status) }}
+                                        {{ __('booking.status_' . $booking->status) }}
                                     </span>
 
                                     {{-- Payment Status --}}
@@ -61,7 +61,7 @@
                                                     ? 'bg-yellow-100 text-yellow-700'
                                                     : 'bg-red-100 text-red-700') }}">
                                             <i class="fas fa-money-bill-wave mr-1 text-xs"></i>
-                                            {{-- {{ $booking->payment_status === 'unpaid' ? 'Belum Bayar' : ucfirst($booking->payment_status) }} --}}
+                                            {{ __('booking.payment_status_' . $booking->payment_status) }}
                                         </span>
                                     @endif
                                 </div>
@@ -72,7 +72,7 @@
                                 <div class="mb-4 p-3 bg-gray-50 rounded-lg">
                                     <div class="flex items-center">
                                         <i class="fas fa-list-ol mr-2 text-[#d4af37]"></i>
-                                        <span class="text-sm text-gray-600">Nomor Antrian:</span>
+                                        <span class="text-sm text-gray-600">{{ __('booking.queue_number') }}:</span>
                                         <span class="ml-2 font-bold text-[#d4af37]">#{{ $booking->queue_number }}</span>
                                     </div>
                                 </div>
@@ -84,7 +84,7 @@
                                 <a href="{{ route('bookings.show', $booking->id) }}"
                                     class="w-full inline-flex justify-center items-center px-4 py-2 hover:bg-[#d4af37] bg-black text-white text-sm font-medium rounded-lg transition-colors duration-200">
                                     <i class="fas fa-eye mr-2"></i>
-                                    Lihat Detail
+                                    {{ __('booking.view_detail') }}
                                 </a>
 
                             </div>
@@ -97,13 +97,12 @@
                             <div class="mb-4">
                                 <i class="fas fa-calendar-times text-6xl text-gray-300"></i>
                             </div>
-                            <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum Ada Booking</h3>
-                            <p class="text-gray-500 mb-6">Anda belum memiliki riwayat booking. Mulai buat booking pertama
-                                Anda!</p>
+                            <h3 class="text-xl font-semibold text-gray-700 mb-2">{{ __('booking.no_bookings_title') }}</h3>
+                            <p class="text-gray-500 mb-6">{{ __('booking.no_bookings_description') }}</p>
                             <a href="{{ route('bookings.create') }}"
                                 class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
                                 <i class="fas fa-plus mr-2"></i>
-                                Buat Booking Baru
+                                {{ __('booking.create_new_booking') }}
                             </a>
                         </div>
                     </div>
@@ -119,21 +118,29 @@
     @if (session('booking_success'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                const translations = {
+                    booking_success: @json(__('booking.booking_success')),
+                    booking_created_for: @json(__('booking.booking_created_for')),
+                    queue_number_label: @json(__('booking.queue_number_label')),
+                    please_arrive_on_time: @json(__('booking.please_arrive_on_time')),
+                    ok: @json(__('booking.ok'))
+                };
+
                 Swal.fire({
                     icon: 'success',
-                    title: 'Booking Berhasil!',
+                    title: translations.booking_success,
                     html: `
                         <div class="text-center">
-                            <p class="text-lg mb-2">Booking berhasil dibuat atas nama:</p>
+                            <p class="text-lg mb-2">${translations.booking_created_for}:</p>
                             <p class="font-bold text-xl text-[#d4af37] mb-3">{{ session('booking_success.name') }}</p>
                             <div class="bg-blue-50 rounded-lg p-4 mb-3">
-                                <p class="text-sm text-gray-600 mb-1">Nomor Antrian Anda:</p>
+                                <p class="text-sm text-gray-600 mb-1">${translations.queue_number_label}:</p>
                                 <p class="text-3xl font-bold text-[#d4af37]">#{{ session('booking_success.queue_number') }}</p>
                             </div>
-                            <p class="text-sm text-gray-500">Silakan datang sesuai jadwal yang telah ditentukan</p>
+                            <p class="text-sm text-gray-500">${translations.please_arrive_on_time}</p>
                         </div>
                     `,
-                    confirmButtonText: 'OK',
+                    confirmButtonText: translations.ok,
                     confirmButtonColor: '#2563eb',
                     showClass: {
                         popup: 'animate__animated animate__fadeInDown'

@@ -8,10 +8,10 @@
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                     <i class="fas fa-star mr-3"></i>
-                    Hairstyle Scores
+                    {{ __('admin.hairstyle_scores') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    Manage hairstyle scores for Wox's Barbershop
+                    {{ __('admin.manage_hairstyle_scores') }}
                 </p>
             </div>
         </div>
@@ -25,7 +25,7 @@
                     <a href="{{ route('admin.hairstyles.score.create') }}"
                         class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
                         <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                        Tambah Score
+                        {{ __('admin.add_score') }}
                     </a>
                 </div>
             </div>
@@ -40,16 +40,16 @@
                                 #
                             </th>
                             <th>
-                                Hairstyle
+                                {{ __('admin.hairstyle') }}
                             </th>
                             <th>
-                                Kriteria
+                                {{ __('admin.criteria') }}
                             </th>
                             <th>
-                                Score
+                                {{ __('admin.score') }}
                             </th>
                             <th class="flex justify-center items-center">
-                                Action
+                                {{ __('admin.actions') }}
                             </th>
                         </tr>
                     </thead>
@@ -64,11 +64,16 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const translations = {
+            success_title: @json(__('admin.success_title'))
+        };
+
         // Success popup
         @if (session('success'))
             Swal.fire({
                 icon: 'success',
-                title: 'Success!',
+                title: translations.success_title,
                 text: '{{ session('success') }}',
                 timer: 3000,
                 showConfirmButton: false

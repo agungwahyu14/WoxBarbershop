@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice - WOX Barbershop</title>
+    <title>{{ __('receipt.invoice_title') }} - WOX Barbershop</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -207,29 +207,29 @@
     <div class="invoice-header">
         <div class="company-info">
             <div class="company-name">WOX BARBERSHOP</div>
-            <div class="company-tagline">Professional Men's Grooming & Style</div>
+            <div class="company-tagline">{{ __('receipt.company_tagline') }}</div>
             <div class="company-details">
-                Jl. Raya Barbershop No. 123<br>
-                Jakarta Selatan, 12345<br>
-                Telp: (021) 123-4567<br>
-                Email: info@woxbarbershop.com
+                {{ __('receipt.company_address') }}<br>
+                {{ __('receipt.company_city') }}<br>
+                {{ __('receipt.company_phone') }}<br>
+                {{ __('receipt.company_email') }}
             </div>
         </div>
         <div class="invoice-title">
-            <h1>INVOICE</h1>
+            <h1>{{ __('receipt.invoice') }}</h1>
         </div>
     </div>
 
     <!-- Invoice Meta Information -->
     <div class="invoice-meta">
         <div class="invoice-details">
-            <div class="section-title">Detail Invoice</div>
+            <div class="section-title">{{ __('receipt.invoice_details') }}</div>
             <div class="info-row">
-                <span class="info-label">No. Invoice:</span>
+                <span class="info-label">{{ __('receipt.invoice_number') }}:</span>
                 <span class="info-value">{{ $transaction['order_id'] ?? 'INV-' . time() }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Tanggal:</span>
+                <span class="info-label">{{ __('receipt.date') }}:</span>
                 <span class="info-value">
                     {{ isset($transaction['transaction_time'])
                         ? \Carbon\Carbon::parse($transaction['transaction_time'])->format('d M Y H:i')
@@ -237,7 +237,7 @@
                 </span>
             </div>
             <div class="info-row">
-                <span class="info-label">Status Pembayaran:</span>
+                <span class="info-label">{{ __('receipt.payment_status') }}:</span>
                 <span class="info-value">
                     @php
                         $status = $transaction['transaction_status'] ?? ($transaction['status'] ?? 'unknown');
@@ -268,13 +268,13 @@
         </div>
 
         <div class="customer-details">
-            <div class="section-title">Detail Pelanggan</div>
+            <div class="section-title">{{ __('receipt.customer_details') }}</div>
             <div class="info-row">
-                <span class="info-label">Nama:</span>
+                <span class="info-label">{{ __('receipt.name') }}:</span>
                 <span class="info-value">{{ $booking->name ?? ($transaction['name'] ?? 'N/A') }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Email:</span>
+                <span class="info-label">{{ __('receipt.email') }}:</span>
                 <span class="info-value">{{ $booking->user->email ?? ($transaction['email'] ?? 'N/A') }}</span>
             </div>
             @if (isset($booking->phone) && $booking->phone)
@@ -298,10 +298,10 @@
     <table class="services-table">
         <thead>
             <tr>
-                <th style="width: 50%">Layanan</th>
-                <th class="text-center" style="width: 15%">Qty</th>
-                <th class="text-right" style="width: 20%">Harga Satuan</th>
-                <th class="text-right" style="width: 15%">Total</th>
+                <th style="width: 50%">{{ __('receipt.service') }}</th>
+                <th class="text-center" style="width: 15%">{{ __('receipt.qty') }}</th>
+                <th class="text-right" style="width: 20%">{{ __('receipt.unit_price') }}</th>
+                <th class="text-right" style="width: 15%">{{ __('receipt.total') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -341,28 +341,28 @@
         @endphp
 
         <div class="total-row">
-            <span>Subtotal:</span>
+            <span>{{ __('receipt.subtotal') }}:</span>
             <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
         </div>
 
         @if ($tax > 0)
             <div class="total-row">
-                <span>Pajak:</span>
+                <span>{{ __('receipt.tax') }}:</span>
                 <span>Rp {{ number_format($tax, 0, ',', '.') }}</span>
             </div>
         @endif
 
         <div class="total-row grand-total">
-            <span>Total Pembayaran:</span>
+            <span>{{ __('receipt.total_payment') }}:</span>
             <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
         </div>
     </div>
 
     <!-- Payment Information -->
     <div class="payment-info">
-        <h4>Informasi Pembayaran</h4>
+        <h4>{{ __('receipt.payment_information') }}</h4>
         <div class="info-row">
-            <span class="info-label">Metode Pembayaran:</span>
+            <span class="info-label">{{ __('receipt.payment_method') }}:</span>
             <span class="info-value">
                 @php
                     $paymentType = $transaction['payment_type'] ?? 'N/A';
@@ -394,15 +394,15 @@
 
     <!-- Thank You Message -->
     <div class="thank-you">
-        Terima kasih telah menggunakan layanan WOX Barbershop!<br>
-        Kami berharap dapat melayani Anda kembali.
+        {{ __('receipt.thank_you_message') }}<br>
+        {{ __('receipt.serve_again_message') }}
     </div>
 
     <!-- Footer -->
     <div class="footer">
-        <p>Invoice ini dibuat secara otomatis oleh sistem WOX Barbershop.</p>
-        <p>Untuk pertanyaan lebih lanjut, hubungi kami di info@woxbarbershop.com atau (021) 123-4567</p>
-        <p><strong>WOX Barbershop</strong> - Your Style, Our Passion</p>
+        <p>{{ __('receipt.auto_generated_message') }}</p>
+        <p>{{ __('receipt.contact_message') }}</p>
+        <p><strong>WOX Barbershop</strong> - {{ __('receipt.tagline') }}</p>
     </div>
 </body>
 

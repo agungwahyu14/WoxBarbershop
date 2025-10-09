@@ -29,8 +29,8 @@
                         <i class="fas fa-user-plus text-white text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">User Information</h2>
-                        <p class="text-gray-600 mt-1">Please fill in all required information</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.user_information') }}</h2>
+                        <p class="text-gray-600 mt-1">{{ __('admin.fill_required_info') }}</p>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                         <!-- Name Field -->
                         <div>
                             <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-user mr-2 text-blue-600"></i> Name
+                                <i class="fas fa-user mr-2 text-blue-600"></i> {{ __('admin.name') }}
                             </label>
                             <input type="text" name="name" id="name"
                                 class="form-control w-full @error('name') border-red-500 @enderror"
@@ -56,7 +56,7 @@
                         <!-- Email Field -->
                         <div>
                             <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-envelope mr-2 text-blue-600"></i>Email Address
+                                <i class="fas fa-envelope mr-2 text-blue-600"></i>{{ __('admin.email_address') }}
                             </label>
                             <input type="email" name="email" id="email"
                                 class="form-control w-full @error('email') border-red-500 @enderror"
@@ -71,11 +71,11 @@
                         <!-- Phone Field -->
                         <div>
                             <label for="no_telepon" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-phone mr-2 text-blue-600"></i>Phone Number
+                                <i class="fas fa-phone mr-2 text-blue-600"></i>{{ __('admin.phone_number') }}
                             </label>
                             <input type="text" name="no_telepon" id="no_telepon"
                                 class="form-control w-full @error('no_telepon') border-red-500 @enderror"
-                                value="{{ old('no_telepon') }}" placeholder="Enter phone number" required>
+                                value="{{ old('no_telepon') }}" placeholder="{{ __('admin.enter_phone') }}" required>
                             @error('no_telepon')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -84,11 +84,11 @@
                         <!-- Password Field -->
                         <div>
                             <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-lock mr-2 text-blue-600"></i>Password
+                                <i class="fas fa-lock mr-2 text-blue-600"></i>{{ __('admin.password') }}
                             </label>
                             <input type="password" name="password" id="password"
                                 class="form-control w-full @error('password') border-red-500 @enderror"
-                                placeholder="Enter password" required>
+                                placeholder="{{ __('admin.enter_password') }}" required>
                             @error('password')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -98,11 +98,11 @@
                     <!-- Password Confirmation Field -->
                     <div>
                         <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-lock mr-2 text-blue-600"></i>Confirm Password
+                            <i class="fas fa-lock mr-2 text-blue-600"></i>{{ __('admin.confirm_password') }}
                         </label>
                         <input type="password" name="password_confirmation" id="password_confirmation"
                             class="form-control w-full @error('password_confirmation') border-red-500 @enderror"
-                            placeholder="Confirm password" required>
+                            placeholder="{{ __('admin.enter_confirm_password') }}" required>
                         @error('password_confirmation')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -111,7 +111,7 @@
                     <!-- Roles Section -->
                     <div class="border-t border-gray-200 pt-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                            <i class="fas fa-users-cog mr-2 text-blue-600"></i>Assign Roles
+                            <i class="fas fa-users-cog mr-2 text-blue-600"></i>{{ __('admin.assign_roles') }}
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             @forelse($roles as $role)
@@ -124,7 +124,7 @@
                                         class="ml-3 text-sm font-medium text-gray-700 capitalize">{{ $role->name }}</span>
                                 </label>
                             @empty
-                                <p class="text-gray-500 col-span-full">No roles available</p>
+                                <p class="text-gray-500 col-span-full">{{ __('admin.no_roles') }}</p>
                             @endforelse
                         </div>
                         @error('roles')
@@ -161,7 +161,7 @@
                         <div class="flex justify-end space-x-4">
                             <a href="{{ route('admin.users.index') }}"
                                 class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                <i class="fas fa-times mr-2"></i>Cancel
+                                <i class="fas fa-times mr-2"></i>{{ __('admin.cancel') }}
                             </a>
                             <button type="submit"
                                 class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
@@ -177,6 +177,23 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const translations = {
+            field_required: @json(__('admin.field_required')),
+            email_invalid: @json(__('admin.email_invalid')),
+            validation_error_title: @json(__('admin.validation_error')),
+            fill_required_fields: @json(__('admin.fill_required_fields')),
+            role_required_title: @json(__('admin.role_required')),
+            assign_role_message: @json(__('admin.assign_role_message')),
+            creating_user: @json(__('admin.creating_user')),
+            very_weak: @json(__('admin.very_weak')),
+            weak: @json(__('admin.weak')),
+            fair: @json(__('admin.fair')),
+            good: @json(__('admin.good')),
+            strong: @json(__('admin.strong')),
+            password_strength: @json(__('admin.password_strength'))
+        };
+
         $(document).ready(function() {
             // Form validation and enhancement
             const form = $('form');
@@ -189,7 +206,7 @@
 
                 if (!value) {
                     input.addClass('border-red-500').removeClass('border-gray-300');
-                    showFieldError(input, 'This field is required');
+                    showFieldError(input, translations.field_required);
                 } else {
                     input.removeClass('border-red-500').addClass('border-gray-300');
                     hideFieldError(input);
@@ -203,7 +220,7 @@
 
                 if (email && !emailRegex.test(email)) {
                     $(this).addClass('border-red-500').removeClass('border-gray-300');
-                    showFieldError($(this), 'Please enter a valid email address');
+                    showFieldError($(this), translations.email_invalid);
                 }
             });
 
@@ -234,20 +251,21 @@
                 });
 
                 if (!isValid) {
-                    showNotification('error', 'Validation Error', 'Please fill in all required fields');
+                    showNotification('error', translations.validation_error_title, translations
+                        .fill_required_fields);
                     return;
                 }
 
                 // Check if at least one role is selected
                 if ($('input[name="roles[]"]:checked').length === 0) {
-                    showNotification('warning', 'Role Required',
-                        'Please assign at least one role to the user');
+                    showNotification('warning', translations.role_required_title,
+                        translations.assign_role_message);
                     return;
                 }
 
                 showLoading();
                 submitButton.prop('disabled', true).html(
-                    '<i class="fas fa-spinner fa-spin mr-2"></i>Creating User...');
+                    '<i class="fas fa-spinner fa-spin mr-2"></i>' + translations.creating_user);
 
                 // Submit the form
                 this.submit();
@@ -282,7 +300,9 @@
                     $('#password').after('<div id="password-strength" class="mt-2"></div>');
                 }
 
-                const labels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+                const labels = [translations.very_weak, translations.weak, translations.fair, translations.good,
+                    translations.strong
+                ];
                 const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-blue-500', 'bg-green-500'];
 
                 let html = '<div class="flex space-x-1 mb-1">';
@@ -292,7 +312,7 @@
                 }
                 html += '</div>';
                 html +=
-                    `<p class="text-xs text-gray-600">Password Strength: ${labels[strength-1] || 'Very Weak'}</p>`;
+                    `<p class="text-xs text-gray-600">${translations.password_strength}: ${labels[strength-1] || translations.very_weak}</p>`;
 
                 $('#password-strength').html(html);
             }

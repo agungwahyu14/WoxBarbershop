@@ -28,9 +28,9 @@
                         class="h-20 w-auto object-contain mx-auto mb-4">
                 </div>
 
-                <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Reset Password</h2>
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">{{ __('auth.reset_password') }}</h2>
                 <p class="text-center text-gray-600 text-sm mb-6">
-                    Lupa password? Masukkan email Anda dan kami akan mengirimkan link reset password.
+                    {{ __('auth.forgot_password_description') }}
                 </p>
 
                 <!-- Session Status -->
@@ -45,12 +45,13 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label for="email" class="block text-gray-700 font-medium mb-1">Email Address</label>
+                        <label for="email"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.email_address') }}</label>
                         <div class="relative">
                             <input id="email" type="email" name="email" value="{{ old('email') }}" required
                                 autofocus autocomplete="email"
                                 class="w-full px-4 py-3 pl-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg @error('email') border-red-500 @enderror"
-                                placeholder="Masukkan email Anda">
+                                placeholder="{{ __('auth.enter_email_placeholder') }}">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-400"></i>
                             </div>
@@ -63,14 +64,14 @@
                     <button type="submit"
                         class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-semibold transition duration-300 rounded-lg mb-4">
                         <i class="fas fa-paper-plane mr-2"></i>
-                        Kirim Link Reset Password
+                        {{ __('auth.send_reset_link') }}
                     </button>
 
                     <div class="text-center">
                         <p class="text-sm text-gray-600">
-                            Ingat password Anda?
+                            {{ __('auth.remember_password') }}
                             <a href="{{ route('login') }}" class="text-[#d4af37] hover:underline font-medium">
-                                Kembali ke Login
+                                {{ __('auth.back_to_login') }}
                             </a>
                         </p>
                     </div>
@@ -81,7 +82,7 @@
             <div class="mt-6 text-center text-white">
                 <p class="text-sm opacity-75">
                     <i class="fas fa-info-circle mr-1"></i>
-                    Link reset password akan dikirim ke email Anda dalam beberapa menit.
+                    {{ __('auth.reset_link_info') }}
                 </p>
             </div>
         </div>
@@ -89,14 +90,22 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Translation variables
+            const translations = {
+                email_sent: @json(__('auth.email_sent')),
+                error_occurred: @json(__('auth.error_occurred')),
+                ok: @json(__('auth.ok')),
+                try_again: @json(__('auth.try_again'))
+            };
+
             // Handle success message
             @if (session('status'))
                 Swal.fire({
                     icon: 'success',
-                    title: 'Email Terkirim!',
+                    title: translations.email_sent,
                     text: '{{ session('status') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
+                    confirmButtonText: translations.ok
                 });
             @endif
 
@@ -109,10 +118,10 @@
 
                 Swal.fire({
                     icon: 'error',
-                    title: 'Terjadi Kesalahan!',
+                    title: translations.error_occurred,
                     text: errorMessage,
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Coba Lagi'
+                    confirmButtonText: translations.try_again
                 });
             @endif
         });

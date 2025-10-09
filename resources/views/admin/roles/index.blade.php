@@ -59,6 +59,32 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const translations = {
+            success: @json(__('admin.success')),
+            error: @json(__('admin.error')),
+            deleted: @json(__('admin.deleted')),
+            areYouSure: @json(__('admin.are_you_sure')),
+            deleteWarning: @json(__('admin.delete_role_warning')),
+            yesDeleteIt: @json(__('admin.yes_delete_it')),
+            somethingWentWrong: @json(__('admin.something_went_wrong')),
+            search: @json(__('admin.search')),
+            lengthMenu: @json(__('admin.show_entries')),
+            info: @json(__('admin.showing_entries')),
+            infoEmpty: @json(__('admin.showing_empty')),
+            infoFiltered: @json(__('admin.filtered_entries')),
+            zeroRecords: @json(__('admin.no_matching_roles')),
+            emptyTable: @json(__('admin.no_roles_available')),
+            loadingRecords: @json(__('admin.loading_roles')),
+            processing: @json(__('admin.processing')),
+            paginate: {
+                first: @json(__('admin.first')),
+                last: @json(__('admin.last')),
+                next: @json(__('admin.next')),
+                previous: @json(__('admin.previous'))
+            }
+        };
+
         $(document).ready(function() {
             // Initialize DataTable with improved styling
             let table = $('#roles-table').DataTable({
@@ -105,21 +131,23 @@
                 // Hide default info and pagination
 
                 language: {
-                    search: "Search:",
-                    lengthMenu: "_MENU_ ",
-                    info: "Showing _START_ to _END_ of _TOTAL_ roles",
-                    infoEmpty: "No roles found",
-                    infoFiltered: "(filtered from _MAX_ total roles)",
-                    zeroRecords: "No matching roles found",
-                    emptyTable: "No roles available",
-                    loadingRecords: "Loading roles...",
+                    search: translations.search,
+                    lengthMenu: translations.lengthMenu,
+                    info: translations.info,
+                    infoEmpty: translations.infoEmpty,
+                    infoFiltered: translations.infoFiltered,
+                    zeroRecords: translations.zeroRecords,
+                    emptyTable: translations.emptyTable,
+                    loadingRecords: translations.loadingRecords,
                     processing: `<div class="flex items-center justify-center py-4">
                         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
+                        <span class="ml-2 text-gray-600 dark:text-gray-400">${translations.processing}...</span>
                     </div>`,
                     paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">Previous</span>',
-                        next: '<span class="sr-only">Next</span><i class="mdi mdi-chevron-right"></i>'
+                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
+                            translations.paginate.previous + '</span>',
+                        next: '<span class="sr-only">' + translations.paginate.next +
+                            '</span><i class="mdi mdi-chevron-right"></i>'
                     }
                 },
                 pageLength: 10,
@@ -143,7 +171,7 @@
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success!',
+                    title: translations.success,
                     text: '{{ session('success') }}',
                     timer: 3000,
                     showConfirmButton: false
@@ -155,13 +183,13 @@
                 const deleteUrl = '{{ route('admin.roles.destroy', ':id') }}'.replace(':id', roleId);
 
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: translations.areYouSure,
+                    text: translations.deleteWarning,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: translations.yesDeleteIt
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -174,7 +202,7 @@
                                 if (response.success) {
                                     Swal.fire({
                                         icon: 'success',
-                                        title: 'Deleted!',
+                                        title: translations.deleted,
                                         text: response.message,
                                         timer: 3000,
                                         showConfirmButton: false
@@ -185,9 +213,9 @@
                             error: function(xhr) {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Error!',
+                                    title: translations.error,
                                     text: xhr.responseJSON?.message ||
-                                        'Something went wrong!',
+                                        translations.somethingWentWrong,
                                 });
                             }
                         });
@@ -210,7 +238,7 @@
                     success: function(response) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Success!',
+                            title: translations.success,
                             text: response.message,
                             timer: 3000,
                             showConfirmButton: false
@@ -226,7 +254,7 @@
 
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error!',
+                            title: translations.error,
                             html: errorMessage,
                         });
                     }

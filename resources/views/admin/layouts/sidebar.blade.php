@@ -65,12 +65,12 @@
                     </a>
                 </li>
 
-                <li>
+                {{-- <li>
                     <a href="{{ route('admin.loyalty.index') }}">
                         <span class="icon"><i class="mdi mdi-star-circle"></i></span>
                         <span class="menu-item-label">{{ __('menu.loyalty') }}</span>
                     </a>
-                </li>
+                </li> --}}
 
                 <li>
                     <a href="{{ route('admin.system.index') }}">

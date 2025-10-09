@@ -28,9 +28,9 @@
                         class="h-20 w-auto object-contain mx-auto mb-4">
                 </div>
 
-                <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Buat Password Baru</h2>
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">{{ __('auth.create_new_password') }}</h2>
                 <p class="text-center text-gray-600 text-sm mb-6">
-                    Masukkan password baru untuk akun Anda.
+                    {{ __('auth.enter_new_password_description') }}
                 </p>
 
                 <form method="POST" action="{{ route('password.store') }}" id="resetPasswordForm">
@@ -44,7 +44,8 @@
 
                     <!-- Display Email (Read-only) -->
                     <div class="mb-4">
-                        <label for="email_display" class="block text-gray-700 font-medium mb-1">Email</label>
+                        <label for="email_display"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.email') }}</label>
                         <div class="relative">
                             <input id="email_display" type="email" value="{{ old('email', $request->email) }}"
                                 readonly
@@ -57,7 +58,8 @@
 
                     <!-- New Password -->
                     <div class="mb-4">
-                        <label for="password" class="block text-gray-700 font-medium mb-1">Password Baru</label>
+                        <label for="password"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.new_password') }}</label>
                         <div class="relative">
                             <input id="password" type="password" name="password" required autocomplete="new-password"
                                 class="w-full px-4 py-3 pl-12 pr-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg @error('password') border-red-500 @enderror"
@@ -81,8 +83,8 @@
 
                     <!-- Confirm Password -->
                     <div class="mb-6">
-                        <label for="password_confirmation" class="block text-gray-700 font-medium mb-1">Konfirmasi
-                            Password</label>
+                        <label for="password_confirmation"
+                            class="block text-gray-700 font-medium mb-1">{{ __('auth.password_confirmation') }}</label>
                         <div class="relative">
                             <input id="password_confirmation" type="password" name="password_confirmation" required
                                 autocomplete="new-password"
@@ -104,27 +106,27 @@
 
                     <!-- Password Strength Indicator -->
                     <div class="mb-4">
-                        <div class="text-xs text-gray-500 mb-2">Kekuatan Password:</div>
+                        <div class="text-xs text-gray-500 mb-2">{{ __('auth.password_strength') }}:</div>
                         <div class="flex space-x-1">
                             <div class="h-2 flex-1 bg-gray-200 rounded-full" id="strength-bar-1"></div>
                             <div class="h-2 flex-1 bg-gray-200 rounded-full" id="strength-bar-2"></div>
                             <div class="h-2 flex-1 bg-gray-200 rounded-full" id="strength-bar-3"></div>
                             <div class="h-2 flex-1 bg-gray-200 rounded-full" id="strength-bar-4"></div>
                         </div>
-                        <div class="text-xs mt-1" id="strength-text">Lemah</div>
+                        <div class="text-xs mt-1" id="strength-text">{{ __('auth.weak') }}</div>
                     </div>
 
                     <button type="submit"
                         class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-semibold transition duration-300 rounded-lg mb-4">
                         <i class="fas fa-key mr-2"></i>
-                        Reset Password
+                        {{ __('auth.reset_password_button') }}
                     </button>
 
                     <div class="text-center">
                         <p class="text-sm text-gray-600">
-                            Ingat password Anda?
+                            {{ __('auth.remember_password') }}
                             <a href="{{ route('login') }}" class="text-[#d4af37] hover:underline font-medium">
-                                Kembali ke Login
+                                {{ __('auth.back_to_login') }}
                             </a>
                         </p>
                     </div>

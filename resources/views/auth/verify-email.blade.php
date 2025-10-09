@@ -5,9 +5,9 @@
                 viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H8m0 0l4-4m-4 4l4 4" />
             </svg>
-            <h2 class="mt-4 text-2xl font-bold text-gray-800">{{ __('Verify Your Email Address') }}</h2>
+            <h2 class="mt-4 text-2xl font-bold text-gray-800">{{ __('auth.verify_email_title') }}</h2>
             <p class="mt-2 text-gray-600 text-sm leading-relaxed">
-                {{ __('Thanks for signing up! Please verify your email address by clicking on the link we just sent you. If you didn\'t receive the email, we will gladly send you another.') }}
+                {{ __('auth.verify_email_message') }}
             </p>
         </div>
 
@@ -15,7 +15,7 @@
             <div
                 class="mb-4 p-3 rounded-lg bg-green-50 text-green-700 text-sm border border-green-200 text-center font-medium">
                 ✅
-                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+                {{ __('auth.verification_link_sent') }}
             </div>
         @endif
 
@@ -25,7 +25,7 @@
                 @csrf
                 <button type="submit"
                     class="w-full bg-[#d4af37] text-white py-3 rounded-xl shadow-md hover:bg-[#b5942b] transition duration-200 font-semibold">
-                    🔄 {{ __('Resend Verification Email') }}
+                    🔄 {{ __('auth.resend_verification') }}
                 </button>
             </form>
 
@@ -34,7 +34,7 @@
                 @csrf
                 <button type="submit"
                     class="w-full bg-gray-100 text-gray-700 py-3 rounded-xl shadow-md hover:bg-gray-200 transition duration-200 font-semibold">
-                    🚪 {{ __('Log Out') }}
+                    🚪 {{ __('auth.logout') }}
                 </button>
             </form>
         </div>

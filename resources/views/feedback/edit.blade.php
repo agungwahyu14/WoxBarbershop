@@ -1,36 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-gray-50 py-8">
+    <div class="min-h-screen bg-gray-50 py-20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header -->
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Edit Feedback</h1>
-                <p class="mt-2 text-gray-600">Update your experience review</p>
-            </div>
+
 
             <!-- Booking Info Card -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 mt-8">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-900">Booking Details</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('feedback.booking_details') }}</h3>
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Booking ID</label>
+                            <label class="block text-sm font-medium text-gray-500">{{ __('feedback.booking_id') }}</label>
                             <p class="mt-1 text-sm text-gray-900">#{{ $feedback->booking->id }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Service</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $feedback->booking->service->name ?? 'N/A' }}</p>
+                            <label class="block text-sm font-medium text-gray-500">{{ __('feedback.service') }}</label>
+                            <p class="mt-1 text-sm text-gray-900">
+                                {{ $feedback->booking->service->name ?? __('feedback.not_available') }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Date</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $feedback->booking->booking_date ?? 'N/A' }}</p>
+                            <label class="block text-sm font-medium text-gray-500">{{ __('feedback.date') }}</label>
+                            <p class="mt-1 text-sm text-gray-900">
+                                {{ $feedback->booking->booking_date ?? __('feedback.not_available') }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Time</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $feedback->booking->booking_time ?? 'N/A' }}</p>
+                            <label class="block text-sm font-medium text-gray-500">{{ __('feedback.time') }}</label>
+                            <p class="mt-1 text-sm text-gray-900">
+                                {{ $feedback->booking->booking_time ?? __('feedback.not_available') }}</p>
                         </div>
                     </div>
                 </div>
@@ -39,7 +38,7 @@
             <!-- Feedback Form -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-900">Update Your Feedback</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('feedback.update_feedback') }}</h3>
                 </div>
 
                 <form action="{{ route('feedback.update', $feedback) }}" method="POST" class="p-6">
@@ -49,7 +48,7 @@
                     <!-- Rating -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-3">
-                            Rating <span class="text-red-500">*</span>
+                            {{ __('feedback.rating') }} <span class="text-red-500">*</span>
                         </label>
                         <div class="flex items-center space-x-2">
                             @for ($i = 1; $i <= 5; $i++)
@@ -64,27 +63,27 @@
                             <span class="ml-3 text-sm text-gray-600 rating-text">
                                 @switch($feedback->rating)
                                     @case(1)
-                                        Poor
+                                        {{ __('feedback.rating_poor') }}
                                     @break
 
                                     @case(2)
-                                        Fair
+                                        {{ __('feedback.rating_fair') }}
                                     @break
 
                                     @case(3)
-                                        Good
+                                        {{ __('feedback.rating_good') }}
                                     @break
 
                                     @case(4)
-                                        Very Good
+                                        {{ __('feedback.rating_very_good') }}
                                     @break
 
                                     @case(5)
-                                        Excellent
+                                        {{ __('feedback.rating_excellent') }}
                                     @break
 
                                     @default
-                                        Click to rate
+                                        {{ __('feedback.click_to_rate') }}
                                 @endswitch
                             </span>
                         </div>
@@ -96,11 +95,11 @@
                     <!-- Comment -->
                     <div class="mb-6">
                         <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">
-                            Comment (Optional)
+                            {{ __('feedback.comment_optional') }}
                         </label>
                         <textarea id="comment" name="comment" rows="4"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Tell us about your experience...">{{ old('comment', $feedback->comment) }}</textarea>
+                            placeholder="{{ __('feedback.comment_placeholder') }}">{{ old('comment', $feedback->comment) }}</textarea>
                         @error('comment')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -113,7 +112,7 @@
                                 {{ old('is_public', $feedback->is_public) ? 'checked' : '' }}
                                 class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                             <label for="is_public" class="ml-2 block text-sm text-gray-700">
-                                Allow this feedback to be used as a testimonial on our website
+                                {{ __('feedback.testimonial_permission') }}
                             </label>
                         </div>
                     </div>
@@ -122,12 +121,12 @@
                     <div class="flex justify-end space-x-3">
                         <a href="{{ route('feedback.show', $feedback) }}"
                             class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Cancel
+                            {{ __('feedback.cancel') }}
                         </a>
                         <button type="submit"
                             class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm bg-blue-600 hover:bg-blue-700 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <i class="fas fa-save mr-2"></i>
-                            Update Feedback
+                            {{ __('feedback.update_feedback') }}
                         </button>
                     </div>
                 </form>
@@ -147,7 +146,13 @@
             const ratingInputs = document.querySelectorAll('.rating-input');
             const ratingText = document.querySelector('.rating-text');
 
-            const ratingLabels = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+            const ratingLabels = @json([
+                __('feedback.rating_poor'),
+                __('feedback.rating_fair'),
+                __('feedback.rating_good'),
+                __('feedback.rating_very_good'),
+                __('feedback.rating_excellent'),
+            ]);
 
             stars.forEach((star, index) => {
                 star.addEventListener('mouseover', function() {
@@ -171,7 +176,7 @@
                     ratingText.textContent = ratingLabels[rating - 1];
                 } else {
                     highlightStars(0);
-                    ratingText.textContent = 'Click to rate';
+                    ratingText.textContent = @json(__('feedback.click_to_rate'));
                 }
             });
 

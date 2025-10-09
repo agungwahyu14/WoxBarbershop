@@ -241,6 +241,26 @@ if ($request->filled('status_filter')) {
                                     </a>';
                     }
 
+                    // Loyalty Points Reset button
+                    if ($row->loyalty && $row->loyalty->points >= 10) {
+                        $actions .= '<button type="button" 
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-600 transition-all duration-200 group resetLoyaltyBtn" 
+                                            data-user-id="'.$row->id.'" 
+                                            data-loyalty-id="'.$row->loyalty->id.'" 
+                                            data-user-name="'.$row->name.'" 
+                                            data-points="'.$row->loyalty->points.'" 
+                                            title="Reset Loyalty Points (Potong Gratis)">
+                                        <i class="fas fa-gift text-xs group-hover:scale-110 transition-transform"></i>
+                                    </button>';
+                    } elseif ($row->loyalty && $row->loyalty->points < 10) {
+                        $actions .= '<button type="button" 
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed" 
+                                            disabled
+                                            title="Belum mencapai 10 poin (Poin saat ini: '.$row->loyalty->points.')">
+                                        <i class="fas fa-gift text-xs"></i>
+                                    </button>';
+                    }
+
                     // Delete button
                     if (auth()->user()->can('delete users') && $row->id !== auth()->id()) {
                         $actions .= '<button type="button" 
@@ -818,6 +838,61 @@ if ($request->filled('status_filter')) {
             ]);
 
             return back()->with('error', 'Gagal melakukan redeem: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Reset loyalty points for free haircut redemption
+     */
+    public function resetLoyaltyPoints(Request $request, $userId)
+    {
+        try {
+            $user = User::with('loyalty')->findOrFail($userId);
+            
+            if (!$user->loyalty) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pengguna tidak memiliki data loyalty.'
+                ], 400);
+            }
+            
+            // Check if user has enough points to redeem
+            if ($user->loyalty->points < 10) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pelanggan belum memiliki 10 poin untuk direset. Poin saat ini: ' . $user->loyalty->points
+                ], 400);
+            }
+
+            // Reset points to 0
+            $oldPoints = $user->loyalty->points;
+            $user->loyalty->points = 0;
+            $user->loyalty->save();
+
+            Log::info('Admin reset loyalty points', [
+                'admin_id' => auth()->id(),
+                'user_id' => $user->id,
+                'loyalty_id' => $user->loyalty->id,
+                'points_before' => $oldPoints,
+                'points_after' => 0
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil reset poin loyalty pelanggan ' . $user->name . '. Pelanggan mendapat potong gratis!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to reset loyalty points', [
+                'user_id' => $userId,
+                'admin_id' => auth()->id(),
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal reset poin: ' . $e->getMessage()
+            ], 500);
         }
     }
 

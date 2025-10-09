@@ -28,6 +28,54 @@ return [
     'password_reset_sent' => 'Password reset link has been sent to your email.',
     'password_reset_success' => 'Password reset successfully!',
     
+    // Login Page
+    'login_button' => 'Login',
+    'no_account' => 'Don\'t have an account?',
+    'register_here' => 'Register here',
+    
+    // General Auth Pages
+    'secure_area_message' => 'This is a secure area of the application. Please confirm your password before continuing.',
+    'confirm' => 'Confirm',
+    'email_address' => 'Email Address',
+    'enter_email_placeholder' => 'Enter your email',
+    'send_reset_link' => 'Send Reset Link',
+    'remember_password' => 'Remember your password?',
+    'back_to_login' => 'Back to Login',
+    'reset_link_info' => 'Reset password link will be sent to your email in a few minutes.',
+    
+    // Register Page
+    'register_account' => 'Register Account',
+    'already_have_account' => 'Already have an account?',
+    'login_here' => 'Login here',
+    
+    // Reset Password Page
+    'create_new_password' => 'Create New Password',
+    'enter_new_password_description' => 'Enter a new password for your account.',
+    'password_strength' => 'Password Strength',
+    'weak' => 'Weak',
+    'fair' => 'Fair',
+    'good' => 'Good',
+    'strong' => 'Strong',
+    'reset_password_button' => 'Reset Password',
+    
+    // Verify Email Page
+    'verify_email_title' => 'Verify Your Email Address',
+    'verify_email_message' => 'Thanks for signing up! Please verify your email address by clicking on the link we just sent you. If you didn\'t receive the email, we will gladly send you another.',
+    'verification_link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
+    'resend_verification' => 'Resend Verification Email',
+    
+    // JavaScript Messages
+    'email_sent' => 'Email Sent!',
+    'error_occurred' => 'An Error Occurred!',
+    'ok' => 'OK',
+    'try_again' => 'Try Again',
+    'success' => 'Success!',
+    'registration_failed' => 'Registration Failed!',
+    'information' => 'Information',
+    'warning' => 'Warning!',
+    'registration_success' => 'Registration Successful!',
+    'forgot_password_description' => 'Forgot your password? Enter your email and we will send you a password reset link.',
+    
     // Placeholders
     'enter_email' => 'Enter your email',
     'enter_password' => 'Enter your password',

@@ -6,9 +6,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center mb-4">
-                    <i class="fas fa-cut mr-3"></i> Create Hairstyle
+                    <i class="fas fa-cut mr-3"></i> {{ __('admin.create_hairstyle') }}
                 </h1>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add new hairstyle recommendation</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{ __('admin.add_new_hairstyle_recommendation') }}
+                </p>
             </div>
         </div>
     </section>
@@ -23,8 +24,8 @@
                         <i class="fas fa-cut text-white text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Hairstyle Information</h2>
-                        <p class="text-gray-600 mt-1">Please fill in all required hairstyle information</p>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.hairstyle_information') }}</h2>
+                        <p class="text-gray-600 mt-1">{{ __('admin.fill_required_hairstyle_info') }}</p>
                     </div>
                 </div>
             </div>
@@ -38,7 +39,7 @@
                     <!-- Hairstyle Name -->
                     <div>
                         <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-tag mr-2 text-blue-600"></i>Hairstyle Name
+                            <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.hairstyle_name') }}
                         </label>
                         <input type="text" name="name" id="name" value="{{ old('name') }}"
                             class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -48,7 +49,7 @@
                     <!-- Description -->
                     <div>
                         <label for="description" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-align-left mr-2 text-blue-600"></i>Description
+                            <i class="fas fa-align-left mr-2 text-blue-600"></i>{{ __('admin.description') }}
                         </label>
                         <textarea name="description" id="description" rows="3"
                             class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ old('description') }}</textarea>
@@ -56,7 +57,8 @@
 
                     <!-- Head Shape -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bentuk Kepala</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('admin.head_shape') }}</label>
                         <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
                             @foreach ($bentukKepalas as $bk)
                                 <label class="inline-flex items-center space-x-2">
@@ -70,7 +72,8 @@
 
                     <!-- Hair Type -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipe Rambut</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('admin.hair_type') }}</label>
                         <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
                             @foreach ($tipeRambuts as $tr)
                                 <label class="inline-flex items-center space-x-2">
@@ -84,8 +87,8 @@
 
                     <!-- Style Preferences -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Style
-                            Preference</label>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('admin.style_preference') }}</label>
                         <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
                             @foreach ($stylePreferences as $sp)
                                 <label class="inline-flex items-center space-x-2">
@@ -100,7 +103,7 @@
                     <!-- Image Upload -->
                     <div>
                         <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-image mr-2 text-blue-600"></i>Image
+                            <i class="fas fa-image mr-2 text-blue-600"></i>{{ __('admin.image') }}
                         </label>
                         <div class="relative">
                             <!-- Hidden file input -->
@@ -109,12 +112,12 @@
                             <!-- Custom button -->
                             <label for="image"
                                 class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none cursor-pointer">
-                                <i class="fas fa-upload mr-2 text-blue-600"></i> Choose a file
+                                <i class="fas fa-upload mr-2 text-blue-600"></i> {{ __('admin.choose_file') }}
                             </label>
 
                             <!-- Display selected file name -->
-                            <div id="file-name-container" class="mt-2 text-sm text-gray-500 dark:text-gray-400">No file
-                                chosen</div>
+                            <div id="file-name-container" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                {{ __('admin.no_file_chosen') }}</div>
                         </div>
                     </div>
 
@@ -122,7 +125,7 @@
                         // Function to update the displayed file name
                         function updateFileName() {
                             const fileInput = document.getElementById('image');
-                            const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'No file chosen';
+                            const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : '{{ __('admin.no_file_chosen') }}';
                             document.getElementById('file-name-container').textContent = fileName;
                         }
                     </script>
@@ -133,11 +136,11 @@
                     <div class="flex justify-end space-x-4">
                         <a href="{{ route('admin.hairstyles.index') }}"
                             class="mr-4 inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                            <i class="fas fa-times mr-2"></i>Cancel
+                            <i class="fas fa-times mr-2"></i>{{ __('admin.cancel') }}
                         </a>
                         <button type="submit"
                             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                            <i class="fas fa-save mr-2"></i>Create Hairstyle
+                            <i class="fas fa-save mr-2"></i>{{ __('admin.create_hairstyle_btn') }}
                         </button>
                     </div>
                 </form>

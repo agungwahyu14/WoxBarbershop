@@ -52,10 +52,11 @@
                     <!-- Description -->
                     <div>
                         <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-align-left mr-2 text-blue-600"></i>Description
+                            <i class="fas fa-align-left mr-2 text-blue-600"></i>{{ __('admin.description_column') }}
                         </label>
                         <textarea name="description" id="description" rows="3"
-                            class="form-control w-full @error('description') border-red-500 @enderror" placeholder="{{ __('admin.optional') }}">{{ old('description') }}</textarea>
+                            class="form-control w-full @error('description') border-red-500 @enderror"
+                            placeholder="{{ __('admin.optional') }}">{{ old('description') }}</textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -64,7 +65,7 @@
                     <!-- Price -->
                     <div>
                         <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i>Price (Rp)
+                            <i class="fas fa-money-bill-wave mr-2 text-blue-600"></i> {{ __('admin.price_column') }} (Rp)
                         </label>
                         <input type="number" name="price" id="price" value="{{ old('price') }}"
                             class="form-control w-full @error('price') border-red-500 @enderror"
@@ -79,7 +80,7 @@
                         <div class="flex justify-end space-x-4">
                             <a href="{{ route('admin.services.index') }}"
                                 class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-times mr-2"></i>Cancel
+                                <i class="fas fa-times mr-2"></i>{{ __('admin.cancel_action') }}
                             </a>
                             <button type="submit"
                                 class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">

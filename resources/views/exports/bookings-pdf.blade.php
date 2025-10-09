@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Laporan Booking</title>
+    <title>{{ __('export.booking_report') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,40 +84,40 @@
 
 <body>
     <div class="header">
-        <div class="title">LAPORAN BOOKING</div>
+        <div class="title">{{ strtoupper(__('export.booking_report')) }}</div>
         <div class="title">WOX BARBERSHOP</div>
         <div class="subtitle">
             @if ($month && $year)
-                Periode: {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}
+                {{ __('export.period') }}: {{ \Carbon\Carbon::create($year, $month)->format('F Y') }}
             @elseif($year)
-                Periode: Tahun {{ $year }}
+                {{ __('export.period') }}: {{ __('export.year') }} {{ $year }}
             @else
-                Periode: {{ \Carbon\Carbon::now()->format('F Y') }}
+                {{ __('export.period') }}: {{ \Carbon\Carbon::now()->format('F Y') }}
             @endif
         </div>
-        <div class="subtitle">Dicetak pada: {{ \Carbon\Carbon::now()->format('d F Y, H:i') }} WIB</div>
+        <div class="subtitle">{{ __('export.printed_on') }}: {{ \Carbon\Carbon::now()->format('d F Y, H:i') }} WIB</div>
     </div>
 
     <div class="summary">
-        <strong>Ringkasan:</strong><br>
-        Total Booking: {{ $bookings->count() }} booking<br>
-        Pending: {{ $bookings->where('status', 'pending')->count() }}<br>
-        Confirmed: {{ $bookings->where('status', 'confirmed')->count() }}<br>
-        Completed: {{ $bookings->where('status', 'completed')->count() }}<br>
-        Cancelled: {{ $bookings->where('status', 'cancelled')->count() }}
+        <strong>{{ __('export.summary') }}:</strong><br>
+        {{ __('export.total_bookings') }}: {{ $bookings->count() }} {{ __('export.bookings') }}<br>
+        {{ __('booking.status_pending') }}: {{ $bookings->where('status', 'pending')->count() }}<br>
+        {{ __('booking.status_confirmed') }}: {{ $bookings->where('status', 'confirmed')->count() }}<br>
+        {{ __('booking.status_completed') }}: {{ $bookings->where('status', 'completed')->count() }}<br>
+        {{ __('booking.status_cancelled') }}: {{ $bookings->where('status', 'cancelled')->count() }}
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Waktu</th>
-                <th>Pelanggan</th>
-                <th>Layanan</th>
-                <th>Status</th>
-                <th class="text-right">Harga (Rp)</th>
-                <th>Catatan</th>
+                <th>{{ __('export.no') }}</th>
+                <th>{{ __('export.date') }}</th>
+                <th>{{ __('export.time') }}</th>
+                <th>{{ __('export.customer') }}</th>
+                <th>{{ __('export.service') }}</th>
+                <th>{{ __('export.status') }}</th>
+                <th class="text-right">{{ __('export.price_rp') }}</th>
+                <th>{{ __('export.notes') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -126,11 +126,11 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ \Carbon\Carbon::parse($booking->date_time)->format('d/m/Y') }}</td>
                     <td>{{ \Carbon\Carbon::parse($booking->date_time)->format('H:i') }}</td>
-                    <td>{{ $booking->user->name ?? 'N/A' }}</td>
-                    <td>{{ $booking->service->name ?? 'N/A' }}</td>
+                    <td>{{ $booking->user->name ?? __('export.na') }}</td>
+                    <td>{{ $booking->service->name ?? __('export.na') }}</td>
                     <td>
                         <span class="status status-{{ $booking->status }}">
-                            {{ ucfirst($booking->status) }}
+                            {{ __('booking.status_' . $booking->status) }}
                         </span>
                     </td>
                     <td class="text-right">{{ number_format($booking->total_price, 0, ',', '.') }}</td>
@@ -138,7 +138,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" style="text-align: center;">Tidak ada data booking</td>
+                    <td colspan="8" style="text-align: center;">{{ __('export.no_booking_data') }}</td>
                 </tr>
             @endforelse
         </tbody>
