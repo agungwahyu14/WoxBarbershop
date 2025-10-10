@@ -11,7 +11,7 @@
                 {{ __('general.welcome_message') }} <br> {{ __('general.tagline') }}
             </h1>
             <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto opacity-90">
-                {{ __('general.welcome_message') }}. {{ __('general.tagline') }}.
+                {{ __('general.welcome_message_detail') }} <br> {{ __('general.tagline_detail') }}.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="{{ route('dashboard') }}#reservasi"
@@ -121,7 +121,8 @@
     <!-- About Section -->
     <section id="tentang" class="py-20 bg-light">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col lg:flex-row items-center gap-12 ">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <!-- Left Column - Text Content -->
                 <div class="lg:w-1/2 animate-slide-up">
                     <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-6">{{ __('welcome.about_wox') }}</h2>
                     <p class="text-gray-600 mb-6 text-justify">
@@ -131,15 +132,18 @@
                         {{ __('welcome.about_paragraph_2') }}
                     </p>
                     <a href="{{ route('dashboard') }}#reservasi"
-                        class="rounded-lg bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3  font-medium transition-all duration-300 inline-block transform hover:-translate-y-1 shadow-lg">
+                        class="rounded-lg bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3 font-medium transition-all duration-300 inline-block transform hover:-translate-y-1 shadow-lg">
                         {{ __('welcome.reservation_button') }}
                     </a>
-                    <div class="lg:w-1/2 relative animate-fade-in ">
-                        <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
-                            alt="Barbershop interior" class=" shadow-xl w-full h-auto rounded-lg">
-                    </div>
+                </div>
+
+                <!-- Right Column - Image -->
+                <div class="lg:w-1/2 relative animate-fade-in">
+                    <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
+                        alt="Barbershop interior" class="shadow-xl w-full h-auto rounded-lg">
                 </div>
             </div>
+        </div>
     </section>
 
     <!-- Menu Section -->
@@ -235,70 +239,49 @@
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Left Column - Services -->
                 <div class="w-full lg:w-1/2">
-                    <div class=" shadow-md rounded-lg">
-                        <!-- Dewasa -->
-                        <div class=" p-6 ">
-                            <div class="flex items-center gap-6">
-                                <!-- Gambar Layanan -->
-                                <div class="flex-shrink-0 w-24 h-24   ">
-                                    <img src="{{ asset('images/dewasa.png') }}" alt="Dewasa"
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <!-- Teks Layanan -->
-                                <div>
-                                    <h4 class="font-bold text-xl font-playfair">Dewasa</h4>
-                                    <p class="text-gray-600 mt-2">Nulla egestas sapien integer mi fermentum telius
-                                        tristique consequatoim pulvinar sagittis Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Esse optio fugit modi labore sit numquam ut incidunt
-                                        reiciendis minima ex, rerum eligendi dignissimos mollitia maxime magni atque,
-                                        nam nisi enim?</p>
-                                    <span class="font-bold text-lg font-playfair ">Rp 24.000</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Anak-anak -->
-                        <div class=" p-6 ">
-                            <div class="flex items-center gap-6">
-                                <!-- Gambar Layanan -->
-                                <div class="flex-shrink-0 w-24 h-24   ">
-                                    <img src="{{ asset('images/anak.png') }}" alt="Anak Anak"
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <!-- Teks Layanan -->
-                                <div>
-                                    <h4 class="font-bold text-xl font-playfair ">Anak - Anak</h4>
-                                    <p class="text-gray-600 mt-2">Nulla egestas sapien integer mi fermentum telius
-                                        tristique consequatoim pulvinar sagittis Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Quo, quibusdam perspiciatis laboriosam, officiis earum illo,
-                                        animi quasi ex consectetur vitae magnam aperiam quidem accusamus! Accusamus
-                                        tempora odio fugit corporis corrupti.</p>
-                                    <span class="font-bold text-lg font-playfair">Rp 30.000</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Cukur Leher & Jenggot -->
-                        <div class=" p-6 ">
+                    @forelse($services->take(4) as $service)
+                        <div class="p-6">
                             <div class="flex items-center gap-6">
                                 <!-- Gambar Layanan -->
                                 <div class="flex-shrink-0 w-24 h-24">
-                                    <img src="{{ asset('images/kumis.png') }}" alt="Kumis"
-                                        class="w-full h-full object-cover">
+                                    @if ($service->image)
+                                        <img src="{{ asset('storage/' . $service->image) }}" alt="{{ $service->name }}"
+                                            class="w-full h-full object-cover rounded-lg">
+                                    @else
+                                        <!-- Default images based on service name -->
+                                        @if (str_contains(strtolower($service->name), 'dewasa') || str_contains(strtolower($service->name), 'adult'))
+                                            <img src="{{ asset('images/dewasa.png') }}" alt="{{ $service->name }}"
+                                                class="w-full h-full object-cover rounded-lg">
+                                        @elseif(str_contains(strtolower($service->name), 'anak') || str_contains(strtolower($service->name), 'kid'))
+                                            <img src="{{ asset('images/anak.png') }}" alt="{{ $service->name }}"
+                                                class="w-full h-full object-cover rounded-lg">
+                                        @elseif(str_contains(strtolower($service->name), 'jenggot') ||
+                                                str_contains(strtolower($service->name), 'kumis') ||
+                                                str_contains(strtolower($service->name), 'beard'))
+                                            <img src="{{ asset('images/kumis.png') }}" alt="{{ $service->name }}"
+                                                class="w-full h-full object-cover rounded-lg">
+                                        @else
+                                            <img src="{{ asset('images/dewasa.png') }}" alt="{{ $service->name }}"
+                                                class="w-full h-full object-cover rounded-lg">
+                                        @endif
+                                    @endif
                                 </div>
                                 <!-- Teks Layanan -->
                                 <div>
-                                    <h4 class="font-bold text-xl font-playfair ">Cukur Jenggot dan Kumis</h4>
-                                    <p class="text-gray-600 mt-2">Nulla egestas sapien integer mi fermentum telius
-                                        tristique consequatoim pulvinar sagittis Lorem ipsum dolor, sit amet consectetur
-                                        adipisicing elit. Libero dicta cum eos similique velit voluptate eveniet facilis
-                                        quae quod excepturi, explicabo non ad nulla maiores consectetur nisi error odit?
-                                        Quae.</p>
-                                    <span class="font-bold text-lg font-playfair">Rp 25.000</span>
+                                    <h4 class="font-bold text-xl font-playfair">{{ $service->name }}</h4>
+                                    <p class="text-gray-600 mt-2">{{ $service->description }}</p>
+                                    <span class="font-bold text-lg font-playfair text-secondary">
+                                        Rp {{ number_format($service->price, 0, ',', '.') }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @empty
+                        <!-- Fallback jika tidak ada layanan -->
+                        <div class="p-6 text-center">
+                            <p class="text-gray-600">{{ __('welcome.no_services_available') }}</p>
+                        </div>
+                    @endforelse
                 </div>
 
                 <!-- Right Column - Booking Form -->
@@ -325,7 +308,12 @@
                                 <select id="service_id" name="service_id"
                                     class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">{{ __('welcome.choose_service') }}</option>
-
+                                    @foreach ($services as $service)
+                                        <option value="{{ $service->id }}"
+                                            {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                                            {{ $service->name }} - Rp {{ number_format($service->price, 0, ',', '.') }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('service_id')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -339,7 +327,12 @@
                                 <select id="hairstyle_id" name="hairstyle_id"
                                     class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">{{ __('welcome.choose_style') }}</option>
-
+                                    @foreach ($hairstyles as $hairstyle)
+                                        <option value="{{ $hairstyle->id }}"
+                                            {{ old('hairstyle_id') == $hairstyle->id ? 'selected' : '' }}>
+                                            {{ $hairstyle->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('hairstyle_id')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -395,12 +388,12 @@
                         @auth
                             <button type="submit"
                                 class="rounded-lg w-full bg-secondary hover:bg-primary text-black hover:text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1">
-                                RESERVASI
+                                {{ __('welcome.reservation_submit') }}
                             </button>
                         @else
                             <a href="{{ route('login') }}"
                                 class="text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1 rounded-lg">
-                                MASUK UNTUK RESERVASI
+                                {{ __('welcome.login_to_reserve') }}
                             </a>
                         @endauth
                     </form>

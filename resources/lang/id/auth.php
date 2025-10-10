@@ -20,7 +20,7 @@ return [
     
     // Messages
     'failed' => 'Kredensial ini tidak cocok dengan catatan kami.',
-    'password' => 'Password yang diberikan salah.',
+    'password_salah' => 'Password yang diberikan salah.',
     'throttle' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam :seconds detik.',
     'login_success' => 'Berhasil masuk!',
     'logout_success' => 'Berhasil keluar!',

@@ -1,10 +1,10 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Perbarui Kata Sandi') }}
+            {{ __('profile.update_password') }}
         </h2>
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Pastikan akun Anda menggunakan kata sandi yang panjang dan acak untuk tetap aman.') }}
+            {{ __('profile.password_security_info') }}
         </p>
     </header>
 
@@ -14,7 +14,7 @@
 
         <div>
             <label for="update_password_current_password" class="block font-medium text-sm text-gray-700">
-                {{ __('Kata Sandi Saat Ini') }}
+                {{ __('profile.current_password') }}
             </label>
             <div class="relative">
                 <input id="update_password_current_password" name="current_password" type="password"
@@ -47,7 +47,7 @@
 
         <div>
             <label for="update_password_password" class="block font-medium text-sm text-gray-700">
-                {{ __('Kata Sandi Baru') }}
+                {{ __('profile.new_password') }}
             </label>
             <div class="relative">
                 <input id="update_password_password" name="password" type="password"
@@ -79,7 +79,7 @@
 
         <div>
             <label for="update_password_password_confirmation" class="block font-medium text-sm text-gray-700">
-                {{ __('Konfirmasi Kata Sandi') }}
+                {{ __('profile.confirm_password') }}
             </label>
             <div class="relative">
                 <input id="update_password_password_confirmation" name="password_confirmation" type="password"
@@ -113,13 +113,13 @@
         <div class="flex items-center gap-4">
             <button type="submit"
                 class="rounded-lg inline-flex items-center px-4 py-2 bg-[#d4af37] border border-transparent font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#c2a033] active:bg-[#b08d2e] focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2 transition ease-in-out duration-150">
-                {{ __('Simpan') }}
+                {{ __('profile.save') }}
             </button>
 
             @if (session('status') === 'password-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
                     class="rounded-lg text-sm text-gray-600">
-                    {{ __('Simpan.') }}
+                    {{ __('profile.password_updated') }}
                 </p>
             @endif
         </div>

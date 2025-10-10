@@ -159,4 +159,13 @@ return [
     'no_bookings' => 'No Bookings Yet',
     'no_bookings_message' => 'You have no booking history yet.',
     'make_booking_now' => 'Make a Booking Now',
+    
+    // Currency and Formatting
+    'currency_symbol' => 'Rp',
+    'currency_format_thousands_separator' => ',',
+    'currency_format_decimal_separator' => '.',
+    
+    // Form Validation
+    'required_field' => 'Required field',
+    'optional_field' => 'Optional',
 ];

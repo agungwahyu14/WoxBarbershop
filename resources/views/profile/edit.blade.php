@@ -10,14 +10,10 @@
                     @php
                         $points = Auth::user()->loyalty ? Auth::user()->loyalty->points : 0;
                     @endphp
-                    <div class=" rounded-lg bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-2">
+                    <div class="rounded-lg bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-2">
                         <span class="font-semibold text-yellow-700">{{ __('profile.visits') }}: {{ $points }} /
                             10</span>
-                        @if ($points == 9)
-                            <div class="text-yellow-800 mt-2">{{ __('profile.one_more_booking_free') }}</div>
-                        @elseif($points == 0 && Auth::user()->loyalty)
-                            <div class="text-green-700 mt-2">{{ __('profile.congratulations_free_haircut') }}</div>
-                        @endif
+
                     </div>
                 </div>
             </div>

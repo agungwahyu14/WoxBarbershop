@@ -61,8 +61,9 @@
                                 @if ($booking->total_price)
                                     <div>
                                         <span class="text-gray-500">{{ __('booking.total') }}:</span>
-                                        <span class="ml-2 font-semibold text-green-600" id="current-price">Rp
-                                            {{ number_format($booking->total_price, 0, ',', '.') }}</span>
+                                        <span class="ml-2 font-semibold text-green-600"
+                                            id="current-price">{{ __('booking.currency_symbol') }}
+                                            {{ number_format($booking->total_price, 0, __('booking.currency_format_thousands_separator'), __('booking.currency_format_decimal_separator')) }}</span>
                                     </div>
                                 @endif
                             </div>
@@ -109,7 +110,8 @@
                                 <div>
                                     <label for="service_id" class="block text-sm font-medium text-gray-700 mb-2">
                                         <i class="fas fa-cut mr-1 text-[#d4af37]"></i>
-                                        {{ __('booking.service') }} <span class="text-red-500">*</span>
+                                        {{ __('booking.service') }} <span class="text-red-500"
+                                            title="{{ __('booking.required_field') }}">*</span>
                                     </label>
                                     <select name="service_id" id="service_id" required
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('service_id') border-red-500 @enderror">
@@ -117,8 +119,8 @@
                                         @foreach ($services as $service)
                                             <option value="{{ $service->id }}" data-price="{{ $service->price }}"
                                                 {{ old('service_id', $booking->service_id) == $service->id ? 'selected' : '' }}>
-                                                {{ $service->name }} - Rp
-                                                {{ number_format($service->price, 0, ',', '.') }}
+                                                {{ $service->name }} - {{ __('booking.currency_symbol') }}
+                                                {{ number_format($service->price, 0, __('booking.currency_format_thousands_separator'), __('booking.currency_format_decimal_separator')) }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -140,7 +142,8 @@
                                 <div>
                                     <label for="hairstyle_id" class="block text-sm font-medium text-gray-700 mb-2">
                                         <i class="fas fa-magic mr-1 text-[#d4af37]"></i>
-                                        {{ __('booking.hairstyle') }} <span class="text-red-500">*</span>
+                                        {{ __('booking.hairstyle') }} <span class="text-red-500"
+                                            title="{{ __('booking.required_field') }}">*</span>
                                     </label>
                                     <select name="hairstyle_id" id="hairstyle_id" required
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('hairstyle_id') border-red-500 @enderror">
@@ -235,11 +238,12 @@
                     const selectedServiceId = this.value;
                     if (selectedServiceId && servicePrices[selectedServiceId]) {
                         const newPrice = servicePrices[selectedServiceId];
-                        const formattedPrice = new Intl.NumberFormat('id-ID', {
-                            style: 'currency',
-                            currency: 'IDR',
-                            minimumFractionDigits: 0
-                        }).format(newPrice).replace('IDR', 'Rp');
+                        const currencySymbol = '{{ __('booking.currency_symbol') }}';
+                        const formattedPrice = currencySymbol + ' ' + new Intl.NumberFormat(
+                            '{{ app()->getLocale() === 'id' ? 'id-ID' : 'en-US' }}', {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            }).format(newPrice);
 
                         currentPriceElement.textContent = formattedPrice;
                         currentPriceElement.classList.add('text-orange-600');

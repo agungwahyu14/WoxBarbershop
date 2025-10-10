@@ -159,4 +159,13 @@ return [
     'no_bookings' => 'Belum Ada Booking',
     'no_bookings_message' => 'Anda belum memiliki riwayat booking.',
     'make_booking_now' => 'Buat Booking Sekarang',
+    
+    // Currency and Formatting
+    'currency_symbol' => 'Rp',
+    'currency_format_thousands_separator' => '.',
+    'currency_format_decimal_separator' => ',',
+    
+    // Form Validation
+    'required_field' => 'Wajib diisi',
+    'optional_field' => 'Opsional',
 ];

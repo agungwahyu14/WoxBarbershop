@@ -4,7 +4,7 @@
             <div>
                 <h3 class="text-2xl font-playfair font-bold mb-6 text-secondary">WOX'S Barbershop.</h3>
                 <p class="text-gray-400 mb-6">
-                    Memberikan pengalaman grooming terbaik dengan layanan profesional dan produk berkualitas tinggi.
+                    {{ __('welcome.footer_description') }}
                 </p>
                 <div class="flex space-x-4">
                     <a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">
@@ -20,25 +20,18 @@
             </div>
 
             <div>
-                <h4 class="text-lg font-bold mb-6">Jam Buka</h4>
+                <h4 class="text-lg font-bold mb-6">{{ __('welcome.operating_hours') }}</h4>
                 <ul class="space-y-3 text-gray-400">
                     <li class="flex justify-between">
-                        <span>Senin - Jumat</span>
-                        <span>09.00 - 20.00</span>
+                        <span>{{ __('welcome.monday_sunday') }}</span>
+                        <span>11.00 - 20.00</span>
                     </li>
-                    <li class="flex justify-between">
-                        <span>Sabtu</span>
-                        <span>09.00 - 22.00</span>
-                    </li>
-                    <li class="flex justify-between">
-                        <span>Minggu</span>
-                        <span>10.00 - 18.00</span>
-                    </li>
+
                 </ul>
             </div>
 
             <div>
-                <h4 class="text-lg font-bold mb-6">Kontak Kami</h4>
+                <h4 class="text-lg font-bold mb-6">{{ __('welcome.contact_us') }}</h4>
                 <ul class="space-y-3 text-gray-400">
                     <li class="flex items-start">
                         <i class="fas fa-map-marker-alt mt-1 mr-3 text-secondary"></i>
@@ -56,35 +49,39 @@
             </div>
 
             <div>
-                <h4 class="text-lg font-bold mb-6">Quick Links</h4>
+                <h4 class="text-lg font-bold mb-6">{{ __('welcome.quick_links') }}</h4>
                 <ul class="space-y-3 text-gray-400">
                     <li>
                         <a href="#beranda"
                             class="hover:text-secondary transition-colors duration-300 flex items-center">
-                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Beranda
+                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> {{ __('welcome.home') }}
                         </a>
                     </li>
                     <li>
                         <a href="#layanan"
                             class="hover:text-secondary transition-colors duration-300 flex items-center">
-                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Layanan
+                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i>
+                            {{ __('welcome.services') }}
                         </a>
                     </li>
                     <li>
                         <a href="#tentang"
                             class="hover:text-secondary transition-colors duration-300 flex items-center">
-                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Tentang Kami
+                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i>
+                            {{ __('welcome.about_us') }}
                         </a>
                     </li>
                     <li>
                         <a href="#produk" class="hover:text-secondary transition-colors duration-300 flex items-center">
-                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Produk
+                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i>
+                            {{ __('welcome.products') }}
                         </a>
                     </li>
                     <li>
                         <a href="#reservasi"
                             class="hover:text-secondary transition-colors duration-300 flex items-center">
-                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i> Reservasi
+                            <i class="fas fa-chevron-right text-xs mr-2 text-secondary"></i>
+                            {{ __('welcome.reservation') }}
                         </a>
                     </li>
                 </ul>
@@ -92,7 +89,7 @@
         </div>
 
         <div class="border-t border-gray-800 pt-6 text-center text-gray-500">
-            <p>&copy; {{ now()->year }} WOX'S Barbershop. Hak cipta dilindungi.</p>
+            <p>&copy; {{ now()->year }} WOX'S Barbershop. {{ __('welcome.footer_copyright') }}</p>
         </div>
     </div>
 </footer>

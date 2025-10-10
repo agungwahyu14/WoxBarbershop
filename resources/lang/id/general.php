@@ -14,8 +14,10 @@ return [
     
     // Barbershop Information
     'barbershop_name' => 'WOX Barbershop',
-    'welcome_message' => 'Selamat datang di WOX Barbershop',
-    'tagline' => 'Tempat Terbaik untuk Gaya Rambut Modern',
+    'welcome_message' => 'Tampilan Rapi, Gaya Terbaik',
+    'tagline' => 'di Setiap Potongan',
+    'welcome_message_detail' => 'Pangkas rambut profesional untuk gaya yang sempurna. ',
+    'tagline_detail' => 'Rasakan pengalaman barbershop premium kami.',
     'operating_hours' => 'Jam Operasional',
     'open_daily' => 'Setiap Hari: 11:00 - 22:00',
     'no_holiday' => 'Tidak Ada Libur',

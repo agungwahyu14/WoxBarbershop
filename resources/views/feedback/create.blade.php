@@ -22,15 +22,18 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">{{ __('feedback.service') }}</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $booking->service->name ?? __('general.na') }}</p>
+                            <p class="mt-1 text-sm text-gray-900">
+                                {{ $booking->service->name ?? __('feedback.not_available') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">{{ __('feedback.date') }}</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $booking->booking_date ?? __('general.na') }}</p>
+                            <p class="mt-1 text-sm text-gray-900">
+                                {{ $booking->booking_date ?? __('feedback.not_available') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">{{ __('feedback.time') }}</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $booking->booking_time ?? __('general.na') }}</p>
+                            <p class="mt-1 text-sm text-gray-900">
+                                {{ $booking->booking_time ?? __('feedback.not_available') }}</p>
                         </div>
                     </div>
                 </div>
@@ -95,7 +98,7 @@
                     <div class="flex justify-end space-x-3">
                         <a href="{{ route('bookings.show', $booking) }}"
                             class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            {{ __('general.cancel') }}
+                            {{ __('feedback.cancel') }}
                         </a>
                         <button type="submit"
                             class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm bg-blue-600 hover:bg-blue-700 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">

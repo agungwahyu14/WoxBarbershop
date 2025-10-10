@@ -39,12 +39,12 @@
                 @auth
                     <a href="{{ route('dashboard') }}#tentang"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        {{ __('general.about') }}
+                        {{ __('welcome.about') }}
                     </a>
                 @else
                     <a href="#tentang"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Tentang
+                        {{ __('welcome.about') }}
                     </a>
                 @endauth
 
@@ -52,12 +52,12 @@
                 @auth
                     <a href="{{ route('dashboard') }}#produk"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Produk
+                        {{ __('welcome.products') }}
                     </a>
                 @else
                     <a href="#produk"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Produk
+                        {{ __('welcome.products') }}
                     </a>
                 @endauth
 
@@ -65,19 +65,19 @@
                 @auth
                     <a href="{{ route('dashboard') }}#reservasi"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Reservasi
+                        {{ __('welcome.reservation') }}
                     </a>
                 @else
                     <a href="#reservasi"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                        Reservasi
+                        {{ __('welcome.reservation') }}
                     </a>
                 @endauth
 
                 <!-- Rekomendasi Gaya -->
                 <a href="{{ route('rekomendasi.index') }}"
                     class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
-                    Rekomendasi Gaya
+                    {{ __('welcome.style_recommendations') }}
                 </a>
             </div>
 
@@ -87,6 +87,58 @@
                 @include('components.language-switcher')
 
                 @auth
+                    <!-- Loyalty Notification Icon -->
+                    @php
+                        $userLoyalty = Auth::user()->loyalty;
+                        $loyaltyPoints = $userLoyalty ? $userLoyalty->points : 0;
+                        $showNotification = $loyaltyPoints == 10;
+                    @endphp
+
+                    @if ($showNotification)
+                        <div class="relative" x-data="{ showTooltip: false }">
+                            <button @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
+                                @click="Swal.fire({
+                title: 'Notifikasi',
+                text: '{{ __('welcome.free_haircut_available') }}',
+                background: '#D4AF37',
+                color: '#FFFFFF',
+                confirmButtonColor: '#FFFFFF',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'text-black font-semibold px-4 py-2 rounded bg-white hover:bg-gray-200'
+                }
+            })"
+                                class="relative flex items-center justify-center w-10 h-10 bg-yellow-500 rounded-full text-white hover:bg-yellow-600 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">
+
+                                <!-- Bell Icon -->
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 2a6 6 0 00-6 6v2.586l-.707.707A1 1 0 004 13h12a1 1 0 00.707-1.707L16 10.586V8a6 6 0 00-6-6zM10 18a2 2 0 01-2-2h4a2 2 0 01-2 2z" />
+                                </svg>
+
+                                <!-- Notification Dot -->
+
+                            </button>
+
+                            <!-- Tooltip -->
+                            <div x-show="showTooltip" x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform scale-95"
+                                x-transition:enter-end="opacity-100 transform scale-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 transform scale-100"
+                                x-transition:leave-end="opacity-0 transform scale-95"
+                                class="absolute -bottom-14 left-1/2 transform -translate-x-1/2 z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg whitespace-nowrap"
+                                x-cloak>
+                                {{ __('welcome.free_haircut_available') }}
+                                <!-- Arrow -->
+                                <div class="absolute -top-1 left-1/2 transform -translate-x-1/2">
+                                    <div class="w-2 h-2 bg-gray-900 rotate-45"></div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+
                     <div class="relative" x-data="{ open: false }" x-init="open = false">
                         <!-- Profile Circle Button -->
                         <button @click="open = !open"
@@ -129,7 +181,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                <span>Pengaturan Profil</span>
+                                <span>{{ __('welcome.profile_settings') }}</span>
                             </a>
 
                             <!-- Riwayat Transaksi -->
@@ -140,7 +192,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 17v-2h6v2m-7 4h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14l2-2 2 2 2-2 2 2 2-2" />
                                 </svg>
-                                <span>Riwayat Transaksi</span>
+                                <span>{{ __('welcome.transaction_history') }}</span>
                             </a>
 
                             <!-- Riwayat Booking -->
@@ -151,7 +203,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z" />
                                 </svg>
-                                <span>Riwayat Booking</span>
+                                <span>{{ __('welcome.booking_history') }}</span>
                             </a>
 
                             <!-- Divider -->
@@ -166,7 +218,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                     </svg>
-                                    <span>Keluar</span>
+                                    <span>{{ __('welcome.logout') }}</span>
                                 </button>
                             </form>
                         </div>
@@ -200,11 +252,11 @@
             <!-- Beranda -->
             @auth
                 <a href="{{ route('dashboard') }}" class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Beranda
+                    {{ __('welcome.home') }}
                 </a>
             @else
                 <a href="#beranda" class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Beranda
+                    {{ __('welcome.home') }}
                 </a>
             @endauth
 
@@ -212,11 +264,11 @@
             @auth
                 <a href="{{ route('dashboard') }}#layanan"
                     class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Layanan
+                    {{ __('welcome.services') }}
                 </a>
             @else
                 <a href="#layanan" class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Layanan
+                    {{ __('welcome.services') }}
                 </a>
             @endauth
 
@@ -224,11 +276,11 @@
             @auth
                 <a href="{{ route('dashboard') }}#tentang"
                     class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Tentang
+                    {{ __('welcome.about') }}
                 </a>
             @else
                 <a href="#tentang" class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Tentang
+                    {{ __('welcome.about') }}
                 </a>
             @endauth
 
@@ -236,11 +288,11 @@
             @auth
                 <a href="{{ route('dashboard') }}#produk"
                     class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Produk
+                    {{ __('welcome.products') }}
                 </a>
             @else
                 <a href="#produk" class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Produk
+                    {{ __('welcome.products') }}
                 </a>
             @endauth
 
@@ -248,18 +300,18 @@
             @auth
                 <a href="{{ route('dashboard') }}#reservasi"
                     class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Reservasi
+                    {{ __('welcome.reservation') }}
                 </a>
             @else
                 <a href="#reservasi" class="text-gray-800 hover:text-secondary transition-colors py-2">
-                    Reservasi
+                    {{ __('welcome.reservation') }}
                 </a>
             @endauth
 
             <!-- Rekomendasi Gaya -->
             <a href="{{ route('rekomendasi.index') }}"
                 class="text-gray-800 hover:text-secondary transition-colors py-2">
-                Rekomendasi Gaya
+                {{ __('welcome.style_recommendations') }}
             </a>
 
             <!-- Authentication Links for Mobile -->
@@ -291,7 +343,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        Pengaturan Profil
+                        {{ __('welcome.profile_settings') }}
                     </a>
 
                     <a href="{{ route('payment.index') }}"
@@ -301,7 +353,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 17v-2h6v2m-7 4h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14l2-2 2 2 2-2 2 2 2-2" />
                         </svg>
-                        Riwayat Transaksi
+                        {{ __('welcome.transaction_history') }}
                     </a>
 
                     <a href="{{ route('bookings.index') }}"
@@ -311,7 +363,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z" />
                         </svg>
-                        Riwayat Booking
+                        {{ __('welcome.booking_history') }}
                     </a>
 
                     <form method="POST" action="{{ route('logout') }}">
@@ -322,7 +374,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
-                            Keluar
+                            {{ __('welcome.logout') }}
                         </button>
                     </form>
                 </div>
@@ -330,11 +382,11 @@
                 <div class="border-t border-gray-200 pt-4 mt-4 space-y-2">
                     <a href="{{ route('login') }}"
                         class="block w-full text-center py-2 px-4 text-gray-800 hover:text-secondary transition-colors border border-gray-300 rounded-lg">
-                        Masuk
+                        {{ __('welcome.login') }}
                     </a>
                     <a href="{{ route('register') }}"
                         class="block w-full text-center py-2 px-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all">
-                        Daftar
+                        {{ __('welcome.register') }}
                     </a>
                 </div>
             @endauth

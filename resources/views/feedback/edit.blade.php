@@ -140,45 +140,51 @@
         }
     </style>
 
+    {{-- JavaScript untuk handling form --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const stars = document.querySelectorAll('.rating-star');
             const ratingInputs = document.querySelectorAll('.rating-input');
             const ratingText = document.querySelector('.rating-text');
 
-            const ratingLabels = @json([
-                __('feedback.rating_poor'),
-                __('feedback.rating_fair'),
-                __('feedback.rating_good'),
-                __('feedback.rating_very_good'),
-                __('feedback.rating_excellent'),
-            ]);
+            // Rating labels data
+            const ratingLabels = {
+                1: '{{ __('feedback.rating_poor') }}',
+                2: '{{ __('feedback.rating_fair') }}',
+                3: '{{ __('feedback.rating_good') }}',
+                4: '{{ __('feedback.rating_very_good') }}',
+                5: '{{ __('feedback.rating_excellent') }}'
+            };
+
+            const clickToRateText = '{{ __('feedback.click_to_rate') }}';
 
             stars.forEach((star, index) => {
                 star.addEventListener('mouseover', function() {
                     highlightStars(index + 1);
-                    ratingText.textContent = ratingLabels[index];
+                    ratingText.textContent = ratingLabels[index + 1];
                 });
 
                 star.addEventListener('click', function() {
                     const rating = index + 1;
                     ratingInputs[index].checked = true;
-                    ratingText.textContent = ratingLabels[index];
+                    ratingText.textContent = ratingLabels[rating];
                     highlightStars(rating, true);
                 });
             });
 
-            document.querySelector('.flex.items-center.space-x-2').addEventListener('mouseleave', function() {
-                const checkedInput = document.querySelector('.rating-input:checked');
-                if (checkedInput) {
-                    const rating = parseInt(checkedInput.value);
-                    highlightStars(rating, true);
-                    ratingText.textContent = ratingLabels[rating - 1];
-                } else {
-                    highlightStars(0);
-                    ratingText.textContent = @json(__('feedback.click_to_rate'));
-                }
-            });
+            if (document.querySelector('.flex.items-center.space-x-2')) {
+                document.querySelector('.flex.items-center.space-x-2').addEventListener('mouseleave', function() {
+                    const checkedInput = document.querySelector('.rating-input:checked');
+                    if (checkedInput) {
+                        const rating = parseInt(checkedInput.value);
+                        highlightStars(rating, true);
+                        ratingText.textContent = ratingLabels[rating];
+                    } else {
+                        highlightStars(0);
+                        ratingText.textContent = clickToRateText;
+                    }
+                });
+            }
 
             function highlightStars(rating, permanent = false) {
                 stars.forEach((star, index) => {

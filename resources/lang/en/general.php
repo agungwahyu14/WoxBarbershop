@@ -14,8 +14,10 @@ return [
     
     // Barbershop Information
     'barbershop_name' => 'WOX Barbershop',
-    'welcome_message' => 'Welcome to WOX Barbershop',
-    'tagline' => 'The Best Place for Modern Hairstyles',
+   'welcome_message' => 'Neat Look, Best Style',
+    'tagline' => 'in Every Cut',
+    'welcome_message_detail' => 'Professional haircuts for the perfect style.',
+    'tagline_detail' => 'Experience our premium barbershop service.',
     'operating_hours' => 'Operating Hours',
     'open_daily' => 'Daily: 11:00 AM - 10:00 PM',
     'no_holiday' => 'No Holidays',

@@ -27,7 +27,7 @@
             </div> --}}
 
             <!-- Register Card -->
-            <div class="bg-white bg-opacity-95 p-8  shadow-lg rounded-lg">
+            <div class="bg-white bg-opacity-95 p-8  shadow-lg rounded-lg my-8">
                 <div class="text-center mb-6">
                     <img src="{{ asset('images/Logo.png') }}" alt="WOX'S Barbershop Logo"
                         class="h-40 w-auto object-contain mx-auto mb-4">
