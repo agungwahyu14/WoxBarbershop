@@ -98,7 +98,7 @@
                         <div class="relative" x-data="{ showTooltip: false }">
                             <button @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
                                 @click="Swal.fire({
-                title: 'Notifikasi',
+                title: '',
                 text: '{{ __('welcome.free_haircut_available') }}',
                 background: '#D4AF37',
                 color: '#FFFFFF',
@@ -121,20 +121,7 @@
                             </button>
 
                             <!-- Tooltip -->
-                            <div x-show="showTooltip" x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0 transform scale-95"
-                                x-transition:enter-end="opacity-100 transform scale-100"
-                                x-transition:leave="transition ease-in duration-150"
-                                x-transition:leave-start="opacity-100 transform scale-100"
-                                x-transition:leave-end="opacity-0 transform scale-95"
-                                class="absolute -bottom-14 left-1/2 transform -translate-x-1/2 z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg whitespace-nowrap"
-                                x-cloak>
-                                {{ __('welcome.free_haircut_available') }}
-                                <!-- Arrow -->
-                                <div class="absolute -top-1 left-1/2 transform -translate-x-1/2">
-                                    <div class="w-2 h-2 bg-gray-900 rotate-45"></div>
-                                </div>
-                            </div>
+
                         </div>
                     @endif
 

@@ -98,7 +98,8 @@
                         <div>
                             <h4 class="text-sm text-gray-500 uppercase mb-1">{{ __('transactions.total_payment') }}</h4>
                             <p class="text-lg font-bold text-gray-800">
-                                Rp {{ number_format($data['amount'], 0, ',', '.') }}
+                                {{ __('transactions.currency_symbol') }}
+                                {{ number_format($data['amount'], 0, __('transactions.currency_format_thousands_separator'), __('transactions.currency_format_decimal_separator')) }}
                             </p>
                         </div>
                     </div>

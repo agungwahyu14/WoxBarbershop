@@ -19,16 +19,18 @@
 
                             {{-- Card Header --}}
                             <div class="bg-black px-6 py-4">
-                                <div class="flex justify-between items-start">
+                                <div>
                                     <div>
-                                        <h3 class="text-white font-semibold text-lg">Transaksi #{{ $tx['order_id'] }}</h3>
+                                        <h3 class="text-white font-semibold text-lg">
+                                            {{ __('transactions.transaction_number') }}{{ $tx['order_id'] }}</h3>
                                         <p class="text-blue-100 text-sm">
                                             {{ \Carbon\Carbon::parse($tx['transaction_time'])->format('d M Y H:i') }}
                                         </p>
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-white font-bold text-xl">Rp
-                                            {{ number_format($tx['amount'], 0, ',', '.') }}</p>
+                                        <p class="text-white font-bold text-xl">{{ __('transactions.currency_symbol') }}
+                                            {{ number_format($tx['amount'], 0, __('transactions.currency_format_thousands_separator'), __('transactions.currency_format_decimal_separator')) }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -42,11 +44,12 @@
                                         {{ __('transactions.customer_information') }}</h4>
                                     <div class="space-y-1">
                                         <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-600">Nama:</span>
+                                            <span
+                                                class="text-sm text-gray-600">{{ __('transactions.customer_name') }}:</span>
                                             <span class="text-sm font-medium text-gray-900">{{ $tx['name'] ?? '-' }}</span>
                                         </div>
                                         <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-600">Email:</span>
+                                            <span class="text-sm text-gray-600">{{ __('transactions.email') }}:</span>
                                             <span class="text-sm text-gray-700">{{ $tx['email'] ?? '-' }}</span>
                                         </div>
                                     </div>
@@ -55,7 +58,7 @@
                                 {{-- Payment Method --}}
                                 <div class="mb-4">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm text-gray-600">Metode Pembayaran:</span>
+                                        <span class="text-sm text-gray-600">{{ __('transactions.payment_method') }}:</span>
                                         <span
                                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                             <span>{{ $tx['formatted_payment_type'] }}</span>
@@ -66,7 +69,7 @@
                                 {{-- Status --}}
                                 <div class="mb-4">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-sm text-gray-600">Status:</span>
+                                        <span class="text-sm text-gray-600">{{ __('transactions.payment_status') }}:</span>
                                         <span
                                             class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
                                             @switch($tx['status'])
@@ -106,7 +109,7 @@
                                         <a href="{{ route('payment.show', $tx['order_id']) }}"
                                             class="w-full inline-flex justify-center items-center px-4 py-2 hover:bg-blue-600 bg-blue-500 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                                             <i class="fas fa-eye mr-2"></i>
-                                            Lihat Detail
+                                            {{ __('transactions.view_detail') }}
                                         </a>
                                     @endif
 
@@ -116,7 +119,7 @@
                                             class="btn-bayar-sekarang w-full inline-flex justify-center items-center px-4 py-2 hover:bg-orange-600 bg-orange-500 text-white text-sm font-medium rounded-lg transition-colors duration-200"
                                             data-order-id="{{ $tx['order_id'] }}">
                                             <i class="fas fa-credit-card mr-2"></i>
-                                            Bayar Sekarang
+                                            {{ __('transactions.pay_now') }}
                                         </button>
                                     @endif --}}
 
@@ -125,7 +128,7 @@
                                         <a href="{{ route('transaction.download', $tx['order_id']) }}" target="_blank"
                                             class="w-full inline-flex justify-center items-center px-4 py-2 hover:bg-green-600 bg-green-500 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                                             <i class="fas fa-download mr-2"></i>
-                                            Unduh Invoice
+                                            {{ __('transactions.download_invoice') }}
                                         </a>
                                     @endif
                                 </div>
@@ -150,15 +153,37 @@
 @endsection
 
 @push('scripts')
+    {{-- JavaScript untuk handling transactions --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Translation data
+            const translations = {
+                success: '{{ __('transactions.success') }}',
+                error: '{{ __('transactions.error') }}',
+                info: '{{ __('transactions.info') }}',
+                ok: '{{ __('transactions.ok') }}',
+                close: '{{ __('transactions.close') }}',
+                cancel: '{{ __('transactions.cancel') }}',
+                pay_now: '{{ __('transactions.pay_now') }}',
+                virtual_account_payment: '{{ __('transactions.virtual_account_payment') }}',
+                qris_payment: '{{ __('transactions.qris_payment') }}',
+                continue_payment: '{{ __('transactions.continue_payment') }}',
+                transfer_instruction: '{{ __('transactions.transfer_instruction') }}',
+                scan_qr_instruction: '{{ __('transactions.scan_qr_instruction') }}',
+                complete_payment_instruction: '{{ __('transactions.complete_payment_instruction') }}',
+                bank: '{{ __('transactions.bank') }}',
+                va_number: '{{ __('transactions.va_number') }}',
+                payment_method_not_supported: '{{ __('transactions.payment_method_not_supported') }}',
+                failed_to_get_va_data: '{{ __('transactions.failed_to_get_va_data') }}'
+            };
+
             // Show success message if exists
             @if (session('success'))
                 Swal.fire({
-                    title: @json(__('transactions.success')),
+                    title: translations.success,
                     text: '{{ session('success') }}',
                     icon: 'success',
-                    confirmButtonText: @json(__('transactions.ok')),
+                    confirmButtonText: translations.ok,
                     customClass: {
                         popup: 'rounded-lg',
                         confirmButton: 'bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600'
@@ -170,10 +195,10 @@
             // Show error message if exists
             @if (session('error'))
                 Swal.fire({
-                    title: @json(__('transactions.error')),
+                    title: translations.error,
                     text: '{{ session('error') }}',
                     icon: 'error',
-                    confirmButtonText: @json(__('transactions.ok')),
+                    confirmButtonText: translations.ok,
                     customClass: {
                         popup: 'rounded-lg',
                         confirmButton: 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600'
@@ -193,17 +218,17 @@
                         .then(data => {
                             if (data.payment_type === 'bank_transfer' && data.va_number) {
                                 Swal.fire({
-                                    title: @json(__('transactions.virtual_account_payment')),
+                                    title: translations.virtual_account_payment,
                                     html: `
-            <p class="mb-2">${@json(__('transactions.transfer_instruction'))}</p>
-            <div style="background-color:#f1f1f1;padding:10px;border-radius:8px;margin-bottom:10px">
-                <strong>${@json(__('transactions.bank'))}:</strong> ${data.bank}<br>
-                <strong>${@json(__('transactions.va_number'))}:</strong><br>
-                <span style="font-size:1.5em;font-weight:bold;">${data.va_number}</span>
-            </div>
-        `,
+                                        <p class="mb-2">${translations.transfer_instruction}</p>
+                                        <div style="background-color:#f1f1f1;padding:10px;border-radius:8px;margin-bottom:10px">
+                                            <strong>${translations.bank}:</strong> ${data.bank}<br>
+                                            <strong>${translations.va_number}:</strong><br>
+                                            <span style="font-size:1.5em;font-weight:bold;">${data.va_number}</span>
+                                        </div>
+                                    `,
                                     icon: 'info',
-                                    confirmButtonText: @json(__('transactions.close')),
+                                    confirmButtonText: translations.close,
                                     customClass: {
                                         popup: 'rounded-lg',
                                         confirmButton: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
@@ -212,13 +237,13 @@
                                 });
                             } else if (data.payment_type === 'qris' && data.qr_url) {
                                 Swal.fire({
-                                    title: @json(__('transactions.qris_payment')),
+                                    title: translations.qris_payment,
                                     html: `
-            <p class="mb-2">${@json(__('transactions.scan_qr_instruction'))}</p>
-            <img src="${data.qr_url}" alt="QRIS" class="mx-auto rounded shadow-md" style="max-width: 250px;">
-        `,
+                                        <p class="mb-2">${translations.scan_qr_instruction}</p>
+                                        <img src="${data.qr_url}" alt="QRIS" class="mx-auto rounded shadow-md" style="max-width: 250px;">
+                                    `,
                                     icon: 'info',
-                                    confirmButtonText: @json(__('transactions.close')),
+                                    confirmButtonText: translations.close,
                                     customClass: {
                                         popup: 'rounded-lg',
                                         confirmButton: 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
@@ -228,12 +253,12 @@
                             } else if (['gopay', 'shopeepay', 'other_e_wallets'].includes(data
                                     .payment_type) && data.redirect_url) {
                                 Swal.fire({
-                                    title: @json(__('transactions.continue_payment')),
-                                    html: `<p>${@json(__('transactions.complete_payment_instruction'))} ${data.payment_type.toUpperCase()}.</p>`,
+                                    title: translations.continue_payment,
+                                    html: `<p>${translations.complete_payment_instruction} ${data.payment_type.toUpperCase()}.</p>`,
                                     icon: 'info',
                                     showCancelButton: true,
-                                    confirmButtonText: @json(__('transactions.pay_now')),
-                                    cancelButtonText: @json(__('transactions.cancel')),
+                                    confirmButtonText: translations.pay_now,
+                                    cancelButtonText: translations.cancel,
                                     customClass: {
                                         popup: 'rounded-lg',
                                         confirmButton: 'bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600',
@@ -246,14 +271,13 @@
                                     }
                                 });
                             } else {
-                                Swal.fire(@json(__('transactions.info')),
-                                    @json(__('transactions.payment_method_not_supported')),
-                                    'info');
+                                Swal.fire(translations.info, translations
+                                    .payment_method_not_supported, 'info');
                             }
                         })
                         .catch(err => {
-                            Swal.fire(@json(__('transactions.error')),
-                                @json(__('transactions.failed_to_get_va_data')), 'error');
+                            Swal.fire(translations.error, translations.failed_to_get_va_data,
+                                'error');
                         });
                 });
             });

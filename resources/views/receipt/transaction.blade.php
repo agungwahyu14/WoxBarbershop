@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
@@ -242,23 +242,27 @@
                     @php
                         $status = $transaction['transaction_status'] ?? ($transaction['status'] ?? 'unknown');
                         $statusClass = 'status-pending';
-                        $statusText = 'Pending';
+                        $statusText = __('receipt.status_pending');
 
                         switch ($status) {
                             case 'settlement':
                             case 'capture':
                                 $statusClass = 'status-success';
-                                $statusText = 'Berhasil';
+                                $statusText = __('receipt.status_success');
                                 break;
                             case 'pending':
                                 $statusClass = 'status-pending';
-                                $statusText = 'Menunggu';
+                                $statusText = __('receipt.status_pending');
                                 break;
                             case 'deny':
                             case 'failure':
                             case 'expire':
                                 $statusClass = 'status-failed';
-                                $statusText = 'Gagal';
+                                $statusText = __('receipt.status_failed');
+                                break;
+                            case 'cancel':
+                                $statusClass = 'status-failed';
+                                $statusText = __('receipt.status_cancelled');
                                 break;
                         }
                     @endphp
@@ -279,13 +283,13 @@
             </div>
             @if (isset($booking->phone) && $booking->phone)
                 <div class="info-row">
-                    <span class="info-label">Telepon:</span>
+                    <span class="info-label">{{ __('receipt.phone') }}:</span>
                     <span class="info-value">{{ $booking->phone }}</span>
                 </div>
             @endif
             @if (isset($booking->date_time))
                 <div class="info-row">
-                    <span class="info-label">Tanggal Booking:</span>
+                    <span class="info-label">{{ __('receipt.booking_date') }}:</span>
                     <span class="info-value">
                         {{ \Carbon\Carbon::parse($booking->date_time)->format('d M Y H:i') }}
                     </span>
@@ -313,20 +317,28 @@
                             <br><small style="color: #666;">{{ $booking->service->description }}</small>
                         @endif
                         @if (isset($booking->hairstyle) && $booking->hairstyle)
-                            <br><small style="color: #888;"><strong>Gaya Rambut:</strong>
+                            <br><small style="color: #888;"><strong>{{ __('receipt.hairstyle_label') }}:</strong>
                                 {{ $booking->hairstyle->name }}</small>
                         @endif
                     </td>
                     <td class="text-center">1</td>
-                    <td class="text-right">Rp {{ number_format($booking->service->price, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($booking->service->price, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ __('receipt.currency_symbol') }}
+                        {{ number_format($booking->service->price, 0, __('receipt.currency_thousands_separator'), __('receipt.currency_decimal_separator')) }}
+                    </td>
+                    <td class="text-right">{{ __('receipt.currency_symbol') }}
+                        {{ number_format($booking->service->price, 0, __('receipt.currency_thousands_separator'), __('receipt.currency_decimal_separator')) }}
+                    </td>
                 </tr>
             @else
                 <tr>
-                    <td>Layanan Barbershop</td>
+                    <td>{{ __('receipt.barbershop_service') }}</td>
                     <td class="text-center">1</td>
-                    <td class="text-right">Rp {{ number_format($transaction['gross_amount'] ?? 0, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($transaction['gross_amount'] ?? 0, 0, ',', '.') }}</td>
+                    <td class="text-right">{{ __('receipt.currency_symbol') }}
+                        {{ number_format($transaction['gross_amount'] ?? 0, 0, __('receipt.currency_thousands_separator'), __('receipt.currency_decimal_separator')) }}
+                    </td>
+                    <td class="text-right">{{ __('receipt.currency_symbol') }}
+                        {{ number_format($transaction['gross_amount'] ?? 0, 0, __('receipt.currency_thousands_separator'), __('receipt.currency_decimal_separator')) }}
+                    </td>
                 </tr>
             @endif
         </tbody>
@@ -342,19 +354,22 @@
 
         <div class="total-row">
             <span>{{ __('receipt.subtotal') }}:</span>
-            <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+            <span>{{ __('receipt.currency_symbol') }}
+                {{ number_format($subtotal, 0, __('receipt.currency_thousands_separator'), __('receipt.currency_decimal_separator')) }}</span>
         </div>
 
         @if ($tax > 0)
             <div class="total-row">
                 <span>{{ __('receipt.tax') }}:</span>
-                <span>Rp {{ number_format($tax, 0, ',', '.') }}</span>
+                <span>{{ __('receipt.currency_symbol') }}
+                    {{ number_format($tax, 0, __('receipt.currency_thousands_separator'), __('receipt.currency_decimal_separator')) }}</span>
             </div>
         @endif
 
         <div class="total-row grand-total">
             <span>{{ __('receipt.total_payment') }}:</span>
-            <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
+            <span>{{ __('receipt.currency_symbol') }}
+                {{ number_format($total, 0, __('receipt.currency_thousands_separator'), __('receipt.currency_decimal_separator')) }}</span>
         </div>
     </div>
 
@@ -367,11 +382,11 @@
                 @php
                     $paymentType = $transaction['payment_type'] ?? 'N/A';
                     $paymentText = match ($paymentType) {
-                        'bank_transfer' => 'Transfer Bank',
-                        'qris' => 'QRIS',
-                        'gopay' => 'GoPay',
-                        'shopeepay' => 'ShopeePay',
-                        'credit_card' => 'Kartu Kredit',
+                        'bank_transfer' => __('receipt.bank_transfer'),
+                        'qris' => __('receipt.qris'),
+                        'gopay' => __('receipt.gopay'),
+                        'shopeepay' => __('receipt.shopeepay'),
+                        'credit_card' => __('receipt.credit_card'),
                         default => ucwords(str_replace('_', ' ', $paymentType)),
                     };
                 @endphp
@@ -380,13 +395,13 @@
         </div>
         @if (isset($transaction['bank']) && $transaction['bank'])
             <div class="info-row">
-                <span class="info-label">Bank:</span>
+                <span class="info-label">{{ __('receipt.bank') }}:</span>
                 <span class="info-value">{{ strtoupper($transaction['bank']) }}</span>
             </div>
         @endif
         @if (isset($transaction['va_number']) && $transaction['va_number'])
             <div class="info-row">
-                <span class="info-label">No. Virtual Account:</span>
+                <span class="info-label">{{ __('receipt.virtual_account_number') }}:</span>
                 <span class="info-value">{{ $transaction['va_number'] }}</span>
             </div>
         @endif

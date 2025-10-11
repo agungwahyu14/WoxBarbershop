@@ -13,6 +13,7 @@
         <div class="navbar-end">
             <!-- Language Switcher -->
             <div class="navbar-item">
+
                 @php
                     $currentLang = app()->getLocale();
                     $languages = [
