@@ -52,6 +52,30 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const success = '{{ __('admin.success') }}';
+        const error = '{{ __('admin.error') }}';
+        const deleted = '{{ __('admin.deleted') }}';
+        const areYouSure = '{{ __('admin.are_you_sure') }}';
+        const deleteProductWarning = '{{ __('admin.delete_product_warning') }}';
+        const yesDeleteIt = '{{ __('admin.yes_delete_it') }}';
+        const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+        const processing = '{{ __('admin.processing') }}';
+        const search = '{{ __('admin.search') }}';
+        const lengthMenu = '{{ __('admin.show_entries') }}';
+        const info = '{{ __('admin.showing_entries') }}';
+        const infoEmpty = '{{ __('admin.showing_empty') }}';
+        const infoFiltered = '{{ __('admin.filtered_entries') }}';
+        const noMatchingProducts = '{{ __('admin.no_matching_products') }}';
+        const noProductsAvailable = '{{ __('admin.no_products_available') }}';
+        const loadingProducts = '{{ __('admin.loading_products') }}';
+        const firstPage = '{{ __('admin.first') }}';
+        const lastPage = '{{ __('admin.last') }}';
+        const nextPage = '{{ __('admin.next') }}';
+        const previousPage = '{{ __('admin.previous') }}';
+        const successTitle = '{{ __('admin.success_title') }}';
+        const errorTitle = '{{ __('admin.error_title') }}';
+
         $(document).ready(function() {
             // Initialize DataTable with improved styling
             let table = $('#products-table').DataTable({
@@ -106,21 +130,23 @@
                     "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>", // tampilkan info & pagination
 
                 language: {
-                    search: "Search:",
-                    lengthMenu: "_MENU_ ",
-                    info: "Showing _START_ to _END_ of _TOTAL_ products",
-                    infoEmpty: "No products found",
-                    infoFiltered: "(filtered from _MAX_ total products)",
-                    zeroRecords: "No matching products found",
-                    emptyTable: "No products available",
-                    loadingRecords: "Loading products...",
+                    search: search,
+                    lengthMenu: lengthMenu,
+                    info: info,
+                    infoEmpty: infoEmpty,
+                    infoFiltered: infoFiltered,
+                    zeroRecords: noMatchingProducts,
+                    emptyTable: noProductsAvailable,
+                    loadingRecords: loadingProducts,
                     processing: `<div class="flex items-center justify-center py-4">
                         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
+                        <span class="ml-2 text-gray-600 dark:text-gray-400">${processing}...</span>
                     </div>`,
                     paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">Previous</span>',
-                        next: '<span class="sr-only">Next</span><i class="mdi mdi-chevron-right"></i>'
+                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
+                            previousPage + '</span>',
+                        next: '<span class="sr-only">' + nextPage +
+                            '</span><i class="mdi mdi-chevron-right"></i>'
                     }
                 },
                 pageLength: 10,
@@ -142,7 +168,7 @@
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success!',
+                    title: successTitle,
                     text: '{{ session('success') }}',
                     timer: 3000,
                     showConfirmButton: false
@@ -154,13 +180,13 @@
                 const deleteUrl = '{{ route('admin.products.destroy', ':id') }}'.replace(':id', productId);
 
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: areYouSure,
+                    text: deleteProductWarning,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: yesDeleteIt
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -173,7 +199,7 @@
                                 if (response.success) {
                                     Swal.fire({
                                         icon: 'success',
-                                        title: 'Deleted!',
+                                        title: deleted,
                                         text: response.message,
                                         timer: 3000,
                                         showConfirmButton: false
@@ -184,9 +210,9 @@
                             error: function(xhr) {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Error!',
+                                    title: errorTitle,
                                     text: xhr.responseJSON?.message ||
-                                        'Something went wrong!',
+                                        somethingWentWrong,
                                 });
                             }
                         });
@@ -211,7 +237,7 @@
                     success: function(response) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Success!',
+                            title: successTitle,
                             text: response.message,
                             timer: 3000,
                             showConfirmButton: false
@@ -221,14 +247,14 @@
                         });
                     },
                     error: function(xhr) {
-                        let errorMessage = xhr.responseJSON?.message || 'An error occurred.';
+                        let errorMessage = xhr.responseJSON?.message || somethingWentWrong;
                         if (xhr.responseJSON?.errors) {
                             errorMessage = Object.values(xhr.responseJSON.errors).join('<br>');
                         }
 
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error!',
+                            title: errorTitle,
                             html: errorMessage,
                         });
                     }

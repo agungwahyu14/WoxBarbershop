@@ -65,15 +65,34 @@
 @push('scripts')
     <script>
         // Translation variables
-        const translations = {
-            success_title: @json(__('admin.success_title'))
-        };
+        const success = '{{ __('admin.success') }}';
+        const error = '{{ __('admin.error') }}';
+        const deleted = '{{ __('admin.deleted') }}';
+        const areYouSure = '{{ __('admin.are_you_sure') }}';
+        const deleteScoreWarning = '{{ __('admin.delete_score_warning') }}';
+        const yesDeleteIt = '{{ __('admin.yes_delete_it') }}';
+        const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+        const processing = '{{ __('admin.processing') }}';
+        const search = '{{ __('admin.search') }}';
+        const lengthMenu = '{{ __('admin.show_entries') }}';
+        const info = '{{ __('admin.showing_entries') }}';
+        const infoEmpty = '{{ __('admin.showing_empty') }}';
+        const infoFiltered = '{{ __('admin.filtered_entries') }}';
+        const noMatchingScores = '{{ __('admin.no_matching_scores') }}';
+        const noScoresAvailable = '{{ __('admin.no_scores_available') }}';
+        const loadingScores = '{{ __('admin.loading_scores') }}';
+        const firstPage = '{{ __('admin.first') }}';
+        const lastPage = '{{ __('admin.last') }}';
+        const nextPage = '{{ __('admin.next') }}';
+        const previousPage = '{{ __('admin.previous') }}';
+        const successTitle = '{{ __('admin.success_title') }}';
+        const errorTitle = '{{ __('admin.error_title') }}';
 
         // Success popup
         @if (session('success'))
             Swal.fire({
                 icon: 'success',
-                title: translations.success_title,
+                title: successTitle,
                 text: '{{ session('success') }}',
                 timer: 3000,
                 showConfirmButton: false
@@ -119,18 +138,26 @@
                 pageLength: 10,
                 responsive: true,
                 language: {
-                    processing: '<div class="flex justify-center py-4"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>',
-                    emptyTable: 'Tidak ada data yang tersedia',
-                    zeroRecords: 'Tidak ada data yang cocok ditemukan',
-                    info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ data',
-                    infoEmpty: 'Menampilkan 0 sampai 0 dari 0 data',
-                    infoFiltered: '(difilter dari _MAX_ total data)',
-                    search: 'Search:',
+                    search: search,
+                    lengthMenu: "_MENU_", // ✅ hanya tampil dropdown tanpa teks "Show entries"
+                    info: info,
+                    infoEmpty: infoEmpty,
+                    infoFiltered: infoFiltered,
+                    zeroRecords: noMatchingScores,
+                    emptyTable: noScoresAvailable,
+                    loadingRecords: loadingScores,
+                    processing: `<div class="flex items-center justify-center py-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <span class="ml-2 text-gray-600 dark:text-gray-400">${processing}...</span>
+    </div>`,
                     paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i>',
-                        next: '<i class="mdi mdi-chevron-right"></i>'
+                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
+                            previousPage + '</span>',
+                        next: '<span class="sr-only">' + nextPage +
+                            '</span><i class="mdi mdi-chevron-right"></i>'
                     }
                 }
+
             });
         });
 
@@ -140,13 +167,9 @@
             const deleteUrl = '{{ route('admin.hairstyles.score.destroy', ':id') }}'.replace(':id', scoreId);
 
             Swal.fire({
-                title: 'Are you sure?',
-                text: "This will permanently delete the score.",
+                text: deleteConfirmationText,
                 icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: confirmDeleteText
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -158,7 +181,7 @@
                         success: function(response) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Deleted!',
+                                title: deleteSuccessTitle,
                                 text: response.message,
                                 timer: 2000,
                                 showConfirmButton: false
@@ -170,9 +193,8 @@
                         error: function(xhr) {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Error!',
-                                text: xhr.responseJSON?.message ||
-                                    'Something went wrong.',
+                                title: errorTitle,
+                                text: xhr.responseJSON?.message || errorMessage,
                             });
                         }
                     });

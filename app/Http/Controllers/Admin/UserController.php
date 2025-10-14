@@ -226,11 +226,11 @@ if ($request->filled('status_filter')) {
                     $actions = '<div class="flex justify-center items-center space-x-1">';
 
                     // View button
-                    $actions .= '<a href="'.$showUrl.'" 
-                                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-all duration-200 group" 
-                                   title="View Details">
-                                    <i class="fas fa-eye text-xs group-hover:scale-110 transition-transform"></i>
-                                </a>';
+                    // $actions .= '<a href="'.$showUrl.'" 
+                    //                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-all duration-200 group" 
+                    //                title="View Details">
+                    //                 <i class="fas fa-eye text-xs group-hover:scale-110 transition-transform"></i>
+                    //             </a>';
 
                     // Edit button
                     if (auth()->user()->can('edit users')) {

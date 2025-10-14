@@ -6,7 +6,7 @@
 
 
             <!-- Booking Info Card -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 mt-8">
+            {{-- <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 mt-8">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                     <h3 class="text-lg font-semibold text-gray-900">{{ __('feedback.booking_details') }}</h3>
                 </div>
@@ -33,10 +33,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Feedback Form -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 mt-8">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                     <h3 class="text-lg font-semibold text-gray-900">{{ __('feedback.update_feedback') }}</h3>
                 </div>

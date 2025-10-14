@@ -14,7 +14,7 @@
                     <i class="fas fa-user-plus mr-3"></i> {{ __('admin.create_user_btn') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    {{ __('admin.user_information_subtitle') }}
+                    {{ __('admin.add_new_user_desc') }}
                 </p>
             </div>
         </div>

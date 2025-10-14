@@ -16,7 +16,8 @@
     </section>
 
     <section class="section min-h-screen main-section">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div
+            class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <!-- Header Actions -->
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -52,6 +53,35 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const success = '{{ __('admin.success') }}';
+        const error = '{{ __('admin.error') }}';
+        const deleted = '{{ __('admin.deleted') }}';
+        const areYouSure = '{{ __('admin.are_you_sure') }}';
+        const deleteServiceWarning = '{{ __('admin.delete_service_confirm') }}';
+        const yesDeleteIt = '{{ __('admin.yes_delete_it') }}';
+        const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+        const processing = '{{ __('admin.processing') }}';
+        const search = '{{ __('admin.search') }}';
+        const lengthMenu = '{{ __('admin.show_entries') }}';
+        const info = '{{ __('admin.showing_entries') }}';
+        const infoEmpty = '{{ __('admin.showing_empty') }}';
+        const infoFiltered = '{{ __('admin.filtered_entries') }}';
+        const noMatchingServices = '{{ __('admin.no_matching_services') }}';
+        const noServicesAvailable = '{{ __('admin.no_services_available') }}';
+        const loadingServices = '{{ __('admin.loading_services') }}';
+        const firstPage = '{{ __('admin.first') }}';
+        const lastPage = '{{ __('admin.last') }}';
+        const nextPage = '{{ __('admin.next') }}';
+        const previousPage = '{{ __('admin.previous') }}';
+        const confirmTitle = '{{ __('admin.confirm_title') }}';
+        const deletedTitle = '{{ __('admin.deleted_title') }}';
+        const serviceDeletedSuccess = '{{ __('admin.service_deleted_success') }}';
+        const errorTitle = '{{ __('admin.error_title') }}';
+        const errorMessage = '{{ __('admin.error_message') }}';
+        const tryAgain = '{{ __('admin.try_again') }}';
+        const cancel = '{{ __('admin.cancel') }}';
+
         $(document).ready(function() {
             // Setup CSRF token for all Ajax requests
             $.ajaxSetup({
@@ -67,8 +97,7 @@
                     url: '{{ route('admin.services.index') }}',
                     type: 'GET',
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                         className: 'text-center',
@@ -98,14 +127,30 @@
                     }
                 ],
                 language: {
-                    info: "{{ __('admin.showing_entries') }}",
-                    infoEmpty: "{{ __('admin.no_users_found') }}",
-                    zeroRecords: "{{ __('admin.no_matching_users') }}",
-                    emptyTable: "{{ __('admin.no_users_available') }}",
+                    search: search,
+                    info: info,
+                    infoEmpty: infoEmpty,
+                    infoFiltered: infoFiltered,
+                    zeroRecords: noMatchingServices,
+                    emptyTable: noServicesAvailable,
+                    loadingRecords: loadingServices,
+                    processing: `<div class="flex items-center justify-center py-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <span class="ml-2 text-gray-600 dark:text-gray-400">${processing}...</span>
+    </div>`,
+                    paginate: {
+                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
+                            previousPage + '</span>',
+                        next: '<span class="sr-only">' + nextPage +
+                            '</span><i class="mdi mdi-chevron-right"></i>'
+                    },
+                    lengthMenu: "_MENU_" // ✅ hanya tampil dropdown, tanpa teks "Show entries"
                 },
                 responsive: true,
                 pageLength: 10,
-                order: [[1, 'asc']],
+                order: [
+                    [1, 'asc']
+                ],
                 dom: '<"flex flex-col md:flex-row justify-between items-center mb-6"lf>rt<"flex flex-col md:flex-row justify-between items-center mt-6"ip>',
                 initComplete: function() {
                     // Style DataTable elements
@@ -145,14 +190,14 @@
                 const deleteUrl = '{{ route('admin.services.destroy', ':id') }}'.replace(':id', id);
 
                 Swal.fire({
-                    title: '{{ __('admin.confirm_title') }}',
-                    text: "{{ __('admin.delete_service_confirm') }}",
+                    title: confirmTitle,
+                    text: deleteServiceWarning,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
-                    confirmButtonText: '{{ __('admin.yes_delete_it') }}',
-                    cancelButtonText: '{{ __('admin.cancel') }}'
+                    confirmButtonText: yesDeleteIt,
+                    cancelButtonText: cancel
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -163,8 +208,8 @@
                             },
                             success: function(response) {
                                 Swal.fire({
-                                    title: '{{ __('admin.deleted_title') }}',
-                                    text: '{{ __('admin.service_deleted_success') }}',
+                                    title: deletedTitle,
+                                    text: serviceDeletedSuccess,
                                     icon: 'success',
                                     timer: 3000,
                                     showConfirmButton: false
@@ -173,10 +218,11 @@
                             },
                             error: function(xhr) {
                                 Swal.fire({
-                                    title: '{{ __('admin.error_title') }}',
-                                    text: '{{ __('admin.error_message') }}',
+                                    title: errorTitle,
+                                    text: xhr.responseJSON?.message ||
+                                        somethingWentWrong,
                                     icon: 'error',
-                                    confirmButtonText: '{{ __('admin.try_again') }}'
+                                    confirmButtonText: tryAgain
                                 });
                             }
                         });

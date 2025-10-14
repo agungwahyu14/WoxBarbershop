@@ -162,7 +162,7 @@
                     </div>
 
                     <!-- Current Roles & Permissions Info -->
-                    <div class="border-t border-gray-200 pt-6">
+                    {{-- <div class="border-t border-gray-200 pt-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">
                             <i class="fas fa-info-circle mr-2 text-blue-600"></i>{{ __('admin.roles') }}
                         </h3>
@@ -179,8 +179,8 @@
                                         <span class="text-gray-500 text-sm">{{ __('admin.no_roles_assigned') }}</span>
                                     @endforelse
                                 </div>
-                            </div>
-                            {{-- <div class="bg-green-50 p-4 rounded-lg">
+                            </div> --}}
+                    {{-- <div class="bg-green-50 p-4 rounded-lg">
                                 <h4 class="font-medium text-green-900 mb-2">Current Permissions</h4>
                                 <div class="flex flex-wrap gap-2">
                                     @forelse($user->getAllPermissions()->take(5) as $permission)
@@ -199,8 +199,8 @@
                                     @endif
                                 </div>
                             </div> --}}
-                        </div>
-                    </div>
+                    {{-- </div>
+                    </div> --}}
 
                     <!-- Roles Section -->
                     <div class="border-t border-gray-200 pt-6">
@@ -260,17 +260,17 @@
                             </div>
                             <div class="flex space-x-4">
 
-                                <a href="{{ route('admin.users.show', $user) }}"
+                                {{-- <a href="{{ route('admin.users.show', $user) }}"
                                     class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                     <i class="fas fa-eye mr-2"></i>{{ __('admin.view_user_btn') }}
-                                </a>
+                                </a> --}}
                                 <a href="{{ route('admin.users.index') }}"
                                     class="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                     <i class="fas fa-times mr-2"></i>{{ __('admin.cancel') }}
                                 </a>
                                 <button type="submit"
                                     class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                    <i class="fas fa-save mr-2"></i>{{ __('admin.update') }}
+                                    <i class="fas fa-save mr-2"></i>{{ __('admin.edit_user_btn') }}
                                 </button>
                             </div>
                         </div>

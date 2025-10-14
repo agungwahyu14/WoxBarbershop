@@ -52,27 +52,26 @@
 @push('scripts')
     <script>
         // Translation variables
-        const translations = {
-            success: @json(__('admin.success')),
-            error: @json(__('admin.error')),
-            deleted: @json(__('admin.deleted')),
-            areYouSure: @json(__('admin.are_you_sure')),
-            deleteWarning: @json(__('admin.delete_feedback_warning')),
-            yesDeleteIt: @json(__('admin.yes_delete_it')),
-            somethingWentWrong: @json(__('admin.something_went_wrong')),
-            processing: @json(__('admin.processing')),
-            search: @json(__('admin.search')),
-            lengthMenu: @json(__('admin.show_entries')),
-            info: @json(__('admin.showing_entries')),
-            infoEmpty: @json(__('admin.showing_empty')),
-            infoFiltered: @json(__('admin.filtered_entries')),
-            paginate: {
-                first: @json(__('admin.first')),
-                last: @json(__('admin.last')),
-                next: @json(__('admin.next')),
-                previous: @json(__('admin.previous'))
-            }
-        };
+        const success = '{{ __('admin.success') }}';
+        const error = '{{ __('admin.error') }}';
+        const deleted = '{{ __('admin.deleted') }}';
+        const areYouSure = '{{ __('admin.are_you_sure') }}';
+        const deleteWarning = '{{ __('admin.delete_feedback_warning') }}';
+        const yesDeleteIt = '{{ __('admin.yes_delete_it') }}';
+        const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+        const processing = '{{ __('admin.processing') }}';
+        const search = '{{ __('admin.search') }}';
+        const lengthMenu = '{{ __('admin.show_entries') }}';
+        const info = '{{ __('admin.showing_entries') }}';
+        const infoEmpty = '{{ __('admin.showing_empty') }}';
+        const infoFiltered = '{{ __('admin.filtered_entries') }}';
+        const noMatchingFeedbacks = '{{ __('admin.no_matching_feedbacks') }}';
+        const noFeedbacksAvailable = '{{ __('admin.no_feedbacks_available') }}';
+        const loadingFeedbacks = '{{ __('admin.loading_feedbacks') }}';
+        const firstPage = '{{ __('admin.first') }}';
+        const lastPage = '{{ __('admin.last') }}';
+        const nextPage = '{{ __('admin.next') }}';
+        const previousPage = '{{ __('admin.previous') }}';
 
         $(document).ready(function() {
             // Initialize DataTable with improved styling
@@ -138,22 +137,22 @@
                     "<'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>", // tampilkan info & pagination
 
                 language: {
-                    search: translations.search,
-                    lengthMenu: translations.lengthMenu,
-                    info: translations.info,
-                    infoEmpty: translations.infoEmpty,
-                    infoFiltered: translations.infoFiltered,
-                    zeroRecords: @json(__('admin.no_matching_feedbacks')),
-                    emptyTable: @json(__('admin.no_feedbacks_available')),
-                    loadingRecords: @json(__('admin.loading_feedbacks')),
+                    search: search,
+                    lengthMenu: "_MENU_", // ✅ hanya dropdown, tanpa teks "Show entries"
+                    info: info,
+                    infoEmpty: infoEmpty,
+                    infoFiltered: infoFiltered,
+                    zeroRecords: noMatchingFeedbacks,
+                    emptyTable: noFeedbacksAvailable,
+                    loadingRecords: loadingFeedbacks,
                     processing: `<div class="flex items-center justify-center py-4">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="ml-2 text-gray-600 dark:text-gray-400">${translations.processing}...</span>
-                    </div>`,
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <span class="ml-2 text-gray-600 dark:text-gray-400">${processing}...</span>
+    </div>`,
                     paginate: {
                         previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
-                            translations.paginate.previous + '</span>',
-                        next: '<span class="sr-only">' + translations.paginate.next +
+                            previousPage + '</span>',
+                        next: '<span class="sr-only">' + nextPage +
                             '</span><i class="mdi mdi-chevron-right"></i>'
                     }
                 },
@@ -163,7 +162,7 @@
                     [10, 25, 50, 100]
                 ],
                 order: [
-                    [7, 'desc']
+                    [5, 'desc']
                 ], // Sort by created date by default
                 responsive: true,
                 stateSave: true,
@@ -171,12 +170,13 @@
                     // Move export buttons to custom location
                     $('.dt-buttons').appendTo('#export-buttons');
                 }
+
             });
 
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: translations.success,
+                    title: success,
                     text: '{{ session('success') }}',
                     timer: 3000,
                     showConfirmButton: false
@@ -189,13 +189,13 @@
                     feedbackId);
 
                 Swal.fire({
-                    title: translations.areYouSure,
-                    text: translations.deleteWarning,
+                    title: areYouSure,
+                    text: deleteWarning,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: translations.yesDeleteIt
+                    confirmButtonText: yesDeleteIt
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -208,7 +208,7 @@
                                 if (response.success) {
                                     Swal.fire({
                                         icon: 'success',
-                                        title: translations.deleted,
+                                        title: deleted,
                                         text: response.message,
                                         timer: 3000,
                                         showConfirmButton: false
@@ -219,9 +219,9 @@
                             error: function(xhr) {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: translations.error,
+                                    title: error,
                                     text: xhr.responseJSON?.message ||
-                                        translations.somethingWentWrong,
+                                        somethingWentWrong,
                                 });
                             }
                         });
@@ -247,7 +247,7 @@
                             if (response.success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: translations.success,
+                                    title: success,
                                     text: response.message,
                                     timer: 2000,
                                     showConfirmButton: false
@@ -258,9 +258,9 @@
                         error: function(xhr) {
                             Swal.fire({
                                 icon: 'error',
-                                title: translations.error,
+                                title: error,
                                 text: xhr.responseJSON?.message ||
-                                    translations.somethingWentWrong,
+                                    somethingWentWrong,
                             });
                         }
                     });

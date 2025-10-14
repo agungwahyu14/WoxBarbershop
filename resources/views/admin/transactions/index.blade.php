@@ -119,48 +119,59 @@
 @push('scripts')
     <script>
         // Translation variables
-        const translations = {
-            showing: @json(__('admin.showing')),
-            to: @json(__('admin.to')),
-            of: @json(__('admin.of')),
-            transactions: @json(__('admin.transactions')),
-            no_transactions_found: @json(__('admin.no_transactions_found')),
-            no_matching_transactions: @json(__('admin.no_matching_transactions')),
-            no_transactions_available: @json(__('admin.no_transactions_available')),
-            confirm_delete: @json(__('admin.confirm_delete')),
-            delete_warning: @json(__('admin.delete_warning')),
-            yes_delete: @json(__('admin.yes_delete')),
-            cancel: @json(__('admin.cancel')),
-            deleted: @json(__('admin.deleted')),
-            transaction_deleted: @json(__('admin.transaction_deleted')),
-            error: @json(__('admin.error')),
-            delete_error: @json(__('admin.delete_error')),
-            success: @json(__('admin.success')),
-            filtered_by: @json(__('admin.filtered_by')),
-            month: @json(__('admin.month')),
-            year: @json(__('admin.year')),
-            and: @json(__('admin.and')),
-            confirm_settlement: @json(__('admin.confirm_settlement')),
-            settlement_warning: @json(__('admin.settlement_warning')),
-            yes_settlement: @json(__('admin.yes_settlement')),
-            update_error: @json(__('admin.update_error')),
-            jan: @json(__('admin.jan')),
-            feb: @json(__('admin.feb')),
-            mar: @json(__('admin.mar')),
-            apr: @json(__('admin.apr')),
-            may: @json(__('admin.may')),
-            jun: @json(__('admin.jun')),
-            jul: @json(__('admin.jul')),
-            aug: @json(__('admin.aug')),
-            sep: @json(__('admin.sep')),
-            oct: @json(__('admin.oct')),
-            nov: @json(__('admin.nov')),
-            dec: @json(__('admin.dec')),
-            pending: @json(__('admin.pending')),
-            paid: @json(__('admin.paid')),
-            cancelled: @json(__('admin.cancelled')),
-            filter_active: @json(__('admin.filter_active'))
-        };
+        const success = '{{ __('admin.success') }}';
+        const error = '{{ __('admin.error') }}';
+        const deleted = '{{ __('admin.deleted') }}';
+        const areYouSure = '{{ __('admin.are_you_sure') }}';
+        const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+        const processing = '{{ __('admin.processing') }}';
+        const search = '{{ __('admin.search') }}';
+        const lengthMenu = '{{ __('admin.show_entries') }}';
+        const info = '{{ __('admin.showing_entries') }}';
+        const infoEmpty = '{{ __('admin.showing_empty') }}';
+        const infoFiltered = '{{ __('admin.filtered_entries') }}';
+        const noMatchingTransactions = '{{ __('admin.no_matching_transactions') }}';
+        const noTransactionsAvailable = '{{ __('admin.no_transactions_available') }}';
+        const loadingTransactions = '{{ __('admin.loading_transactions') }}';
+        const firstPage = '{{ __('admin.first') }}';
+        const lastPage = '{{ __('admin.last') }}';
+        const nextPage = '{{ __('admin.next') }}';
+        const previousPage = '{{ __('admin.previous') }}';
+        const showing = '{{ __('admin.showing') }}';
+        const to = '{{ __('admin.to') }}';
+        const of = '{{ __('admin.of') }}';
+        const transactions = '{{ __('admin.transactions') }}';
+        const noTransactionsFound = '{{ __('admin.no_transactions_found') }}';
+        const confirmDelete = '{{ __('admin.confirm_delete') }}';
+        const deleteWarning = '{{ __('admin.delete_warning') }}';
+        const yesDelete = '{{ __('admin.yes_delete') }}';
+        const cancel = '{{ __('admin.cancel') }}';
+        const transactionDeleted = '{{ __('admin.transaction_deleted') }}';
+        const deleteError = '{{ __('admin.delete_error') }}';
+        const filteredBy = '{{ __('admin.filtered_by') }}';
+        const month = '{{ __('admin.month') }}';
+        const year = '{{ __('admin.year') }}';
+        const and = '{{ __('admin.and') }}';
+        const confirmSettlementText = '{{ __('admin.confirm_settlement') }}';
+        const settlementWarning = '{{ __('admin.settlement_warning') }}';
+        const yesSettlement = '{{ __('admin.yes_settlement') }}';
+        const updateError = '{{ __('admin.update_error') }}';
+        const jan = '{{ __('admin.jan') }}';
+        const feb = '{{ __('admin.feb') }}';
+        const mar = '{{ __('admin.mar') }}';
+        const apr = '{{ __('admin.apr') }}';
+        const may = '{{ __('admin.may') }}';
+        const jun = '{{ __('admin.jun') }}';
+        const jul = '{{ __('admin.jul') }}';
+        const aug = '{{ __('admin.aug') }}';
+        const sep = '{{ __('admin.sep') }}';
+        const oct = '{{ __('admin.oct') }}';
+        const nov = '{{ __('admin.nov') }}';
+        const dec = '{{ __('admin.dec') }}';
+        const pending = '{{ __('admin.pending') }}';
+        const paid = '{{ __('admin.paid') }}';
+        const cancelled = '{{ __('admin.cancelled') }}';
+        const filterActive = '{{ __('admin.filter_active') }}';
 
         $(document).ready(function() {
             let table = $('#transactions-table').DataTable({
@@ -230,16 +241,26 @@
                     $('.dt-buttons').appendTo('#export-buttons');
                 },
                 language: {
-                    info: translations.showing + " _START_ " + translations.to + " _END_ " + translations
-                        .of + " _TOTAL_ " + translations.transactions,
-                    infoEmpty: translations.no_transactions_found,
-                    zeroRecords: translations.no_matching_transactions,
-                    emptyTable: translations.no_transactions_available,
+                    search: search,
+                    lengthMenu: "_MENU_", // ✅ hanya dropdown, tanpa teks "Show entries"
+                    info: info,
+                    infoEmpty: infoEmpty,
+                    infoFiltered: infoFiltered,
+                    zeroRecords: noMatchingTransactions,
+                    emptyTable: noTransactionsAvailable,
+                    loadingRecords: loadingTransactions,
+                    processing: `<div class="flex items-center justify-center py-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <span class="ml-2 text-gray-600 dark:text-gray-400">${processing}...</span>
+    </div>`,
                     paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i>',
-                        next: '<i class="mdi mdi-chevron-right"></i>'
+                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
+                            previousPage + '</span>',
+                        next: '<span class="sr-only">' + nextPage +
+                            '</span><i class="mdi mdi-chevron-right"></i>'
                     }
                 },
+
             });
 
             // Filter event listeners
@@ -264,14 +285,14 @@
         // Function to confirm settlement
         function confirmSettlement(transactionId) {
             Swal.fire({
-                title: translations.confirm_settlement,
-                text: translations.settlement_warning,
+                title: confirmSettlementText,
+                text: settlementWarning,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#22c55e',
                 cancelButtonColor: '#6b7280',
-                confirmButtonText: translations.yes_settlement,
-                cancelButtonText: translations.cancel,
+                confirmButtonText: yesSettlement,
+                cancelButtonText: cancel,
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -285,7 +306,7 @@
                         success: function(response) {
                             if (response.success) {
                                 Swal.fire({
-                                    title: translations.success,
+                                    title: success,
                                     text: response.message,
                                     icon: 'success',
                                     confirmButtonColor: '#22c55e'
@@ -296,8 +317,8 @@
                         },
                         error: function(xhr) {
                             Swal.fire({
-                                title: translations.error,
-                                text: translations.update_error,
+                                title: error,
+                                text: updateError,
                                 icon: 'error',
                                 confirmButtonColor: '#ef4444'
                             });
@@ -363,19 +384,15 @@
             } else if (year) {
                 parts.push(year);
             } else if (month) {
-                const monthNames = [translations.jan, translations.feb, translations.mar, translations.apr, translations
-                    .may, translations.jun,
-                    translations.jul, translations.aug, translations.sep, translations.oct, translations.nov,
-                    translations.dec
-                ];
+                const monthNames = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec];
                 parts.push(`${monthNames[month - 1]}`);
             }
 
             if (status) {
                 const statusText = {
-                    'pending': translations.pending,
-                    'paid': translations.paid,
-                    'cancelled': translations.cancelled
+                    'pending': pending,
+                    'paid': paid,
+                    'cancelled': cancelled
                 };
                 parts.push(statusText[status] || status);
             }
@@ -389,7 +406,7 @@
             const textSpan = $('#filterText');
 
             if (filterText) {
-                textSpan.text(`${translations.filter_active}: ${filterText}`);
+                textSpan.text(`${filterActive}: ${filterText}`);
                 indicator.removeClass('hidden');
             } else {
                 indicator.addClass('hidden');

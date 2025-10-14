@@ -53,30 +53,50 @@
 
 @push('scripts')
     <script>
-        const translations = {
-            are_you_sure: @json(__('admin.are_you_sure')),
-            delete_hairstyle_warning: @json(__('admin.delete_hairstyle_warning')),
-            yes_delete_it: @json(__('admin.yes_delete_it')),
-            deleted_success_title: @json(__('admin.deleted_success_title')),
-            error_title: @json(__('admin.error_title')),
-            something_went_wrong: @json(__('admin.something_went_wrong')),
-            showing_entries: @json(__('admin.showing_hairstyles')),
-            no_hairstyles_found: @json(__('admin.no_hairstyles_found')),
-            no_matching_hairstyles: @json(__('admin.no_matching_hairstyles')),
-            no_hairstyles_available: @json(__('admin.no_hairstyles_available')),
-            loading: @json(__('admin.loading')),
-            success_title: @json(__('admin.success_title'))
-        };
+        // Translation variables
+        const success = '{{ __('admin.success') }}';
+        const error = '{{ __('admin.error') }}';
+        const deleted = '{{ __('admin.deleted') }}';
+        const areYouSure = '{{ __('admin.are_you_sure') }}';
+        const deleteHairstyleWarning = '{{ __('admin.delete_hairstyle_warning') }}';
+        const yesDeleteIt = '{{ __('admin.yes_delete_it') }}';
+        const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+        const processing = '{{ __('admin.processing') }}';
+        const search = '{{ __('admin.search') }}';
+        const lengthMenu = '{{ __('admin.show_entries') }}';
+        const info = '{{ __('admin.showing_entries') }}';
+        const infoEmpty = '{{ __('admin.showing_empty') }}';
+        const infoFiltered = '{{ __('admin.filtered_entries') }}';
+        const noMatchingHairstyles = '{{ __('admin.no_matching_hairstyles') }}';
+        const noHairstylesAvailable = '{{ __('admin.no_hairstyles_available') }}';
+        const loadingHairstyles = '{{ __('admin.loading_hairstyles') }}';
+        const firstPage = '{{ __('admin.first') }}';
+        const lastPage = '{{ __('admin.last') }}';
+        const nextPage = '{{ __('admin.next') }}';
+        const previousPage = '{{ __('admin.previous') }}';
+        const successTitle = '{{ __('admin.success_title') }}';
+        const errorTitle = '{{ __('admin.error_title') }}';
+        const deletedSuccessTitle = '{{ __('admin.deleted_success_title') }}';
+        const loading = '{{ __('admin.loading') }}';
 
         $(document).ready(function() {
             const table = $('#hairstyles-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('admin.hairstyles.index') }}',
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', className: 'text-center' },
-                    { data: 'name', name: 'name' },
-                    { data: 'description', name: 'description' },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'description',
+                        name: 'description'
+                    },
                     {
                         data: 'bentuk_kepala',
                         name: 'bentuk_kepala',
@@ -98,7 +118,8 @@
                         orderable: false,
                         searchable: false,
                         className: 'text-center',
-                        render: data => data || '<div class="flex justify-center"><i class="fas fa-image text-gray-400"></i></div>'
+                        render: data => data ||
+                            '<div class="flex justify-center"><i class="fas fa-image text-gray-400"></i></div>'
                     },
                     {
                         data: 'action',
@@ -110,29 +131,38 @@
                 ],
                 dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
                 language: {
-                    info: translations.showing_entries,
-                    infoEmpty: translations.no_hairstyles_found,
-                    zeroRecords: translations.no_matching_hairstyles,
-                    emptyTable: translations.no_hairstyles_available,
+                    search: search,
+                    lengthMenu: "_MENU_", // ✅ hanya tampil dropdown, tanpa teks
+                    info: info,
+                    infoEmpty: infoEmpty,
+                    infoFiltered: infoFiltered,
+                    zeroRecords: noMatchingHairstyles,
+                    emptyTable: noHairstylesAvailable,
+                    loadingRecords: loadingHairstyles,
                     processing: `<div class="flex items-center justify-center py-4">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                            <span class="ml-2 text-gray-600 dark:text-gray-400">${translations.loading}</span>
-                        </div>`,
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <span class="ml-2 text-gray-600 dark:text-gray-400">${processing}...</span>
+    </div>`,
                     paginate: {
-                        previous: '<i class="mdi mdi-chevron-left"></i>',
-                        next: '<i class="mdi mdi-chevron-right"></i>'
+                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
+                            previousPage + '</span>',
+                        next: '<span class="sr-only">' + nextPage +
+                            '</span><i class="mdi mdi-chevron-right"></i>'
                     }
                 },
                 responsive: true,
                 pageLength: 10,
-                order: [[1, 'asc']]
+                order: [
+                    [1, 'asc']
+                ]
+
             });
 
             // Success popup
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: translations.success_title,
+                    title: successTitle,
                     text: '{{ session('success') }}',
                     timer: 3000,
                     showConfirmButton: false
@@ -142,26 +172,29 @@
             // Delete hairstyle
             $(document).on('click', '.deleteBtn', function() {
                 const hairstyleId = $(this).data('id');
-                const deleteUrl = '{{ route('admin.hairstyles.destroy', ':id') }}'.replace(':id', hairstyleId);
+                const deleteUrl = '{{ route('admin.hairstyles.destroy', ':id') }}'.replace(':id',
+                    hairstyleId);
 
                 Swal.fire({
-                    title: translations.are_you_sure,
-                    text: translations.delete_hairstyle_warning,
+                    title: areYouSure,
+                    text: deleteHairstyleWarning,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: translations.yes_delete_it
+                    confirmButtonText: yesDeleteIt
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
                             url: deleteUrl,
                             type: 'DELETE',
-                            data: { _token: '{{ csrf_token() }}' },
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
                             success: response => {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: translations.deleted_success_title,
+                                    title: deletedSuccessTitle,
                                     text: response.message,
                                     timer: 2000,
                                     showConfirmButton: false
@@ -170,8 +203,9 @@
                             error: xhr => {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: translations.error_title,
-                                    text: xhr.responseJSON?.message || translations.something_went_wrong,
+                                    title: errorTitle,
+                                    text: xhr.responseJSON?.message ||
+                                        somethingWentWrong,
                                 });
                             }
                         });
@@ -181,7 +215,10 @@
 
             // Auto reload (with auth check)
             let refreshInterval = setInterval(() => {
-                fetch('{{ route('admin.hairstyles.index') }}', { method: 'HEAD', credentials: 'same-origin' })
+                fetch('{{ route('admin.hairstyles.index') }}', {
+                        method: 'HEAD',
+                        credentials: 'same-origin'
+                    })
                     .then(response => {
                         if (response.ok) {
                             table.ajax.reload(null, false);
@@ -205,8 +242,13 @@
 
 @push('styles')
     <style>
-        th.text-center { text-align: center !important; }
-        th.text-left { text-align: left !important; }
+        th.text-center {
+            text-align: center !important;
+        }
+
+        th.text-left {
+            text-align: left !important;
+        }
 
         /* DataTables Buttons */
         .dt-buttons .dt-button {
@@ -225,23 +267,65 @@
             color: #312e81 !important;
         }
 
-        .dt-buttons .dt-button.dt-btn-copy:hover { background-color: #c7d2fe !important; }
-        .dt-buttons .dt-button.dt-btn-csv { background-color: #34d399 !important; color: #fff !important; }
-        .dt-buttons .dt-button.dt-btn-csv:hover { background-color: #6ee7b7 !important; }
-        .dt-buttons .dt-button.dt-btn-excel { background-color: #10b981 !important; color: #fff !important; }
-        .dt-buttons .dt-button.dt-btn-excel:hover { background-color: #34d399 !important; }
-        .dt-buttons .dt-button.dt-btn-pdf { background-color: #f87171 !important; color: #fff !important; }
-        .dt-buttons .dt-button.dt-btn-pdf:hover { background-color: #fca5a5 !important; }
-        .dt-buttons .dt-button.dt-btn-print { background-color: #60a5fa !important; color: #fff !important; }
-        .dt-buttons .dt-button.dt-btn-print:hover { background-color: #93c5fd !important; }
+        .dt-buttons .dt-button.dt-btn-copy:hover {
+            background-color: #c7d2fe !important;
+        }
+
+        .dt-buttons .dt-button.dt-btn-csv {
+            background-color: #34d399 !important;
+            color: #fff !important;
+        }
+
+        .dt-buttons .dt-button.dt-btn-csv:hover {
+            background-color: #6ee7b7 !important;
+        }
+
+        .dt-buttons .dt-button.dt-btn-excel {
+            background-color: #10b981 !important;
+            color: #fff !important;
+        }
+
+        .dt-buttons .dt-button.dt-btn-excel:hover {
+            background-color: #34d399 !important;
+        }
+
+        .dt-buttons .dt-button.dt-btn-pdf {
+            background-color: #f87171 !important;
+            color: #fff !important;
+        }
+
+        .dt-buttons .dt-button.dt-btn-pdf:hover {
+            background-color: #fca5a5 !important;
+        }
+
+        .dt-buttons .dt-button.dt-btn-print {
+            background-color: #60a5fa !important;
+            color: #fff !important;
+        }
+
+        .dt-buttons .dt-button.dt-btn-print:hover {
+            background-color: #93c5fd !important;
+        }
 
         /* Mobile view */
         @media (max-width: 768px) {
-            .dt-buttons { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
-            .dt-buttons .dt-button { width: 100% !important; text-align: center; }
+            .dt-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .dt-buttons .dt-button {
+                width: 100% !important;
+                text-align: center;
+            }
         }
 
         /* Table */
-        #hairstyles-table { width: 100% !important; table-layout: auto !important; }
+        #hairstyles-table {
+            width: 100% !important;
+            table-layout: auto !important;
+        }
     </style>
 @endpush

@@ -263,34 +263,33 @@
                     let hasError = false;
                     let errorMessage = '';
 
-                    const translations = @json([
-                        'name_required' => __('booking.name_required'),
-                        'service_required' => __('booking.service_required'),
-                        'hairstyle_required' => __('booking.hairstyle_required'),
-                        'datetime_required' => __('booking.datetime_required'),
-                        'closed_sunday' => __('booking.closed_sunday'),
-                        'business_hours' => __('booking.business_hours'),
-                    ]);
+                    // Translation strings
+                    const nameRequired = '{{ __('booking.name_required') }}';
+                    const serviceRequired = '{{ __('booking.service_required') }}';
+                    const hairstyleRequired = '{{ __('booking.hairstyle_required') }}';
+                    const datetimeRequired = '{{ __('booking.datetime_required') }}';
+                    const closedSunday = '{{ __('booking.closed_sunday') }}';
+                    const businessHours = '{{ __('booking.business_hours') }}';
 
                     // Validate required fields
                     if (!nameInput.value.trim()) {
                         hasError = true;
-                        errorMessage += '• ' + translations.name_required + '\n';
+                        errorMessage += '• ' + nameRequired + '\n';
                     }
 
                     if (!serviceInput.value) {
                         hasError = true;
-                        errorMessage += '• ' + translations.service_required + '\n';
+                        errorMessage += '• ' + serviceRequired + '\n';
                     }
 
                     if (!hairstyleInput.value) {
                         hasError = true;
-                        errorMessage += '• ' + translations.hairstyle_required + '\n';
+                        errorMessage += '• ' + hairstyleRequired + '\n';
                     }
 
                     if (!dateTimeInput.value) {
                         hasError = true;
-                        errorMessage += '• ' + translations.datetime_required + '\n';
+                        errorMessage += '• ' + datetimeRequired + '\n';
                     } else {
                         // Validate business hours
                         const selectedDateTime = new Date(dateTimeInput.value);
@@ -299,12 +298,12 @@
 
                         if (dayOfWeek === 0) { // Sunday
                             hasError = true;
-                            errorMessage += '• ' + translations.closed_sunday + '\n';
+                            errorMessage += '• ' + closedSunday + '\n';
                         }
 
                         if (hours < 11 || hours >= 22) {
                             hasError = true;
-                            errorMessage += '• ' + translations.business_hours + '\n';
+                            errorMessage += '• ' + businessHours + '\n';
                         }
                     }
 

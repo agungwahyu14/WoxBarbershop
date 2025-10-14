@@ -1,6 +1,6 @@
 <footer class="footer">
     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-        <div class="flex items-center justify-start space-x-3">
+        {{-- <div class="flex items-center justify-start space-x-3">
             <div>© 2021, JustBoil.me</div>
             <div>
                 <p>Distributed By: <a href="https://themewagon.com/" target="_blank">ThemeWagon</a></p>
@@ -14,6 +14,6 @@
                 class="w-auto h-8">
                 <!-- SVG Logo -->
             </svg>
-        </a>
+        </a> --}}
     </div>
 </footer>

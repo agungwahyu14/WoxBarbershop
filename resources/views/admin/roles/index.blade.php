@@ -60,30 +60,26 @@
 @push('scripts')
     <script>
         // Translation variables
-        const translations = {
-            success: @json(__('admin.success')),
-            error: @json(__('admin.error')),
-            deleted: @json(__('admin.deleted')),
-            areYouSure: @json(__('admin.are_you_sure')),
-            deleteWarning: @json(__('admin.delete_role_warning')),
-            yesDeleteIt: @json(__('admin.yes_delete_it')),
-            somethingWentWrong: @json(__('admin.something_went_wrong')),
-            search: @json(__('admin.search')),
-            lengthMenu: @json(__('admin.show_entries')),
-            info: @json(__('admin.showing_entries')),
-            infoEmpty: @json(__('admin.showing_empty')),
-            infoFiltered: @json(__('admin.filtered_entries')),
-            zeroRecords: @json(__('admin.no_matching_roles')),
-            emptyTable: @json(__('admin.no_roles_available')),
-            loadingRecords: @json(__('admin.loading_roles')),
-            processing: @json(__('admin.processing')),
-            paginate: {
-                first: @json(__('admin.first')),
-                last: @json(__('admin.last')),
-                next: @json(__('admin.next')),
-                previous: @json(__('admin.previous'))
-            }
-        };
+        const success = '{{ __('admin.success') }}';
+        const error = '{{ __('admin.error') }}';
+        const deleted = '{{ __('admin.deleted') }}';
+        const areYouSure = '{{ __('admin.are_you_sure') }}';
+        const deleteWarning = '{{ __('admin.delete_role_warning') }}';
+        const yesDeleteIt = '{{ __('admin.yes_delete_it') }}';
+        const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+        const processing = '{{ __('admin.processing') }}';
+        const search = '{{ __('admin.search') }}';
+        const lengthMenu = '{{ __('admin.show_entries') }}';
+        const info = '{{ __('admin.showing_entries') }}';
+        const infoEmpty = '{{ __('admin.showing_empty') }}';
+        const infoFiltered = '{{ __('admin.filtered_entries') }}';
+        const noMatchingRoles = '{{ __('admin.no_matching_roles') }}';
+        const noRolesAvailable = '{{ __('admin.no_roles_available') }}';
+        const loadingRoles = '{{ __('admin.loading_roles') }}';
+        const firstPage = '{{ __('admin.first') }}';
+        const lastPage = '{{ __('admin.last') }}';
+        const nextPage = '{{ __('admin.next') }}';
+        const previousPage = '{{ __('admin.previous') }}';
 
         $(document).ready(function() {
             // Initialize DataTable with improved styling
@@ -131,22 +127,22 @@
                 // Hide default info and pagination
 
                 language: {
-                    search: translations.search,
-                    lengthMenu: translations.lengthMenu,
-                    info: translations.info,
-                    infoEmpty: translations.infoEmpty,
-                    infoFiltered: translations.infoFiltered,
-                    zeroRecords: translations.zeroRecords,
-                    emptyTable: translations.emptyTable,
-                    loadingRecords: translations.loadingRecords,
+                    search: search,
+                    lengthMenu: "_MENU_", // ✅ hanya tampil dropdown, tanpa teks "Show entries"
+                    info: info,
+                    infoEmpty: infoEmpty,
+                    infoFiltered: infoFiltered,
+                    zeroRecords: noMatchingRoles,
+                    emptyTable: noRolesAvailable,
+                    loadingRecords: loadingRoles,
                     processing: `<div class="flex items-center justify-center py-4">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="ml-2 text-gray-600 dark:text-gray-400">${translations.processing}...</span>
-                    </div>`,
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <span class="ml-2 text-gray-600 dark:text-gray-400">${processing}...</span>
+    </div>`,
                     paginate: {
                         previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
-                            translations.paginate.previous + '</span>',
-                        next: '<span class="sr-only">' + translations.paginate.next +
+                            previousPage + '</span>',
+                        next: '<span class="sr-only">' + nextPage +
                             '</span><i class="mdi mdi-chevron-right"></i>'
                     }
                 },
@@ -163,15 +159,15 @@
                 initComplete: function() {
                     // Move export buttons to custom location
                     $('.dt-buttons').appendTo('#export-buttons');
-
                 }
+
             });
 
 
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: translations.success,
+                    title: success,
                     text: '{{ session('success') }}',
                     timer: 3000,
                     showConfirmButton: false
@@ -183,13 +179,13 @@
                 const deleteUrl = '{{ route('admin.roles.destroy', ':id') }}'.replace(':id', roleId);
 
                 Swal.fire({
-                    title: translations.areYouSure,
-                    text: translations.deleteWarning,
+                    title: areYouSure,
+                    text: deleteWarning,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: translations.yesDeleteIt
+                    confirmButtonText: yesDeleteIt
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -202,7 +198,7 @@
                                 if (response.success) {
                                     Swal.fire({
                                         icon: 'success',
-                                        title: translations.deleted,
+                                        title: deleted,
                                         text: response.message,
                                         timer: 3000,
                                         showConfirmButton: false
@@ -213,9 +209,9 @@
                             error: function(xhr) {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: translations.error,
+                                    title: error,
                                     text: xhr.responseJSON?.message ||
-                                        translations.somethingWentWrong,
+                                        somethingWentWrong,
                                 });
                             }
                         });
@@ -238,7 +234,7 @@
                     success: function(response) {
                         Swal.fire({
                             icon: 'success',
-                            title: translations.success,
+                            title: success,
                             text: response.message,
                             timer: 3000,
                             showConfirmButton: false
@@ -247,14 +243,14 @@
                         });
                     },
                     error: function(xhr) {
-                        let errorMessage = xhr.responseJSON?.message || 'An error occurred.';
+                        let errorMessage = xhr.responseJSON?.message || somethingWentWrong;
                         if (xhr.responseJSON?.errors) {
                             errorMessage = Object.values(xhr.responseJSON.errors).join('<br>');
                         }
 
                         Swal.fire({
                             icon: 'error',
-                            title: translations.error,
+                            title: error,
                             html: errorMessage,
                         });
                     }

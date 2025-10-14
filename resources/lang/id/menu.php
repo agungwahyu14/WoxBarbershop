@@ -12,8 +12,8 @@ return [
     'products' => 'Produk',
     'transactions' => 'Transaksi',
     'payments' => 'Pembayaran',
-    'feedback' => 'Feedback',
-    'feedbacks' => 'Feedback',
+    'feedback' => 'Umpan balik ',
+    'feedbacks' => 'Umpan balik ',
     'reviews' => 'Ulasan',
     'reports' => 'Laporan',
     'analytics' => 'Analitik',
@@ -22,7 +22,7 @@ return [
     'general' => 'Umum',
     'management' => 'Manajemen',
     'hairstyle_score' => 'Skor Gaya Rambut',
-    'backup_restore' => 'Backup & Restore',
+    'backup_restore' => 'Cadangkan & Pulihkan',
     'roles' => 'Peran',
     'loyalty' => 'Kesetiaan',
     
@@ -77,8 +77,8 @@ return [
     'payment_methods' => 'Metode Pembayaran',
     
     // Feedback Menu
-    'feedback_management' => 'Manajemen Feedback',
-    'all_feedback' => 'Semua Feedback',
+    'feedback_management' => 'Manajemen Umpan balik ',
+    'all_feedback' => 'Semua Umpan balik ',
     'customer_reviews' => 'Ulasan Pelanggan',
     'ratings' => 'Rating',
     'testimonials' => 'Testimoni',

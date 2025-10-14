@@ -862,4 +862,66 @@ return [
     'restore_error' => 'An error occurred during restore',
     'backup_full_desc' => 'full backup (database + files)',
     'backup_partial_desc' => 'database backup only',
+    
+    // Basic status messages
+    'success' => 'Success',
+    'deleted' => 'Deleted',
+    
+    // Pagination
+    'first' => 'First',
+    'last' => 'Last', 
+    'next' => 'Next',
+    'previous' => 'Previous',
+    
+    // DataTables
+    'search' => 'Search:',
+    'showing_empty' => 'Showing 0 to 0 of 0 entries',
+    'filtered_entries' => '(filtered from :max total entries)',
+    
+    // Users specific
+    'loading_users' => 'Loading users...',
+    'no_matching_users' => 'No matching users found',
+    'no_users_available' => 'No users available',
+    'reset_loyalty_title' => 'Reset Loyalty Points?',
+    'reset_loyalty_text' => 'Are you sure you want to reset :points loyalty points for :name? Customer will get a free haircut.',
+    'yes_reset_it' => 'Yes, Reset Points!',
+    'loyalty_reset_success' => 'Points Reset Successfully!',
+    'loyalty_reset_failed' => 'Failed to Reset Points',
+    
+    // Services specific
+    'loading_services' => 'Loading services...',
+    'no_matching_services' => 'No matching services found',
+    'no_services_available' => 'No services available',
+    
+    // Bookings specific
+    'loading_bookings' => 'Loading bookings...',
+    'no_matching_bookings' => 'No matching bookings found',
+    'no_bookings_available' => 'No bookings available',
+    
+    // Products specific
+    'loading_products' => 'Loading products...',
+    'no_matching_products' => 'No matching products found',
+    'no_products_available' => 'No products available',
+    'delete_product_warning' => "You won't be able to revert this!",
+    
+    // Hairstyles specific
+    'loading_hairstyles' => 'Loading hairstyles...',
+    'no_matching_hairstyles' => 'No matching hairstyles found',
+    'no_hairstyles_available' => 'No hairstyles available',
+    
+    // Hairstyle Scores specific
+    'hairstyle_scores' => 'Hairstyle Scores',
+    'manage_hairstyle_scores' => 'Manage evaluation scores for hairstyles',
+    'add_score' => 'Add Score',
+    'loading_scores' => 'Loading scores...',
+    'no_matching_scores' => 'No matching scores found',
+    'no_scores_available' => 'No scores available',
+    
+    // Roles specific
+    'roles' => 'Roles',
+    'manage_roles' => 'Manage user roles and permissions',
+    'add_role' => 'Add Role',
+    'loading_roles' => 'Loading roles...',
+    'no_matching_roles' => 'No matching roles found',
+    'no_roles_available' => 'No roles available',
 ];

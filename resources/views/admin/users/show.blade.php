@@ -21,17 +21,17 @@
 
             <!-- Right: Action Buttons -->
             <div class="flex flex-wrap gap-3 justify-center md:justify-end">
-                <a href="{{ route('admin.users.edit', $user) }}"
+                {{-- <a href="{{ route('admin.users.edit', $user) }}"
                     class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                     <i class="fas fa-edit mr-2"></i>{{ __('admin.edit_user_btn') }}
-                </a>
+                </a> --}}
 
                 <a href="{{ route('admin.users.index') }}"
                     class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                     <i class="fas fa-arrow-left mr-2"></i>{{ __('admin.back_to_users_btn') }}
                 </a>
 
-                @if ($user->is_active ?? true)
+                {{-- @if ($user->is_active ?? true)
                     <button type="button" onclick="toggleUserStatus('deactivate')"
                         class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-user-slash mr-2"></i>{{ __('admin.deactivate_account_btn') }}
@@ -41,7 +41,7 @@
                         class="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200">
                         <i class="fas fa-user-check mr-2"></i>{{ __('admin.activate_account_btn') }}
                     </button>
-                @endif
+                @endif --}}
             </div>
         </div>
     </div>

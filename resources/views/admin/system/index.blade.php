@@ -260,8 +260,8 @@
                                 </ul>
                             </div>
                             <div class="bg-gray-50 rounded-lg p-3">
-                                <p class="text-sm"><strong>${translations.file_label}:</strong> ${fileName}</p>
-                                <p class="text-sm"><strong>${translations.size_label}:</strong> ${fileSize} MB</p>
+                                <p class="text-sm">${translations.file_label}: ${fileName}</p>
+                                <p class="text-sm">${translations.size_label}: ${fileSize} MB</p>
                             </div>
                         </div>
                     `,

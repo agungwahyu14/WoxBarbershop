@@ -90,7 +90,7 @@
                     </div>
 
                     <!-- Booking Info -->
-                    <div class="mb-6 p-4 bg-gray-50 rounded-md border border-gray-200">
+                    {{-- <div class="mb-6 p-4 bg-gray-50 rounded-md border border-gray-200">
                         <h4 class="text-sm font-medium text-gray-700 mb-3">{{ __('feedback.related_booking') }}</h4>
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div>
@@ -113,7 +113,7 @@
                                     class="ml-2 text-gray-900">{{ $feedback->booking->booking_time ?? __('feedback.not_available') }}</span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Actions -->
                     <div class="flex justify-between items-center">

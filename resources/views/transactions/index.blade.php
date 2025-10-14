@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
 
-                                {{-- Payment Method --}}
+                                {{-- Payment Method --}} 
                                 <div class="mb-4">
                                     <div class="flex items-center justify-between">
                                         <span class="text-sm text-gray-600">{{ __('transactions.payment_method') }}:</span>

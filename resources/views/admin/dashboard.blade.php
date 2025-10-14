@@ -209,7 +209,7 @@
             </div>
         </div>
         <!-- Analytics and Charts Section -->
-        <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
+        {{-- <div class="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-8">
             <!-- Booking Status Chart -->
             <div class="card">
                 <header class="card-header bg-gradient-to-r from-blue-50 to-indigo-50">
@@ -245,7 +245,7 @@
                     <canvas id="revenueChart" width="400" height="200"></canvas>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Analytics Categories -->
         <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-8">

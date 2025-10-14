@@ -171,24 +171,37 @@
     @push('scripts')
         <script>
             // Translation variables
-            const translations = {
-                success: @json(__('admin.success')),
-                error: @json(__('admin.error')),
-                confirm: @json(__('admin.confirm')),
-                cancel: @json(__('admin.cancel')),
-                yes: @json(__('admin.yes')),
-                no: @json(__('admin.no')),
-                confirmBooking: @json(__('admin.confirm_booking')),
-                startService: @json(__('admin.start_service')),
-                completeService: @json(__('admin.complete_service')),
-                cancelBooking: @json(__('admin.cancel_booking')),
-                confirmBookingMessage: @json(__('admin.confirm_booking_message')),
-                startServiceMessage: @json(__('admin.start_service_message')),
-                completeServiceMessage: @json(__('admin.complete_service_message')),
-                cancelBookingMessage: @json(__('admin.cancel_booking_message')),
-                processing: @json(__('admin.processing')),
-                errorOccurred: @json(__('admin.error_occurred'))
-            };
+            const success = '{{ __('admin.success') }}';
+            const error = '{{ __('admin.error') }}';
+            const deleted = '{{ __('admin.deleted') }}';
+            const areYouSure = '{{ __('admin.are_you_sure') }}';
+            const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+            const processing = '{{ __('admin.processing') }}';
+            const search = '{{ __('admin.search') }}';
+            const lengthMenu = '{{ __('admin.show_entries') }}';
+            const info = '{{ __('admin.showing_entries') }}';
+            const infoEmpty = '{{ __('admin.showing_empty') }}';
+            const infoFiltered = '{{ __('admin.filtered_entries') }}';
+            const noMatchingBookings = '{{ __('admin.no_matching_bookings') }}';
+            const noBookingsAvailable = '{{ __('admin.no_bookings_available') }}';
+            const loadingBookings = '{{ __('admin.loading_bookings') }}';
+            const firstPage = '{{ __('admin.first') }}';
+            const lastPage = '{{ __('admin.last') }}';
+            const nextPage = '{{ __('admin.next') }}';
+            const previousPage = '{{ __('admin.previous') }}';
+            const confirm = '{{ __('admin.confirm') }}';
+            const cancel = '{{ __('admin.cancel') }}';
+            const yes = '{{ __('admin.yes') }}';
+            const no = '{{ __('admin.no') }}';
+            const confirmBookingText = '{{ __('admin.confirm_booking') }}';
+            const startServiceText = '{{ __('admin.start_service') }}';
+            const completeServiceText = '{{ __('admin.complete_service') }}';
+            const cancelBookingText = '{{ __('admin.cancel_booking') }}';
+            const confirmBookingMessage = '{{ __('admin.confirm_booking_message') }}';
+            const startServiceMessage = '{{ __('admin.start_service_message') }}';
+            const completeServiceMessage = '{{ __('admin.complete_service_message') }}';
+            const cancelBookingMessage = '{{ __('admin.cancel_booking_message') }}';
+            const errorOccurred = '{{ __('admin.error_occurred') }}';
 
             $(document).ready(function() {
                 // Enhanced DataTable configuration
@@ -282,20 +295,23 @@
                         },
                     ],
                     language: {
-
-                        info: "Showing _START_ to _END_ of _TOTAL_ bookings",
-                        infoEmpty: "No bookings found",
-                        zeroRecords: "No matching bookings found",
-                        emptyTable: "No bookings available",
-                        processing: `
-                    <div class="flex items-center justify-center py-8">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                        <span class="ml-4 text-gray-600 text-lg">Loading bookings...</span>
-                    </div>
-                `,
+                        search: search,
+                        lengthMenu: "_MENU_", // ✅ tampil dropdown saja tanpa teks
+                        info: info,
+                        infoEmpty: infoEmpty,
+                        infoFiltered: infoFiltered,
+                        zeroRecords: noMatchingBookings,
+                        emptyTable: noBookingsAvailable,
+                        loadingRecords: loadingBookings,
+                        processing: `<div class="flex items-center justify-center py-8">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <span class="ml-4 text-gray-600 text-lg">${processing}...</span>
+    </div>`,
                         paginate: {
-                            previous: '<i class="fas fa-chevron-left"></i>',
-                            next: '<i class="fas fa-chevron-right"></i>'
+                            previous: '<i class="fas fa-chevron-left"></i><span class="sr-only">' +
+                                previousPage + '</span>',
+                            next: '<span class="sr-only">' + nextPage +
+                                '</span><i class="fas fa-chevron-right"></i>'
                         }
                     },
                     pageLength: 25,
@@ -481,48 +497,48 @@
 
                 // Success notification
                 @if (session('success'))
-                    showNotification('success', translations.success, '{{ session('success') }}');
+                    showNotification('success', success, '{{ session('success') }}');
                 @endif
 
                 // Error notification
                 @if (session('error'))
-                    showNotification('error', translations.error, '{{ session('error') }}');
+                    showNotification('error', error, '{{ session('error') }}');
                 @endif
             });
 
             // Booking status update functions
             function confirmBooking(bookingId) {
-                updateBookingStatus(bookingId, 'confirmed', translations.confirmBookingMessage);
+                updateBookingStatus(bookingId, 'confirmed', confirmBookingMessage);
             }
 
             function startService(bookingId) {
-                updateBookingStatus(bookingId, 'in_progress', translations.startServiceMessage);
+                updateBookingStatus(bookingId, 'in_progress', startServiceMessage);
             }
 
             function completeService(bookingId) {
-                updateBookingStatus(bookingId, 'completed', translations.completeServiceMessage);
+                updateBookingStatus(bookingId, 'completed', completeServiceMessage);
             }
 
             function cancelBooking(bookingId) {
-                updateBookingStatus(bookingId, 'cancelled', translations.cancelBookingMessage);
+                updateBookingStatus(bookingId, 'cancelled', cancelBookingMessage);
             }
 
             function updateBookingStatus(bookingId, status, action) {
                 Swal.fire({
-                    title: translations.confirm,
-                    text: `${translations.confirm} ${action}?`,
+                    title: confirm,
+                    text: `${confirm} ${action}?`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#d4af37',
                     cancelButtonColor: '#aaa',
-                    confirmButtonText: translations.yes,
-                    cancelButtonText: translations.cancel
+                    confirmButtonText: yes,
+                    cancelButtonText: cancel
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Show loading
                         Swal.fire({
-                            title: translations.processing,
-                            text: translations.processing + '...',
+                            title: processing,
+                            text: processing + '...',
                             allowOutsideClick: false,
                             didOpen: () => {
                                 Swal.showLoading()
@@ -551,7 +567,7 @@
                                 console.log('Response data:', data);
                                 Swal.close();
                                 if (data.success) {
-                                    showNotification('success', translations.success, data.message);
+                                    showNotification('success', success, data.message);
                                     // Reload DataTable instead of whole page for better UX
                                     if (typeof table !== 'undefined' && table.ajax) {
                                         table.ajax.reload(null, false); // Keep pagination
@@ -561,15 +577,14 @@
                                     // Update statistics
                                     updateStatistics();
                                 } else {
-                                    showNotification('error', translations.error, data.message || translations
-                                        .errorOccurred);
+                                    showNotification('error', error, data.message || errorOccurred);
                                 }
                             })
                             .catch(error => {
                                 Swal.close();
                                 console.error('Error details:', error);
-                                showNotification('error', translations.error,
-                                    translations.errorOccurred + ': ' + error.message);
+                                showNotification('error', error,
+                                    errorOccurred + ': ' + error.message);
                             });
                     }
                 });

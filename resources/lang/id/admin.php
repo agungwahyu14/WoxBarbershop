@@ -31,16 +31,16 @@ return [
     'customers' => 'Pelanggan',
     'customer' => 'Pelanggan',
     'transactions' => 'Transaksi',
-    'bookings' => 'Booking',
+    'bookings' => 'Pemesanan',
     'pending' => 'tertunda',
     'popular_service' => 'Layanan Terpopuler',
-    'today_bookings' => 'Booking Hari Ini',
+    'today_bookings' => 'Pemesanan Hari Ini',
     'last_updated' => 'Terakhir diperbarui',
     'no' => 'No',
     'service' => 'Layanan',
     'time' => 'Waktu',
     'total' => 'Total',
-    'no_bookings_today' => 'Belum ada booking hari ini',
+    'no_bookings_today' => 'Belum ada pemesanan hari ini',
     
     // CRUD Operations
     'create' => 'Buat',
@@ -233,12 +233,12 @@ return [
     'no_matching_users' => 'Tidak ada pengguna yang sesuai',
     'no_users_available' => 'Tidak ada pengguna tersedia',
     
-    // Bookings
-    'booking_page_title' => 'Booking',
+// Bookings
+    'booking_page_title' => 'Pemesanan',
     'booking_page_subtitle' => 'Kelola semua janji temu dan reservasi pelanggan',
-    'todays_bookings' => 'Booking Hari Ini',
+    'todays_bookings' => 'Pemesanan Hari Ini',
     'pending_approval' => 'Menunggu Persetujuan',
-    'completed_bookings' => 'Booking Selesai',
+    'completed_bookings' => 'Pemesanan Selesai',
     'total_revenue' => 'Total Pendapatan',
     
     // Status Labels
@@ -331,10 +331,10 @@ return [
     'dashboard_title' => 'Dashboard Admin',
     'dashboard_subtitle' => 'Selamat datang di panel administrasi WOX Barbershop',
     'total_users' => 'Total Pengguna',
-    'total_bookings' => 'Total Booking',
+    'total_bookings' => 'Total Pemesanan',
     'total_services' => 'Total Layanan',
     'monthly_revenue' => 'Pendapatan Bulan Ini',
-    'recent_bookings' => 'Booking Terbaru',
+    'recent_bookings' => 'Pemesanan Terbaru',
     'quick_actions' => 'Aksi Cepat',
     'system_overview' => 'Gambaran Sistem',
     
@@ -518,10 +518,10 @@ return [
     // Dashboard Additional Keys
     'customers' => 'Pelanggan',
     'transactions' => 'Transaksi',
-    'bookings' => 'Booking',
+    'bookings' => 'Pemesanan',
     'pending' => 'Tertunda',
     'popular_service' => 'Layanan Populer',
-    'today_bookings' => 'Booking Hari Ini',
+    'today_bookings' => 'Pemesanan Hari Ini',
     'last_updated' => 'Terakhir diperbarui',
     'no' => 'No',
     'customer' => 'Pelanggan',
@@ -529,7 +529,7 @@ return [
     'time' => 'Waktu',
     
     // Additional columns
-    'booking_column' => 'Booking',
+    'booking_column' => 'Pemesanan',
     'visibility_column' => 'Visibilitas',
     'date_column' => 'Tanggal',
     
@@ -563,14 +563,14 @@ return [
     'time_label' => 'Waktu',
     
     // Dashboard Charts & Analytics
-    'booking_status_chart' => 'Status Booking',
+    'booking_status_chart' => 'Status Pemesanan',
     'monthly_revenue_trend' => 'Tren Pendapatan Bulanan',
     'financial_reports' => 'Laporan Keuangan',
     'revenue_analysis' => 'Analisis pendapatan dan transaksi',
     'daily_revenue' => 'Pendapatan Hari Ini',
     'monthly_revenue' => 'Pendapatan Bulan Ini',
-    'booking_analysis' => 'Analisis Booking',
-    'booking_status_trends' => 'Status dan tren booking',
+    'booking_analysis' => 'Analisis Pemesanan',
+    'booking_status_trends' => 'Status dan tren pemesanan',
     'customer_data' => 'Data Pelanggan',
     'customer_statistics' => 'Statistik pelanggan',
     'new_customers' => 'Pelanggan Baru',
@@ -579,10 +579,10 @@ return [
     // Export Section
     'export_data_reports' => 'Ekspor Data & Laporan',
     'export_financial' => 'Ekspor Keuangan',
-    'export_bookings' => 'Ekspor Booking',
+    'export_bookings' => 'Ekspor Pemesanan',
     'export_customers' => 'Ekspor Pelanggan',
     'export_financial_report' => 'Ekspor Laporan Keuangan',
-    'export_booking_report' => 'Ekspor Laporan Booking',
+    'export_booking_report' => 'Ekspor Laporan Pemesanan',
     'export_customer_report' => 'Ekspor Laporan Pelanggan',
     
     // Export Modal
@@ -673,7 +673,7 @@ return [
     'assigned_roles' => 'Peran yang Ditetapkan',
     'no_roles_assigned' => 'Tidak ada peran yang ditetapkan',
     'account_statistics' => 'Statistik Akun',
-    'total_bookings' => 'Total Booking',
+    'total_bookings' => 'Total Pemesanan',
     'days_as_member' => 'Hari sebagai Member',
     
     // Form Validation Messages
@@ -712,10 +712,10 @@ return [
     'delete_failed' => 'Gagal menghapus pengguna',
     
     // Booking Management
-    'booking_details' => 'Detail Booking',
-    'manage_booking' => 'Kelola booking',
+    'booking_details' => 'Detail Pemesanan',
+    'manage_booking' => 'Kelola pemesanan',
     'unknown_customer' => 'Pelanggan Tidak Dikenal',
-    'booking_overview' => 'Ringkasan Booking',
+    'booking_overview' => 'Ringkasan Pemesanan',
     'appointment' => 'Janji Temu',
     'queue_position' => 'Posisi Antrian',
     'total_amount' => 'Total Biaya',
@@ -727,13 +727,13 @@ return [
     'hair_type' => 'Tipe Rambut',
     'style_preference' => 'Preferensi Gaya',
     'customer_information' => 'Informasi Pelanggan',
-    'confirm_booking' => 'Konfirmasi Booking',
+    'confirm_booking' => 'Konfirmasi Pemesanan',
     'start_service' => 'Mulai Layanan',
     'complete_service' => 'Selesaikan Layanan',
-    'cancel_booking' => 'Batalkan Booking',
-    'back_to_bookings' => 'Kembali ke Booking',
-    'booking_export' => 'Export Booking',
-    'booking_name' => 'Nama Booking',
+    'cancel_booking' => 'Batalkan Pemesanan',
+    'back_to_bookings' => 'Kembali ke Pemesanan',
+    'booking_export' => 'Export Pemesanan',
+    'booking_name' => 'Nama Pemesanan',
     'contact' => 'Kontak',
     'hairstyle' => 'Gaya Rambut',
     'date_time' => 'Tanggal & Waktu',
@@ -741,18 +741,18 @@ return [
     'status' => 'Status',
     
     // Booking Action Messages
-    'confirm_booking_message' => 'konfirmasi booking ini',
-    'start_service_message' => 'mulai layanan untuk booking ini',
-    'complete_service_message' => 'tandai booking ini sebagai selesai',
-    'cancel_booking_message' => 'batalkan booking ini',
+    'confirm_booking_message' => 'konfirmasi pemesanan ini',
+    'start_service_message' => 'mulai layanan untuk pemesanan ini',
+    'complete_service_message' => 'tandai pemesanan ini sebagai selesai',
+    'cancel_booking_message' => 'batalkan pemesanan ini',
     'processing' => 'Memproses',
     'error_occurred' => 'Terjadi kesalahan',
     
     // Feedback Management
-    'feedbacks_page_title' => 'Feedback Pelanggan',
-    'feedbacks_page_subtitle' => 'Kelola dan tinjau feedback serta rating pelanggan',
-    'feedback_details' => 'Detail Feedback',
-    'feedback_details_subtitle' => 'Lihat detail feedback dan rating pelanggan',
+    'feedbacks_page_title' => 'Umpan Balik Pelanggan',
+    'feedbacks_page_subtitle' => 'Kelola dan tinjau umpan balik serta rating pelanggan',
+    'feedback_details' => 'Detail Umpan Balik',
+    'feedback_details_subtitle' => 'Lihat detail umpan balik dan rating pelanggan',
     'customer_rating' => 'Rating Pelanggan',
     'excellent_service' => 'Layanan Sangat Baik',
     'good_service' => 'Layanan Baik',
@@ -761,11 +761,11 @@ return [
     'poor_service' => 'Layanan Buruk',
     'customer_information' => 'Informasi Pelanggan',
     'customer_info_not_available' => 'Informasi pelanggan tidak tersedia',
-    'booking_information' => 'Informasi Booking',
-    'booking_id' => 'ID Booking',
-    'booking_date' => 'Tanggal Booking',
+    'booking_information' => 'Informasi Pemesanan',
+    'booking_id' => 'ID Pemesanan',
+    'booking_date' => 'Tanggal Pemesanan',
     'not_scheduled' => 'Tidak dijadwalkan',
-    'no_booking_info_available' => 'Tidak ada informasi booking tersedia',
+    'no_booking_info_available' => 'Tidak ada informasi pemesanan tersedia',
     'feedback_content' => 'Konten Feedback',
     'no_written_feedback' => 'Tidak ada feedback tertulis',
     'rating_only_feedback' => 'Pelanggan hanya memberikan rating',
@@ -786,7 +786,7 @@ return [
     
     // Feedback Table Columns
     'customer_column' => 'Pelanggan',
-    'booking_column' => 'Booking',
+    'booking_column' => 'Pemesanan',
     'rating_column' => 'Rating',
     'comment_column' => 'Komentar',
     'visibility_column' => 'Visibilitas',
@@ -821,9 +821,9 @@ return [
     'backup_full' => 'Backup Lengkap (Database + File)',
     'backup_partial' => 'Backup Data Saja',
     'restore_database' => 'Restore Database',
-    'restore_description' => 'Pulihkan database dari file backup. <strong>Perhatian:</strong> Ini akan mengganti semua data yang ada.',
+    'restore_description' => 'Pulihkan database dari file backup. Perhatian: Ini akan mengganti semua data yang ada.',
     'select_backup_file' => 'Pilih File Backup (.sql, .zip)',
-    'restore_warning' => '<strong>Peringatan:</strong> Proses restore akan menghapus semua data saat ini!',
+    'restore_warning' => 'Peringatan: Proses restore akan menghapus semua data saat ini!',
     'backup_history' => 'Riwayat Backup Terbaru',
     'no_backup_history' => 'Belum ada riwayat backup',
     'first_backup_message' => 'Backup pertama akan muncul di sini',
@@ -843,7 +843,7 @@ return [
     'select_backup_first' => 'Silakan pilih file backup terlebih dahulu',
     'important_warning' => 'PERINGATAN PENTING!',
     'restore_warning_text' => 'Proses ini akan menghapus SEMUA data yang ada!',
-    'data_will_be_replaced' => 'Semua data user, booking, dan transaksi akan diganti',
+    'data_will_be_replaced' => 'Semua data user, pemesanan, dan transaksi akan diganti',
     'changes_irreversible' => 'Perubahan ini TIDAK dapat dibatalkan',
     'ensure_current_backup' => 'Pastikan Anda memiliki backup data saat ini',
     'file_label' => 'File',
@@ -859,4 +859,66 @@ return [
     'restore_error' => 'Terjadi kesalahan saat melakukan restore',
     'backup_full_desc' => 'backup lengkap (database + file)',
     'backup_partial_desc' => 'backup data saja',
+    
+    // Pesan status dasar
+    'success' => 'Berhasil',
+    'deleted' => 'Dihapus',
+    
+    // Paginasi
+    'first' => 'Pertama',
+    'last' => 'Terakhir',
+    'next' => 'Berikutnya', 
+    'previous' => 'Sebelumnya',
+    
+    // DataTables
+    'search' => 'Cari:',
+    'showing_empty' => 'Menampilkan 0 sampai 0 dari 0 entri',
+    'filtered_entries' => '(difilter dari :max total entri)',
+    
+    // Users specific
+    'loading_users' => 'Memuat pengguna...',
+    'no_matching_users' => 'Tidak ada pengguna yang cocok',
+    'no_users_available' => 'Tidak ada pengguna tersedia',
+    'reset_loyalty_title' => 'Reset Poin Loyalty?',
+    'reset_loyalty_text' => 'Apakah Anda yakin ingin mereset :points poin loyalty milik :name? Pelanggan akan mendapat potong gratis.',
+    'yes_reset_it' => 'Ya, Reset Poin!',
+    'loyalty_reset_success' => 'Poin Berhasil Direset!',
+    'loyalty_reset_failed' => 'Gagal Reset Poin',
+    
+    // Services specific
+    'loading_services' => 'Memuat layanan...',
+    'no_matching_services' => 'Tidak ada layanan yang cocok',
+    'no_services_available' => 'Tidak ada layanan tersedia',
+    
+    // Bookings specific
+    'loading_bookings' => 'Memuat pemesanan...',
+    'no_matching_bookings' => 'Tidak ada pemesanan yang cocok',
+    'no_bookings_available' => 'Tidak ada pemesanan tersedia',
+    
+    // Products specific
+    'loading_products' => 'Memuat produk...',
+    'no_matching_products' => 'Tidak ada produk yang cocok',
+    'no_products_available' => 'Tidak ada produk tersedia',
+    'delete_product_warning' => 'Anda tidak akan bisa mengembalikannya!',
+    
+    // Hairstyles specific
+    'loading_hairstyles' => 'Memuat gaya rambut...',
+    'no_matching_hairstyles' => 'Tidak ada gaya rambut yang cocok',
+    'no_hairstyles_available' => 'Tidak ada gaya rambut tersedia',
+    
+    // Hairstyle Scores specific
+    'hairstyle_scores' => 'Skor Gaya Rambut',
+    'manage_hairstyle_scores' => 'Kelola skor evaluasi untuk gaya rambut',
+    'add_score' => 'Tambah Skor',
+    'loading_scores' => 'Memuat skor...',
+    'no_matching_scores' => 'Tidak ada skor yang cocok',
+    'no_scores_available' => 'Tidak ada skor tersedia',
+    
+    // Roles specific
+    'roles' => 'Peran',
+    'manage_roles' => 'Kelola peran pengguna dan izin',
+    'add_role' => 'Tambah Peran',
+    'loading_roles' => 'Memuat peran...',
+    'no_matching_roles' => 'Tidak ada peran yang cocok',
+    'no_roles_available' => 'Tidak ada peran tersedia',
 ];

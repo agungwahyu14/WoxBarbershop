@@ -85,19 +85,39 @@
 
 @push('scripts')
     <script>
+        // Translation variables
+        const success = '{{ __('admin.success') }}';
+        const error = '{{ __('admin.error') }}';
+        const deleted = '{{ __('admin.deleted') }}';
+        const areYouSure = '{{ __('admin.are_you_sure') }}';
+        const deleteWarning = '{{ __('admin.delete_user_warning') }}';
+        const yesDeleteIt = '{{ __('admin.yes_delete_it') }}';
+        const somethingWentWrong = '{{ __('admin.something_went_wrong') }}';
+        const processing = '{{ __('admin.processing') }}';
+        const search = '{{ __('admin.search') }}';
+        const lengthMenu = '{{ __('admin.show_entries') }}';
+        const info = '{{ __('admin.showing_entries') }}';
+        const infoEmpty = '{{ __('admin.showing_empty') }}';
+        const infoFiltered = '{{ __('admin.filtered_entries') }}';
+        const noMatchingUsers = '{{ __('admin.no_matching_users') }}';
+        const noUsersAvailable = '{{ __('admin.no_users_available') }}';
+        const loadingUsers = '{{ __('admin.loading_users') }}';
+        const firstPage = '{{ __('admin.first') }}';
+        const lastPage = '{{ __('admin.last') }}';
+        const nextPage = '{{ __('admin.next') }}';
+        const previousPage = '{{ __('admin.previous') }}';
+        const successTitle = '{{ __('admin.success_title') }}';
+        const errorTitle = '{{ __('admin.error_title') }}';
+        const deletedSuccessTitle = '{{ __('admin.deleted_success_title') }}';
+        const userDeletedSuccessfully = '{{ __('admin.user_deleted_successfully') }}';
+        const cancel = '{{ __('admin.cancel') }}';
+        const resetLoyaltyTitle = '{{ __('admin.reset_loyalty_title') }}';
+        const resetLoyaltyText = '{{ __('admin.reset_loyalty_text') }}';
+        const yesResetIt = '{{ __('admin.yes_reset_it') }}';
+        const loyaltyResetSuccess = '{{ __('admin.loyalty_reset_success') }}';
+        const loyaltyResetFailed = '{{ __('admin.loyalty_reset_failed') }}';
+
         $(document).ready(function() {
-            // Translation variables
-            const translations = {
-                success_title: @json(__('admin.success_title')),
-                are_you_sure: @json(__('admin.are_you_sure')),
-                delete_user_warning: @json(__('admin.delete_user_warning')),
-                yes_delete_it: @json(__('admin.yes_delete_it')),
-                cancel: @json(__('admin.cancel')),
-                deleted_success_title: @json(__('admin.deleted_success_title')),
-                user_deleted_successfully: @json(__('admin.user_deleted_successfully')),
-                error: @json(__('admin.error')),
-                delete_failed: @json(__('admin.delete_failed'))
-            };
 
             // Setup CSRF token for all Ajax requests
             $.ajaxSetup({
@@ -156,41 +176,32 @@
                     }
                 ],
                 language: {
-                    info: "{{ __('admin.showing_entries') }}",
-                    infoEmpty: "{{ __('admin.no_users_found') }}",
-                    zeroRecords: "{{ __('admin.no_matching_users') }}",
-                    emptyTable: "{{ __('admin.no_users_available') }}",
+                    search: search,
+                    info: info,
+                    infoEmpty: infoEmpty,
+                    infoFiltered: infoFiltered,
+                    zeroRecords: noMatchingUsers,
+                    emptyTable: noUsersAvailable,
+                    loadingRecords: loadingUsers,
+                    processing: `<div class="flex items-center justify-center ">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span class="ml-2 text-gray-600 dark:text-gray-400">${processing}...</span>
+        </div>`,
+                    paginate: {
+                        previous: '<i class="mdi mdi-chevron-left"></i><span class="sr-only">' +
+                            previousPage + '</span>',
+                        next: '<span class="sr-only">' + nextPage +
+                            '</span><i class="mdi mdi-chevron-right"></i>'
+                    },
+                    lengthMenu: "_MENU_" // ⬅️ ini menampilkan hanya dropdown-nya tanpa teks
                 },
                 responsive: true,
                 pageLength: 10,
                 order: [
                     [1, 'asc']
-                ],
-                dom: '<"flex flex-col md:flex-row justify-between items-center mb-6"lf>rt<"flex flex-col md:flex-row justify-between items-center mt-6"ip>',
-                initComplete: function() {
-                    // Style DataTable elements
-                    $('.dataTables_filter input').addClass(
-                        'border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-80 text-base'
-                    );
-                    $('.dataTables_length select').addClass(
-                        'border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base'
-                    );
-                    $('.dataTables_paginate .paginate_button').addClass(
-                        'px-4 py-2 mx-1 rounded-lg text-base font-medium');
-                    $('.dataTables_paginate .current').addClass('bg-blue-600 text-white');
-                    $('.dataTables_info').addClass('text-gray-600 dark:text-gray-400 text-base');
-
-                    // Add hover effect to table rows
-                    $('#users-table tbody tr').hover(
-                        function() {
-                            $(this).addClass('bg-gray-50 dark:bg-gray-700/50');
-                        },
-                        function() {
-                            $(this).removeClass('bg-gray-50 dark:bg-gray-700/50');
-                        }
-                    );
-                }
+                ]
             });
+
 
             // Filter event listeners
             $('#monthFilter, #yearFilter, #statusFilter').on('change', function() {
@@ -209,7 +220,7 @@
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: translations.success_title,
+                    title: successTitle,
                     text: '{{ session('success') }}',
                     timer: 3000,
                     showConfirmButton: false,
@@ -227,13 +238,13 @@
                 const deleteUrl = '{{ route('admin.users.destroy', ':id') }}'.replace(':id', userId);
 
                 Swal.fire({
-                    title: translations.are_you_sure,
-                    text: translations.delete_user_warning,
+                    title: areYouSure,
+                    text: deleteWarning,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: translations.yes_delete_it,
+                    confirmButtonText: yesDeleteIt,
                     customClass: {
                         popup: 'swal2-desktop-popup',
                         title: 'text-xl',
@@ -252,9 +263,9 @@
                             success: function(response) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: translations.deleted_success_title,
-                                    text: response.message || translations
-                                        .user_deleted_successfully,
+                                    title: deletedSuccessTitle,
+                                    text: response.message ||
+                                        userDeletedSuccessfully,
                                     timer: 3000,
                                     showConfirmButton: false,
                                     toast: true,
@@ -268,9 +279,9 @@
                             error: function(xhr) {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: translations.error_title,
+                                    title: errorTitle,
                                     text: xhr.responseJSON?.message ||
-                                        translations.something_went_wrong,
+                                        somethingWentWrong,
                                     toast: true,
                                     position: 'top-end',
                                     customClass: {
@@ -292,14 +303,14 @@
                     userId);
 
                 Swal.fire({
-                    title: 'Reset Poin Loyalty?',
-                    text: `Apakah Anda yakin ingin mereset ${points} poin loyalty milik ${userName}? Pelanggan akan mendapat potong gratis.`,
+                    title: resetLoyaltyTitle,
+                    text: resetLoyaltyText.replace(':points', points).replace(':name', userName),
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#f59e0b',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Ya, Reset Poin!',
-                    cancelButtonText: 'Batal',
+                    confirmButtonText: yesResetIt,
+                    cancelButtonText: cancel,
                     customClass: {
                         popup: 'swal2-desktop-popup',
                         title: 'text-xl',
@@ -318,7 +329,7 @@
                             success: function(response) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Poin Berhasil Direset!',
+                                    title: loyaltyResetSuccess,
                                     text: response.message,
                                     timer: 4000,
                                     showConfirmButton: false,
@@ -333,9 +344,9 @@
                             error: function(xhr) {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Gagal Reset Poin',
+                                    title: loyaltyResetFailed,
                                     text: xhr.responseJSON?.message ||
-                                        'Terjadi kesalahan saat mereset poin',
+                                        somethingWentWrong,
                                     toast: true,
                                     position: 'top-end',
                                     customClass: {
