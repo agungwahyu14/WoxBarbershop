@@ -131,7 +131,7 @@
 
                 language: {
                     search: search,
-                    lengthMenu: lengthMenu,
+                    lengthMenu: "_MENU_",
                     info: info,
                     infoEmpty: infoEmpty,
                     infoFiltered: infoFiltered,

@@ -6,7 +6,7 @@
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                     <i class="fas fa-plus mr-3"></i>
-                    {{ __('admin.add_product_title') }}
+                    {{ __('admin.create') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     {{ __('admin.add_product_subtitle') }}
@@ -42,7 +42,7 @@
                             <!-- Product Name -->
                             <div>
                                 <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                                    <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.name') }}
+                                    <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.product_name') }}
                                     <span class="text-red-500">{{ __('admin.required') }}</span>
                                 </label>
                                 <input type="text" id="name" name="name" value="{{ old('name') }}" required

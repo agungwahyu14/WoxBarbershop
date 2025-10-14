@@ -268,7 +268,7 @@
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
                         <i class="fas fa-cogs mr-3 text-green-600"></i>
-                        {{ __('admin.actions') }}
+                        {{ __('admin.actions_column') }}
                     </h3>
                 </div>
                 <div class="p-6 space-y-3">

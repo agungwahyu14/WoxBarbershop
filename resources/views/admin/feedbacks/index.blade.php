@@ -18,12 +18,6 @@
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <!-- Table Header -->
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.feedbacks_page_title') }}
-                    </h3>
-                </div>
-            </div>
 
             <!-- Table Content -->
             <div class="card-content">

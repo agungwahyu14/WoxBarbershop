@@ -141,7 +141,7 @@
                         </a>
                         <button type="submit"
                             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                            <i class="fas fa-save mr-2"></i>{{ __('admin.update_hairstyle') }}
+                            <i class="fas fa-save mr-2"></i>{{ __('admin.edit_hairstyle') }}
                         </button>
                     </div>
                 </form>

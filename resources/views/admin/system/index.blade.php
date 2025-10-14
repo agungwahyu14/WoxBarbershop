@@ -8,7 +8,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    <i class="fas fa-box mr-3"></i> {{ __('admin.system_page_title') }}
+                    <i class="fas fa-box mr-3"></i> {{ __('menu.backup_restore') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     {{ __('admin.system_page_subtitle') }}
@@ -36,12 +36,12 @@
                             {{ __('admin.backup_description') }}
                         </p>
                         <div class="space-y-3">
-                            <button onclick="createBackup('full')"
+                            {{-- <button onclick="createBackup('full')"
                                 class="w-full inline-flex justify-center items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                                 aria-label="Backup Lengkap (Database + Files)">
                                 <i class="fas fa-database mr-3" aria-hidden="true"></i>
                                 {{ __('admin.backup_full') }}
-                            </button>
+                            </button> --}}
                             <button onclick="createBackup('partial')"
                                 class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                                 aria-label="Backup Data Saja">
@@ -93,7 +93,7 @@
                 </div>
 
                 <!-- Backup History Section -->
-                <div class="mt-8 pt-8 border-t border-gray-200">
+                {{-- <div class="mt-8 pt-8 border-t border-gray-200">
                     <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                         <i class="fas fa-history text-gray-600 mr-3" aria-hidden="true"></i>
                         {{ __('admin.backup_history') }}
@@ -105,7 +105,7 @@
                             <p class="text-sm">{{ __('admin.first_backup_message') }}</p>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>

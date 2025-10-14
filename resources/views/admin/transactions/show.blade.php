@@ -8,12 +8,7 @@
                     {{ __('admin.transaction_detail') }}</h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{ __('admin.transaction_detail_subtitle') }}</p>
             </div>
-            <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                <a href="{{ route('admin.transactions.index') }}"
-                    class="flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                    <i class="fas fa-arrow-left mr-2"></i>{{ __('admin.back_to_transactions') }}
-                </a>
-            </div>
+
         </div>
     </section>
 
@@ -74,7 +69,7 @@
         </div>
 
         <!-- Transaction Details Grid -->
-        <div class="grid lg:grid-cols-3 gap-6 mb-6">
+        <div class="grid lg:grid-cols-4 gap-6 mb-6">
             <!-- Customer Information -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
                 <div class="flex items-center mb-4">
@@ -88,12 +83,11 @@
                     <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
                         <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.name') }}</span>
                         <span
-                            class="text-sm text-gray-900 dark:text-white font-medium">{{ $transaction->customer_name ?? '-' }}</span>
+                            class="text-sm text-gray-900 dark:text-white font-medium">{{ $transaction->name ?? '-' }}</span>
                     </div>
                     <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
                         <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ __('admin.email') }}</span>
-                        <span
-                            class="text-sm text-gray-900 dark:text-white">{{ $transaction->customer_email ?? '-' }}</span>
+                        <span class="text-sm text-gray-900 dark:text-white">{{ $transaction->email ?? '-' }}</span>
                     </div>
 
                 </div>
@@ -253,7 +247,28 @@
                     </div>
                 </div>
             </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+                        <i class="fas fa-cogs mr-3 text-green-600"></i>
+                        {{ __('admin.actions_column') }}
+                    </h3>
+                </div>
+                <div class="p-6 space-y-3">
+
+
+                    <a href="{{ route('admin.transactions.index') }}"
+                        class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        {{ __('admin.back_to_transactions') }}
+                    </a>
+
+                </div>
+            </div>
         </div>
+
+
 
         <!-- Additional Information -->
         {{-- <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
