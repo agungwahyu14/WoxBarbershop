@@ -133,7 +133,7 @@
                 language: {
                     search: search,
                     lengthMenu: "_MENU_", // ✅ hanya tampil dropdown, tanpa teks
-                    info: info,
+                    info: '',
                     infoEmpty: infoEmpty,
                     infoFiltered: infoFiltered,
                     zeroRecords: noMatchingHairstyles,

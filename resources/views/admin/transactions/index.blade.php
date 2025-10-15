@@ -243,7 +243,7 @@
                 language: {
                     search: search,
                     lengthMenu: "_MENU_", // ✅ hanya dropdown, tanpa teks "Show entries"
-                    info: info,
+                  info: '',
                     infoEmpty: infoEmpty,
                     infoFiltered: infoFiltered,
                     zeroRecords: noMatchingTransactions,

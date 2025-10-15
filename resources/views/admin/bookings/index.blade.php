@@ -297,7 +297,7 @@
                     language: {
                         search: search,
                         lengthMenu: "_MENU_", // ✅ tampil dropdown saja tanpa teks
-                        info: info,
+                        info: '',
                         infoEmpty: infoEmpty,
                         infoFiltered: infoFiltered,
                         zeroRecords: noMatchingBookings,

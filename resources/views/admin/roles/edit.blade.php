@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
                 <h1 class="title text-3xl font-bold text-gray-900 dark:text-white">
-                    <i class="fas fa-user-shield mr-3"></i> {{ __('admin.roles_page_title') }}
+                    <i class="fas fa-user-shield mr-3"></i> {{ __('admin.edit_role_btn') }}
                 </h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     {{ __('admin.roles_page_subtitle') }}
@@ -56,7 +56,7 @@
                         </a>
                         <button type="submit"
                             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                            <i class="fas fa-save mr-2"></i>{{ __('admin.update_role') }}
+                            <i class="fas fa-save mr-2"></i>{{ __('admin.edit_role_btn') }}
                         </button>
                     </div>
                 </form>

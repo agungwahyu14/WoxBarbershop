@@ -749,7 +749,7 @@ return [
     'error_occurred' => 'Terjadi kesalahan',
     
     // Feedback Management
-    'feedbacks_page_title' => 'Umpan Balik Pelanggan',
+    'feedbacks_page_title' => 'Umpan Balik',
     'feedbacks_page_subtitle' => 'Kelola dan tinjau umpan balik serta rating pelanggan',
     'feedback_details' => 'Detail Umpan Balik',
     'feedback_details_subtitle' => 'Lihat detail umpan balik dan rating pelanggan',
@@ -782,7 +782,7 @@ return [
     'delete_feedback' => 'Hapus Feedback',
     'delete_feedback_confirm' => 'Apakah Anda yakin ingin menghapus feedback ini? Tindakan ini tidak dapat dibatalkan.',
     'delete_feedback_warning' => 'Anda tidak akan bisa mengembalikannya!',
-    'back_to_feedbacks' => 'Kembali ke Feedback',
+    'back_to_feedbacks' => 'Kembali ke Umpan Balik',
     
     // Feedback Table Columns
     'customer_column' => 'Pelanggan',

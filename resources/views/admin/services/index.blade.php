@@ -128,7 +128,7 @@
                 ],
                 language: {
                     search: search,
-                    info: info,
+                    info: '',
                     infoEmpty: infoEmpty,
                     infoFiltered: infoFiltered,
                     zeroRecords: noMatchingServices,

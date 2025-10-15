@@ -132,7 +132,7 @@
                 language: {
                     search: search,
                     lengthMenu: "_MENU_",
-                    info: info,
+                    info: '',
                     infoEmpty: infoEmpty,
                     infoFiltered: infoFiltered,
                     zeroRecords: noMatchingProducts,
