@@ -45,7 +45,6 @@
 
 @push('scripts')
     <script>
-        // Translation variables
         const success = '{{ __('admin.success') }}';
         const error = '{{ __('admin.error') }}';
         const deleted = '{{ __('admin.deleted') }}';

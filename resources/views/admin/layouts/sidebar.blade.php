@@ -109,7 +109,22 @@
             </ul>
 
             <p class="menu-label">{{ __('menu.transactions') }}</p>
+
+
             <ul class="menu-list">
+                <li>
+                    <a href="{{ route('admin.users.index') }}">
+                        <span class="icon"><i class="mdi mdi-account-multiple"></i></span>
+                        <span class="menu-item-label">{{ __('menu.users') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.bookings.index') }}">
+                        <span class="icon"><i class="mdi mdi-calendar-check"></i></span>
+                        <span class="menu-item-label">{{ __('menu.bookings') }}</span>
+                    </a>
+                </li>
+
                 <li>
                     <a href="{{ route('admin.bookings.index') }}">
                         <span class="icon"><i class="mdi mdi-calendar-check"></i></span>
