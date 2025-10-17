@@ -1,8 +1,8 @@
 <?php
 
 return [
-    // Booking Messages
-    'booking_success_title' => 'Booking Berhasil!',
+    // Pemesanan Messages
+    'booking_success_title' => 'Pemesanan Berhasil!',
     'booking_success_name' => 'Nama',
     'booking_success_queue' => 'Nomor Antrian',
     'booking_success_time' => 'Waktu',
@@ -10,18 +10,18 @@ return [
     'booking_success_note' => 'Mohon hadir 10 menit sebelum waktu booking Anda',
 
     // Headers and Titles
-    'booking_history_title' => 'Riwayat Booking',
+    'booking_history_title' => 'Riwayat Pemesanan',
     'booking_history_subtitle' => 'Lihat dan kelola riwayat janji temu Anda.',
-    'booking_detail_title' => 'Detail Booking',
-    'booking_detail_subtitle' => 'Lihat dan kelola detail booking Anda.',
-    'edit_booking' => 'Edit Booking',
-    'edit_booking_subtitle' => 'Ubah detail booking Anda sesuai kebutuhan.',
+    'booking_detail_title' => 'Rincian Pemesanan',
+    'booking_detail_subtitle' => 'Lihat dan kelola rincian pemesanan Anda.',
+    'edit_booking' => 'Edit Pemesanan',
+    'edit_booking_subtitle' => 'Ubah rincian pemesanan Anda sesuai kebutuhan.',
 
     // Basic Information
-    'booking_number' => 'Booking #',
+    'booking_number' => 'Pemesanan #',
     'customer' => 'Pelanggan',
     'customer_name' => 'Nama Pelanggan',
-    'booking_date' => 'Tanggal Booking',
+    'booking_date' => 'Tanggal Pemesanan',
     'date_time' => 'Tanggal & Waktu',
     'status' => 'Status',
     'payment' => 'Pembayaran',
@@ -30,7 +30,7 @@ return [
     'notes' => 'Catatan',
     'hairstyle' => 'Gaya Rambut',
     'service' => 'Layanan',
-    'service_details' => 'Detail Layanan',
+    'service_details' => 'Rincian Layanan',
 
     // Status Labels
     'status_pending' => 'Menunggu',
@@ -59,19 +59,19 @@ return [
     'update_booking_info' => 'Perbarui informasi booking Anda',
 
     // Action Buttons
-    'view_detail' => 'Lihat Detail',
+    'view_detail' => 'Lihat Rincian',
     'back' => 'Kembali',
     'cancel' => 'Batalkan',
     'save_changes' => 'Simpan Perubahan',
     'pay_now' => 'Bayar Sekarang',
     'pay_cash' => 'Bayar Tunai',
-    'view_feedback' => 'Lihat Feedback',
-    'give_feedback' => 'Berikan Feedback',
-    'new_booking' => 'Booking Baru',
-    'create_new_booking' => 'Buat Booking Baru',
+    'view_feedback' => 'Lihat Umpan Balik',
+    'give_feedback' => 'Berikan Umpan Balik',
+    'new_booking' => 'Pemesanan Baru',
+    'create_new_booking' => 'Buat Pemesanan Baru',
 
     // Empty State
-    'no_bookings_title' => 'Belum Ada Booking',
+    'no_bookings_title' => 'Belum Ada Pemesanan',
     'no_bookings_description' => 'Anda belum memiliki riwayat booking. Mulai buat booking pertama Anda!',
 
     // Validation Messages
@@ -82,17 +82,17 @@ return [
     'hairstyle_required' => 'Gaya rambut wajib dipilih',
     'datetime_required' => 'Tanggal dan waktu wajib diisi',
     'closed_sunday' => 'Maaf, kami tutup pada hari Minggu',
-    'business_hours' => 'Booking hanya dapat dilakukan antara jam 11:00 - 22:00',
+    'business_hours' => 'Pemesanan hanya dapat dilakukan antara jam 11:00 - 22:00',
 
     // Important Information
     'important_info' => 'Informasi Penting',
     'info_time_change' => 'Perubahan tanggal dan waktu mungkin mempengaruhi nomor antrian Anda',
     'info_service_change' => 'Jika mengubah layanan, total harga akan dihitung ulang',
-    'info_edit_restriction' => 'Booking hanya dapat diubah jika status masih "Pending" atau "Confirmed"',
+    'info_edit_restriction' => 'Pemesanan hanya dapat diubah jika status masih "Pending" atau "Confirmed"',
 
     // JavaScript Messages
-    'booking_success' => 'Booking Berhasil!',
-    'booking_created_for' => 'Booking berhasil dibuat atas nama',
+    'booking_success' => 'Pemesanan Berhasil!',
+    'booking_created_for' => 'Pemesanan berhasil dibuat atas nama',
     'queue_number_label' => 'Nomor Antrian Anda',
     'please_arrive_on_time' => 'Silakan datang sesuai jadwal yang telah ditentukan',
     'ok' => 'Oke',
@@ -105,17 +105,17 @@ return [
 
     // Confirmation Messages
     'are_you_sure' => 'Apakah Anda yakin?',
-    'booking_will_be_cancelled' => 'Booking akan dibatalkan!',
+    'booking_will_be_cancelled' => 'Pemesanan akan dibatalkan!',
     'yes_cancel' => 'Ya, batalkan!',
 
     // Feedback
-    'rating' => 'Rating',
+    'rating' => 'Penilaian',
     'comment' => 'Komentar',
-    'public_feedback' => 'Jadikan feedback publik',
-    'submit_feedback' => 'Kirim Feedback',
-    'rating_required' => 'Silakan pilih rating',
+    'public_feedback' => 'Jadikan umpan balik publik',
+    'submit_feedback' => 'Kirim Umpan Balik',
+    'rating_required' => 'Silakan pilih penilaian',
     'comment_required' => 'Silakan berikan komentar Anda',
-    'booking_created_successfully' => 'Booking berhasil dibuat atas nama',
+    'booking_created_successfully' => 'Pemesanan berhasil dibuat atas nama',
     
     // Payment Messages
     'payment_success' => 'Pembayaran Berhasil',
@@ -123,17 +123,17 @@ return [
     'payment_cancelled' => 'Pembayaran dibatalkan',
     'payment_pending' => 'Menunggu Pembayaran',
     
-    // Booking Status
+    // Pemesanan Status
     'status_pending' => 'Menunggu',
     'status_confirmed' => 'Dikonfirmasi',
     'status_completed' => 'Selesai',
     'status_cancelled' => 'Dibatalkan',
     
-    // Booking Actions
-    'view_booking' => 'Lihat Booking',
-    'cancel_booking' => 'Batalkan Booking',
-    'confirm_booking' => 'Konfirmasi Booking',
-    'complete_booking' => 'Selesaikan Booking',
+    // Pemesanan Actions
+    'view_booking' => 'Lihat Pemesanan',
+    'cancel_booking' => 'Batalkan Pemesanan',
+    'confirm_booking' => 'Konfirmasi Pemesanan',
+    'complete_booking' => 'Selesaikan Pemesanan',
     
     // Queue System
     'queue_number' => 'Nomor Antrian',
@@ -142,9 +142,9 @@ return [
     'please_wait' => 'Mohon Tunggu',
     
     // Notifications
-    'booking_confirmed' => 'Booking Anda telah dikonfirmasi',
-    'booking_completed' => 'Booking Anda telah selesai',
-    'booking_cancelled' => 'Booking Anda telah dibatalkan',
+    'booking_confirmed' => 'Pemesanan Anda telah dikonfirmasi',
+    'booking_completed' => 'Pemesanan Anda telah selesai',
+    'booking_cancelled' => 'Pemesanan Anda telah dibatalkan',
     
     // Time & Date
     'select_date' => 'Pilih Tanggal',
@@ -152,13 +152,13 @@ return [
     'available_time' => 'Waktu Tersedia',
     'unavailable_time' => 'Waktu Tidak Tersedia',
     
-    // Booking History
-    'booking_history_title' => 'Riwayat Booking',
-    'booking_history_subtitle' => 'Lihat riwayat booking Anda di sini.',
-    'booking_number' => 'Booking #',
-    'no_bookings' => 'Belum Ada Booking',
+    // Pemesanan History
+    'booking_history_title' => 'Riwayat Pemesanan',
+    'booking_history_subtitle' => 'Lihat riwayat pemesanan Anda di sini.',
+    'booking_number' => 'Pemesanan #',
+    'no_bookings' => 'Belum Ada Pemesanan',
     'no_bookings_message' => 'Anda belum memiliki riwayat booking.',
-    'make_booking_now' => 'Buat Booking Sekarang',
+    'make_booking_now' => 'Buat Pemesanan Sekarang',
     
     // Currency and Formatting
     'currency_symbol' => 'Rp',

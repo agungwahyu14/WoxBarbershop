@@ -375,39 +375,40 @@
                     submit_feedback: @json(__('booking.submit_feedback')),
                     cancel: @json(__('booking.cancel')),
                     rating_required: @json(__('booking.rating_required')),
-                    comment_required: @json(__('booking.comment_required'))
+                    comment_required: @json(__('booking.comment_required')),
+
                 };
 
                 Swal.fire({
                     title: translations.give_feedback,
                     html: `
-                        <div class="text-left">
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Rating</label>
-                                <div class="flex justify-center space-x-1" id="rating-stars">
-                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="1"></i>
-                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="2"></i>
-                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="3"></i>
-                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="4"></i>
-                                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="5"></i>
-                                </div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Komentar</label>
-                                <textarea id="feedback-comment" class="w-full p-3 border border-gray-300 rounded-lg resize-none" 
-                                         rows="4" placeholder="Bagikan pengalaman Anda..."></textarea>
-                            </div>
-                            <div class="mb-4">
-                                <label class="flex items-center">
-                                    <input type="checkbox" id="feedback-public" class="mr-2">
-                                    <span class="text-sm text-gray-700">Tampilkan feedback ini secara publik</span>
-                                </label>
-                            </div>
-                        </div>
-                    `,
+        <div class="text-left">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">${translations.rating}</label>
+                <div class="flex justify-center space-x-1" id="rating-stars">
+                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="1"></i>
+                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="2"></i>
+                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="3"></i>
+                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="4"></i>
+                    <i class="fas fa-star text-gray-300 cursor-pointer text-2xl" data-rating="5"></i>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">${translations.comment}</label>
+                <textarea id="feedback-comment" class="w-full p-3 border border-gray-300 rounded-lg resize-none" 
+                         rows="4" placeholder="${translations.comment_required}"></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="flex items-center">
+                    <input type="checkbox" id="feedback-public" class="mr-2">
+                    <span class="text-sm text-gray-700">${translations.public_feedback}</span>
+                </label>
+            </div>
+        </div>
+    `,
                     showCancelButton: true,
-                    confirmButtonText: 'Kirim Feedback',
-                    cancelButtonText: 'Batal',
+                    confirmButtonText: translations.submit_feedback,
+                    cancelButtonText: translations.cancel,
                     confirmButtonColor: '#3b82f6',
                     cancelButtonColor: '#6b7280',
                     width: '500px',
@@ -419,6 +420,7 @@
                             star.addEventListener('click', () => {
                                 selectedRating = index + 1;
                                 updateStars(selectedRating);
+                                window.selectedRating = selectedRating;
                             });
 
                             star.addEventListener('mouseenter', () => {
@@ -441,16 +443,6 @@
                                 }
                             });
                         }
-
-                        // Store selected rating globally for access in preConfirm
-                        window.selectedRating = selectedRating;
-
-                        // Update selectedRating when stars are clicked
-                        stars.forEach((star, index) => {
-                            star.addEventListener('click', () => {
-                                window.selectedRating = index + 1;
-                            });
-                        });
                     },
                     preConfirm: () => {
                         const rating = window.selectedRating || 0;
@@ -458,12 +450,12 @@
                         const isPublic = document.getElementById('feedback-public').checked;
 
                         if (rating === 0) {
-                            Swal.showValidationMessage('Silakan berikan rating');
+                            Swal.showValidationMessage(translations.rating_required);
                             return false;
                         }
 
                         if (!comment.trim()) {
-                            Swal.showValidationMessage('Silakan berikan komentar');
+                            Swal.showValidationMessage(translations.comment_required);
                             return false;
                         }
 
@@ -478,6 +470,7 @@
                         submitFeedback(result.value.rating, result.value.comment, result.value.isPublic);
                     }
                 });
+
             }
 
             function submitFeedback(rating, comment, isPublic) {

@@ -96,6 +96,7 @@
         @endhasrole
 
         {{-- Sidebar untuk Pegawai --}}
+        {{-- Sidebar untuk Pegawai --}}
         @hasrole('pegawai')
             <p class="menu-label">{{ __('menu.general') }}</p>
             <ul class="menu-list">
@@ -121,8 +122,15 @@
                         <span class="menu-item-label">{{ __('menu.transactions') }}</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.feedbacks.index') }}">
+                        <span class="icon"><i class="mdi mdi-comment-text-outline"></i></span>
+                        <span class="menu-item-label">{{ __('menu.feedbacks') }}</span>
+                    </a>
+                </li>
             </ul>
         @endhasrole
+
 
     </div>
 </aside>

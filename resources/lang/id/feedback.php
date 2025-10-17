@@ -2,16 +2,16 @@
 
 return [
     // Page Titles and Headers
-    'give_feedback' => 'Berikan Feedback',
-    'feedback_details' => 'Detail Feedback',
-    'booking_details' => 'Detail Booking',
-    'your_feedback' => 'Feedback Anda',
-    'update_feedback' => 'Perbarui Feedback',
+    'give_feedback' => 'Berikan Umpan Balik',
+    'feedback_details' => 'Rincian Umpan Balik',
+    'booking_details' => 'Rincian Pemesanan',
+    'your_feedback' => 'Umpan Balik Anda',
+    'update_feedback' => 'Edit Umpan Balik',
     'share_experience' => 'Bagikan pengalaman Anda untuk membantu meningkatkan layanan kami',
 
     // Form Labels
-    'rating' => 'Rating',
-    'your_rating' => 'Rating Anda',
+    'rating' => 'Penilaian',
+    'your_rating' => 'Penilaian Anda',
     'comment' => 'Komentar',
     'your_comment' => 'Komentar Anda',
     'comment_optional' => 'Komentar (Opsional)',
@@ -23,21 +23,21 @@ return [
     'rating_fair' => 'Cukup',
     'rating_good' => 'Baik',
     'rating_very_good' => 'Sangat Baik',
-    'rating_excellent' => 'Excellent',
-    'click_to_rate' => 'Klik untuk memberi rating',
+    'rating_excellent' => 'Luar Biasa',
+    'click_to_rate' => 'Klik untuk memberi penilaian',
 
     // Visibility Options
-    'allow_testimonial' => 'Izinkan feedback ini digunakan sebagai testimonial di website kami',
-    'testimonial_permission' => 'Jadikan feedback ini publik sebagai testimonial',
-    'public_testimonial' => 'Testimonial Publik',
-    'private_feedback' => 'Feedback Pribadi',
+    'allow_testimonial' => 'Izinkan umpan balik ini digunakan sebagai testimoni di website kami',
+    'testimonial_permission' => 'Jadikan umpan balik ini publik sebagai testimoni',
+    'public_testimonial' => 'Testimoni Publik',
+    'private_feedback' => 'Umpan Balik Pribadi',
 
     // Booking Information
-    'booking_id' => 'ID Booking',
+    'booking_id' => 'ID Pemesanan',
     'service' => 'Layanan',
     'date' => 'Tanggal',
     'time' => 'Waktu',
-    'related_booking' => 'Booking Terkait',
+    'related_booking' => 'Pemesanan Terkait',
     'not_available' => 'Tidak Tersedia',
 
     // Status and Meta Information
@@ -45,41 +45,41 @@ return [
     'no_comment_provided' => 'Tidak ada komentar',
 
     // Actions
-    'submit_feedback' => 'Kirim Feedback',
-    'edit_feedback' => 'Edit Feedback',
-    'back_to_booking' => 'Kembali ke Booking',
-    'dashboard' => 'Dashboard',
+    'submit_feedback' => 'Kirim Umpan Balik',
+    'edit_feedback' => 'Edit Umpan Balik',
+    'back_to_booking' => 'Kembali ke Pemesanan',
+    'dashboard' => 'Beranda',
     'cancel' => 'Batal',
     'save_changes' => 'Simpan Perubahan',
 
     // Messages and Notifications
-    'feedback_submitted_successfully' => 'Terima kasih! Feedback Anda berhasil dikirim.',
-    'feedback_updated_successfully' => 'Feedback Anda berhasil diperbarui.',
-    'feedback_deleted_successfully' => 'Feedback Anda berhasil dihapus.',
-    'error_submitting_feedback' => 'Terjadi kesalahan saat mengirim feedback. Silakan coba lagi.',
-    'error_updating_feedback' => 'Terjadi kesalahan saat memperbarui feedback. Silakan coba lagi.',
+    'feedback_submitted_successfully' => 'Terima kasih! Umpan balik Anda berhasil dikirim.',
+    'feedback_updated_successfully' => 'Umpan balik Anda berhasil diedit.',
+    'feedback_deleted_successfully' => 'Umpan balik Anda berhasil dihapus.',
+    'error_submitting_feedback' => 'Terjadi kesalahan saat mengirim umpan balik. Silakan coba lagi.',
+    'error_updating_feedback' => 'Terjadi kesalahan saat mengedit umpan balik. Silakan coba lagi.',
 
     // Validation Messages
-    'rating_required' => 'Silakan berikan rating',
+    'rating_required' => 'Silakan berikan penilaian',
     'comment_max_length' => 'Komentar tidak boleh melebihi :max karakter',
 
     // Success Messages
     'thank_you' => 'Terima Kasih!',
-    'feedback_received' => 'Feedback Anda telah diterima dan sangat kami hargai.',
-    'helps_improve_service' => 'Feedback Anda membantu kami meningkatkan kualitas layanan.',
+    'feedback_received' => 'Umpan balik Anda telah diterima dan sangat kami hargai.',
+    'helps_improve_service' => 'Umpan balik Anda membantu kami meningkatkan kualitas layanan.',
 
     // Confirmation Messages
-    'confirm_delete' => 'Apakah Anda yakin ingin menghapus feedback ini?',
+    'confirm_delete' => 'Apakah Anda yakin ingin menghapus umpan balik ini?',
     'delete_feedback_warning' => 'Tindakan ini tidak dapat dibatalkan.',
     'yes_delete' => 'Ya, Hapus',
     'no_keep' => 'Tidak, Simpan',
 
     // Empty States
-    'no_feedback' => 'Tidak ada feedback',
-    'no_feedback_message' => 'Belum ada feedback yang dikirim.',
+    'no_feedback' => 'Tidak ada umpan balik',
+    'no_feedback_message' => 'Belum ada umpan balik yang dikirim.',
 
     // Meta Information
-    'average_rating' => 'Rating Rata-rata',
+    'average_rating' => 'Penilaian Rata-rata',
     'total_reviews' => 'Total Ulasan',
     'customer_satisfaction' => 'Kepuasan Pelanggan',
 ];

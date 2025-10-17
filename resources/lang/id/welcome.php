@@ -87,7 +87,7 @@ return [
     // Profile Menu
     'profile_settings' => 'Pengaturan Profil',
     'transaction_history' => 'Riwayat Transaksi', 
-    'booking_history' => 'Riwayat Booking',
+    'booking_history' => 'Riwayat Pemesanan',
     'logout' => 'Keluar',
     'login' => 'Masuk',
     'register' => 'Daftar',

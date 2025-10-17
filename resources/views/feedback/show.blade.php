@@ -4,7 +4,7 @@
     <div class="min-h-screen bg-gray-50 py-20 ">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Success Message -->
-            @if (session('success'))
+            {{-- @if (session('success'))
                 <div class="mb-6 bg-green-50 border border-green-200 rounded-md p-4">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -15,7 +15,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endif --}}
 
             <!-- Feedback Display -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 mt-8">
