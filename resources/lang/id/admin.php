@@ -53,7 +53,7 @@ return [
     'create_new' => 'Buat Baru',
     'edit_item' => 'Edit Item',
     'delete_item' => 'Hapus Item',
-    'view_details' => 'Lihat Detail',
+    'view_details' => 'Lihat Rincian',
     
     // Form Actions
     'save_changes' => 'Simpan Perubahan',
@@ -210,12 +210,12 @@ return [
     // Page Headers
     'users_page_title' => 'Pengguna',
     'users_page_subtitle' => 'Kelola peran dan izin pengguna di sistem Anda',
-    'user_details_title' => 'Detail Pengguna',
+    'user_details_title' => 'Rincian Pengguna',
     'user_details_subtitle' => 'Informasi pengguna lengkap dan ikhtisar aktivitas',
     'edit_user_title' => 'Edit Pengguna',
     'edit_user_subtitle' => 'Perbarui informasi pengguna untuk',
     'user_information_title' => 'Informasi Pengguna',
-    'user_information_subtitle' => 'Perbarui detail dan izin pengguna',
+    'user_information_subtitle' => 'Perbarui rincian dan izin pengguna',
     
     // Table Headers
     'name_column' => 'Nama',
@@ -307,9 +307,9 @@ return [
     'score_information' => 'Informasi Skor',
     'update_score_information' => 'Perbarui Informasi Skor',
     'add_new_score_recommendation' => 'Tambahkan skor baru untuk rekomendasi gaya rambut',
-    'fill_required_score_details' => 'Harap isi detail skor yang diperlukan',
+    'fill_required_score_details' => 'Harap isi rincian skor yang diperlukan',
     'update_existing_score' => 'Perbarui skor yang ada untuk rekomendasi gaya rambut',
-    'modify_score_details' => 'Ubah detail skor di bawah ini',
+    'modify_score_details' => 'Ubah rincian skor di bawah ini',
     'hairstyle' => 'Gaya Rambut',
     'select_hairstyle' => 'Pilih Gaya Rambut',
     'criteria' => 'Kriteria',
@@ -418,7 +418,7 @@ return [
     'unknown' => 'Tidak Diketahui',
     
     // Transaction Detail
-    'transaction_detail' => 'Detail Transaksi',
+    'transaction_detail' => 'Rincian Transaksi',
     'transaction_detail_subtitle' => 'Lihat informasi lengkap transaksi',
     'back_to_transactions' => 'Kembali ke Transaksi',
     'unknown_status' => 'Status Tidak Diketahui',
@@ -428,7 +428,7 @@ return [
     'failed' => 'Gagal',
     'payment_success' => 'Pembayaran Berhasil',
     'customer_information' => 'Informasi Pelanggan',
-    'payment_details' => 'Detail Pembayaran',
+    'payment_details' => 'Rincian Pembayaran',
     'customer_name' => 'Nama Pelanggan',
     'transaction_date' => 'Tanggal Transaksi',
     'payment_type' => 'Tipe Pembayaran',
@@ -627,7 +627,7 @@ return [
     'new_password' => 'Kata Sandi Baru',
     'leave_empty_keep_password' => 'Biarkan kosong untuk mempertahankan kata sandi saat ini',
     'enter_confirm_password' => 'Konfirmasi kata sandi',
-    'user_details' => 'Detail Pengguna',
+    'user_details' => 'Rincian Pengguna',
     'personal_information' => 'Informasi Pribadi',
     'account_information' => 'Informasi Akun',
     'email_verified' => 'Email Terverifikasi',
@@ -712,7 +712,7 @@ return [
     'delete_failed' => 'Gagal menghapus pengguna',
     
     // Booking Management
-    'booking_details' => 'Detail Pemesanan',
+    'booking_details' => 'Rincian Pemesanan',
     'manage_booking' => 'Kelola pemesanan',
     'unknown_customer' => 'Pelanggan Tidak Dikenal',
     'booking_overview' => 'Ringkasan Pemesanan',
@@ -721,8 +721,8 @@ return [
     'total_amount' => 'Total Biaya',
     'duration' => 'Durasi',
     'minutes' => 'menit',
-    'service_details' => 'Detail Layanan',
-    'hairstyle_details' => 'Detail Gaya Rambut',
+    'service_details' => 'Rincian Layanan',
+    'hairstyle_details' => 'Rincian Gaya Rambut',
     'face_shape' => 'Bentuk Wajah',
     'hair_type' => 'Tipe Rambut',
     'style_preference' => 'Preferensi Gaya',
@@ -751,8 +751,8 @@ return [
     // Feedback Management
     'feedbacks_page_title' => 'Umpan Balik',
     'feedbacks_page_subtitle' => 'Kelola dan tinjau umpan balik serta rating pelanggan',
-    'feedback_details' => 'Detail Umpan Balik',
-    'feedback_details_subtitle' => 'Lihat detail umpan balik dan rating pelanggan',
+    'feedback_details' => 'Rincian Umpan Balik',
+    'feedback_details_subtitle' => 'Lihat rincian umpan balik dan rating pelanggan',
     'customer_rating' => 'Rating Pelanggan',
     'excellent_service' => 'Layanan Sangat Baik',
     'good_service' => 'Layanan Baik',

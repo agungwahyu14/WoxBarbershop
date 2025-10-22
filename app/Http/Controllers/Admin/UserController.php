@@ -233,47 +233,51 @@ if ($request->filled('status_filter')) {
                     //             </a>';
 
                     // Edit button
-                    if (auth()->user()->can('edit users')) {
-                        $actions .= '<a href="'.$editUrl.'" 
-                                       class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-all duration-200 group" 
-                                       title="Edit User">
-                                        <i class="fas fa-edit text-xs group-hover:scale-110 transition-transform"></i>
-                                    </a>';
-                    }
+                   $actions = '<div class="flex items-center space-x-2">';
 
-                    // Loyalty Points Reset button
-                    if ($row->loyalty && $row->loyalty->points >= 10) {
-                        $actions .= '<button type="button" 
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-600 transition-all duration-200 group resetLoyaltyBtn" 
-                                            data-user-id="'.$row->id.'" 
-                                            data-loyalty-id="'.$row->loyalty->id.'" 
-                                            data-user-name="'.$row->name.'" 
-                                            data-points="'.$row->loyalty->points.'" 
-                                            title="Reset Loyalty Points (Potong Gratis)">
-                                        <i class="fas fa-gift text-xs group-hover:scale-110 transition-transform"></i>
-                                    </button>';
-                    } elseif ($row->loyalty && $row->loyalty->points < 10) {
-                        $actions .= '<button type="button" 
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed" 
-                                            disabled
-                                            title="Belum mencapai 10 poin (Poin saat ini: '.$row->loyalty->points.')">
-                                        <i class="fas fa-gift text-xs"></i>
-                                    </button>';
-                    }
+// Tombol Edit — untuk admin & pegawai
+if (auth()->user()->hasRole('admin')) {
+    $actions .= '<a href="'.$editUrl.'" 
+                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-all duration-200 group" 
+                   title="Edit User">
+                    <i class="fas fa-edit text-xs group-hover:scale-110 transition-transform"></i>
+                </a>';
+}
 
-                    // Delete button
-                    if (auth()->user()->can('delete users') && $row->id !== auth()->id()) {
-                        $actions .= '<button type="button" 
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-all duration-200 group deleteBtn" 
-                                            data-id="'.$row->id.'" 
-                                            title="Delete User">
-                                        <i class="fas fa-trash text-xs group-hover:scale-110 transition-transform"></i>
-                                    </button>';
-                    }
+// Tombol Loyalty — untuk admin & pegawai
+if ($row->loyalty && $row->loyalty->points >= 10) {
+    $actions .= '<button type="button" 
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-600 transition-all duration-200 group resetLoyaltyBtn" 
+                        data-user-id="'.$row->id.'" 
+                        data-loyalty-id="'.$row->loyalty->id.'" 
+                        data-user-name="'.$row->name.'" 
+                        data-points="'.$row->loyalty->points.'" 
+                        title="Reset Loyalty Points (Potong Gratis)">
+                    <i class="fas fa-gift text-xs group-hover:scale-110 transition-transform"></i>
+                </button>';
+} elseif ($row->loyalty && $row->loyalty->points < 10) {
+    $actions .= '<button type="button" 
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed" 
+                        disabled
+                        title="Belum mencapai 10 poin (Poin saat ini: '.$row->loyalty->points.')">
+                    <i class="fas fa-gift text-xs"></i>
+                </button>';
+}
 
-                    $actions .= '</div>';
+// Tombol Delete — hanya untuk admin
+if (auth()->user()->hasRole('admin') && $row->id !== auth()->id()) {
+    $actions .= '<button type="button" 
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-all duration-200 group deleteBtn" 
+                        data-id="'.$row->id.'" 
+                        title="Delete User">
+                    <i class="fas fa-trash text-xs group-hover:scale-110 transition-transform"></i>
+                </button>';
+}
 
-                    return $actions;
+$actions .= '</div>';
+
+return $actions;
+
                 })
                ->rawColumns([
     'name', 

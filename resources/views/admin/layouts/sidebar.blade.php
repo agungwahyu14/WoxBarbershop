@@ -118,12 +118,7 @@
                         <span class="menu-item-label">{{ __('menu.users') }}</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('admin.bookings.index') }}">
-                        <span class="icon"><i class="mdi mdi-calendar-check"></i></span>
-                        <span class="menu-item-label">{{ __('menu.bookings') }}</span>
-                    </a>
-                </li>
+
 
                 <li>
                     <a href="{{ route('admin.bookings.index') }}">

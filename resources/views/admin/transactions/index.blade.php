@@ -17,12 +17,13 @@
 
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            @hasrole('admin')
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 
-                    {{-- 🔹 Bagian Kiri --}}
-                    <div class="flex flex-wrap items-center gap-2">
-                        @if (Auth::user()->hasRole('admin'))
+                        {{-- 🔹 Bagian Kiri --}}
+                        <div class="flex flex-wrap items-center gap-2">
+
                             <select id="monthFilter"
                                 class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
                                 <option value="">{{ __('admin.all_months') }}</option>
@@ -56,14 +57,14 @@
                                 <i class="mdi mdi-filter mr-1"></i>
                                 <span id="filterText"></span>
                             </div>
-                        @endif
-                    </div>
 
-                    {{-- 🔹 Bagian Kanan --}}
-                    <div class="flex items-center space-x-2">
+                        </div>
+
+                        {{-- 🔹 Bagian Kanan --}}
+                        <div class="flex items-center space-x-2">
 
 
-                        @if (Auth::user()->hasRole('admin'))
+
                             <div class="flex flex-wrap gap-2">
                                 <button id="exportCsvBtn" type="button"
                                     class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
@@ -74,11 +75,12 @@
                                     <i class="mdi mdi-file mr-2"></i> {{ __('admin.export_pdf') }}
                                 </button>
                             </div>
-                        @endif
-                    </div>
 
+                        </div>
+
+                    </div>
                 </div>
-            </div>
+            @endhasrole
 
 
 
@@ -243,7 +245,7 @@
                 language: {
                     search: search,
                     lengthMenu: "_MENU_", // ✅ hanya dropdown, tanpa teks "Show entries"
-                  info: '',
+                    info: '',
                     infoEmpty: infoEmpty,
                     infoFiltered: infoFiltered,
                     zeroRecords: noMatchingTransactions,

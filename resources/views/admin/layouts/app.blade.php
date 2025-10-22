@@ -161,8 +161,8 @@
                 @yield('content')
             </div>
         </main>
-
-        @include('admin.partials.footer')
+{{-- 
+        @include('admin.partials.footer') --}}
     </div>
 
     <!-- Enhanced JavaScript Libraries -->

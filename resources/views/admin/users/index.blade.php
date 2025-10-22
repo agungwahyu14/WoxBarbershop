@@ -18,32 +18,35 @@
 
         <div
             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <!-- Kiri: Tombol Create -->
-                    <a href="{{ route('admin.users.create') }}"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
-                        <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
-                        {{ __('admin.create_user_btn') }}
-                    </a>
+            @role('admin')
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <!-- Kiri: Tombol Create -->
+                        <a href="{{ route('admin.users.create') }}"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
+                            <span class="icon mr-2"><i class="mdi mdi-plus"></i></span>
+                            {{ __('admin.create_user_btn') }}
+                        </a>
 
-                    <!-- Kanan: Filter + Export -->
-                    <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-                        <div class="flex items-center space-x-2">
+                        <!-- Kanan: Filter + Export -->
+                        <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                            <div class="flex items-center space-x-2">
 
-                            <a href="{{ route('admin.users.export.csv') }}"
-                                class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                <i class="mdi mdi-file-delimited mr-2"></i> {{ __('admin.export_csv') }}
-                            </a>
-                            <a href="{{ route('admin.users.export.pdf') }}"
-                                class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
-                                <i class="mdi mdi-file mr-2"></i> {{ __('admin.export_pdf') }}
-                            </a>
+                                <a href="{{ route('admin.users.export.csv') }}"
+                                    class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                    <i class="mdi mdi-file-delimited mr-2"></i> {{ __('admin.export_csv') }}
+                                </a>
+                                <a href="{{ route('admin.users.export.pdf') }}"
+                                    class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                    <i class="mdi mdi-file mr-2"></i> {{ __('admin.export_pdf') }}
+                                </a>
 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endrole
+
 
 
             <div class="card-content">

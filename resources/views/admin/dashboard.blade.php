@@ -247,204 +247,203 @@
             </div>
         </div> --}}
 
-        <!-- Analytics Categories -->
-        <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-8">
-            <!-- Financial Reports -->
-            <div class="card hover:shadow-lg transition-shadow duration-200">
-                <div class="card-content p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="p-3 bg-green-100 rounded-full mr-4">
-                            <i class="mdi mdi-chart-line text-green-600 text-xl"></i>
+        @role('admin')
+            <!-- Analytics Categories -->
+            <div class="grid gap-6 grid-cols-1 lg:grid-cols-3 mb-8">
+                <!-- Financial Reports -->
+                <div class="card hover:shadow-lg transition-shadow duration-200">
+                    <div class="card-content p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 bg-green-100 rounded-full mr-4">
+                                <i class="mdi mdi-chart-line text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.financial_reports') }}</h3>
+                                <p class="text-sm text-gray-600">{{ __('admin.revenue_analysis') }}</p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.financial_reports') }}</h3>
-                            <p class="text-sm text-gray-600">{{ __('admin.revenue_analysis') }}</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <span class="text-sm text-gray-700">{{ __('admin.daily_revenue') }}</span>
-                            <span class="font-medium text-green-600"
-                                id="daily-revenue">Rp{{ number_format($dailyRevenue ?? 0, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <span class="text-sm text-gray-700">{{ __('admin.monthly_revenue') }}</span>
-                            <span class="font-medium text-green-600"
-                                id="monthly-revenue">Rp{{ number_format($monthlyRevenue ?? 0, 0, ',', '.') }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Booking Analytics -->
-            <div class="card hover:shadow-lg transition-shadow duration-200">
-                <div class="card-content p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="p-3 bg-blue-100 rounded-full mr-4">
-                            <i class="mdi mdi-calendar-check text-blue-600 text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.booking_analysis') }}</h3>
-                            <p class="text-sm text-gray-600">{{ __('admin.booking_status_trends') }}</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        @php
-                            $bookingStats = \App\Models\Booking::selectRaw('status, COUNT(*) as count')
-                                ->groupBy('status')
-                                ->get();
-                            $total = $bookingStats->sum('count');
-                            $statusColors = [
-                                'pending' => 'text-yellow-600',
-                                'confirmed' => 'text-blue-600',
-                                'completed' => 'text-green-600',
-                                'cancelled' => 'text-red-600',
-                            ];
-                        @endphp
-                        @foreach ($bookingStats->take(2) as $stat)
+                        <div class="space-y-2">
                             <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
-                                <span class="text-sm text-gray-700">{{ __('admin.' . $stat->status) }}</span>
-                                <span
-                                    class="font-medium {{ $statusColors[$stat->status] ?? 'text-gray-600' }}">{{ $stat->count }}</span>
+                                <span class="text-sm text-gray-700">{{ __('admin.daily_revenue') }}</span>
+                                <span class="font-medium text-green-600"
+                                    id="daily-revenue">Rp{{ number_format($dailyRevenue ?? 0, 0, ',', '.') }}</span>
                             </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Customer Analytics -->
-            <div class="card hover:shadow-lg transition-shadow duration-200">
-                <div class="card-content p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="p-3 bg-purple-100 rounded-full mr-4">
-                            <i class="mdi mdi-account-group text-purple-600 text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.customer_data') }}</h3>
-                            <p class="text-sm text-gray-600">{{ __('admin.customer_statistics') }}</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <span class="text-sm text-gray-700">{{ __('admin.new_customers') }}</span>
-                            <span class="font-medium text-purple-600" id="new-customers">{{ $newCustomers ?? 0 }}</span>
-                        </div>
-                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <span class="text-sm text-gray-700">{{ __('admin.total_customers') }}</span>
-                            <span class="font-medium text-purple-600"
-                                id="total-customers-count">{{ $totalCustomersCount ?? 0 }}</span>
+                            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <span class="text-sm text-gray-700">{{ __('admin.monthly_revenue') }}</span>
+                                <span class="font-medium text-green-600"
+                                    id="monthly-revenue">Rp{{ number_format($monthlyRevenue ?? 0, 0, ',', '.') }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Export Options -->
-        <div class="card mb-8">
-            <header class="card-header bg-gradient-to-r from-gray-50 to-gray-100">
-                <p class="card-header-title text-gray-800">
-                    <span class="icon text-gray-600"><i class="mdi mdi-download"></i></span>
-                    {{ __('admin.export_data_reports') }}
-                </p>
-            </header>
-            <div class="card-content">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <button onclick="openExportModal('financial', '{{ __('admin.export_financial_report') }}')"
-                        class="inline-flex items-center justify-center px-4 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
-                        <i class="mdi mdi-file-excel mr-2"></i>
-                        {{ __('admin.export_financial') }}
-                    </button>
-                    <button onclick="openExportModal('bookings', '{{ __('admin.export_booking_report') }}')"
-                        class="inline-flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
-                        <i class="mdi mdi-file-csv mr-2"></i>
-                        {{ __('admin.export_bookings') }}
-                    </button>
-                    <button onclick="openExportModal('customers', '{{ __('admin.export_customer_report') }}')"
-                        class="inline-flex items-center justify-center px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
-                        <i class="mdi mdi-file-pdf mr-2"></i>
-                        {{ __('admin.export_customers') }}
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Export Filter Modal -->
-        <div id="exportModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900" id="modalTitle">{{ __('admin.export_report') }}</h3>
-                    <button onclick="closeExportModal()" class="text-gray-400 hover:text-gray-600">
-                        <i class="mdi mdi-close text-xl"></i>
-                    </button>
-                </div>
-
-                <form id="exportForm" method="POST" action="{{ route('dashboard.export') }}">
-                    @csrf
-                    <input type="hidden" id="exportType" name="type" value="">
-
-                    <div class="mb-4">
-                        <label
-                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.export_format') }}</label>
-                        <select name="format" id="exportFormat"
-                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="pdf">PDF</option>
-                            <option value="excel">Excel (XLSX)</option>
-                            <option value="csv">CSV</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label
-                            class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.filter_period') }}</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <select name="month" id="exportMonth"
-                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="">{{ __('admin.all_months') }}</option>
-                                    <option value="1">{{ __('admin.january') }}</option>
-                                    <option value="2">{{ __('admin.february') }}</option>
-                                    <option value="3">{{ __('admin.march') }}</option>
-                                    <option value="4">{{ __('admin.april') }}</option>
-                                    <option value="5">{{ __('admin.may') }}</option>
-                                    <option value="6">{{ __('admin.june') }}</option>
-                                    <option value="7">{{ __('admin.july') }}</option>
-                                    <option value="8">{{ __('admin.august') }}</option>
-                                    <option value="9">{{ __('admin.september') }}</option>
-                                    <option value="10">{{ __('admin.october') }}</option>
-                                    <option value="11">{{ __('admin.november') }}</option>
-                                    <option value="12">{{ __('admin.december') }}</option>
-                                </select>
+                <!-- Booking Analytics -->
+                <div class="card hover:shadow-lg transition-shadow duration-200">
+                    <div class="card-content p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 bg-blue-100 rounded-full mr-4">
+                                <i class="mdi mdi-calendar-check text-blue-600 text-xl"></i>
                             </div>
                             <div>
-                                <select name="year" id="exportYear"
-                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="">{{ __('admin.all_years') }}</option>
-                                    @for ($year = date('Y'); $year >= date('Y') - 5; $year--)
-                                        <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
-                                            {{ $year }}</option>
-                                    @endfor
-                                </select>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.booking_analysis') }}</h3>
+                                <p class="text-sm text-gray-600">{{ __('admin.booking_status_trends') }}</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            @php
+                                $bookingStats = \App\Models\Booking::selectRaw('status, COUNT(*) as count')
+                                    ->groupBy('status')
+                                    ->get();
+                                $total = $bookingStats->sum('count');
+                                $statusColors = [
+                                    'pending' => 'text-yellow-600',
+                                    'confirmed' => 'text-blue-600',
+                                    'completed' => 'text-green-600',
+                                    'cancelled' => 'text-red-600',
+                                ];
+                            @endphp
+                            @foreach ($bookingStats->take(2) as $stat)
+                                <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                    <span class="text-sm text-gray-700">{{ __('admin.' . $stat->status) }}</span>
+                                    <span
+                                        class="font-medium {{ $statusColors[$stat->status] ?? 'text-gray-600' }}">{{ $stat->count }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Analytics -->
+                <div class="card hover:shadow-lg transition-shadow duration-200">
+                    <div class="card-content p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 bg-purple-100 rounded-full mr-4">
+                                <i class="mdi mdi-account-group text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ __('admin.customer_data') }}</h3>
+                                <p class="text-sm text-gray-600">{{ __('admin.customer_statistics') }}</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <span class="text-sm text-gray-700">{{ __('admin.new_customers') }}</span>
+                                <span class="font-medium text-purple-600" id="new-customers">{{ $newCustomers ?? 0 }}</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <span class="text-sm text-gray-700">{{ __('admin.total_customers') }}</span>
+                                <span class="font-medium text-purple-600"
+                                    id="total-customers-count">{{ $totalCustomersCount ?? 0 }}</span>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" onclick="closeExportModal()"
-                            class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-                            {{ __('admin.cancel') }}
+            <!-- Export Options -->
+            <div class="card mb-8">
+                <header class="card-header bg-gradient-to-r from-gray-50 to-gray-100">
+                    <p class="card-header-title text-gray-800">
+                        <span class="icon text-gray-600"><i class="mdi mdi-download"></i></span>
+                        {{ __('admin.export_data_reports') }}
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="openExportModal('financial', '{{ __('admin.export_financial_report') }}')"
+                            class="inline-flex items-center justify-center px-4 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
+                            <i class="mdi mdi-file-excel mr-2"></i>
+                            {{ __('admin.export_financial') }}
                         </button>
-                        <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
-                            <i class="mdi mdi-download mr-2"></i>
-                            {{ __('admin.export') }}
+                        <button onclick="openExportModal('bookings', '{{ __('admin.export_booking_report') }}')"
+                            class="inline-flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
+                            <i class="mdi mdi-file-csv mr-2"></i>
+                            {{ __('admin.export_bookings') }}
+                        </button>
+                        <button onclick="openExportModal('customers', '{{ __('admin.export_customer_report') }}')"
+                            class="inline-flex items-center justify-center px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition duration-200 hover:shadow-md">
+                            <i class="mdi mdi-file-pdf mr-2"></i>
+                            {{ __('admin.export_customers') }}
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
 
+            <!-- Export Filter Modal -->
+            <div id="exportModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+                <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900" id="modalTitle">{{ __('admin.export_report') }}</h3>
+                        <button onclick="closeExportModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="mdi mdi-close text-xl"></i>
+                        </button>
+                    </div>
 
+                    <form id="exportForm" method="POST" action="{{ route('dashboard.export') }}">
+                        @csrf
+                        <input type="hidden" id="exportType" name="type" value="">
 
+                        <div class="mb-4">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.export_format') }}</label>
+                            <select name="format" id="exportFormat"
+                                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="pdf">PDF</option>
+                                <option value="excel">Excel (XLSX)</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label
+                                class="block text-sm font-medium text-gray-700 mb-2">{{ __('admin.filter_period') }}</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <select name="month" id="exportMonth"
+                                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="">{{ __('admin.all_months') }}</option>
+                                        <option value="1">{{ __('admin.january') }}</option>
+                                        <option value="2">{{ __('admin.february') }}</option>
+                                        <option value="3">{{ __('admin.march') }}</option>
+                                        <option value="4">{{ __('admin.april') }}</option>
+                                        <option value="5">{{ __('admin.may') }}</option>
+                                        <option value="6">{{ __('admin.june') }}</option>
+                                        <option value="7">{{ __('admin.july') }}</option>
+                                        <option value="8">{{ __('admin.august') }}</option>
+                                        <option value="9">{{ __('admin.september') }}</option>
+                                        <option value="10">{{ __('admin.october') }}</option>
+                                        <option value="11">{{ __('admin.november') }}</option>
+                                        <option value="12">{{ __('admin.december') }}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select name="year" id="exportYear"
+                                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="">{{ __('admin.all_years') }}</option>
+                                        @for ($year = date('Y'); $year >= date('Y') - 5; $year--)
+                                            <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
+                                                {{ $year }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="closeExportModal()"
+                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                {{ __('admin.cancel') }}
+                            </button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
+                                <i class="mdi mdi-download mr-2"></i>
+                                {{ __('admin.export') }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        @endrole
     </section>
 @endsection
 
