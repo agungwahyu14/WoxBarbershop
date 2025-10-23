@@ -382,9 +382,12 @@
 
                         <!-- Submit Button -->
                         @auth
-                            <button type="submit"
+                            <button type="submit" id="submit-booking"
                                 class="rounded-lg w-full bg-secondary hover:bg-primary text-black hover:text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1">
-                                {{ __('welcome.reservation_submit') }}
+                                <span id="submit-text">{{ __('welcome.reservation_submit') }}</span>
+                                <span id="loading-text" class="hidden">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i>{{ __('welcome.processing') }}...
+                                </span>
                             </button>
                         @else
                             <a href="{{ route('login') }}"
@@ -431,8 +434,14 @@
 
 
 @push('scripts')
+    <!-- jQuery untuk AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SweetAlert2 untuk notifikasi -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Booking Form AJAX Handler -->
+    <script src="{{ asset('js/booking-form-ajax.js') }}"></script>
+
     @if (session('booking_error'))
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             Swal.fire({
                 icon: 'error',
@@ -442,4 +451,17 @@
             });
         </script>
     @endif
+
+    {{-- @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#10B981',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif --}}
 @endpush

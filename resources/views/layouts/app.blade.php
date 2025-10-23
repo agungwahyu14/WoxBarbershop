@@ -152,17 +152,17 @@
     <!-- SweetAlert Script -->
     <script>
         // SweetAlert for Success Messages
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: '{{ __('admin.success_title') }}',
-                text: '{{ session('success') }}',
-                timer: 4000,
-                showConfirmButton: true,
-                toast: true,
-                position: 'top-end'
-            });
-        @endif
+        // @if (session('success'))
+        //     Swal.fire({
+        //         icon: 'success',
+        //         title: '{{ __('admin.success_title') }}',
+        //         text: '{{ session('success') }}',
+        //         timer: 4000,
+        //         showConfirmButton: true,
+        //         toast: true,
+        //         position: 'top-end'
+        //     });
+        // @endif
 
         // SweetAlert for Booking Success (Special handling)
         @if (session('booking_success'))

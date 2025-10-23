@@ -70,6 +70,7 @@ return [
     // Buttons
     'reservation_submit' => 'RESERVASI',
     'login_to_reserve' => 'MASUK UNTUK RESERVASI',
+    'processing' => 'Memproses',
     
     // Gallery
     'our_gallery' => 'Galeri Kami',

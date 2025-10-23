@@ -322,6 +322,22 @@ class BookingController extends Controller
                 'queue_number' => $booking->queue_number
             ]);
 
+            // Check if request is AJAX
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Booking berhasil dibuat! Nomor antrian Anda: {$booking->queue_number}",
+                    'data' => [
+                        'booking_id' => $booking->id,
+                        'name' => $booking->name,
+                        'queue_number' => $booking->queue_number,
+                        'date_time' => $booking->date_time->format('d/m/Y H:i'),
+                        'service_name' => $booking->service->name ?? 'N/A'
+                    ],
+                    'redirect' => route('bookings.index')
+                ]);
+            }
+
             // Redirect ke halaman booking dengan pesan sukses
             return redirect()->route('bookings.index')
                 ->with('success', "Booking berhasil dibuat! Nomor antrian Anda: {$booking->queue_number}")
@@ -341,6 +357,15 @@ class BookingController extends Controller
                 'validation_errors' => $e->errors(),
                 'ip' => $request->ip()
             ]);
+
+            // Check if request is AJAX for validation errors
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validasi gagal. Mohon periksa input Anda.',
+                    'errors' => $e->errors()
+                ], 422);
+            }
 
             return back()
                 ->withErrors($e->errors())
@@ -363,6 +388,27 @@ class BookingController extends Controller
             // Handle different error types with appropriate messages
             $errorCode = $e->getCode();
             $errorMessage = $e->getMessage();
+            
+            // Check if request is AJAX for general errors
+            if ($request->wantsJson() || $request->ajax()) {
+                $statusCode = 500; // Default server error
+                
+                if ($errorCode === 422) {
+                    $statusCode = 422;
+                    $message = $errorMessage ?: 'Validasi jam operasional gagal';
+                } elseif ($errorCode === 409) {
+                    $statusCode = 409;
+                    $message = $errorMessage ?: 'Jadwal bentrok dengan booking lain';
+                } else {
+                    $message = 'Terjadi kesalahan saat membuat booking. Silakan coba lagi.';
+                }
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                    'error_type' => $errorCode === 422 ? 'business_hours' : ($errorCode === 409 ? 'time_conflict' : 'general')
+                ], $statusCode);
+            }
             
             if ($errorCode === 422) {
                 // Business hours validation errors

@@ -62,7 +62,14 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerate();
 
-            // Default redirect for customers and other roles
+            // Clear any admin-related intended URL for regular users
+            if ($user->hasRole('pelanggan')) {
+                $request->session()->forget('url.intended');
+                return redirect()->route('dashboard')
+                    ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+            }
+
+            // For admin/pegawai, allow intended redirect or default to dashboard
             return redirect()->intended(RouteServiceProvider::HOME)
                 ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
 

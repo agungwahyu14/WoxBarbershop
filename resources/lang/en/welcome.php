@@ -65,6 +65,7 @@ return [
     // Buttons
     'reservation_submit' => 'RESERVE',
     'login_to_reserve' => 'LOGIN TO RESERVE',
+    'processing' => 'Processing',
     
     // Gallery
     'our_gallery' => 'Our Gallery',
