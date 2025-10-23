@@ -91,34 +91,38 @@ class FeedbackController extends Controller
                     </div>';
                 })
                 ->addColumn('action', function ($row) {
-                    $actions = '<div class="flex items-center gap-2 justify-center">';
-                    
-                    // View button
-                    $actions .= '<a href="' . route('admin.feedbacks.show', $row->id) . '" 
-                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-colors duration-200">
-                        <i class="fas fa-eye"></i>
-                    </a>';
-                    
-                    // Toggle Public button
-                    $publicColor = $row->is_public ? 'yellow' : 'blue';
-$icon = $row->is_public ? 'fa-eye-slash' : 'fa-eye';
+    $actions = '<div class="flex items-center gap-2 justify-center">';
 
-$actions .= '<button type="button" data-id="' . $row->id . '" data-action="toggle-public" 
-    class="toggleBtn inline-flex items-center justify-center w-8 h-8 rounded-lg  text-' . $publicColor . '-600 bg-' . $publicColor . '-50 rounded-md hover:bg-' . $publicColor . '-100 transition-colors">
-    <i class="fas ' . $icon . '"></i>
-</button>';
+    // Tombol View (semua role bisa lihat)
+    $actions .= '<a href="' . route('admin.feedbacks.show', $row->id) . '" 
+        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-colors duration-200">
+        <i class="fas fa-eye"></i>
+    </a>';
 
-                    
-                    // Delete button
-                    $actions .= '<button type="button" data-id="' . $row->id . '" 
-                        class="deleteBtn inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200">
-                        <i class="fas fa-trash"></i>
-                    </button>';
-                    
-                    $actions .= '</div>';
-                    
-                    return $actions;
-                })
+    // Hanya tampil jika user punya role 'admin'
+    if (auth()->user()->hasRole('admin')) {
+
+        // Toggle Public button
+        $publicColor = $row->is_public ? 'yellow' : 'blue';
+        $icon = $row->is_public ? 'fa-eye-slash' : 'fa-eye';
+
+        $actions .= '<button type="button" data-id="' . $row->id . '" data-action="toggle-public" 
+            class="toggleBtn inline-flex items-center justify-center w-8 h-8 rounded-lg text-' . $publicColor . '-600 bg-' . $publicColor . '-50 hover:bg-' . $publicColor . '-100 transition-colors">
+            <i class="fas ' . $icon . '"></i>
+        </button>';
+
+        // Delete button
+        $actions .= '<button type="button" data-id="' . $row->id . '" 
+            class="deleteBtn inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors duration-200">
+            <i class="fas fa-trash"></i>
+        </button>';
+    }
+
+    $actions .= '</div>';
+
+    return $actions;
+})
+
                 ->rawColumns(['user.name', 'booking.id', 'rating', 'comment', 'is_public', 'is_active', 'created_at', 'action'])
                 ->make(true);
         }

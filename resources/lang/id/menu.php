@@ -3,7 +3,7 @@
 return [
     // Main Menu Items
     'dashboard' => 'Dashboard',
-    'bookings' => 'Booking',
+    'bookings' => 'Pemesanan',
     'services' => 'Layanan',
     'users' => 'Pengguna',
     'customers' => 'Pelanggan',
@@ -27,14 +27,14 @@ return [
     'loyalty' => 'Kesetiaan',
     
     // Booking Menu
-    'booking_management' => 'Manajemen Booking',
-    'all_bookings' => 'Semua Booking',
-    'pending_bookings' => 'Booking Menunggu',
-    'confirmed_bookings' => 'Booking Dikonfirmasi',
-    'completed_bookings' => 'Booking Selesai',
-    'cancelled_bookings' => 'Booking Dibatalkan',
-    'booking_calendar' => 'Kalender Booking',
-    'booking_history' => 'Riwayat Booking',
+    'booking_management' => 'Manajemen Pemesanan',
+    'all_bookings' => 'Semua Pemesanan',
+    'pending_bookings' => 'Pemesanan Menunggu',
+    'confirmed_bookings' => 'Pemesanan Dikonfirmasi',
+    'completed_bookings' => 'Pemesanan Selesai',
+    'cancelled_bookings' => 'Pemesanan Dibatalkan',
+    'booking_calendar' => 'Kalender Pemesanan',
+    'booking_history' => 'Riwayat Pemesanan',
     
     // Service Menu
     'service_management' => 'Manajemen Layanan',
@@ -86,7 +86,7 @@ return [
     // Reports Menu
     'reports_analytics' => 'Laporan & Analitik',
     'sales_report' => 'Laporan Penjualan',
-    'booking_report' => 'Laporan Booking',
+    'booking_report' => 'Laporan Pemesanan',
     'customer_report' => 'Laporan Pelanggan',
     'staff_report' => 'Laporan Staff',
     'financial_report' => 'Laporan Keuangan',
@@ -103,7 +103,7 @@ return [
     
     // Quick Actions
     'quick_actions' => 'Aksi Cepat',
-    'add_booking' => 'Tambah Booking',
+    'add_booking' => 'Tambah Pemesanan',
     'add_customer' => 'Tambah Pelanggan',
     'add_service' => 'Tambah Layanan',
     'view_calendar' => 'Lihat Kalender',

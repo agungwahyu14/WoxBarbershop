@@ -331,7 +331,7 @@ return [
     'loading' => 'Loading...',
     
     // Dashboard
-    'dashboard_title' => 'Admin Dashboard',
+    // 'dashboard_title' => 'Admin Dashboard',
     'dashboard_subtitle' => 'Welcome to WOX Barbershop administration panel',
     'total_users' => 'Total Users',
     'total_bookings' => 'Total Bookings',

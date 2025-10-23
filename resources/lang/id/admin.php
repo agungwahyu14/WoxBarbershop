@@ -302,7 +302,7 @@ return [
     
     // Hairstyle Scores
     'hairstyle_scores' => 'Skor Gaya Rambut',
-    'add_hairstyle_score' => 'Tambah Skor Gaya Rambut',
+    'add_hairstyle_score' => 'Buat Skor Gaya Rambut',
     'edit_hairstyle_score' => 'Edit Skor Gaya Rambut',
     'score_information' => 'Informasi Skor',
     'update_score_information' => 'Perbarui Informasi Skor',
@@ -315,9 +315,9 @@ return [
     'criteria' => 'Kriteria',
     'select_criteria' => 'Pilih Kriteria',
     'score' => 'Skor',
-    'save_score' => 'Simpan Skor',
-    'add_score' => 'Tambah Skor',
-    'update_score' => 'Perbarui Skor',
+    'save_score' => 'Buat Skor',
+    'add_score' => 'Buat Skor',
+    'update_score' => 'Edit Skor',
     'manage_hairstyle_scores' => 'Kelola skor gaya rambut untuk WOX Barbershop',
     
     // DataTables - Hairstyles
@@ -328,7 +328,7 @@ return [
     'loading' => 'Memuat...',
     
     // Dashboard
-    'dashboard_title' => 'Dashboard Admin',
+    // 'dashboard_title' => 'Dashboard Admin',
     'dashboard_subtitle' => 'Selamat datang di panel administrasi WOX Barbershop',
     'total_users' => 'Total Pengguna',
     'total_bookings' => 'Total Pemesanan',
@@ -909,7 +909,7 @@ return [
     // Hairstyle Scores specific
     'hairstyle_scores' => 'Skor Gaya Rambut',
     'manage_hairstyle_scores' => 'Kelola skor evaluasi untuk gaya rambut',
-    'add_score' => 'Tambah Skor',
+    'add_score' => 'Buat Skor',
     'loading_scores' => 'Memuat skor...',
     'no_matching_scores' => 'Tidak ada skor yang cocok',
     'no_scores_available' => 'Tidak ada skor tersedia',

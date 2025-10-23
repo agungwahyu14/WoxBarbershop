@@ -79,7 +79,7 @@
                     @foreach ($results as $index => $style)
                         <div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-all">
                             <img src="{{ $style['hairstyle']->image ? asset('storage/' . $style['hairstyle']->image) : asset('img/placeholder.svg') }}"
-                                alt="{{ $style['hairstyle']->name }}" class="w-full h-60 object-cover">
+                                alt="{{ $style['hairstyle']->name }}" class="w-full h-80 object-cover">
 
                             <div class="p-4">
                                 <h3 class="text-xl font-semibold text-gray-800 mb-2">
