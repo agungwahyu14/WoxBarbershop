@@ -31,5 +31,6 @@ class AppServiceProvider extends ServiceProvider
             return Cookie::make($name, $value, $rememberDuration, '/', $domain, $secure, $httpOnly, false, $sameSite);
         });
         */
+        \URL::forceScheme('https');
     }
 }

@@ -71,7 +71,7 @@ if (!function_exists('translate_or_fallback')) {
      * @param string|null $locale
      * @return string
      */
-    function translate_or_fallback(string $key, array $replace = [], string $locale = null): string
+    function translate_or_fallback(string $key, array $replace = [], string $locale = ""): string
     {
         $translation = trans($key, $replace, $locale);
         
