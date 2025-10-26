@@ -438,8 +438,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- SweetAlert2 untuk notifikasi -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Booking Form AJAX Handler -->
-    <script src="{{ asset('js/booking-form-ajax.js') }}"></script>
+    
+    <!-- Pass translations to JavaScript -->
+    <script>
+        window.bookingTranslations = @json(__('booking'));
+    </script>
+    
+    <!-- Multi-Language Booking Form AJAX Handler -->
+    <script src="{{ asset('js/booking-form-ajax-multilang.js') }}"></script>
 
     @if (session('booking_error'))
         <script>

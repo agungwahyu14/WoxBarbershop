@@ -28,11 +28,10 @@
                         {{-- Queue --}}
                         @if (isset($queuePosition) && $queuePosition)
                             <div>
-                                <h4 class="text-sm text-gray-500 uppercase mb-1">Nomor Pesanan</h4>
+                                <h4 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.queue_number') }}</h4>
                                 <p class="text-xl font-semibold text-blue-600">#{{ $queuePosition }}</p>
                                 @if (isset($estimatedWaitTime) && $estimatedWaitTime > 0)
-                                    <p class="text-sm text-gray-500 mt-1">Estimasi tunggu: {{ $estimatedWaitTime }} menit
-                                    </p>
+                                    <p class="text-sm text-gray-500 mt-1">{{ __('booking.estimated_wait') }}: {{ $estimatedWaitTime }} {{ __('booking.minutes') }}</p>
                                 @endif
                             </div>
                         @endif
@@ -201,9 +200,9 @@
                         </a>
 
                         {{-- Edit Booking (only if status allows and no pending transaction) --}}
-                        @if (in_array($booking->status, ['pending', 'confirmed']) && 
-                              (!isset($booking->transaction) || 
-                               !in_array($booking->transaction->transaction_status ?? '', ['pending', 'settlement'])))
+                        @if (in_array($booking->status, ['pending', 'confirmed']) &&
+                                (!isset($booking->transaction) ||
+                                    !in_array($booking->transaction->transaction_status ?? '', ['pending', 'settlement'])))
                             <a href="{{ route('bookings.edit', $booking->id) }}"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
                                 <i class="fas fa-edit mr-2"></i>
@@ -254,13 +253,13 @@
                                         {{ __('booking.pay_cash') }}
                                     </button>
                                 </form>
-                            @elseif ($booking->payment_method === 'cash' && $booking->transaction)
+                                {{-- @elseif ($booking->payment_method === 'cash' && $booking->transaction)
                                 <!-- Button untuk melihat transaksi cash jika sudah ada -->
                                 <a href="{{ route('payment.show', $booking->id) }}"
                                     class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
                                     <i class="fas fa-eye mr-2"></i>
                                     {{ __('booking.view_transaction') }}
-                                </a>
+                                </a> --}}
                             @endif
                         @endif
 
@@ -315,14 +314,16 @@
                                     {{ __('booking.give_feedback') }}
                                 </button>
                             @endif
+
+                            <a href="{{ route('dashboard') }}#reservasi"
+                                class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                <i class="fas fa-plus mr-2"></i>
+                                {{ __('booking.new_booking') }}
+                            </a>
                         @endif
 
                         {{-- Create New Booking --}}
-                        <a href="{{ route('dashboard') }}#reservasi"
-                            class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                            <i class="fas fa-plus mr-2"></i>
-                            {{ __('booking.new_booking') }}
-                        </a>
+
 
                     </div>
 

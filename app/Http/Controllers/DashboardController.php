@@ -88,10 +88,11 @@ class DashboardController extends Controller
             $revenueData[] = $monthlyRevenue;
         }
 
-        // Today's bookings with details
+        // Today's bookings with details (max 20 data)
         $todayBookingsData = Booking::with(['user', 'service'])
             ->whereDate('date_time', today())
             ->orderBy('date_time', 'asc')
+            ->take(20)
             ->get();
 
         // Additional data for analytics section
@@ -180,10 +181,11 @@ class DashboardController extends Controller
 
         $popularServiceName = $popularService ? Service::find($popularService->service_id)->name : '-';
 
-        // Today's bookings with details
+        // Today's bookings with details (max 20 data)
         $todayBookingsData = Booking::with(['user', 'service'])
             ->whereDate('date_time', today())
             ->orderBy('date_time', 'asc')
+            ->take(20)
             ->get()
             ->map(function ($booking) {
                 return [

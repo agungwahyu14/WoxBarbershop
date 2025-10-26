@@ -13,6 +13,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        
+        // Cancel expired bookings every hour
+        $schedule->command('app:cancel-expired-bookings')
+                 ->hourly()
+                 ->description('Cancel bookings and transactions that have expired');
     }
 
     /**

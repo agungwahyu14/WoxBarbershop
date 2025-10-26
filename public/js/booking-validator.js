@@ -1,6 +1,6 @@
 /**
- * Booking Business Hours Validation
- * Real-time validation untuk jam operasional barbershop
+ * Multi-Language Booking Business Hours Validation
+ * Real-time validation untuk jam operasional barbershop dengan multi-language support
  */
 
 class BookingValidator {
@@ -11,7 +11,28 @@ class BookingValidator {
             closedDays: [] // Open every day, no holidays
         };
 
+        this.translations = {};
+        this.loadTranslations();
         this.init();
+    }
+
+    loadTranslations() {
+        // Load translations from window object (passed from blade template)
+        if (window.bookingTranslations) {
+            this.translations = window.bookingTranslations;
+        }
+    }
+
+    // Translation function
+    __(key, replacements = {}) {
+        let translation = this.translations[key] || key;
+        
+        // Replace placeholders in translation
+        Object.keys(replacements).forEach(placeholder => {
+            translation = translation.replace(`:${placeholder}`, replacements[placeholder]);
+        });
+        
+        return translation;
     }
 
     init() {
@@ -124,25 +145,25 @@ class BookingValidator {
         const hour = dateTime.getHours();
         const dayOfWeek = dateTime.getDay();
 
-        // Check if booking time is in the past
+        // Check if booking time is in past
         if (dateTime < now) {
             result.isValid = false;
-            result.errors.push('Tidak dapat membuat booking di waktu yang sudah berlalu');
+            result.errors.push(this.__('past_date_not_allowed'));
             return result;
         }
 
         // Check if it's a business day (not Sunday)
         if (this.businessHours.closedDays.includes(dayOfWeek)) {
             result.isValid = false;
-            result.errors.push('Maaf, barbershop tutup pada hari Minggu');
-            result.suggestions.push('Silakan pilih hari Senin - Sabtu');
+            result.errors.push(this.__('closed_sunday'));
+            result.suggestions.push(this.__('choose_weekday'));
 
             // Suggest next business day
             const nextBusinessDay = new Date(dateTime);
             while (this.businessHours.closedDays.includes(nextBusinessDay.getDay())) {
                 nextBusinessDay.setDate(nextBusinessDay.getDate() + 1);
             }
-            result.suggestions.push(`Hari kerja berikutnya: ${this.formatDate(nextBusinessDay)}`);
+            result.suggestions.push(`${this.__('next_business_day')}: ${this.formatDate(nextBusinessDay)}`);
         }
 
         // Check business hours
@@ -150,24 +171,24 @@ class BookingValidator {
             result.isValid = false;
 
             if (hour < this.businessHours.open) {
-                result.errors.push(`Barbershop belum buka. Jam operasional: ${this.businessHours.open.toString().padStart(2, '0')}:00 - ${this.businessHours.close.toString().padStart(2, '0')}:00`);
-                result.suggestions.push(`Silakan pilih waktu mulai jam ${this.businessHours.open.toString().padStart(2, '0')}:00`);
+                result.errors.push(`${this.__('shop_not_open')}. ${this.__('business_hours_error')}`);
+                result.suggestions.push(`${this.__('select_time_from')} ${this.businessHours.open.toString().padStart(2, '0')}:00`);
             } else {
-                result.errors.push(`Barbershop sudah tutup. Jam operasional: ${this.businessHours.open.toString().padStart(2, '0')}:00 - ${this.businessHours.close.toString().padStart(2, '0')}:00`);
-                result.suggestions.push(`Silakan pilih waktu sebelum jam ${this.businessHours.close.toString().padStart(2, '0')}:00`);
+                result.errors.push(`${this.__('shop_closed')}. ${this.__('business_hours_error')}`);
+                result.suggestions.push(`${this.__('select_time_before')} ${this.businessHours.close.toString().padStart(2, '0')}:00`);
             }
         }
 
         // Check if booking is too far in advance (30 days)
         const daysInAdvance = Math.ceil((dateTime - now) / (1000 * 60 * 60 * 24));
         if (daysInAdvance > 30) {
-            result.warnings.push('Booking terlalu jauh di masa depan (maksimal 30 hari ke depan)');
+            result.warnings.push(this.__('booking_too_far_advance', {days: 30}));
         }
 
         // Check if booking is very soon (less than 2 hours)
         const hoursFromNow = Math.ceil((dateTime - now) / (1000 * 60 * 60));
         if (hoursFromNow < 2 && hoursFromNow > 0) {
-            result.warnings.push('Booking dalam waktu dekat. Pastikan Anda bisa hadir tepat waktu');
+            result.warnings.push(this.__('booking_soon_warning'));
         }
 
         return result;
@@ -176,30 +197,30 @@ class BookingValidator {
     showValidationAlert(validation) {
         const errorMessage = validation.errors.join('. ');
         const suggestions = validation.suggestions.length > 0 ?
-            '<div class="mt-3 p-3 bg-red-50 rounded-lg"><h4 class="font-semibold text-red-800 mb-2"><i class="fas fa-lightbulb mr-1"></i> Saran:</h4>' +
+            '<div class="mt-3 p-3 bg-red-50 rounded-lg"><h4 class="font-semibold text-red-800 mb-2"><i class="fas fa-lightbulb mr-1"></i> ' + this.__('suggestions') + ':</h4>' +
             validation.suggestions.map(s => `<p class="text-red-700 text-sm">• ${s}</p>`).join('') +
             '</div>' : '';
 
         Swal.fire({
             icon: 'error',
-            title: 'Waktu Tidak Valid',
+            title: this.__('time_invalid'),
             html: `
                 <div class="text-left">
                     <p class="mb-3">${errorMessage}</p>
                     <div class="bg-red-50 p-3 rounded-lg">
                         <h4 class="font-semibold text-red-800 mb-2">
-                            <i class="fas fa-clock mr-1"></i> Jam Operasional:
+                            <i class="fas fa-clock mr-1"></i> ${this.__('operating_hours')}:
                         </h4>
                         <p class="text-red-700">
-                            <strong>Senin - Sabtu:</strong> ${this.businessHours.open.toString().padStart(2, '0')}:00 - ${this.businessHours.close.toString().padStart(2, '0')}:00<br>
-                            <strong>Minggu:</strong> Tutup
+                            <strong>${this.__('monday_saturday')}:</strong> ${this.businessHours.open.toString().padStart(2, '0')}:00 - ${this.businessHours.close.toString().padStart(2, '0')}:00<br>
+                            <strong>${this.__('sunday')}:</strong> ${this.__('closed')}
                         </p>
                     </div>
                     ${suggestions}
                 </div>
             `,
             showConfirmButton: true,
-            confirmButtonText: 'Pilih Waktu Lain',
+            confirmButtonText: this.__('select_different_time'),
             confirmButtonColor: '#DC2626'
         });
     }
@@ -209,20 +230,20 @@ class BookingValidator {
 
         Swal.fire({
             icon: 'warning',
-            title: 'Perhatian',
+            title: this.__('attention'),
             html: `
                 <div class="text-left">
                     <p class="mb-3">${warningMessage}</p>
                     <div class="bg-yellow-50 p-3 rounded-lg">
                         <p class="text-yellow-800">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Booking Anda masih valid, tetapi mohon perhatikan informasi di atas.
+                            ${this.__('booking_valid_note')}
                         </p>
                     </div>
                 </div>
             `,
             showConfirmButton: true,
-            confirmButtonText: 'Mengerti',
+            confirmButtonText: this.__('understand'),
             confirmButtonColor: '#F59E0B',
             toast: true,
             position: 'top-end',
@@ -231,9 +252,19 @@ class BookingValidator {
     }
 
     formatDate(date) {
-        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        // Get day and month names based on current locale
+        const locale = document.documentElement.lang || 'id';
+        let days, months;
+
+        if (locale === 'en') {
+            days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            months = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+        } else {
+            days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        }
 
         const dayName = days[date.getDay()];
         const day = date.getDate();
@@ -271,7 +302,7 @@ class BookingValidator {
             attempts++;
         }
 
-        throw new Error('No available slots found in the next week');
+        throw new Error('No available slots found in next week');
     }
 }
 
