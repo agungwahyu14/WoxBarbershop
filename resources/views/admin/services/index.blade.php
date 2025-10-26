@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
+    <!-- Page Header -->
     <section class="is-hero-bar">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div>
@@ -40,6 +41,8 @@
                             <th>{{ __('admin.name_column') }}</th>
                             <th>{{ __('admin.description_column') }}</th>
                             <th>{{ __('admin.price_column') }}</th>
+                            <th>{{ __('admin.duration_column') }}</th>
+                            <th>{{ __('admin.is_active') }}</th>
                             <th>{{ __('admin.actions_column') }}</th>
                         </tr>
                     </thead>
@@ -117,6 +120,21 @@
                         data: 'price',
                         name: 'price',
                         className: 'text-right'
+                    },
+                    {
+                        data: 'duration',
+                        name: 'duration',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'is_active',
+                        name: 'is_active',
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            return data ?
+                                '<span class="text-green-500">{{ __('admin.active') }}</span>' :
+                                '<span class="text-red-500">{{ __('admin.inactive') }}</span>';
+                        }
                     },
                     {
                         data: 'action',

@@ -84,6 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/transaction', [PaymentController::class, 'index'])->name('payment.index');
         Route::get('/transactions', [PaymentController::class, 'index'])->name('transactions.index');
         Route::post('/transaction/cash', [PaymentController::class, 'cashPayment'])->name('payment.cash');
+        Route::post('/transaction/cancel', [PaymentController::class, 'cancelTransaction'])->name('payment.cancel');
         Route::get('/transaction/{orderId}', [PaymentController::class, 'show'])->name('payment.show');
         Route::get('/transaction/va/{orderId}', [PaymentController::class, 'showVA']);
         Route::get('/transaction/download/{orderId}', [PaymentController::class, 'downloadReceipt'])->name('transaction.download');
@@ -189,6 +190,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Additional transaction routes
         Route::post('transactions/{id}/settlement', [TransactionController::class, 'markAsSettlement'])->name('admin.transactions.settlement');
+        Route::post('transactions/{id}/cancel', [TransactionController::class, 'cancelTransaction'])->name('admin.transactions.cancel');
+        Route::post('transactions/{id}/refresh-status', [TransactionController::class, 'refreshStatus'])->name('admin.transactions.refresh-status');
         Route::resource('loyalty', AdminLoyaltyController::class)->names([
             'index' => 'admin.loyalty.index',
             'create' => 'admin.loyalty.create',

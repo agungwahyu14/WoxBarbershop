@@ -2,7 +2,7 @@
 
 return [
     // Hero Section
-    'reservation_button' => 'Buat Reservasi',
+    'reservation_button' => 'Buat Pemesanan',
     'view_services' => 'Lihat Layanan',
 
     // Services Section
@@ -68,15 +68,15 @@ return [
     'description' => 'Deskripsi',
     
     // Buttons
-    'reservation_submit' => 'RESERVASI',
-    'login_to_reserve' => 'MASUK UNTUK RESERVASI',
+    'reservation_submit' => 'PEMESANAN',
+    'login_to_reserve' => 'MASUK UNTUK PEMESANAN',
     'processing' => 'Memproses',
     
     // Gallery
     'our_gallery' => 'Galeri Kami',
     
     // Messages
-    'booking_failed' => 'Reservasi Gagal',
+    'booking_failed' => 'Pemesanan Gagal',
     
     // Navigation Menu
     'home' => 'Beranda',

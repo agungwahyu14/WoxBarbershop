@@ -53,12 +53,15 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="no_telepon"
-                            class="block text-gray-700 font-medium mb-1">{{ __('auth.phone') }}</label>
-                        <input type="text" name="no_telepon" id="no_telepon"
+                        <label for="no_telepon" class="block text-gray-700 font-medium mb-1">
+                            {{ __('auth.phone') }}
+                        </label>
+                        <input type="tel" name="no_telepon" id="no_telepon"
                             class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
-                            value="{{ old('no_telepon') }}">
+                            value="{{ old('no_telepon') }}" pattern="[0-9]*" inputmode="numeric"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                     </div>
+
 
                     <div class="mb-4">
                         <label for="password"

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Backup & Restore Data')
+@section('title', __('admin.backup_restore_title'))
 
 @section('content')
     <!-- Page Header -->
@@ -44,7 +44,7 @@
                             </button> --}}
                             <button onclick="createBackup('partial')"
                                 class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
-                                aria-label="Backup Data Saja">
+                                aria-label="{{ __('admin.backup_partial_aria') }}">
                                 <i class="fas fa-archive mr-3" aria-hidden="true"></i>
                                 {{ __('admin.backup_partial') }}
                             </button>
@@ -72,11 +72,11 @@
                                 </label>
                                 <input type="file" id="restore_file" accept=".sql,.zip"
                                     class="w-full px-4 py-3 border-2 border-dashed border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-center cursor-pointer hover:border-red-400 transition-colors"
-                                    aria-label="Pilih file backup untuk restore">
+                                    aria-label="{{ __('admin.select_backup_file_aria') }}">
                             </div>
                             <button onclick="restoreBackup()"
                                 class="w-full inline-flex justify-center items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
-                                aria-label="Restore Database">
+                                aria-label="{{ __('admin.restore_database_aria') }}">
                                 <i class="fas fa-exclamation-triangle mr-3" aria-hidden="true"></i>
                                 {{ __('admin.restore_database') }}
                             </button>

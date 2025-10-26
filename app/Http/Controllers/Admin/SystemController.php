@@ -91,6 +91,18 @@ class SystemController extends Controller
             $path = $file->storeAs('temp', $filename);
             $fullPath = storage_path('app/' . $path);
             
+            // Basic validation for SQL file content
+            if ($file->getClientOriginalExtension() === 'sql') {
+                $content = file_get_contents($fullPath);
+                if (strpos($content, 'CREATE TABLE') === false && strpos($content, 'INSERT INTO') === false) {
+                    unlink($fullPath);
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('admin.invalid_sql_file')
+                    ], 400);
+                }
+            }
+            
             // Get database configuration
             $database = env('DB_DATABASE');
             $username = env('DB_USERNAME');
@@ -102,12 +114,23 @@ class SystemController extends Controller
                 // Extract ZIP file (simplified - you might want to use ZipArchive)
                 return response()->json([
                     'success' => false,
-                    'message' => 'ZIP files not supported yet. Please use .sql files.'
+                    'message' => __('admin.zip_files_not_supported')
                 ], 400);
             }
             
+            // Check if mysql client is available
+            exec('which mysql', $mysql_check, $mysql_return);
+            if ($mysql_return !== 0) {
+                // Clean up temporary file
+                unlink($fullPath);
+                return response()->json([
+                    'success' => false,
+                    'message' => __('admin.mysql_client_not_found')
+                ], 500);
+            }
+            
             // Restore from SQL file
-            $command = "mysql --user={$username} --password={$password} --host={$host} {$database} < {$fullPath}";
+            $command = "mysql --user={$username} --password='{$password}' --host={$host} {$database} < {$fullPath} 2>&1";
             
             exec($command, $output, $return_code);
             
@@ -115,21 +138,34 @@ class SystemController extends Controller
             unlink($fullPath);
             
             if ($return_code === 0) {
+                \Log::info('Database restore successful', [
+                    'filename' => $filename,
+                    'user_id' => auth()->id()
+                ]);
+                
                 return response()->json([
                     'success' => true,
-                    'message' => 'Database berhasil dipulihkan dari backup'
+                    'message' => __('admin.database_restored_successfully')
                 ]);
             } else {
+                \Log::error('Database restore failed', [
+                    'filename' => $filename,
+                    'return_code' => $return_code,
+                    'output' => implode('\n', $output),
+                    'user_id' => auth()->id()
+                ]);
+                
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal melakukan restore database'
+                    'message' => __('admin.failed_to_restore_database') . 
+                                 (app()->environment('local') ? ': ' . implode('\n', $output) : '')
                 ], 500);
             }
             
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => __('admin.restore_error') . ': ' . $e->getMessage()
             ], 500);
         }
     }

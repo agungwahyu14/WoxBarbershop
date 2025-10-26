@@ -113,7 +113,7 @@
                             <p>
                                 <span class="font-medium">{{ __('admin.booking_date') }}:</span>
                                 <span class="ml-2">
-                                    {{ $feedback->booking->booking_date ? \Carbon\Carbon::parse($feedback->booking->booking_date)->format('d M Y, H:i') : __('admin.not_scheduled') }}
+                                    {{ $feedback->booking->date_time ? \Carbon\Carbon::parse($feedback->booking->date_time)->format('d M Y, H:i') : __('admin.not_scheduled') }}
                                 </span>
                             </p>
                         @else

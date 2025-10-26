@@ -2,7 +2,7 @@
 
 return [
     // Hero Section
-    'reservation_button' => 'Make Reservation',
+    'reservation_button' => 'Make Booking',
     'view_services' => 'View Services',
 
     // Services Section
@@ -63,8 +63,8 @@ return [
     'description' => 'Description',
     
     // Buttons
-    'reservation_submit' => 'RESERVE',
-    'login_to_reserve' => 'LOGIN TO RESERVE',
+    'reservation_submit' => 'BOOK',
+    'login_to_reserve' => 'LOGIN TO BOOK',
     'processing' => 'Processing',
     
     // Gallery

@@ -28,7 +28,7 @@
                         {{-- Queue --}}
                         @if (isset($queuePosition) && $queuePosition)
                             <div>
-                                <h4 class="text-sm text-gray-500 uppercase mb-1">Nomor Antrian</h4>
+                                <h4 class="text-sm text-gray-500 uppercase mb-1">Nomor Pesanan</h4>
                                 <p class="text-xl font-semibold text-blue-600">#{{ $queuePosition }}</p>
                                 @if (isset($estimatedWaitTime) && $estimatedWaitTime > 0)
                                     <p class="text-sm text-gray-500 mt-1">Estimasi tunggu: {{ $estimatedWaitTime }} menit
@@ -45,6 +45,27 @@
                                 {{ $booking->date_time->format('d M Y') }}
                             </p>
                             <p class="text-sm text-gray-500">{{ $booking->date_time->format('H:i') }}</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.payment_status') }}</h4>
+                            <p class="text-xl font-semibold text-gray-800">
+                                @if ($booking->transaction)
+                                    @if ($booking->transaction->transaction_status === 'settlement')
+                                        <i class="fas fa-check-circle mr-2 text-green-600"></i>
+                                        {{ __('booking.payment_success') }}
+                                    @elseif ($booking->transaction->transaction_status === 'pending')
+                                        <i class="fas fa-clock mr-2 text-yellow-500"></i>
+                                        {{ __('booking.payment_pending') }}
+                                    @else
+                                        <i class="fas fa-question-circle mr-2 text-gray-500"></i>
+                                        {{ __('booking.payment_method_unknown') }}
+                                    @endif
+                                @else
+                                    <i class="fas fa-exclamation-circle mr-2 text-gray-500"></i>
+                                    {{ __('booking.payment_method_unknown') }}
+                                @endif
+                            </p>
                         </div>
 
                         {{-- Status --}}
@@ -179,8 +200,10 @@
                             {{ __('booking.back') }}
                         </a>
 
-                        {{-- Edit Booking (only if status allows) --}}
-                        @if (in_array($booking->status, ['pending', 'confirmed']))
+                        {{-- Edit Booking (only if status allows and no pending transaction) --}}
+                        @if (in_array($booking->status, ['pending', 'confirmed']) && 
+                              (!isset($booking->transaction) || 
+                               !in_array($booking->transaction->transaction_status ?? '', ['pending', 'settlement'])))
                             <a href="{{ route('bookings.edit', $booking->id) }}"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
                                 <i class="fas fa-edit mr-2"></i>
@@ -188,58 +211,38 @@
                             </a>
                         @endif
 
-                        {{-- Cancel Booking (only if not completed or cancelled) --}}
-                        @if (!in_array($booking->status, ['completed', 'cancelled']))
+                        {{-- Cancel Booking (only if not completed, cancelled, or confirmed) --}}
+                        @if (!in_array($booking->status, ['completed', 'cancelled', 'confirmed']))
                             <button type="button"
                                 class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition duration-200"
-                                onclick="confirmCancel({{ $booking->id }})">
+                                onclick="cancelBooking({{ $booking->id }}, '{{ $booking->name }}')">
                                 <i class="fas fa-times mr-2"></i>
                                 {{ __('booking.cancel') }}
                             </button>
-
-                            <form id="cancel-form-{{ $booking->id }}"
-                                action="{{ route('bookings.destroy', $booking->id) }}" method="POST"
-                                style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                            </form>
                         @endif
 
-                        <script>
-                            function confirmCancel(bookingId) {
-                                const translations = {
-                                    are_you_sure: @json(__('booking.are_you_sure')),
-                                    booking_will_be_cancelled: @json(__('booking.booking_will_be_cancelled')),
-                                    yes_cancel: @json(__('booking.yes_cancel')),
-                                    cancel: @json(__('booking.cancel'))
-                                };
-
-                                Swal.fire({
-                                    title: translations.are_you_sure,
-                                    text: translations.booking_will_be_cancelled,
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#d33',
-                                    cancelButtonColor: '#6c757d',
-                                    confirmButtonText: translations.yes_cancel,
-                                    cancelButtonText: translations.cancel
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        document.getElementById('cancel-form-' + bookingId).submit();
-                                    }
-                                })
-                            }
-                        </script> {{-- Payment Button (only show if booking is not completed and payment is not paid) --}}
+                        {{-- Payment Button / Transaction Status Button --}}
                         @if (!in_array($booking->status, ['completed', 'cancelled']))
                             @if ($booking->payment_method === 'bank')
-                                <!-- Tombol untuk Midtrans (Bank) -->
-                                <button type="button" id="pay-button-{{ $booking->id }}"
-                                    onclick="initiatePayment({{ $booking->id }})"
-                                    class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
-                                    <i class="fas fa-credit-card mr-2"></i>
-                                    {{ __('booking.pay_now') }}
-                                </button>
-                            @elseif ($booking->payment_method === 'cash')
+                                @if ($booking->transaction && in_array($booking->transaction->transaction_status, ['pending', 'settlement']))
+                                    <!-- Button untuk melihat transaksi jika sudah ada transaksi -->
+                                    <a href="{{ route('payment.show', $booking->id) }}"
+                                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                        <i class="fas fa-eye mr-2"></i>
+                                        {{ __('booking.view_transaction') }}
+                                    </a>
+                                @else
+                                    <!-- Tombol untuk Midtrans (Bank) - hanya jika belum ada transaksi -->
+                                    <button type="button" id="pay-button-{{ $booking->id }}"
+                                        onclick="initiatePayment({{ $booking->id }})"
+                                        class="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                        <i class="fas fa-credit-card mr-2"></i>
+                                        {{ __('booking.pay_now') }}
+                                    </button>
+                                @endif
+                            @elseif (
+                                $booking->payment_method === 'cash' &&
+                                    !in_array(optional($booking->transaction)->transaction_status, ['settlement', 'pending']))
                                 <!-- Tombol untuk Cash -->
                                 <form action="{{ route('payment.cash') }}" method="POST" class="inline">
                                     @csrf
@@ -251,6 +254,13 @@
                                         {{ __('booking.pay_cash') }}
                                     </button>
                                 </form>
+                            @elseif ($booking->payment_method === 'cash' && $booking->transaction)
+                                <!-- Button untuk melihat transaksi cash jika sudah ada -->
+                                <a href="{{ route('payment.show', $booking->id) }}"
+                                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    {{ __('booking.view_transaction') }}
+                                </a>
                             @endif
                         @endif
 
@@ -534,4 +544,97 @@
         </script>
     @endif
 
+
+
+@endpush
+
+{{-- Cancel Booking Scripts --}}
+@push('scripts')
+    {{-- SweetAlert2 CDN --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- Cancel Booking Script --}}
+    <script>
+        // Translation variables for cancel booking
+        const cancelTranslations = {
+            confirm_cancel: @json(__('booking.confirm_cancel_booking')),
+            cancel_warning: @json(__('booking.cancel_warning_message')),
+            yes_cancel: @json(__('booking.yes_cancel_booking')),
+            no_keep: @json(__('booking.no_keep_booking')),
+            cancelling: @json(__('booking.cancelling_booking')),
+            cancelled_successfully: @json(__('booking.booking_cancelled_successfully')),
+            cancel_failed: @json(__('booking.cancel_failed')),
+            error_occurred: @json(__('booking.error_occurred')),
+            ok: @json(__('booking.ok'))
+        };
+
+        function cancelBooking(bookingId, bookingName) {
+            Swal.fire({
+                title: cancelTranslations.confirm_cancel,
+                html: `
+                    <div class="text-left">
+                        <p class="mb-3">{{ __('booking.are_you_sure_cancel') }} <strong>${bookingName}</strong>?</p>
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+                                <span class="font-bold text-red-800">${cancelTranslations.cancel_warning}</span>
+                            </div>
+                            <ul class="text-sm text-red-700 ml-6 list-disc">
+                                <li>{{ __('booking.booking_will_be_cancelled') }}</li>
+                                <li>{{ __('booking.transaction_will_be_cancelled') }}</li>
+                                <li>{{ __('booking.action_cannot_be_undone') }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: cancelTranslations.yes_cancel,
+                cancelButtonText: cancelTranslations.no_keep,
+                reverseButtons: true,
+                focusCancel: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: cancelTranslations.cancelling,
+                        html: `
+                            <div class="text-center">
+                                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+                                <p>{{ __('booking.please_wait_cancelling') }}...</p>
+                            </div>
+                        `,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false
+                    });
+
+                    // Create form and submit
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/bookings/${bookingId}`;
+                    form.style.display = 'none';
+
+                    // Add CSRF token
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfInput);
+
+                    // Add method spoofing for DELETE
+                    const methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'DELETE';
+                    form.appendChild(methodInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+    </script>
 @endpush

@@ -30,7 +30,93 @@ class BookingService
             ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
             ->exists();
 
+        Log::info('Time slot availability check', [
+            'requested_datetime' => $dateTime->format('Y-m-d H:i:s'),
+            'duration_minutes' => $durationMinutes,
+            'end_time' => $endTime->format('Y-m-d H:i:s'),
+            'is_available' => !$conflictingBookings,
+            'conflicting_bookings_exist' => $conflictingBookings
+        ]);
+
         return ! $conflictingBookings;
+    }
+
+    /**
+     * Get detailed slot availability information including conflicting bookings
+     */
+    public function getSlotAvailabilityDetails(Carbon $dateTime, int $durationMinutes): array
+    {
+        $endTime = $dateTime->copy()->addMinutes($durationMinutes);
+        
+        $conflictingBookings = Booking::with(['service', 'user'])
+            ->where(function ($query) use ($dateTime, $endTime) {
+                $query->where(function ($q) use ($dateTime) {
+                    // Check for overlapping bookings
+                    $q->where('date_time', '<=', $dateTime)
+                        ->whereRaw('DATE_ADD(date_time, INTERVAL (SELECT duration FROM services WHERE id = bookings.service_id) MINUTE) > ?', [$dateTime]);
+                })->orWhere(function ($q) use ($dateTime, $endTime) {
+                    $q->where('date_time', '<', $endTime)
+                        ->where('date_time', '>', $dateTime);
+                });
+            })
+            ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
+            ->get();
+
+        $isAvailable = $conflictingBookings->isEmpty();
+
+        $result = [
+            'is_available' => $isAvailable,
+            'requested_slot' => [
+                'start' => $dateTime->format('Y-m-d H:i:s'),
+                'end' => $endTime->format('Y-m-d H:i:s'),
+                'duration' => $durationMinutes
+            ],
+            'conflicting_bookings' => $conflictingBookings->map(function ($booking) {
+                $bookingEndTime = Carbon::parse($booking->date_time)->addMinutes($booking->service->duration);
+                return [
+                    'id' => $booking->id,
+                    'customer_name' => $booking->name,
+                    'service_name' => $booking->service->name,
+                    'start_time' => Carbon::parse($booking->date_time)->format('H:i'),
+                    'end_time' => $bookingEndTime->format('H:i'),
+                    'status' => $booking->status
+                ];
+            })->toArray()
+        ];
+
+        Log::info('Detailed slot availability check', $result);
+
+        return $result;
+    }
+
+    /**
+     * Check if booking can be made within 24 hours advance requirement
+     */
+    public function validateAdvanceBookingTime(Carbon $dateTime): array
+    {
+        $now = Carbon::now();
+        $hoursInAdvance = $now->diffInHours($dateTime, false);
+        
+        $result = [
+            'is_valid' => true,
+            'errors' => [],
+            'warnings' => [],
+            'hours_in_advance' => $hoursInAdvance
+        ];
+
+        // Check if booking is at least 24 hours in advance
+        // if ($hoursInAdvance < 24 && $dateTime->isFuture()) {
+        //     $result['is_valid'] = false;
+        //     $result['errors'][] = 'Pemesanan harus dilakukan minimal 24 jam sebelumnya.';
+            
+        //     Log::warning('Booking attempt with insufficient advance notice', [
+        //         'requested_datetime' => $dateTime->format('Y-m-d H:i:s'),
+        //         'hours_in_advance' => $hoursInAdvance,
+        //         'minimum_required' => 24
+        //     ]);
+        // }
+
+        return $result;
     }
 
     /**
@@ -57,6 +143,47 @@ class BookingService
     }
 
     /**
+     * Get multiple available time slots for the next few days
+     */
+    public function getAlternativeSlots(Carbon $requestedTime, int $durationMinutes, int $maxSlots = 5): array
+    {
+        $current = $requestedTime->copy();
+        $slots = [];
+        $maxAttempts = 96; // Check up to 4 days ahead
+        $attempt = 0;
+
+        while ($attempt < $maxAttempts && count($slots) < $maxSlots) {
+            if ($this->isWithinBusinessHours($current) &&
+                $this->isBusinessDay($current) &&
+                $this->isTimeSlotAvailable($current, $durationMinutes)) {
+                
+                // Only include slots that are at least 24 hours in advance
+                if ($current->diffInHours(Carbon::now(), false) >= 24) {
+                    $slots[] = [
+                        'datetime' => $current->copy(),
+                        'formatted_date' => $current->format('d/m/Y'),
+                        'formatted_time' => $current->format('H:i'),
+                        'formatted_full' => $current->format('d/m/Y H:i'),
+                        'day_name' => $current->locale('id')->dayName
+                    ];
+                }
+            }
+
+            $current->addMinutes(30); // 30-minute intervals
+            $attempt++;
+        }
+
+        Log::info('Alternative slots search', [
+            'requested_time' => $requestedTime->format('Y-m-d H:i:s'),
+            'duration_minutes' => $durationMinutes,
+            'slots_found' => count($slots),
+            'max_attempts' => $attempt
+        ]);
+
+        return $slots;
+    }
+
+    /**
      * Calculate booking price including any surcharges
      */
 
@@ -69,7 +196,7 @@ class BookingService
     }
 
     /**
-     * Check if time is within business hours (11 AM - 10 PM)
+     * Check if time is within business hours (11:00 AM - 10:00 PM)
      */
     public function isWithinBusinessHours(Carbon $dateTime): bool
     {
@@ -139,10 +266,17 @@ class BookingService
             return $result;
         }
 
+        // Check 24 hours advance requirement
+        $advanceValidation = $this->validateAdvanceBookingTime($dateTime);
+        if (!$advanceValidation['is_valid']) {
+            $result['is_valid'] = false;
+            $result['errors'] = array_merge($result['errors'], $advanceValidation['errors']);
+        }
+
         // Check business day (No longer needed as we are open every day)
         // Barbershop is now open every day, no holidays
 
-        // Check business hours
+        // Check business hours (11:00 - 22:00)
         if (!$this->isWithinBusinessHours($dateTime)) {
             $result['is_valid'] = false;
             
@@ -169,16 +303,6 @@ class BookingService
             Log::info('Booking attempt too far in advance', [
                 'requested_date' => $dateTime->format('Y-m-d'),
                 'days_in_advance' => $dateTime->diffInDays(now())
-            ]);
-        }
-
-        // Check if booking is very soon (less than 2 hours)
-        if ($dateTime->diffInHours(now()) < 2 && $dateTime->isFuture()) {
-            $result['warnings'][] = 'Booking dalam waktu dekat. Pastikan Anda bisa hadir tepat waktu';
-            
-            Log::info('Last minute booking attempt', [
-                'requested_time' => $dateTime->format('Y-m-d H:i:s'),
-                'hours_from_now' => $dateTime->diffInHours(now())
             ]);
         }
 
@@ -231,16 +355,34 @@ class BookingService
             throw new \Exception('Layanan akan berakhir setelah jam tutup (22:00). Silakan pilih waktu yang lebih awal.', 422);
         }
 
-        // Validasi ketersediaan slot waktu
-        if (! $this->isTimeSlotAvailable($dateTime, $service->duration)) {
-            $nextAvailable = $this->findNextAvailableSlot($dateTime, $service->duration);
+        // Validasi ketersediaan slot waktu dengan detail
+        $slotDetails = $this->getSlotAvailabilityDetails($dateTime, $service->duration);
+        
+        if (!$slotDetails['is_available']) {
+            $conflictInfo = '';
+            if (!empty($slotDetails['conflicting_bookings'])) {
+                $conflicts = collect($slotDetails['conflicting_bookings']);
+                $conflictInfo = 'Bertabrakan dengan booking: ';
+                $conflictInfo .= $conflicts->map(function ($booking) {
+                    return "{$booking['service_name']} ({$booking['start_time']}-{$booking['end_time']})";
+                })->join(', ');
+            }
             
-            Log::warning('Time slot not available', [
+            try {
+                $nextAvailable = $this->findNextAvailableSlot($dateTime, $service->duration);
+                $nextSlotText = $nextAvailable->format('d/m/Y H:i');
+            } catch (\Exception $e) {
+                $nextSlotText = 'tidak ada slot tersedia dalam 2 hari ke depan';
+            }
+            
+            Log::warning('Time slot not available - detailed', [
                 'requested_time' => $dateTime->format('Y-m-d H:i:s'),
-                'next_available' => $nextAvailable->format('Y-m-d H:i:s')
+                'conflicting_bookings' => $slotDetails['conflicting_bookings'],
+                'next_available' => $nextSlotText
             ]);
             
-            throw new \Exception('Slot waktu tidak tersedia. Slot terdekat: '.$nextAvailable->format('d/m/Y H:i'), 409); // 409 = Conflict
+            $errorMessage = "Slot waktu tidak tersedia. {$conflictInfo} Slot terdekat: {$nextSlotText}";
+            throw new \Exception($errorMessage, 409); // 409 = Conflict
         }
 
         // Generate nomor antrian
@@ -299,7 +441,7 @@ class BookingService
         $validTransitions = [
             'pending' => ['confirmed', 'cancelled'],
             'confirmed' => ['in_progress', 'cancelled'],
-            'in_progress' => ['completed'],
+            'in_progress' => ['completed', 'cancelled'],
             'completed' => [],
             'cancelled' => [],
         ];
@@ -308,7 +450,36 @@ class BookingService
             throw new \Exception("Invalid status transition from {$booking->status} to {$status}");
         }
 
-        return $booking->update(['status' => $status]);
+        // Start database transaction
+        DB::beginTransaction();
+
+        try {
+            // Update booking status
+            $updated = $booking->update(['status' => $status]);
+
+            // If booking is being cancelled, also cancel the related transaction
+            if ($status === 'cancelled') {
+                $paymentController = app(\App\Http\Controllers\PaymentController::class);
+                $transactionCancelled = $paymentController->cancelTransaction($booking);
+                
+                Log::info('Booking status updated to cancelled, transaction also cancelled', [
+                    'booking_id' => $booking->id,
+                    'transaction_cancelled' => $transactionCancelled
+                ]);
+            }
+
+            DB::commit();
+            return $updated;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to update booking status', [
+                'booking_id' => $booking->id,
+                'status' => $status,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
     }
 
     /**

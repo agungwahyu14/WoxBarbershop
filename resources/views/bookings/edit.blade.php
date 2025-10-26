@@ -137,6 +137,31 @@
                                 </div>
                             @endif
 
+
+                            <div>
+                                <label for="hairstyle_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-money-bill mr-1 text-[#d4af37]"></i>
+                                    {{ __('welcome.payment') }} <span class="text-red-500"
+                                        title="{{ __('booking.required_field') }}">*</span>
+                                </label>
+
+                                <select id="payment_method" name="payment_method" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('payment_method') border-red-500 @enderror">
+                                    <option value="">{{ __('welcome.choose_payment_method') }}</option>
+                                    <option value="cash"
+                                        {{ old('payment_method', $booking->payment_method) == 'cash' ? 'selected' : '' }}>
+                                        {{ __('welcome.cash') }}
+                                    </option>
+                                    <option value="bank"
+                                        {{ old('payment_method', $booking->payment_method) == 'bank' ? 'selected' : '' }}>
+                                        {{ __('welcome.bank') }}
+                                    </option>
+                                </select>
+                                @error('payment_method')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             {{-- Hairstyle --}}
                             @if (isset($hairstyles) && $hairstyles->count() > 0)
                                 <div>
@@ -296,10 +321,6 @@
                         const hours = selectedDateTime.getHours();
                         const dayOfWeek = selectedDateTime.getDay();
 
-                        if (dayOfWeek === 0) { // Sunday
-                            hasError = true;
-                            errorMessage += '• ' + closedSunday + '\n';
-                        }
 
                         if (hours < 11 || hours >= 22) {
                             hasError = true;
@@ -346,15 +367,118 @@
                 });
             @endif
 
-            // Handle error message
+            // Handle error message with enhanced categorization
             @if (session('error'))
+                @php
+                    $errorType = session('error_type', 'general');
+                    $errorTitle = __('booking.error_occurred');
+                    $icon = 'error';
+                    
+                    // Customize based on error type
+                    if ($errorType === 'business_hours') {
+                        $errorTitle = __('booking.business_hours_error');
+                        $icon = 'warning';
+                    } elseif ($errorType === 'time_conflict') {
+                        $errorTitle = __('booking.time_conflict_error');
+                        $icon = 'warning';
+                    }
+                @endphp
+                
                 Swal.fire({
-                    icon: 'error',
-                    title: '{{ __('booking.error_occurred') }}!',
+                    icon: '{{ $icon }}',
+                    title: '{{ $errorTitle }}!',
                     text: '{{ session('error') }}',
                     confirmButtonColor: '#d4af37',
                     confirmButtonText: '{{ __('booking.ok') }}'
                 });
+            @endif
+
+            // Handle warning message (for time conflicts with alternatives)
+            @if (session('warning'))
+                @php
+                    $errorType = session('error_type', 'general');
+                    $warningTitle = __('booking.booking_warning');
+                    $icon = 'warning';
+                    $showCancelButton = false;
+                    $alternativeSlots = session('alternative_slots', []);
+                    
+                    // Customize based on error type
+                    if ($errorType === 'time_conflict' && !empty($alternativeSlots)) {
+                        $warningTitle = __('booking.time_conflict_with_alternatives');
+                        $showCancelButton = true;
+                    }
+                @endphp
+                
+                @if ($showCancelButton && !empty($alternativeSlots))
+                    Swal.fire({
+                        icon: '{{ $icon }}',
+                        title: '{{ $warningTitle }}',
+                        html: `
+                            <div class="text-left">
+                                <p>{{ session('warning') }}</p>
+                                <div class="mt-4">
+                                    <h4 class="font-semibold mb-2">{{ __('booking.alternative_slots_available') }}:</h4>
+                                    <div class="space-y-2 max-h-48 overflow-y-auto">
+                                        @foreach ($alternativeSlots as $slot)
+                                            <div class="flex justify-between items-center p-2 border rounded hover:bg-gray-50 cursor-pointer alternative-slot" 
+                                                 data-datetime="{{ $slot['datetime'] }}">
+                                                <div>
+                                                    <div class="font-medium">{{ $slot['day_name'] }}, {{ $slot['formatted_date'] }}</div>
+                                                    <div class="text-sm text-gray-600">{{ $slot['formatted_time'] }}</div>
+                                                </div>
+                                                <button type="button" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                                    {{ __('booking.choose_this_slot') }}
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        `,
+                        confirmButtonColor: '#d4af37',
+                        confirmButtonText: '{{ __('booking.keep_current_time') }}',
+                        cancelButtonColor: '#6b7280',
+                        cancelButtonText: '{{ __('booking.close') }}',
+                        showCancelButton: true,
+                        width: '500px'
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                            // User closed the dialog, do nothing
+                        }
+                    });
+
+                    // Add event listeners to alternative slot buttons
+                    document.addEventListener('click', function(e) {
+                        if (e.target.closest('.alternative-slot')) {
+                            const slotDiv = e.target.closest('.alternative-slot');
+                            const datetime = slotDiv.dataset.datetime;
+                            const dateTimeInput = document.getElementById('date_time');
+                            
+                            if (dateTimeInput) {
+                                dateTimeInput.value = datetime;
+                                // Trigger validation
+                                dateTimeInput.dispatchEvent(new Event('change'));
+                                
+                                // Show confirmation
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '{{ __('booking.time_updated') }}!',
+                                    text: '{{ __('booking.new_time_selected') }}',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            }
+                        }
+                    });
+                @else
+                    Swal.fire({
+                        icon: '{{ $icon }}',
+                        title: '{{ $warningTitle }}!',
+                        text: '{{ session('warning') }}',
+                        confirmButtonColor: '#d4af37',
+                        confirmButtonText: '{{ __('booking.ok') }}'
+                    });
+                @endif
             @endif
         });
     </script>

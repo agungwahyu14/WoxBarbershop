@@ -185,7 +185,7 @@
                                         @endphp
                                         <span
                                             class="px-2 py-1 text-xs font-medium rounded-full {{ $statusColors[$booking->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                            {{ ucfirst($booking->status) }}
+                                            {{ __('booking.status_' . $booking->status) }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -447,9 +447,47 @@
     </section>
 @endsection
 
+
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Real-time clock update
+            function updateClock() {
+                const now = new Date();
+                const options = {
+                    timeZone: 'Asia/Makassar',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                };
+                const timeOptions = {
+                    timeZone: 'Asia/Makassar',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                };
+
+                const dateElement = document.getElementById('current-date');
+                const timeElement = document.getElementById('current-time');
+                const lastUpdateElement = document.getElementById('last-update');
+
+                if (dateElement) {
+                    dateElement.textContent = now.toLocaleDateString('id-ID', options);
+                }
+                if (timeElement) {
+                    timeElement.textContent = now.toLocaleTimeString('id-ID', timeOptions) + ' WITA';
+                }
+                if (lastUpdateElement) {
+                    lastUpdateElement.textContent = now.toLocaleTimeString('id-ID', timeOptions);
+                }
+            }
+
+            // Update clock immediately and then every second
+            updateClock();
+            setInterval(updateClock, 1000);
+
             // Auto-refresh dashboard data every 3 seconds
             function refreshDashboardData() {
                 fetch('{{ route('dashboard.data') }}', {
@@ -570,7 +608,7 @@
                     data: {
                         labels: [
                             @foreach ($bookingStats as $stat)
-                                '{{ ucfirst($stat->status) }}',
+                                '{{ __('booking.status_' . $stat->status) }}',
                             @endforeach
                         ],
                         datasets: [{
@@ -699,9 +737,23 @@
                 document.getElementById('exportModal').classList.remove('flex');
             };
 
+            // Track active XMLHttpRequest to prevent multiple simultaneous exports
+            let activeExportXhr = null;
+
             // Handle form submission with loading indicator
             document.getElementById('exportForm').addEventListener('submit', function(e) {
                 e.preventDefault();
+
+                // Prevent multiple simultaneous exports
+                if (activeExportXhr) {
+                    Swal.fire({
+                        title: 'Sedang Proses...',
+                        text: 'Export sedang berjalan, silakan tunggu hingga selesai',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
 
                 const formData = new FormData(this);
                 const type = formData.get('type');
@@ -719,11 +771,21 @@
 
                 // Use XMLHttpRequest for better file download handling
                 const xhr = new XMLHttpRequest();
+                activeExportXhr = xhr;
+
+                // Set timeout to prevent hanging
+                xhr.timeout = 60000; // 60 seconds timeout
+
                 xhr.open('POST', this.action);
                 xhr.responseType = 'blob';
 
                 xhr.onload = function() {
+                    activeExportXhr = null; // Clear the active xhr reference
+
                     if (xhr.status === 200) {
+                        // Close loading Swal first
+                        Swal.close();
+
                         // Create download link
                         const blob = xhr.response;
                         const url = window.URL.createObjectURL(blob);
@@ -739,19 +801,30 @@
 
                         document.body.appendChild(a);
                         a.click();
-                        document.body.removeChild(a);
-                        window.URL.revokeObjectURL(url);
 
+                        // Cleanup with delay to ensure download starts
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            window.URL.revokeObjectURL(url);
+                        }, 100);
+
+                        // Show success message
                         Swal.fire({
                             title: 'Berhasil!',
-                            text: 'Laporan berhasil diunduh',
+                            text: 'Laporan berhasil diunduh. Halaman akan direfresh otomatis...',
                             icon: 'success',
-                            confirmButtonText: 'OK',
+                            showConfirmButton: false,
                             timer: 2000
+                        }).then(() => {
+                            // Auto refresh page after successful export
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 500);
                         });
 
                         closeExportModal();
                     } else {
+                        activeExportXhr = null;
                         Swal.fire({
                             title: 'Error!',
                             text: 'Terjadi kesalahan saat export',
@@ -762,12 +835,27 @@
                 };
 
                 xhr.onerror = function() {
+                    activeExportXhr = null;
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Terjadi kesalahan saat export',
+                        text: 'Terjadi kesalahan koneksi saat export',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
+                };
+
+                xhr.ontimeout = function() {
+                    activeExportXhr = null;
+                    Swal.fire({
+                        title: 'Timeout!',
+                        text: 'Export terlalu lama, silakan coba lagi',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                };
+
+                xhr.onabort = function() {
+                    activeExportXhr = null;
                 };
 
                 // Set headers
@@ -776,7 +864,25 @@
                 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
                 // Send form data
-                xhr.send(formData);
+                try {
+                    xhr.send(formData);
+                } catch (error) {
+                    activeExportXhr = null;
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Gagal mengirim request export',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+            // Cleanup on page unload to prevent hanging requests
+            window.addEventListener('beforeunload', function() {
+                if (activeExportXhr) {
+                    activeExportXhr.abort();
+                    activeExportXhr = null;
+                }
             });
 
             // Auto-refresh data every 3 seconds - this is now handled by the main refresh function above
@@ -800,8 +906,30 @@
         }
 
         .widget-label h1 {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
+        }
+
+        .widget-label h3 {
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-content {
+            backdrop-filter: blur(10px);
+        }
+
+        /* Enhanced card visibility */
+        .card {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+        }
+
+        .card-hover:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
         .stats-card {

@@ -256,89 +256,259 @@
                     </h3>
                 </div>
                 <div class="p-6 space-y-3">
-
-
+                    <!-- Back to Transactions Button -->
                     <a href="{{ route('admin.transactions.index') }}"
                         class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
                         <i class="fas fa-arrow-left mr-2"></i>
                         {{ __('admin.back_to_transactions') }}
                     </a>
 
+                    <!-- Action Buttons for Pending Transactions -->
+                    @if (in_array($status, ['pending']))
+                        <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <div class="flex flex-col sm:flex-row justify-end gap-3">
+                                <!-- Cancel Button -->
+                                <button onclick="confirmAction('cancel')"
+                                    class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                    <i class="fas fa-times mr-2"></i>{{ __('admin.cancel_transaction') }}
+                                </button>
+
+                                <!-- Conditional Buttons Based on Payment Type -->
+                                @if ($transaction->payment_type == 'cash')
+                                    <!-- Mark as Paid Button for Cash Payments -->
+                                    <button onclick="confirmSettlement({{ $transaction->id }})"
+                                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                        <i class="fas fa-check mr-2"></i>{{ __('admin.confirm_settlement') }}
+                                    </button>
+                                @else
+                                    <!-- Refresh Status Button for Non-Cash Payments -->
+                                    <button onclick="refreshStatus()"
+                                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                        <i class="fas fa-sync-alt mr-2"></i>{{ __('admin.refresh_status') }}
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
 
-
-
-        <!-- Additional Information -->
-        {{-- <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-            <div class="flex items-center mb-4">
-                <div class="p-2 bg-indigo-100 dark:bg-indigo-900 rounded-lg mr-3">
-                    <i class="fas fa-info-circle text-indigo-600 dark:text-indigo-300"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Additional Information</h3>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Transaction ID</span>
-                        <span
-                            class="text-sm text-gray-900 dark:text-white font-mono">{{ $transaction->transaction_id ?? '-' }}</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Merchant ID</span>
-                        <span class="text-sm text-gray-900 dark:text-white">{{ $transaction->merchant_id ?? '-' }}</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2">
-                        <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Currency</span>
-                        <span
-                            class="text-sm text-gray-900 dark:text-white">{{ strtoupper($transaction->currency ?? 'IDR') }}</span>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    @if ($transaction->signature_key ?? false)
-                        <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Signature</span>
-                            <span
-                                class="text-sm text-gray-900 dark:text-white font-mono">{{ substr($transaction->signature_key, 0, 16) }}...</span>
-                        </div>
-                    @endif
-
-                    @if ($transaction->status_code ?? false)
-                        <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Status Code</span>
-                            <span class="text-sm text-gray-900 dark:text-white">{{ $transaction->status_code }}</span>
-                        </div>
-                    @endif
-
-                    @if ($transaction->status_message ?? false)
-                        <div class="flex justify-between items-center py-2">
-                            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Status Message</span>
-                            <span class="text-sm text-gray-900 dark:text-white">{{ $transaction->status_message }}</span>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div> --}}
-
         <!-- Actions -->
-        @if (in_array($status, ['pending']))
-            <div class="mt-6 flex justify-end space-x-4">
-                <button onclick="confirmAction('cancel')"
-                    class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200">
-                    <i class="fas fa-times mr-2"></i>{{ __('admin.cancel_transaction') }}
-                </button>
-                <button onclick="refreshStatus()"
-                    class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
-                    <i class="fas fa-sync-alt mr-2"></i>{{ __('admin.refresh_status') }}
-                </button>
-            </div>
-        @endif
+
     </section>
 @endsection
 
 @push('scripts')
-    <script></script>
+    <script>
+        // Translation variables
+        const confirmText = '{{ __('admin.confirm') }}';
+        const cancelText = '{{ __('admin.cancel') }}';
+        const yesText = '{{ __('admin.yes') }}';
+        const noText = '{{ __('admin.no') }}';
+        const successText = '{{ __('admin.success') }}';
+        const errorText = '{{ __('admin.error') }}';
+        const processingText = '{{ __('admin.processing') }}';
+        const cancelConfirmation = '{{ __('admin.cancel_transaction_confirmation') }}';
+        const cancelWarning = '{{ __('admin.cancel_transaction_warning') }}';
+        const refreshConfirmation = '{{ __('admin.refresh_status_confirmation') }}';
+        const refreshInfo = '{{ __('admin.refresh_status_info') }}';
+        const confirmSettlementText = '{{ __('admin.confirm_settlement') }}';
+        const settlementWarning = '{{ __('admin.settlement_warning') }}';
+        const yesSettlement = '{{ __('admin.yes_settlement') }}';
+        const processingSettlement = '{{ __('admin.processing_settlement') }}';
+
+        // Show notification function
+        function showNotification(type, title, message) {
+            Swal.fire({
+                icon: type,
+                title: title,
+                text: message,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
+
+        // Confirm action function
+        function confirmAction(action) {
+            if (action === 'cancel') {
+                cancelTransaction();
+            }
+        }
+
+        // Cancel transaction function
+        function cancelTransaction() {
+            Swal.fire({
+                title: confirmText,
+                html: `${cancelConfirmation}<br><small class="text-red-600">${cancelWarning}</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: yesText + ', ' + '{{ __('admin.cancel_transaction') }}',
+                cancelButtonText: noText,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: processingText,
+                        html: '{{ __('admin.cancelling_transaction') }}...',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    });
+
+                    // Send cancel request
+                    fetch('{{ route('admin.transactions.cancel', $transaction->id) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.close();
+
+                            if (data.success) {
+                                showNotification('success', successText, data.message);
+                                // Reload page after 2 seconds
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000);
+                            } else {
+                                showNotification('error', errorText, data.message);
+                            }
+                        })
+                        .catch(error => {
+                            Swal.close();
+                            console.error('Error:', error);
+                            showNotification('error', errorText, '{{ __('admin.error_occurred') }}');
+                        });
+                }
+            });
+        }
+
+        // Confirm settlement function
+        function confirmSettlement(transactionId) {
+            Swal.fire({
+                title: confirmSettlementText,
+                text: settlementWarning,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#22c55e',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: yesSettlement,
+                cancelButtonText: cancelText,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: processingText,
+                        html: processingSettlement,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    });
+
+                    // Send settlement request
+                    fetch(`/admin/transactions/${transactionId}/settlement`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.close();
+
+                            if (data.success) {
+                                showNotification('success', successText, data.message);
+                                // Reload page after 2 seconds
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000);
+                            } else {
+                                showNotification('error', errorText, data.message);
+                            }
+                        })
+                        .catch(error => {
+                            Swal.close();
+                            console.error('Error:', error);
+                            showNotification('error', errorText, '{{ __('admin.error_occurred') }}');
+                        });
+                }
+            });
+        }
+
+        // Refresh status function
+        function refreshStatus() {
+            Swal.fire({
+                title: confirmText,
+                html: `${refreshConfirmation}<br><small class="text-blue-600">${refreshInfo}</small>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: yesText + ', ' + '{{ __('admin.refresh_status') }}',
+                cancelButtonText: noText
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: processingText,
+                        html: '{{ __('admin.refreshing_status') }}...',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    });
+
+                    // Send refresh request
+                    fetch('{{ route('admin.transactions.refresh-status', $transaction->id) }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.close();
+
+                            if (data.success) {
+                                showNotification('success', successText, data.message);
+                                // Reload page after 2 seconds
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000);
+                            } else {
+                                showNotification('error', errorText, data.message);
+                            }
+                        })
+                        .catch(error => {
+                            Swal.close();
+                            console.error('Error:', error);
+                            showNotification('error', errorText, '{{ __('admin.error_occurred') }}');
+                        });
+                }
+            });
+        }
+    </script>
 @endpush
 
 @push('styles')

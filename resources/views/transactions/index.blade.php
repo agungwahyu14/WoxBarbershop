@@ -22,7 +22,7 @@
                                 <div>
                                     <div>
                                         <h3 class="text-white font-semibold text-lg">
-                                            {{ __('transactions.transaction_number') }}{{ $tx['order_id'] }}</h3>
+                                            {{ __('transactions.transaction_number') }} #{{ $tx['order_id'] }}</h3>
                                         <p class="text-blue-100 text-sm">
                                             {{ \Carbon\Carbon::parse($tx['transaction_time'])->format('d M Y H:i') }}
                                         </p>

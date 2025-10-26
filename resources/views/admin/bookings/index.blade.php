@@ -172,7 +172,7 @@
 
     @push('scripts')
         <script>
-            // Translation variables
+            // ✅ Translation variables (now working properly with Indonesian locale)
             const success = '{{ __('admin.success') }}';
             const error = '{{ __('admin.error') }}';
             const deleted = '{{ __('admin.deleted') }}';
@@ -528,7 +528,7 @@
             function updateBookingStatus(bookingId, status, action) {
                 Swal.fire({
                     title: confirm,
-                    text: `${confirm} ${action}?`,
+                    text: `${action}?`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#d4af37',

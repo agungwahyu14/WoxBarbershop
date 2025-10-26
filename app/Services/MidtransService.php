@@ -50,4 +50,52 @@ class MidtransService
 
         return $snapToken;
     }
+
+    /**
+     * Cancel transaction in Midtrans
+     */
+    public function cancelTransaction(Booking $booking)
+    {
+        try {
+            // Cancel transaction via Midtrans API
+            $cancel = \Midtrans\Transaction::cancel($booking->id);
+            
+            Log::info('Midtrans transaction cancelled', [
+                'order_id' => $booking->id,
+                'booking_id' => $booking->id,
+                'status' => $cancel->transaction_status ?? 'cancelled'
+            ]);
+
+            // Update local transaction record
+            \App\Models\Transaction::where('order_id', $booking->id)
+                ->update([
+                    'transaction_status' => 'cancel',
+                    'updated_at' => now()
+                ]);
+
+            return true;
+
+        } catch (\Midtrans\Exception $e) {
+            Log::warning('Failed to cancel Midtrans transaction', [
+                'order_id' => $booking->id,
+                'error' => $e->getMessage()
+            ]);
+
+            // Even if Midtrans API call fails, update local record as cancelled
+            \App\Models\Transaction::where('order_id', $booking->id)
+                ->update([
+                    'transaction_status' => 'cancel',
+                    'updated_at' => now()
+                ]);
+
+            return false;
+        } catch (\Exception $e) {
+            Log::error('Error cancelling transaction', [
+                'order_id' => $booking->id,
+                'error' => $e->getMessage()
+            ]);
+
+            return false;
+        }
+    }
 }

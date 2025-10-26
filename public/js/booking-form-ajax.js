@@ -43,6 +43,7 @@ $(document).ready(function () {
         });
     });
 
+
     /**
      * Clear previous error messages and styling
      */
@@ -92,7 +93,7 @@ $(document).ready(function () {
                 html: `
                     <div class="text-left">
                         <p class="mb-2"><strong>Nama:</strong> ${response.data.name}</p>
-                        <p class="mb-2"><strong>Nomor Antrian:</strong> <span class="text-2xl font-bold text-green-600">${response.data.queue_number}</span></p>
+                        <p class="mb-2"><strong>Nomor Pesanan:</strong> <span class="text-2xl font-bold text-green-600">${response.data.queue_number}</span></p>
                         <p class="mb-2"><strong>Tanggal & Waktu:</strong> ${response.data.date_time}</p>
                         <p class="mb-2"><strong>Layanan:</strong> ${response.data.service_name}</p>
                     </div>
@@ -148,13 +149,66 @@ $(document).ready(function () {
         } else if (xhr.status === 409) {
             // Conflict - time slot taken
             const errorMessage = xhr.responseJSON?.message || 'Jadwal yang dipilih sudah diambil.';
+            const alternativeSlots = xhr.responseJSON?.alternative_slots || [];
+
+            let htmlContent = `<div class="text-left">
+                <p class="mb-4">${errorMessage}</p>`;
+
+            if (alternativeSlots.length > 0) {
+                htmlContent += `<div class="border-t pt-4">
+                    <h4 class="font-semibold mb-2">Jadwal Alternatif Tersedia:</h4>
+                    <div class="space-y-2 max-h-48 overflow-y-auto">`;
+
+                alternativeSlots.forEach(slot => {
+                    htmlContent += `<div class="flex justify-between items-center p-2 border rounded hover:bg-gray-50 cursor-pointer alternative-slot" 
+                                        data-datetime="${slot.datetime}">
+                        <div>
+                            <div class="font-medium">${slot.day_name}, ${slot.formatted_date}</div>
+                            <div class="text-sm text-gray-600">${slot.formatted_time}</div>
+                        </div>
+                        <button type="button" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            Pilih Jadwal Ini
+                        </button>
+                    </div>`;
+                });
+
+                htmlContent += `</div></div>`;
+            }
+
+            htmlContent += `</div>`;
 
             Swal.fire({
                 icon: 'warning',
                 title: 'Jadwal Bentrok ⚠️',
-                text: errorMessage,
+                html: htmlContent,
                 confirmButtonColor: '#F59E0B',
-                confirmButtonText: 'Pilih Jadwal Lain'
+                confirmButtonText: 'Tutup',
+                width: '500px',
+                showClass: {
+                    popup: 'swal2-show',
+                    backdrop: 'swal2-backdrop-show',
+                    icon: 'swal2-icon-show'
+                },
+                didOpen: () => {
+                    // Add event listeners to alternative slot buttons
+                    document.querySelectorAll('.alternative-slot').forEach(slotDiv => {
+                        slotDiv.addEventListener('click', function () {
+                            const datetime = this.dataset.datetime;
+                            $('#date_time').val(datetime);
+                            $('#date_time').trigger('change'); // Trigger validation
+                            Swal.close();
+
+                            // Show confirmation
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Jadwal Dipilih!',
+                                text: 'Jadwal alternatif telah dipilih. Silakan submit ulang formulir.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        });
+                    });
+                }
             });
 
         } else {
@@ -238,6 +292,30 @@ $(document).ready(function () {
             const errorHtml = `<p class="text-red-600 text-sm mt-1">
                 <i class="fas fa-exclamation-circle mr-1"></i>
                 Tidak bisa memilih waktu yang sudah berlalu.
+            </p>`;
+            $(this).closest('div').append(errorHtml);
+            return;
+        }
+
+        // Check 24 hours advance requirement
+        // const hoursInAdvance = (selectedDate - now) / (1000 * 60 * 60);
+        // if (hoursInAdvance < 24) {
+        //     $(this).addClass('border-red-500');
+        //     const errorHtml = `<p class="text-red-600 text-sm mt-1">
+        //         <i class="fas fa-exclamation-circle mr-1"></i>
+        //         Pemesanan harus dilakukan minimal 24 jam sebelumnya.
+        //     </p>`;
+        //     $(this).closest('div').append(errorHtml);
+        //     return;
+        // }
+
+        // Check if time is between 11:00 - 22:00
+        const selectedHour = selectedDate.getHours();
+        if (selectedHour < 11 || selectedHour >= 22) {
+            $(this).addClass('border-red-500');
+            const errorHtml = `<p class="text-red-600 text-sm mt-1">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                Booking hanya dapat dilakukan antara jam 11:00 - 22:00.
             </p>`;
             $(this).closest('div').append(errorHtml);
         }

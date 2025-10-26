@@ -69,7 +69,8 @@
             </label>
             <input id="no_telepon" name="no_telepon" type="tel"
                 class="mt-1 block w-full py-3 border-0 border-b border-gray-300 shadow-none focus:border-[#d4af37] focus:ring-0 focus:ring-[#d4af37]"
-                value="{{ old('no_telepon', $user->no_telepon) }}" autocomplete="tel"
+                value="{{ old('no_telepon', $user->no_telepon) }}" autocomplete="tel" pattern="[0-9]*"
+                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                 placeholder="{{ __('profile.phone_placeholder') }}">
             @if ($errors->get('no_telepon'))
                 <p class="mt-2 text-sm text-red-600">

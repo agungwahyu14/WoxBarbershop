@@ -4,7 +4,7 @@ return [
     // Booking Messages
     'booking_success_title' => 'Booking Successful!',
     'booking_success_name' => 'Name',
-    'booking_success_queue' => 'Queue Number',
+    'booking_success_queue' => 'Order Number',
     'booking_success_time' => 'Time',
     'booking_success_service' => 'Service',
     'booking_success_note' => 'Please arrive 10 minutes before your booking time',
@@ -25,7 +25,7 @@ return [
     'date_time' => 'Date & Time',
     'status' => 'Status',
     'payment' => 'Payment',
-    'queue_number' => 'Queue Number',
+    'queue_number' => 'Order Number',
     'total' => 'Total',
     'notes' => 'Notes',
     'hairstyle' => 'Hairstyle',
@@ -35,6 +35,7 @@ return [
     // Status Labels
     'status_pending' => 'Pending',
     'status_confirmed' => 'Confirmed',
+    'status_in_progress' => 'In Progress',
     'status_completed' => 'Completed',
     'status_cancelled' => 'Cancelled',
 
@@ -44,8 +45,15 @@ return [
     'payment_status_unpaid' => 'Unpaid',
     'payment_status_pending' => 'Pending',
     'payment_status_settlement' => 'Settled',
+    'payment_status_failed' => 'Payment Failed',
+    'payment_status_expired' => 'Payment Expired',
+    'payment_status_cancelled' => 'Payment Cancelled',
     'payment_method_cash' => 'Cash',
     'payment_method_bank' => 'Bank Transfer',
+    'payment_expires_at' => 'Payment expires at',
+    'payment_method_unknown' => 'Unknown',
+    'order_id' => 'Order ID',
+
 
     // Form Labels
     'enter_customer_name' => 'Enter customer name',
@@ -65,6 +73,7 @@ return [
     'save_changes' => 'Save Changes',
     'pay_now' => 'Pay Now',
     'pay_cash' => 'Pay Cash',
+    'view_transaction' => 'View Transaction',
     'view_feedback' => 'View Feedback',
     'give_feedback' => 'Give Feedback',
     'new_booking' => 'New Booking',
@@ -83,17 +92,20 @@ return [
     'datetime_required' => 'Date and time must be filled',
     'closed_sunday' => 'Sorry, we are closed on Sundays',
     'business_hours' => 'Booking can only be made between 11:00 - 22:00',
+    'advance_booking' => 'Booking must be made at least 24 hours in advance',
+    'slot_not_available' => 'Time slot is not available',
+    'slot_conflict' => 'Schedule conflicts with another booking',
 
     // Important Information
     'important_info' => 'Important Information',
-    'info_time_change' => 'Changing date and time may affect your queue number',
+    'info_time_change' => 'Changing date and time may affect your order number',
     'info_service_change' => 'If you change the service, the total price will be recalculated',
     'info_edit_restriction' => 'Booking can only be edited if status is still "Pending" or "Confirmed"',
 
     // JavaScript Messages
     'booking_success' => 'Booking Successful!',
     'booking_created_for' => 'Booking successfully created for',
-    'queue_number_label' => 'Your Queue Number',
+    'queue_number_label' => 'Your Order Number',
     'please_arrive_on_time' => 'Please arrive according to the scheduled time',
     'ok' => 'OK',
     'success' => 'Success',
@@ -135,9 +147,9 @@ return [
     'confirm_booking' => 'Confirm Booking',
     'complete_booking' => 'Complete Booking',
     
-    // Queue System
-    'queue_number' => 'Queue Number',
-    'current_queue' => 'Current Queue',
+    // Order System
+    'queue_number' => 'Order Number',
+    'current_queue' => 'Current Order',
     'your_turn' => 'Your Turn',
     'please_wait' => 'Please Wait',
     
@@ -168,4 +180,13 @@ return [
     // Form Validation
     'required_field' => 'Required field',
     'optional_field' => 'Optional',
+
+    // Business Hours Error Messages
+    'business_hours_error' => 'Our business hours are 11:00 - 22:00. Please select a time within business hours.',
+    'booking_warning' => 'Warning: The selected time is close to closing time. Ensure you can finish before 22:00.',
+    
+    // Time conflict messages
+    'time_conflict' => 'The selected time conflicts with another booking. Please choose a different time.',
+    'slot_available' => 'Available slot: :time',
+    'alternative_slots' => 'Alternative Slots:',
 ];

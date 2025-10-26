@@ -76,6 +76,28 @@
                         @enderror
                     </div>
 
+                    <!-- Duration (in minutes) -->
+                    <div>
+                        <label for="duration" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-clock mr-2 text-blue-600"></i>{{ __('admin.duration_column') }} (Minutes)
+                        </label>
+                        <input type="number" name="duration" id="duration"
+                            value="{{ old('duration', $service->duration) }}"
+                            class="form-control w-full @error('duration') border-red-500 @enderror"
+                            placeholder="{{ __('admin.enter_duration') }}" required>
+                        @error('duration')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Is Active (checkbox) -->
+                    <div class="flex items-center">
+                        <input type="hidden" name="is_active" value="0">
+                        <input type="checkbox" name="is_active" id="is_active" value="1"
+                            {{ old('is_active', true) ? 'checked' : '' }}
+                            class="form-checkbox text-blue-600 rounded border-gray-300">
+                        <label for="is_active" class="ml-2 text-sm text-gray-700">{{ __('admin.is_active') }}</label>
+                    </div>
                     <!-- Action Buttons -->
                     <div class="border-t border-gray-200 pt-6">
                         <div class="flex justify-end space-x-4">

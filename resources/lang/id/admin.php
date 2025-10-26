@@ -235,7 +235,7 @@ return [
     
 // Bookings
     'booking_page_title' => 'Pemesanan',
-    'booking_page_subtitle' => 'Kelola semua janji temu dan reservasi pelanggan',
+    'booking_page_subtitle' => 'Kelola semua janji temu dan pemesanan pelanggan',
     'todays_bookings' => 'Pemesanan Hari Ini',
     'pending_approval' => 'Menunggu Persetujuan',
     'completed_bookings' => 'Pemesanan Selesai',
@@ -450,6 +450,18 @@ return [
     'current_status' => 'Status Saat Ini',
     'cancel_transaction' => 'Batalkan Transaksi',
     'refresh_status' => 'Refresh Status',
+    'transaction_cannot_be_cancelled' => 'Transaksi tidak dapat dibatalkan. Hanya transaksi dengan status pending yang dapat dibatalkan.',
+    'transaction_cancelled_successfully' => 'Transaksi berhasil dibatalkan',
+    'failed_to_cancel_transaction' => 'Gagal membatalkan transaksi',
+    'transaction_status_refreshed_successfully' => 'Status transaksi berhasil diperbarui',
+    'failed_to_refresh_status' => 'Gagal memperbarui status transaksi',
+    'midtrans_error' => 'Error Midtrans API',
+    'cancel_transaction_confirmation' => 'Apakah Anda yakin ingin membatalkan transaksi ini?',
+    'cancel_transaction_warning' => 'Transaksi yang dibatalkan tidak dapat dikembalikan!',
+    'refresh_status_confirmation' => 'Apakah Anda yakin ingin memperbarui status transaksi ini?',
+    'refresh_status_info' => 'Status akan diperbarui berdasarkan data terbaru dari Midtrans.',
+    'cancelling_transaction' => 'Membatalkan transaksi',
+    'refreshing_status' => 'Memperbarui status',
     
     // Transaction Index
     'all_months' => 'Semua Bulan',
@@ -540,6 +552,15 @@ return [
     'backup_partial' => 'Backup Data Saja',
     'restore_database' => 'Restore Database',
     'restore_description' => 'Pulihkan database dari file backup yang tersedia.',
+    'select_backup_file_aria' => 'Pilih file backup untuk restore',
+    'restore_database_aria' => 'Restore Database',
+    'backup_partial_aria' => 'Backup Data Saja',
+    'database_restored_successfully' => 'Database berhasil dipulihkan dari backup',
+    'failed_to_restore_database' => 'Gagal melakukan restore database',
+    'zip_files_not_supported' => 'File ZIP belum didukung. Silakan gunakan file .sql.',
+    'mysql_client_not_found' => 'MySQL client tidak ditemukan di sistem. Pastikan MySQL telah terinstall.',
+    'invalid_sql_file' => 'File SQL tidak valid. Pastikan file berisi perintah SQL yang benar.',
+    'backup_restore_title' => 'Backup & Restore Data',
     'create_user_btn' => 'Buat Pengguna',
     'edit_service_btn' => 'Edit Layanan',
     'edit_user_btn' => 'Edit Pengguna',
@@ -921,4 +942,31 @@ return [
     'loading_roles' => 'Memuat peran...',
     'no_matching_roles' => 'Tidak ada peran yang cocok',
     'no_roles_available' => 'Tidak ada peran tersedia',
+    
+    
+    // Missing translations for bookings page
+    'error' => 'Error',
+    'processing' => 'Sedang memproses',
+    'confirm' => 'Konfirmasi',
+    'cancel' => 'Batal',
+    'yes' => 'Ya',
+    'confirm_booking' => 'Konfirmasi Pemesanan',
+    'start_service' => 'Mulai Layanan',
+    'complete_service' => 'Selesaikan Layanan', 
+    'cancel_booking' => 'Batalkan Pemesanan',
+    'confirm_booking_message' => 'pemesanan ini',
+    'start_service_message' => 'mulai layanan untuk pemesanan ini', 
+    'complete_service_message' => 'tandai pemesanan ini sebagai selesai',
+    'cancel_booking_message' => 'batalkan pemesanan ini',
+    'booking_cancelled_successfully' => 'Booking berhasil dibatalkan',
+    'booking_and_transaction_cancelled' => 'Booking berhasil dibatalkan dan transaksi pembayaran telah dibatalkan',
+    'transaction_cancelled_for_booking' => 'Transaksi pembayaran berhasil dibatalkan untuk booking ini',
+    'yes' => 'Ya',
+    'no' => 'Tidak',
+
+    'duration_column' => 'Durasi (Menit)',
+    'enter_duration' => 'Masukkan durasi layanan dalam menit',
+    'is_active' => 'Aktif',
+
+
 ];

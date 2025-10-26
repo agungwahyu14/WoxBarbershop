@@ -178,13 +178,13 @@ class PaymentController extends Controller
                         'order_id' => $orderId,
                         'amount' => $localTransaction->gross_amount ?? $booking->total_price,
                         'status' => $localTransaction->transaction_status ?? 'unknown',
-                        'payment_type' => $localTransaction->payment_type ?? '-',
+                        'payment_type' => $localTransaction->payment_type ?? 'unknown',
                         'channel' => $localTransaction->bank ?? '-',
                         'name' => $localTransaction->name ?? $booking->name, // From transaction table
                         'email' => $localTransaction->email ?? $booking->user->email, // From transaction table
                         'transaction_time' => $localTransaction->transaction_time ?? $booking->created_at,
                         'booking' => $booking,
-                        'formatted_payment_type' => $this->formatPaymentMethod($localTransaction->payment_type ?? '-'),
+                        'formatted_payment_type' => $this->formatPaymentMethod($localTransaction->payment_type ?? 'unknown'),
                         'formatted_status' => $this->formatStatus($localTransaction->transaction_status ?? 'unknown'),
                     ];
                 } else {
@@ -299,6 +299,7 @@ class PaymentController extends Controller
             'capture' => 'Berhasil',
             'deny' => 'Ditolak',
             'cancel' => 'Dibatalkan',
+            'cancelled' => 'Dibatalkan',
             'expire' => 'Kedaluwarsa',
             'failure' => 'Gagal',
             'refund' => 'Dikembalikan',
@@ -346,6 +347,8 @@ class PaymentController extends Controller
 
     
 
+    
+
 
     public function show($orderId)
     {
@@ -387,4 +390,33 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', 'Gagal mengambil detail transaksi: '.$e->getMessage());
         }
     }
+
+    /**
+     * Cancel transaction when booking is cancelled
+     */
+    public function cancelTransaction(Booking $booking)
+{
+    // Cek apakah transaksi sudah ada
+    $transaction = Transaction::where('order_id', $booking->id)->first();
+
+    if ($transaction) {
+        $transaction->update([
+            'transaction_status' => 'cancel',
+        ]);
+    } else {
+        // Jika tidak ada transaksi, buat transaksi baru dengan status cancel
+        Transaction::create([
+            'order_id' => $booking->id,
+            'transaction_status' => 'cancel',
+            'payment_type' => $booking->payment_method,
+            'gross_amount' => $booking->total_price,
+            'transaction_time' => now(),
+            'name' => $booking->name,
+            'email' => $booking->user->email ?? null,
+        ]);
+    }
+
+    return true; // bisa kamu ubah sesuai kebutuhan
+}
+
 }

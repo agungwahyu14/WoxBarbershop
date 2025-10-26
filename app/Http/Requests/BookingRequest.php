@@ -98,11 +98,11 @@ class BookingRequest extends FormRequest
     {
         if (isset($errors['date_time'])) {
             foreach ($errors['date_time'] as $error) {
-                if (strpos($error, 'jam 09:00 - 21:00') !== false) {
+                if (strpos($error, 'jam 11:00 - 22:00') !== false) {
                     return 'business_hours';
                 }
-                if (strpos($error, 'hari Minggu') !== false) {
-                    return 'closed_day';
+                if (strpos($error, '24 jam sebelumnya') !== false) {
+                    return 'advance_booking';
                 }
                 if (strpos($error, 'masa depan') !== false) {
                     return 'past_date';
@@ -142,43 +142,55 @@ class BookingRequest extends FormRequest
             'requested_datetime' => $dateTime->format('Y-m-d H:i:s'),
             'day_of_week' => $dateTime->dayOfWeek,
             'hour' => $dateTime->hour,
-            'service_id' => $this->service_id
+            'service_id' => $this->service_id,
+            'method' => $this->isMethod('post') ? 'create' : 'update'
         ]);
 
         $errors = [];
         $errorCategory = '';
 
-        // Check if booking time is within business hours (9 AM - 9 PM)
-        if ($dateTime->hour < 9 || $dateTime->hour >= 21) {
-            $errors['date_time'] = ['Booking hanya dapat dilakukan antara jam 09:00 - 21:00.'];
+        // Apply business hours validation for both create and update
+        if ($dateTime->hour < 11 || $dateTime->hour >= 22) {
+            $errors['date_time'] = ['Booking hanya dapat dilakukan antara jam 11:00 - 22:00.'];
             $errorCategory = 'business_hours';
             
             Log::warning('Booking attempt outside business hours', [
                 'user_id' => auth()->id(),
                 'requested_hour' => $dateTime->hour,
-                'business_hours' => '09:00 - 21:00'
+                'business_hours' => '11:00 - 22:00',
+                'method' => $this->isMethod('post') ? 'create' : 'update'
             ]);
         }
 
-        // Check if it's not Sunday (assuming barbershop closed on Sunday)
-        if ($dateTime->dayOfWeek === Carbon::SUNDAY) {
-            $errors['date_time'] = ['Maaf, kami tutup pada hari Minggu.'];
-            $errorCategory = 'closed_day';
+        // For create bookings, check 24 hours advance requirement
+        // For update bookings, allow more flexibility but still validate future date
+        if ($this->isMethod('post')) {
+            $now = Carbon::now();
+            $hoursInAdvance = $now->diffInHours($dateTime, false);
             
-            Log::warning('Booking attempt on closed day', [
-                'user_id' => auth()->id(),
-                'requested_date' => $dateTime->format('Y-m-d'),
-                'day_name' => 'Sunday'
-            ]);
+            // if ($hoursInAdvance < 24 && $dateTime->isFuture()) {
+            //     $errors['date_time'] = ['Pemesanan harus dilakukan minimal 24 jam sebelumnya.'];
+            //     $errorCategory = 'advance_booking';
+                
+            //     Log::warning('Booking attempt without 24 hours advance', [
+            //         'user_id' => auth()->id(),
+            //         'requested_datetime' => $dateTime->format('Y-m-d H:i:s'),
+            //         'hours_in_advance' => $hoursInAdvance,
+            //         'minimum_required' => 24
+            //     ]);
+            // }
         }
+
+        // Barbershop is open every day - no closed days
 
         // Check if service might extend beyond business hours
-        if ($this->service_id && $dateTime->hour >= 20) {
+        if ($this->service_id && $dateTime->hour >= 21) {
             // This is a soft warning - we'll let BookingService handle the detailed check
             Log::info('Late booking attempt - service might extend beyond hours', [
                 'user_id' => auth()->id(),
                 'requested_hour' => $dateTime->hour,
-                'service_id' => $this->service_id
+                'service_id' => $this->service_id,
+                'method' => $this->isMethod('post') ? 'create' : 'update'
             ]);
         }
 
@@ -191,13 +203,20 @@ class BookingRequest extends FormRequest
                 'user_id' => auth()->id(),
                 'errors' => $errors,
                 'category' => $errorCategory,
-                'datetime' => $dateTime->format('Y-m-d H:i:s')
+                'datetime' => $dateTime->format('Y-m-d H:i:s'),
+                'method' => $this->isMethod('post') ? 'create' : 'update'
             ]);
 
             // Flash errors and error type to session for SweetAlert
             session()->flash('validation_errors', $errors);
             session()->flash('error_type', $errorCategory);
-            session()->flash('error', 'Booking tidak dapat dilakukan pada jam tersebut.');
+            
+            // Different error messages for create vs update
+            $errorMessage = $this->isMethod('post') 
+                ? 'Booking tidak dapat dilakukan pada jam tersebut.' 
+                : 'Update booking tidak dapat dilakukan pada jam tersebut.';
+            
+            session()->flash('error', $errorMessage);
             
             // Use redirect to trigger SweetAlert instead of throwing exception
             $response = redirect()->back()
@@ -211,7 +230,8 @@ class BookingRequest extends FormRequest
 
         Log::info('BookingRequest validation passed', [
             'user_id' => auth()->id(),
-            'datetime' => $dateTime->format('Y-m-d H:i:s')
+            'datetime' => $dateTime->format('Y-m-d H:i:s'),
+            'method' => $this->isMethod('post') ? 'create' : 'update'
         ]);
     }
 }

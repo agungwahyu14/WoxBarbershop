@@ -97,35 +97,49 @@ if ($request->filled('status_filter')) {
                         '<span class="text-gray-400 text-sm">Not provided</span>';
                 })
                 ->editColumn('roles', function ($row) {
-                    if ($row->roles->isEmpty()) {
-                        return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                            <i class="fas fa-user-slash mr-1"></i>No Role
-                        </span>';
-                    }
+    // 1. Periksa apakah user yang sedang login memiliki role 'pegawai'
+    // Gunakan operator null-safe (?->) untuk mencegah error jika tidak ada user yang login
+    $isPegawai = auth()->user()?->hasRole('pegawai');
 
-                    $roleColors = [
-                        'admin' => 'bg-red-100 text-red-800',
-                        'pegawai' => 'bg-blue-100 text-blue-800',
-                        'pelanggan' => 'bg-green-100 text-green-800',
-                        'staff' => 'bg-yellow-100 text-yellow-800',
-                    ];
+    // 2. Tentukan koleksi role yang akan ditampilkan
+    $rolesToDisplay = $row->roles;
+    if ($isPegawai) {
+        // Jika yang login adalah 'pegawai', filter role untuk hanya menampilkan 'pelanggan'
+        $rolesToDisplay = $row->roles->filter(function ($role) {
+            return $role->name === 'pelanggan';
+        });
+    }
 
-                    $roleIcons = [
-                        'admin' => 'fas fa-crown',
-                        'pegawai' => 'fas fa-user-tie',
-                        'pelanggan' => 'fas fa-user',
-                        'staff' => 'fas fa-user-cog',
-                    ];
+    // 3. Jika setelah filter tidak ada role yang ditampilkan, tampilkan "No Role"
+    if ($rolesToDisplay->isEmpty()) {
+        return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            <i class="fas fa-user-slash mr-1"></i>No Role
+        </span>';
+    }
 
-                    return $row->roles->map(function ($role) use ($roleColors, $roleIcons) {
-                        $color = $roleColors[$role->name] ?? 'bg-gray-100 text-gray-800';
-                        $icon = $roleIcons[$role->name] ?? 'fas fa-user';
+    // 4. Siapkan warna dan icon (tidak berubah)
+    $roleColors = [
+        'admin' => 'bg-red-100 text-red-800',
+        'pegawai' => 'bg-blue-100 text-blue-800',
+        'pelanggan' => 'bg-green-100 text-green-800',
+    ];
 
-                        return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium '.$color.' mb-1 mr-1">
-                            <i class="'.$icon.' mr-1"></i>'.ucfirst($role->name).'
-                        </span>';
-                    })->implode(' ');
-                })
+    $roleIcons = [
+        'admin' => 'fas fa-crown',
+        'pegawai' => 'fas fa-user-tie',
+        'pelanggan' => 'fas fa-user'
+    ];
+
+    // 5. Tampilkan role-role yang ada di dalam koleksi $rolesToDisplay
+    return $rolesToDisplay->map(function ($role) use ($roleColors, $roleIcons) {
+        $color = $roleColors[$role->name] ?? 'bg-gray-100 text-gray-800';
+        $icon = $roleIcons[$role->name] ?? 'fas fa-user';
+
+        return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium '.$color.' mb-1 mr-1">
+            <i class="'.$icon.' mr-1"></i>'.ucfirst($role->name).'
+        </span>';
+    })->implode(' ');
+})
 
 
                 // Tambahkan kolom loyalty points

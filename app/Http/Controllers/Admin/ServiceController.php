@@ -125,43 +125,13 @@ class ServiceController extends Controller
 
                     return '<span class="text-gray-400 text-sm">No description</span>';
                 })
-                ->addColumn('image', function ($row) {
-                    if ($row->image) {
-                        return '<div class="flex justify-center">
-                            <img src="'.Storage::url($row->image).'" 
-                                 class="w-12 h-12 object-cover rounded-lg border border-gray-200" 
-                                 alt="'.e($row->name).'" />
-                        </div>';
-                    }
-
-                    return '<div class="flex justify-center">
-                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-image text-gray-400"></i>
-                        </div>
-                    </div>';
-                })
-                ->addColumn('stats', function ($row) {
-                    $bookingsCount = $row->bookings ? $row->bookings->count() : 0;
-
-                    return '<div class="text-center">
-                        <div class="text-sm font-semibold text-gray-900">'.$bookingsCount.'</div>
-                        <div class="text-xs text-gray-500">Bookings</div>
-                    </div>';
-                })
                 ->addColumn('action', function ($row) {
                     // $showUrl = route('admin.services.show', $row->id);
                     $editUrl = route('admin.services.edit', $row->id);
 
                     $actions = '<div class="flex justify-center items-center space-x-1">';
 
-                    // View button
-                    // $actions .= '<a href="'.$showUrl.'" 
-                    //                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 transition-all duration-200 group" 
-                    //                title="View Details">
-                    //                 <i class="fas fa-eye text-xs group-hover:scale-110 transition-transform"></i>
-                    //             </a>';
-
-                    // Edit button
+             
                     if (auth()->user()->can('edit services')) {
                         $actions .= '<a href="'.$editUrl.'" 
                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition-all duration-200 group" 
@@ -170,22 +140,6 @@ class ServiceController extends Controller
                                     </a>';
                     }
 
-                    // Toggle status button
-                    // if (auth()->user()->can('edit services')) {
-                    //     $statusAction = $row->is_active ? 'deactivate' : 'activate';
-                    //     $statusColor = $row->is_active ? 'yellow' : 'green';
-                    //     $statusIcon = $row->is_active ? 'pause' : 'play';
-
-                    //     $actions .= '<button type="button" 
-                    //                         class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-'.$statusColor.'-100 hover:bg-'.$statusColor.'-200 text-'.$statusColor.'-600 transition-all duration-200 group toggleStatusBtn" 
-                    //                         data-id="'.$row->id.'" 
-                    //                         data-action="'.$statusAction.'"
-                    //                         title="'.ucfirst($statusAction).' Service">
-                    //                     <i class="fas fa-'.$statusIcon.' text-xs group-hover:scale-110 transition-transform"></i>
-                    //                 </button>';
-                    // }
-
-                    // Delete button
                     if (auth()->user()->can('delete services')) {
                         $actions .= '<button type="button" 
                                             class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-all duration-200 group deleteBtn" 
@@ -199,7 +153,7 @@ class ServiceController extends Controller
 
                     return $actions;
                 })
-                ->rawColumns(['name', 'category', 'price', 'duration', 'description', 'image', 'stats', 'action'])
+                ->rawColumns(['name', 'price', 'duration', 'description', 'action'])
                 ->make(true);
         }
 
@@ -227,15 +181,8 @@ class ServiceController extends Controller
 
     public function create()
     {
-        $categories = [
-            'haircut' => 'Hair Cut',
-            'styling' => 'Hair Styling',
-            'treatment' => 'Hair Treatment',
-            'coloring' => 'Hair Coloring',
-            'other' => 'Other Services',
-        ];
 
-        return view('admin.services.create', compact('categories'));
+        return view('admin.services.create');
     }
 
     public function store(Request $request)
@@ -245,8 +192,6 @@ class ServiceController extends Controller
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0|max:10000000',
             'duration' => 'nullable|integer|min:1|max:480',
-            'category' => 'required|string|in:haircut,styling,treatment,coloring,other',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -258,13 +203,8 @@ class ServiceController extends Controller
                 'description' => $validated['description'],
                 'price' => $validated['price'],
                 'duration' => $validated['duration'],
-                'category' => $validated['category'],
                 'is_active' => $request->boolean('is_active', true),
             ];
-
-            if ($request->hasFile('image')) {
-                $data['image'] = $request->file('image')->store('services', 'public');
-            }
 
             Service::create($data);
 
@@ -284,15 +224,7 @@ class ServiceController extends Controller
 
     public function edit(Service $service)
     {
-        $categories = [
-            'haircut' => 'Hair Cut',
-            'styling' => 'Hair Styling',
-            'treatment' => 'Hair Treatment',
-            'coloring' => 'Hair Coloring',
-            'other' => 'Other Services',
-        ];
-
-        return view('admin.services.edit', compact('service', 'categories'));
+        return view('admin.services.edit', compact('service'));
     }
 
     public function update(Request $request, Service $service)
@@ -302,8 +234,6 @@ class ServiceController extends Controller
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0|max:10000000',
             'duration' => 'nullable|integer|min:1|max:480',
-            'category' => 'required|string|in:haircut,styling,treatment,coloring,other',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -315,18 +245,10 @@ class ServiceController extends Controller
                 'description' => $validated['description'],
                 'price' => $validated['price'],
                 'duration' => $validated['duration'],
-                'category' => $validated['category'],
                 'is_active' => $request->boolean('is_active', true),
             ];
 
-            if ($request->hasFile('image')) {
-                // Delete old image if exists
-                if ($service->image) {
-                    Storage::disk('public')->delete($service->image);
-                }
-
-                $data['image'] = $request->file('image')->store('services', 'public');
-            }
+            
 
             $service->update($data);
 
@@ -358,9 +280,7 @@ class ServiceController extends Controller
             }
 
             // Delete image if exists
-            if ($service->image) {
-                Storage::disk('public')->delete($service->image);
-            }
+          
 
             $service->delete();
 

@@ -238,7 +238,7 @@ return [
     
     // Bookings
     'booking_page_title' => 'Bookings',
-    'booking_page_subtitle' => 'Manage all customer appointments and reservations',
+    'booking_page_subtitle' => 'Manage all customer appointments and bookings',
     'todays_bookings' => "Today's Bookings",
     'pending_approval' => 'Pending Approval',
     'completed_bookings' => 'Completed Bookings',
@@ -784,7 +784,7 @@ return [
     'make_private' => 'Make Private',
     'delete_feedback' => 'Delete Feedback',
     'delete_feedback_confirm' => 'Are you sure you want to delete this feedback? This action cannot be undone.',
-    'delete_feedback_warning' => 'You won\'t be able to revert this!',
+    'delete_feedback_warning' => 'You wont be able to revert this!',
     'back_to_feedbacks' => 'Back to Feedbacks',
     
     // Feedback Table Columns
@@ -811,7 +811,7 @@ return [
     'create_role_btn' => 'Create New Role',
     'create_role' => 'Create Role',
     'update_role' => 'Update Role',
-    'delete_role_warning' => 'You won\'t be able to revert this!',
+    'delete_role_warning' => 'You wont be able to revert this!',
     
     // Role DataTable Messages
     'no_matching_roles' => 'No matching roles found',
@@ -902,7 +902,7 @@ return [
     'loading_products' => 'Loading products...',
     'no_matching_products' => 'No matching products found',
     'no_products_available' => 'No products available',
-    'delete_product_warning' => "You won't be able to revert this!",
+    'delete_product_warning' => "You wont be able to revert this!",
     
     // Hairstyles specific
     'loading_hairstyles' => 'Loading hairstyles...',
@@ -924,4 +924,18 @@ return [
     'loading_roles' => 'Loading roles...',
     'no_matching_roles' => 'No matching roles found',
     'no_roles_available' => 'No roles available',
+
+
+
+    'confirm' => 'Confirm',
+    'yes' => 'Yes',
+    'no' => 'No',
+
+     
+     'duration_column' => 'Duration (Minutes)',
+    'enter_duration' => 'Enter the duration of the service in minutes',
+    'is_active' => 'Is Active',
+
+
+
 ];

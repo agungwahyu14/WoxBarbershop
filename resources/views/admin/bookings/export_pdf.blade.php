@@ -112,7 +112,25 @@
                         @elseif ($booking->status == 'pending') status-pending
                         @elseif ($booking->status == 'cancelled') status-cancelled @endif
                     ">
-                        {{ ucfirst($booking->status) }}
+                        @switch($booking->status)
+                            @case('pending')
+                                {{ __('booking.status_pending') }}
+                            @break
+                            @case('confirmed')
+                                {{ __('booking.status_confirmed') }}
+                            @break
+                            @case('in_progress')
+                                {{ __('booking.status_in_progress') }}
+                            @break
+                            @case('completed')
+                                {{ __('booking.status_completed') }}
+                            @break
+                            @case('cancelled')
+                                {{ __('booking.status_cancelled') }}
+                            @break
+                            @default
+                                {{ ucfirst($booking->status) }}
+                        @endswitch
                     </td>
                     <td>{{ $booking->created_at->format('d/m/Y H:i') }}</td>
                 </tr>

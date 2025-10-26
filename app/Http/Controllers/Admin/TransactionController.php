@@ -109,7 +109,7 @@ class TransactionController extends Controller
                     </a>';
 
                 // Show settlement button only if status is not already settlement
-                if ($row->transaction_status !== 'settlement') {
+                if ($row->transaction_status !== 'settlement' && $row->transaction_status !== 'cancel') {
                     $actions .= '<button type="button" 
                         class="btn btn-sm bg-green-100 text-green-600 rounded px-2 py-1 hover:bg-green-200" 
                         title="Konfirmasi Settlement" 
@@ -399,6 +399,150 @@ protected function getPaymentType($paymentType)
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengkonfirmasi settlement: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Cancel a transaction
+     */
+    public function cancelTransaction($id)
+    {
+        try {
+            $transaction = Transaction::findOrFail($id);
+
+            // Check if transaction can be cancelled (only pending transactions)
+            if (!in_array($transaction->transaction_status, ['pending'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('admin.transaction_cannot_be_cancelled')
+                ], 400);
+            }
+
+            DB::beginTransaction();
+
+            // Update transaction status
+            $transaction->update([
+                'transaction_status' => 'cancel'
+            ]);
+
+            // If there's a related booking, update its status as well
+            if ($transaction->order_id) {
+                $booking = Booking::find($transaction->order_id);
+                if ($booking && $booking->status !== 'cancelled') {
+                    $booking->update(['status' => 'cancelled']);
+                }
+            }
+
+            DB::commit();
+
+            Log::info('Transaction cancelled successfully', [
+                'transaction_id' => $id,
+                'admin_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('admin.transaction_cancelled_successfully')
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Failed to cancel transaction', [
+                'transaction_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('admin.failed_to_cancel_transaction') . ': ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Refresh transaction status from Midtrans
+     */
+    public function refreshStatus($id)
+    {
+        try {
+            $transaction = Transaction::findOrFail($id);
+
+            // Import Midtrans
+            \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
+            \Midtrans\Config::$isSanitized = true;
+            \Midtrans\Config::$is3ds = true;
+
+            // Get status from Midtrans
+            $status = \Midtrans\Transaction::status($transaction->order_id);
+
+            DB::beginTransaction();
+
+            // Update transaction with latest status from Midtrans
+            $transaction->update([
+                'transaction_status' => $status->transaction_status,
+                'payment_type' => $status->payment_type ?? $transaction->payment_type,
+                'transaction_time' => isset($status->transaction_time) ? 
+                    \Carbon\Carbon::parse($status->transaction_time) : $transaction->transaction_time,
+                'fraud_status' => $status->fraud_status ?? $transaction->fraud_status,
+            ]);
+
+            // Update related booking status if needed
+            if ($transaction->order_id) {
+                $booking = Booking::find($transaction->order_id);
+                if ($booking) {
+                    if (in_array($status->transaction_status, ['settlement', 'capture'])) {
+                        if ($booking->status === 'pending') {
+                            $booking->update(['status' => 'confirmed']);
+                        }
+                    } elseif (in_array($status->transaction_status, ['cancel', 'failure', 'expire', 'deny'])) {
+                        if ($booking->status !== 'cancelled') {
+                            $booking->update(['status' => 'cancelled']);
+                        }
+                    }
+                }
+            }
+
+            DB::commit();
+
+            Log::info('Transaction status refreshed successfully', [
+                'transaction_id' => $id,
+                'old_status' => $transaction->getOriginal('transaction_status'),
+                'new_status' => $status->transaction_status,
+                'admin_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('admin.transaction_status_refreshed_successfully'),
+                'transaction' => $transaction->fresh()
+            ]);
+
+        } catch (\Midtrans\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Midtrans API error when refreshing transaction status', [
+                'transaction_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('admin.midtrans_error') . ': ' . $e->getMessage()
+            ], 500);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Failed to refresh transaction status', [
+                'transaction_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => __('admin.failed_to_refresh_status') . ': ' . $e->getMessage()
             ], 500);
         }
     }
