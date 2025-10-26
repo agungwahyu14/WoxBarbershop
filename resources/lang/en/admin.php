@@ -32,7 +32,7 @@ return [
     'customer' => 'Customer',
     'transactions' => 'Transactions',
     'bookings' => 'Bookings',
-    'pending' => 'pending',
+    'pending' => 'Pending',
     'popular_service' => 'Most Popular Service',
     'today_bookings' => 'Today\'s Bookings',
     'last_updated' => 'Last updated',
@@ -123,12 +123,12 @@ return [
     // Validation
     'required_field' => 'This field is required',
     'invalid_format' => 'Invalid format',
-    'validation_error' => 'Validation error',
+        'validation_error' => 'Validation error',
     'please_correct_errors' => 'Please correct the following errors',
     
     // Service Management
     'create_service' => 'Create Service',
-    'add_new_service_desc' => 'Add a new service for Wox\'s Barbershop',
+    'add_new_service_desc' => 'Add a new service for Wox Barbershop',
     'service_information' => 'Service Information',
     'fill_required_info' => 'Please fill in all required service information',
     'service_name' => 'Service Name',
@@ -137,6 +137,21 @@ return [
     'service_description' => 'Service Description',
     'service_price' => 'Service Price',
     'service_duration' => 'Service Duration',
+    'create_service_btn' => 'Create Service',
+    'edit_service_btn' => 'Edit Service',
+    'update_service' => 'Update Service',
+    'edit_service_title' => 'Edit Service',
+    'edit_service_subtitle' => 'Update service information for :name',
+    'create_service_title' => 'Create Service',
+    'create_service_subtitle' => 'Add a new service for Wox Barbershop',
+    'duration_column' => 'Duration',
+    'enter_duration' => 'Enter service duration in minutes',
+    'is_active' => 'Active',
+    'multilingual_fields' => 'Multilingual Fields',
+    'service_name_id' => 'Service Name (Indonesian)',
+    'service_name_en' => 'Service Name (English)',
+    'service_name_id_placeholder' => 'Enter service name in Indonesian',
+    'service_name_en_placeholder' => 'Enter service name in English',
     
     // User Management
     'create_user' => 'Create User',
@@ -226,9 +241,6 @@ return [
     'created_date_column' => 'Created Date',
     'actions_column' => 'Actions',
     
-    // Export Buttons
-    'export_csv' => 'CSV',
-    'export_pdf' => 'PDF',
     
     // DataTables Messages
     'showing_entries' => 'Showing _START_ to _END_ of _TOTAL_ users',
@@ -236,10 +248,10 @@ return [
     'no_matching_users' => 'No matching users',
     'no_users_available' => 'No users available',
     
-    // Bookings
+// Bookings
     'booking_page_title' => 'Bookings',
     'booking_page_subtitle' => 'Manage all customer appointments and bookings',
-    'todays_bookings' => "Today's Bookings",
+    'todays_bookings' => 'Today\'s Bookings',
     'pending_approval' => 'Pending Approval',
     'completed_bookings' => 'Completed Bookings',
     'total_revenue' => 'Total Revenue',
@@ -267,10 +279,10 @@ return [
     'something_went_wrong' => 'Something went wrong.',
     
     // Form Validation
-    'field_required' => 'This field is required',
+    'field_required' => 'This column is required',
     'email_invalid' => 'Please enter a valid email address',
     'validation_error' => 'Validation Error',
-    'fill_required_fields' => 'Please fill in all required fields',
+    'fill_required_fields' => 'Please fill in all required columns',
     'role_required' => 'Role Required',
     'assign_role_message' => 'Please assign at least one role to the user',
     'creating_user' => 'Creating User...',
@@ -288,7 +300,7 @@ return [
     'create_hairstyle' => 'Create Hairstyle',
     'edit_hairstyle' => 'Edit Hairstyle',
     'hairstyle_information' => 'Hairstyle Information',
-    'add_new_hairstyle_recommendation' => 'Add new hairstyle recommendation',
+    'add_new_hairstyle_recommendation' => 'Add a new hairstyle recommendation',
     'fill_required_hairstyle_info' => 'Please fill in all required hairstyle information',
     'update_required_hairstyle_info' => 'Update all required hairstyle information',
     'modify_existing_hairstyle' => 'Modify existing hairstyle recommendation',
@@ -300,7 +312,7 @@ return [
     'no_file_chosen' => 'No file chosen',
     'create_hairstyle_btn' => 'Create Hairstyle',
     'update_hairstyle' => 'Update Hairstyle',
-    'manage_hairstyle_recommendations' => 'Manage hairstyle recommendations for Wox\'s Barbershop',
+    'manage_hairstyle_recommendations' => 'Manage hairstyle recommendations for WOX Barbershop',
     'delete_hairstyle_warning' => 'This will permanently delete the hairstyle.',
     
     // Hairstyle Scores
@@ -321,7 +333,7 @@ return [
     'save_score' => 'Save Score',
     'add_score' => 'Add Score',
     'update_score' => 'Update Score',
-    'manage_hairstyle_scores' => 'Manage hairstyle scores for Wox\'s Barbershop',
+    'manage_hairstyle_scores' => 'Manage hairstyle scores for WOX Barbershop',
     
     // DataTables - Hairstyles
     'showing_hairstyles' => 'Showing _START_ to _END_ of _TOTAL_ hairstyles',
@@ -340,10 +352,9 @@ return [
     'recent_bookings' => 'Recent Bookings',
     'quick_actions' => 'Quick Actions',
     'system_overview' => 'System Overview',
+    
 
-
-
-    // 🔹 Products Management
+    // 🔹 Product Management
     'products_page_title' => 'Products',
     'products_page_subtitle' => 'Manage products sold at the barbershop',
     'create_product_btn' => 'Create Product',
@@ -383,11 +394,9 @@ return [
     'low_stock_warning' => 'Low Stock Warning',
     'low_stock_message' => 'This stock level is considered low. Consider restocking soon.',
 
-
-    
     // Feedbacks Management
     'feedbacks_page_title' => 'Feedbacks',
-    'feedbacks_page_subtitle' => 'View and manage customer feedback',
+    'feedbacks_page_subtitle' => 'View and manage customer feedback and ratings',
     'view_feedback_btn' => 'View Feedback',
     'customer_column' => 'Customer',
     'rating_column' => 'Rating',
@@ -405,7 +414,7 @@ return [
     'transaction_date_column' => 'Transaction Date',
     
     // Transaction Export
-    'transaction_export' => 'Transaction Export',
+    'transaction_export' => 'Export Transaction',
     'period' => 'Period',
     'year' => 'Year',
     'all_data' => 'All Data',
@@ -423,7 +432,7 @@ return [
     'unknown' => 'Unknown',
     
     // Transaction Detail
-    'transaction_detail' => 'Transaction Detail',
+    'transaction_detail' => 'Transaction Details',
     'transaction_detail_subtitle' => 'View complete transaction information',
     'back_to_transactions' => 'Back to Transactions',
     'unknown_status' => 'Unknown Status',
@@ -431,7 +440,7 @@ return [
     'cancelled' => 'Cancelled',
     'expired' => 'Expired',
     'failed' => 'Failed',
-    'payment_success' => 'Payment Success',
+    'payment_success' => 'Payment Successful',
     'customer_information' => 'Customer Information',
     'payment_details' => 'Payment Details',
     'customer_name' => 'Customer Name',
@@ -455,6 +464,18 @@ return [
     'current_status' => 'Current Status',
     'cancel_transaction' => 'Cancel Transaction',
     'refresh_status' => 'Refresh Status',
+    'transaction_cannot_be_cancelled' => 'Transaction cannot be cancelled. Only transactions with pending status can be cancelled.',
+    'transaction_cancelled_successfully' => 'Transaction cancelled successfully',
+    'failed_to_cancel_transaction' => 'Failed to cancel transaction',
+    'transaction_status_refreshed_successfully' => 'Transaction status refreshed successfully',
+    'failed_to_refresh_status' => 'Failed to refresh transaction status',
+    'midtrans_error' => 'Midtrans API Error',
+    'cancel_transaction_confirmation' => 'Are you sure you want to cancel this transaction?',
+    'cancel_transaction_warning' => 'Cancelled transactions cannot be restored!',
+    'refresh_status_confirmation' => 'Are you sure you want to refresh the status of this transaction?',
+    'refresh_status_info' => 'Status will be updated based on the latest data from Midtrans.',
+    'cancelling_transaction' => 'Cancelling transaction',
+    'refreshing_status' => 'Refreshing status',
     
     // Transaction Index
     'all_months' => 'All Months',
@@ -516,7 +537,7 @@ return [
     
     // Service Create/Edit
     'create_service_title' => 'Create Service',
-    'create_service_subtitle' => 'Add new service for WOX Barbershop',
+    'create_service_subtitle' => 'Add a new service for Wox Barbershop',
     'edit_service_title' => 'Edit Service',
     'edit_service_subtitle' => 'Update service information',
     
@@ -525,8 +546,8 @@ return [
     'transactions' => 'Transactions',
     'bookings' => 'Bookings',
     'pending' => 'Pending',
-    'popular_service' => 'Popular Service',
-    'today_bookings' => "Today's Bookings",
+    'popular_service' => 'Most Popular Service',
+    'today_bookings' => 'Today\'s Bookings',
     'last_updated' => 'Last updated',
     'no' => 'No',
     'customer' => 'Customer',
@@ -540,11 +561,20 @@ return [
     
     // System Backup & Restore
     'backup_database' => 'Backup Database',
-    'backup_description' => 'Create database backup to protect important data from loss or corruption.',
+    'backup_description' => 'Create a database backup to protect important data from loss or damage.',
     'backup_full' => 'Full Backup (Database + Files)',
     'backup_partial' => 'Data Only Backup',
     'restore_database' => 'Restore Database',
-    'restore_description' => 'Restore database from available backup files.',
+    'restore_description' => 'Restore database from available backup file.',
+    'select_backup_file_aria' => 'Select backup file to restore',
+    'restore_database_aria' => 'Restore Database',
+    'backup_partial_aria' => 'Data Only Backup',
+    'database_restored_successfully' => 'Database successfully restored from backup',
+    'failed_to_restore_database' => 'Failed to restore database',
+    'zip_files_not_supported' => 'ZIP files are not yet supported. Please use .sql files.',
+    'mysql_client_not_found' => 'MySQL client not found in the system. Make sure MySQL is installed.',
+    'invalid_sql_file' => 'Invalid SQL file. Make sure the file contains correct SQL commands.',
+    'backup_restore_title' => 'Backup & Restore Data',
     'create_user_btn' => 'Create User',
     'edit_service_btn' => 'Edit Service',
     'edit_user_btn' => 'Edit User',
@@ -568,15 +598,15 @@ return [
     'time_label' => 'Time',
     
     // Dashboard Charts & Analytics
-    'booking_status_chart' => 'Booking Status',
+    'booking_status_chart' => 'Booking Status Chart',
     'monthly_revenue_trend' => 'Monthly Revenue Trend',
     'financial_reports' => 'Financial Reports',
     'revenue_analysis' => 'Revenue and transaction analysis',
-    'daily_revenue' => 'Today\'s Revenue',
+    'daily_revenue' => 'Daily Revenue',
     'monthly_revenue' => 'Monthly Revenue',
-    'booking_analysis' => 'Booking Analysis',
+    'booking_analysis' => 'Booking analysis',
     'booking_status_trends' => 'Booking status and trends',
-    'customer_data' => 'Customer Data',
+    'customer_data' => 'Customer data',
     'customer_statistics' => 'Customer statistics',
     'new_customers' => 'New Customers',
     'total_customers' => 'Total Customers',
@@ -616,18 +646,21 @@ return [
     'completed' => 'Completed',
     'cancelled' => 'Cancelled',
 
+
     'enter_name' => 'Enter full name',
+    'email_address' => 'Email Address',
+    'enter_email' => 'Enter email address',
     'phone_number' => 'Phone Number',
     'enter_phone' => 'Enter phone number',
     'password' => 'Password',
-    'confirm_password' => 'Confirm Password',
-    'assign_roles' => 'Assign Roles',
+    'confirm_password' => 'Confirm password',
+    'assign_roles' => 'Select Role',
     'no_roles' => 'No roles available',
     'cancel' => 'Cancel',
     
     // Additional User Management Keys
     'new_password' => 'New Password',
-    'leave_empty_keep_password' => 'Leave empty to keep the current password',
+    'leave_empty_keep_password' => 'Leave blank to keep current password',
     'enter_confirm_password' => 'Confirm password',
     'user_details' => 'User Details',
     'personal_information' => 'Personal Information',
@@ -659,7 +692,7 @@ return [
     'deactivate_account_text' => 'This will deactivate the user account and prevent login.',
     'yes_activate' => 'Yes, Activate',
     'yes_deactivate' => 'Yes, Deactivate',
-    'password_reset' => 'Password Reset',
+    'password_reset' => 'Reset Password',
     'password_reset_success' => 'Password reset email has been sent successfully',
     'account_updated' => 'Account Updated',
     'user_account_activated' => 'User account has been activated successfully',
@@ -679,10 +712,10 @@ return [
     'days_as_member' => 'Days as Member',
     
     // Form Validation Messages
-    'field_required' => 'This field is required',
+    'field_required' => 'This column is required',
     'invalid_email' => 'Please enter a valid email address',
     'validation_error' => 'Validation Error',
-    'fill_required_fields' => 'Please fill in all required fields',
+    'fill_required_fields' => 'Please fill in all required columns',
     'role_required' => 'Role Required',
     'assign_role_message' => 'Please assign at least one role to the user',
     'updating_user' => 'Updating User...',
@@ -710,7 +743,7 @@ return [
     'delete_user_warning' => 'This will permanently delete the user.',
     'yes_delete_it' => 'Yes, delete it!',
     'deleted_success_title' => 'Deleted!',
-    'user_deleted_successfully' => 'User has been deleted successfully.',
+    'user_deleted_successfully' => 'User deleted successfully.',
     'delete_failed' => 'Failed to delete user',
     
     // Booking Management
@@ -729,13 +762,12 @@ return [
     'hair_type' => 'Hair Type',
     'style_preference' => 'Style Preference',
     'customer_information' => 'Customer Information',
-    'actions' => 'Actions',
     'confirm_booking' => 'Confirm Booking',
     'start_service' => 'Start Service',
     'complete_service' => 'Complete Service',
     'cancel_booking' => 'Cancel Booking',
     'back_to_bookings' => 'Back to Bookings',
-    'booking_export' => 'Booking Export',
+    'booking_export' => 'Export Booking',
     'booking_name' => 'Booking Name',
     'contact' => 'Contact',
     'hairstyle' => 'Hairstyle',
@@ -745,22 +777,22 @@ return [
     
     // Booking Action Messages
     'confirm_booking_message' => 'confirm this booking',
-    'start_service_message' => 'start the service for this booking',
+    'start_service_message' => 'start service for this booking',
     'complete_service_message' => 'mark this booking as completed',
     'cancel_booking_message' => 'cancel this booking',
     'processing' => 'Processing',
     'error_occurred' => 'An error occurred',
     
     // Feedback Management
-    'feedbacks_page_title' => 'Customer Feedbacks',
-    'feedbacks_page_subtitle' => 'Manage and review customer feedback and ratings',
+    'feedbacks_page_title' => 'Feedbacks',
+    'feedbacks_page_subtitle' => 'View and manage customer feedback and ratings',
     'feedback_details' => 'Feedback Details',
-    'feedback_details_subtitle' => 'View detailed customer feedback and ratings',
+    'feedback_details_subtitle' => 'View feedback details and customer ratings',
     'customer_rating' => 'Customer Rating',
     'excellent_service' => 'Excellent Service',
     'good_service' => 'Good Service',
     'average_service' => 'Average Service',
-    'below_average_service' => 'Below Average',
+    'below_average_service' => 'Below Average Service',
     'poor_service' => 'Poor Service',
     'customer_information' => 'Customer Information',
     'customer_info_not_available' => 'Customer information not available',
@@ -770,21 +802,21 @@ return [
     'not_scheduled' => 'Not scheduled',
     'no_booking_info_available' => 'No booking information available',
     'feedback_content' => 'Feedback Content',
-    'no_written_feedback' => 'No written feedback provided',
-    'rating_only_feedback' => 'Customer only provided a rating',
+    'no_written_feedback' => 'No written feedback',
+    'rating_only_feedback' => 'Customer only provided rating',
     'settings_and_actions' => 'Settings & Actions',
     'visibility' => 'Visibility',
     'public' => 'Public',
     'private' => 'Private',
     'visible_to_customers' => 'Visible to customers',
-    'admin_only' => 'Admin only',
+    'admin_only' => 'Admin Only',
     'active' => 'Active',
     'inactive' => 'Inactive',
     'make_public' => 'Make Public',
     'make_private' => 'Make Private',
     'delete_feedback' => 'Delete Feedback',
     'delete_feedback_confirm' => 'Are you sure you want to delete this feedback? This action cannot be undone.',
-    'delete_feedback_warning' => 'You wont be able to revert this!',
+    'delete_feedback_warning' => 'You will not be able to restore it!',
     'back_to_feedbacks' => 'Back to Feedbacks',
     
     // Feedback Table Columns
@@ -798,9 +830,9 @@ return [
     'actions_column' => 'Actions',
     
     // Feedback DataTable Messages
-    'no_matching_feedbacks' => 'No matching feedbacks found',
-    'no_feedbacks_available' => 'No feedbacks available',
-    'loading_feedbacks' => 'Loading feedbacks...',
+    'no_matching_feedbacks' => 'No matching feedback',
+    'no_feedbacks_available' => 'No feedback available',
+    'loading_feedbacks' => 'Loading feedback...',
     
     // Role Management
     'roles_page_title' => 'Role Management',
@@ -811,23 +843,23 @@ return [
     'create_role_btn' => 'Create New Role',
     'create_role' => 'Create Role',
     'update_role' => 'Update Role',
-    'delete_role_warning' => 'You wont be able to revert this!',
+    'delete_role_warning' => 'You will not be able to restore it!',
     
     // Role DataTable Messages
-    'no_matching_roles' => 'No matching roles found',
+    'no_matching_roles' => 'No matching roles',
     'no_roles_available' => 'No roles available',
     'loading_roles' => 'Loading roles...',
     
     // System Backup & Restore
     'backup_database' => 'Backup Database',
-    'backup_description' => 'Create a backup copy of your database and files for security purposes.',
-    'backup_full' => 'Full Backup (Database + Files)',
-    'backup_partial' => 'Database Only',
+    'backup_description' => 'Create a backup copy of the database and files for security purposes.',
+    'backup_full' => 'Full Backup (Database + File)',
+    'backup_partial' => 'Data Only Backup',
     'restore_database' => 'Restore Database',
-    'restore_description' => 'Restore database from backup file. <strong>Warning:</strong> This will replace all existing data.',
+    'restore_description' => 'Restore database from backup file. Attention: This will replace all existing data.',
     'select_backup_file' => 'Select Backup File (.sql, .zip)',
-    'restore_warning' => '<strong>Warning:</strong> Restore process will delete all current data!',
-    'backup_history' => 'Recent Backup History',
+    'restore_warning' => 'Warning: The restore process will delete all current data!',
+    'backup_history' => 'Latest Backup History',
     'no_backup_history' => 'No backup history yet',
     'first_backup_message' => 'First backup will appear here',
     'backup_timestamp_info' => 'Backup will be saved with timestamp for identification',
@@ -836,22 +868,22 @@ return [
     'yes_create_backup' => 'Yes, Create Backup!',
     'creating_backup' => 'Creating :type...',
     'backup_process_wait' => 'Backup process is running, please wait...',
-    'dont_close_page' => 'Don\'t close this page!',
-    'backup_failed' => 'Backup Failed',
+    'dont_close_page' => 'Do not close this page!',
+    'backup_failed' => 'Backup Failed!',
     'backup_success' => 'Backup Successful!',
     'backup_created_successfully' => ':type created successfully!',
-    'file_downloaded' => 'Backup file has been downloaded automatically',
+    'file_downloaded' => 'Backup file has been automatically downloaded',
     'backup_error' => 'An error occurred while creating backup',
     'file_not_selected' => 'File Not Selected',
     'select_backup_first' => 'Please select a backup file first',
     'important_warning' => 'IMPORTANT WARNING!',
     'restore_warning_text' => 'This process will delete ALL existing data!',
     'data_will_be_replaced' => 'All user, booking, and transaction data will be replaced',
-    'changes_irreversible' => 'This change CANNOT be undone',
+    'changes_irreversible' => 'These changes CANNOT be undone',
     'ensure_current_backup' => 'Make sure you have a backup of current data',
     'file_label' => 'File',
     'size_label' => 'Size',
-    'yes_sure_restore' => 'Yes, I\'m Sure to Restore!',
+    'yes_sure_restore' => 'Yes, I\'m Sure Restore!',
     'restoring_database' => 'Restoring Database...',
     'restore_in_progress' => 'Restore process is running...',
     'estimated_time' => 'Estimated time: 2-5 minutes depending on file size',
@@ -860,8 +892,8 @@ return [
     'page_will_reload' => 'Page will reload to apply changes',
     'restore_failed' => 'Restore Failed!',
     'restore_error' => 'An error occurred during restore',
-    'backup_full_desc' => 'full backup (database + files)',
-    'backup_partial_desc' => 'database backup only',
+    'backup_full_desc' => 'full backup (database + file)',
+    'backup_partial_desc' => 'data only backup',
     
     // Basic status messages
     'success' => 'Success',
@@ -869,8 +901,8 @@ return [
     
     // Pagination
     'first' => 'First',
-    'last' => 'Last', 
-    'next' => 'Next',
+    'last' => 'Last',
+    'next' => 'Next', 
     'previous' => 'Previous',
     
     // DataTables
@@ -880,41 +912,41 @@ return [
     
     // Users specific
     'loading_users' => 'Loading users...',
-    'no_matching_users' => 'No matching users found',
+    'no_matching_users' => 'No matching users',
     'no_users_available' => 'No users available',
     'reset_loyalty_title' => 'Reset Loyalty Points?',
-    'reset_loyalty_text' => 'Are you sure you want to reset :points loyalty points for :name? Customer will get a free haircut.',
+    'reset_loyalty_text' => 'Are you sure you want to reset :points loyalty points belonging to :name? Customer will get a free cut.',
     'yes_reset_it' => 'Yes, Reset Points!',
     'loyalty_reset_success' => 'Points Reset Successfully!',
     'loyalty_reset_failed' => 'Failed to Reset Points',
     
     // Services specific
     'loading_services' => 'Loading services...',
-    'no_matching_services' => 'No matching services found',
+    'no_matching_services' => 'No matching services',
     'no_services_available' => 'No services available',
     
     // Bookings specific
     'loading_bookings' => 'Loading bookings...',
-    'no_matching_bookings' => 'No matching bookings found',
+    'no_matching_bookings' => 'No matching bookings',
     'no_bookings_available' => 'No bookings available',
     
     // Products specific
     'loading_products' => 'Loading products...',
-    'no_matching_products' => 'No matching products found',
+    'no_matching_products' => 'No matching products',
     'no_products_available' => 'No products available',
-    'delete_product_warning' => "You wont be able to revert this!",
+    'delete_product_warning' => 'You will not be able to restore it!',
     
     // Hairstyles specific
     'loading_hairstyles' => 'Loading hairstyles...',
-    'no_matching_hairstyles' => 'No matching hairstyles found',
+    'no_matching_hairstyles' => 'No matching hairstyles',
     'no_hairstyles_available' => 'No hairstyles available',
     
     // Hairstyle Scores specific
     'hairstyle_scores' => 'Hairstyle Scores',
-    'manage_hairstyle_scores' => 'Manage evaluation scores for hairstyles',
+    'manage_hairstyle_scores' => 'Manage hairstyle evaluation scores',
     'add_score' => 'Add Score',
     'loading_scores' => 'Loading scores...',
-    'no_matching_scores' => 'No matching scores found',
+    'no_matching_scores' => 'No matching scores',
     'no_scores_available' => 'No scores available',
     
     // Roles specific
@@ -922,20 +954,53 @@ return [
     'manage_roles' => 'Manage user roles and permissions',
     'add_role' => 'Add Role',
     'loading_roles' => 'Loading roles...',
-    'no_matching_roles' => 'No matching roles found',
+    'no_matching_roles' => 'No matching roles',
     'no_roles_available' => 'No roles available',
-
-
-
+    
+    
+    // Missing translations for bookings page
+    'error' => 'Error',
+    'processing' => 'Processing',
     'confirm' => 'Confirm',
+    'cancel' => 'Cancel',
+    'yes' => 'Yes',
+    'confirm_booking' => 'Confirm Booking',
+    'start_service' => 'Start Service',
+    'complete_service' => 'Complete Service', 
+    'cancel_booking' => 'Cancel Booking',
+    'confirm_booking_message' => 'this booking',
+    'start_service_message' => 'start service for this booking', 
+    'complete_service_message' => 'mark this booking as completed',
+    'cancel_booking_message' => 'cancel this booking',
+    'booking_cancelled_successfully' => 'Booking successfully cancelled',
+    'booking_and_transaction_cancelled' => 'Booking successfully cancelled and payment transaction has been cancelled',
+    'transaction_cancelled_for_booking' => 'Payment transaction successfully cancelled for this booking',
     'yes' => 'Yes',
     'no' => 'No',
 
-     
-     'duration_column' => 'Duration (Minutes)',
-    'enter_duration' => 'Enter the duration of the service in minutes',
-    'is_active' => 'Is Active',
+    'duration_column' => 'Duration (Minutes)',
+    'enter_duration' => 'Enter service duration in minutes',
+    'is_active' => 'Active',
 
+    // Product Multilingual Fields
+    'product_name_id' => 'Product Name (Indonesian)',
+    'product_name_en' => 'Product Name (English)',
+    'product_name_id_placeholder' => 'Enter product name in Indonesian',
+    'product_name_en_placeholder' => 'Enter product name in English',
+    'description_id' => 'Description (Indonesian)',
+    'description_en' => 'Description (English)',
+    'description_id_placeholder' => 'Enter product description in Indonesian',
+    'description_en_placeholder' => 'Enter product description in English',
+
+    // Service Multilingual Fields
+    'service_name_id' => 'Service Name (Indonesian)',
+    'service_name_en' => 'Service Name (English)',
+    'service_name_id_placeholder' => 'Enter service name in Indonesian',
+    'service_name_en_placeholder' => 'Enter service name in English',
+    'service_description_id' => 'Service Description (Indonesian)',
+    'service_description_en' => 'Service Description (English)',
+    'service_description_id_placeholder' => 'Enter service description in Indonesian',
+    'service_description_en_placeholder' => 'Enter service description in English',
 
 
 ];

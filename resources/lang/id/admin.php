@@ -137,6 +137,21 @@ return [
     'service_description' => 'Deskripsi Layanan',
     'service_price' => 'Harga Layanan',
     'service_duration' => 'Durasi Layanan',
+    'create_service_btn' => 'Buat Layanan',
+    'edit_service_btn' => 'Edit Layanan',
+    'update_service' => 'Perbarui Layanan',
+    'edit_service_title' => 'Edit Layanan',
+    'edit_service_subtitle' => 'Perbarui informasi layanan untuk :name',
+    'create_service_title' => 'Buat Layanan',
+    'create_service_subtitle' => 'Tambahkan layanan baru untuk Wox Barbershop',
+    'duration_column' => 'Durasi',
+    'enter_duration' => 'Masukkan durasi layanan dalam menit',
+    'is_active' => 'Aktif',
+    'multilingual_fields' => 'Field Multilingual',
+    'service_name_id' => 'Nama Layanan (Bahasa Indonesia)',
+    'service_name_en' => 'Nama Layanan (Bahasa Inggris)',
+    'service_name_id_placeholder' => 'Masukkan nama layanan dalam Bahasa Indonesia',
+    'service_name_en_placeholder' => 'Enter service name in English',
     
     // User Management
     'create_user' => 'Buat Pengguna',
@@ -379,7 +394,6 @@ return [
     'low_stock_warning' => 'Peringatan Stok Rendah',
     'low_stock_message' => 'Jumlah stok ini tergolong rendah. Pertimbangkan untuk menambah stok segera.',
 
-    
     // Feedbacks Management
     'feedbacks_page_title' => 'Umpan Balik',
     'feedbacks_page_subtitle' => 'Lihat dan kelola umpan balik dari pelanggan',
@@ -967,6 +981,26 @@ return [
     'duration_column' => 'Durasi (Menit)',
     'enter_duration' => 'Masukkan durasi layanan dalam menit',
     'is_active' => 'Aktif',
+
+    // Product Multilingual Fields
+    'product_name_id' => 'Nama Produk (Bahasa Indonesia)',
+    'product_name_en' => 'Nama Produk (Bahasa Inggris)',
+    'product_name_id_placeholder' => 'Masukkan nama produk dalam Bahasa Indonesia',
+    'product_name_en_placeholder' => 'Enter product name in English',
+    'description_id' => 'Deskripsi (Bahasa Indonesia)',
+    'description_en' => 'Deskripsi (Bahasa Inggris)',
+    'description_id_placeholder' => 'Masukkan deskripsi produk dalam Bahasa Indonesia',
+    'description_en_placeholder' => 'Enter product description in English',
+
+    // Service Multilingual Fields
+    'service_name_id' => 'Nama Layanan (Bahasa Indonesia)',
+    'service_name_en' => 'Service Name (English)',
+    'service_name_id_placeholder' => 'Masukkan nama layanan dalam Bahasa Indonesia',
+    'service_name_en_placeholder' => 'Enter service name in English',
+    'service_description_id' => 'Deskripsi Layanan (Bahasa Indonesia)',
+    'service_description_en' => 'Service Description (English)',
+    'service_description_id_placeholder' => 'Masukkan deskripsi layanan dalam Bahasa Indonesia',
+    'service_description_en_placeholder' => 'Enter service description in English',
 
 
 ];

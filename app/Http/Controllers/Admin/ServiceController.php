@@ -34,7 +34,11 @@ class ServiceController extends Controller
                 $searchTerm = $request->search['value'];
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('name', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('name_id', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('name_en', 'LIKE', "%{$searchTerm}%")
                         ->orWhere('description', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('description_id', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('description_en', 'LIKE', "%{$searchTerm}%")
                         ->orWhere('price', 'LIKE', "%{$searchTerm}%");
                 });
             }
@@ -190,6 +194,10 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:services',
             'description' => 'nullable|string|max:1000',
+            'name_id' => 'nullable|string|max:255',
+            'name_en' => 'nullable|string|max:255',
+            'description_id' => 'nullable|string|max:1000',
+            'description_en' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0|max:10000000',
             'duration' => 'nullable|integer|min:1|max:480',
             'is_active' => 'nullable|boolean',
@@ -201,6 +209,10 @@ class ServiceController extends Controller
             $data = [
                 'name' => $validated['name'],
                 'description' => $validated['description'],
+                'name_id' => $validated['name_id'],
+                'name_en' => $validated['name_en'],
+                'description_id' => $validated['description_id'],
+                'description_en' => $validated['description_en'],
                 'price' => $validated['price'],
                 'duration' => $validated['duration'],
                 'is_active' => $request->boolean('is_active', true),
@@ -232,6 +244,10 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:services,name,'.$service->id,
             'description' => 'nullable|string|max:1000',
+            'name_id' => 'nullable|string|max:255',
+            'name_en' => 'nullable|string|max:255',
+            'description_id' => 'nullable|string|max:1000',
+            'description_en' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0|max:10000000',
             'duration' => 'nullable|integer|min:1|max:480',
             'is_active' => 'nullable|boolean',
@@ -243,6 +259,10 @@ class ServiceController extends Controller
             $data = [
                 'name' => $validated['name'],
                 'description' => $validated['description'],
+                'name_id' => $validated['name_id'],
+                'name_en' => $validated['name_en'],
+                'description_id' => $validated['description_id'],
+                'description_en' => $validated['description_en'],
                 'price' => $validated['price'],
                 'duration' => $validated['duration'],
                 'is_active' => $request->boolean('is_active', true),

@@ -1,0 +1,20 @@
+[2025-10-26 07:59:50] local.INFO: User logout attempt {"user_id":80,"user_name":"Aisya Nadia","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"} 
+[2025-10-26 07:59:50] local.INFO: User logout successful  
+[2025-10-26 07:59:57] local.INFO: User login attempt {"email":"admin@woxbarbershop.com","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"} 
+[2025-10-26 07:59:57] local.INFO: User last login updated {"user_id":45,"email":"admin@woxbarbershop.com","previous_login":"2025-10-26 07:40:08","current_login":"2025-10-26 07:59:57"} 
+[2025-10-26 07:59:57] local.INFO: User login successful {"user_id":45,"email":"admin@woxbarbershop.com","last_login_at":"2025-10-26 07:59:57","ip":"127.0.0.1"} 
+[2025-10-26 08:01:34] local.INFO: User logout attempt {"user_id":45,"user_name":"Super Admin","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"} 
+[2025-10-26 08:01:34] local.INFO: User logout successful  
+[2025-10-26 08:05:20] local.ERROR: Unhandled exception {"exception":"Symfony\\Component\\ErrorHandler\\Error\\FatalError","message":"Unclosed '{' on line 23","file":"/Users/appkey/Desktop/agungappkey/tugas-akhir/app/Models/Service.php","line":31,"trace":"#0 {main}","url":"http://localhost","method":"GET","ip":"127.0.0.1","user_agent":"Symfony","user_id":null} 
+[2025-10-26 08:05:20] local.ERROR: Unclosed '{' on line 23 {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Unclosed '{' on line 23 at /Users/appkey/Desktop/agungappkey/tugas-akhir/app/Models/Service.php:31)
+[stacktrace]
+#0 {main}
+"} 
+[2025-10-26 08:05:25] local.ERROR: Unhandled exception {"exception":"Symfony\\Component\\ErrorHandler\\Error\\FatalError","message":"Unclosed '{' on line 23","file":"/Users/appkey/Desktop/agungappkey/tugas-akhir/app/Models/Service.php","line":31,"trace":"#0 {main}","url":"http://localhost","method":"GET","ip":"127.0.0.1","user_agent":"Symfony","user_id":null} 
+[2025-10-26 08:05:25] local.ERROR: Unclosed '{' on line 23 {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Unclosed '{' on line 23 at /Users/appkey/Desktop/agungappkey/tugas-akhir/app/Models/Service.php:31)
+[stacktrace]
+#0 {main}
+"} 
+[2025-10-26 08:20:29] local.INFO: User login attempt {"email":"admin@woxbarbershop.com","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"} 
+[2025-10-26 08:20:29] local.INFO: User last login updated {"user_id":45,"email":"admin@woxbarbershop.com","previous_login":"2025-10-26 07:59:57","current_login":"2025-10-26 08:20:29"} 
+[2025-10-26 08:20:29] local.INFO: User login successful {"user_id":45,"email":"admin@woxbarbershop.com","last_login_at":"2025-10-26 08:20:29","ip":"127.0.0.1"} 

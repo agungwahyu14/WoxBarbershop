@@ -53,17 +53,69 @@
                                 @enderror
                             </div>
 
+                            <!-- Multilingual Product Names -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="name_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-language mr-2 text-green-600"></i>{{ __('admin.product_name_id') }}
+                                    </label>
+                                    <input type="text" id="name_id" name="name_id" value="{{ old('name_id') }}"
+                                        class="form-control w-full @error('name_id') border-red-500 @enderror"
+                                        placeholder="{{ __('admin.product_name_id_placeholder') }}">
+                                    @error('name_id')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <label for="name_en" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-language mr-2 text-blue-600"></i>{{ __('admin.product_name_en') }}
+                                    </label>
+                                    <input type="text" id="name_en" name="name_en" value="{{ old('name_en') }}"
+                                        class="form-control w-full @error('name_en') border-red-500 @enderror"
+                                        placeholder="{{ __('admin.product_name_en_placeholder') }}">
+                                    @error('name_en')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <!-- Description -->
                             <div>
                                 <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-align-left mr-2 text-blue-600"></i>{{ __('admin.description') }}
                                 </label>
-                                <textarea id="description" name="description" rows="4"
+                                <textarea id="description" name="description" rows="3"
                                     class="form-control w-full @error('description') border-red-500 @enderror"
                                     placeholder="{{ __('admin.description') }}">{{ old('description') }}</textarea>
                                 @error('description')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
+                            </div>
+
+                            <!-- Multilingual Descriptions -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="description_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-language mr-2 text-green-600"></i>{{ __('admin.description_id') }}
+                                    </label>
+                                    <textarea id="description_id" name="description_id" rows="4"
+                                        class="form-control w-full @error('description_id') border-red-500 @enderror"
+                                        placeholder="{{ __('admin.description_id_placeholder') }}">{{ old('description_id') }}</textarea>
+                                    @error('description_id')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <label for="description_en" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-language mr-2 text-blue-600"></i>{{ __('admin.description_en') }}
+                                    </label>
+                                    <textarea id="description_en" name="description_en" rows="4"
+                                        class="form-control w-full @error('description_en') border-red-500 @enderror"
+                                        placeholder="{{ __('admin.description_en_placeholder') }}">{{ old('description_en') }}</textarea>
+                                    @error('description_en')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Category -->

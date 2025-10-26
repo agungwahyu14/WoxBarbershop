@@ -38,7 +38,7 @@
                     <!-- Service Name -->
                     <div>
                         <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.service_name') }}
+                            <i class="fas fa-tag mr-2 text-blue-600"></i>{{ __('admin.service_name') }} *
                         </label>
                         <input type="text" name="name" id="name" value="{{ old('name') }}"
                             class="form-control w-full @error('name') border-red-500 @enderror"
@@ -59,6 +59,80 @@
                         @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
+                    </div>
+
+                    <!-- Multilingual Fields Section -->
+                    <div class="border-t border-gray-200 pt-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-language mr-2 text-blue-600"></i>
+                            {{ __('admin.multilingual_fields') }}
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Indonesian Fields -->
+                            <div class="space-y-4">
+                                <h4 class="text-sm font-medium text-gray-700 border-b border-gray-200 pb-2">
+                                    🇮🇩 Bahasa Indonesia
+                                </h4>
+                                
+                                <div>
+                                    <label for="name_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('admin.service_name_id') }}
+                                    </label>
+                                    <input type="text" name="name_id" id="name_id" 
+                                        value="{{ old('name_id') }}"
+                                        class="form-control w-full @error('name_id') border-red-500 @enderror"
+                                        placeholder="{{ __('admin.service_name_id_placeholder') }}">
+                                    @error('name_id')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
+                                <div>
+                                    <label for="description_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('admin.description_id') }}
+                                    </label>
+                                    <textarea name="description_id" id="description_id" rows="3"
+                                        class="form-control w-full @error('description_id') border-red-500 @enderror"
+                                        placeholder="{{ __('admin.description_id_placeholder') }}">{{ old('description_id') }}</textarea>
+                                    @error('description_id')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                            
+                            <!-- English Fields -->
+                            <div class="space-y-4">
+                                <h4 class="text-sm font-medium text-gray-700 border-b border-gray-200 pb-2">
+                                    🇬🇧 English
+                                </h4>
+                                
+                                <div>
+                                    <label for="name_en" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('admin.service_name_en') }}
+                                    </label>
+                                    <input type="text" name="name_en" id="name_en" 
+                                        value="{{ old('name_en') }}"
+                                        class="form-control w-full @error('name_en') border-red-500 @enderror"
+                                        placeholder="{{ __('admin.service_name_en_placeholder') }}">
+                                    @error('name_en')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
+                                <div>
+                                    <label for="description_en" class="block text-sm font-medium text-gray-700 mb-2">
+                                        {{ __('admin.description_en') }}
+                                    </label>
+                                    <textarea name="description_en" id="description_en" rows="3"
+                                        class="form-control w-full @error('description_en') border-red-500 @enderror"
+                                        placeholder="{{ __('admin.description_en_placeholder') }}">{{ old('description_en') }}</textarea>
+                                    @error('description_en')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Price -->
@@ -87,7 +161,6 @@
                         @enderror
                     </div>
 
-                    <!-- Is Active (checkbox) -->
                     <!-- Is Active (checkbox) -->
                     <div class="flex items-center">
                         <input type="hidden" name="is_active" value="0">
