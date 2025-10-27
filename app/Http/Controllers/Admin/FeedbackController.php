@@ -10,12 +10,12 @@ use Yajra\DataTables\DataTables;
 class FeedbackController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of resource.
      */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Feedback::with(['user', 'booking'])->select('feedback.*');
+            $data = Feedback::with(['user', 'booking'])->select('feedback.*')->orderByDesc('id');
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -131,7 +131,7 @@ class FeedbackController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display specified resource.
      */
     public function show(Feedback $feedback)
     {

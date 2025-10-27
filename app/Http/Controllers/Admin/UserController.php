@@ -72,7 +72,7 @@ if ($request->filled('status_filter')) {
                 $query->whereYear('created_at', $request->year_filter);
             }
 
-            $data = $query->get();
+            $data = $query->orderByDesc('id')->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -517,7 +517,7 @@ return $actions;
             $user->syncRoles([]);
             $user->syncPermissions([]);
 
-            // Delete the user
+            // Delete user
             $user->delete();
 
             DB::commit();

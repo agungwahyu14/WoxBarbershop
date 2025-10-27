@@ -54,9 +54,8 @@
                 <div class="card-content p-6">
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
-                            <h3 class=" text-sm font-medium mb-2">{{ __('admin.customers') }}</h3>
+                            <h3 class="text-sm font-medium mb-2 text-white">{{ __('admin.customers') }}</h3>
                             <h1 class="text-3xl font-bold" id="total-customers">{{ $todayCustomers }}</h1>
-
                         </div>
                         <div class="bg-blue-400 bg-opacity-30 p-3 rounded-full">
                             <i class="mdi mdi-account-multiple text-2xl"></i>
@@ -64,6 +63,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Total Revenue -->
             <div

@@ -82,7 +82,7 @@ class BookingController extends Controller
                     Log::info('Year filter applied', ['year' => $request->year_filter]);
                 }
 
-                $data = $query->get();
+                $data = $query->orderByDesc('id')->get();
 
                 Log::info('Bookings data retrieved successfully', [
                     'total_records' => $data->count(),
@@ -663,7 +663,7 @@ class BookingController extends Controller
             $validatedData = $request->validated();
             $newDateTime = \Carbon\Carbon::parse($validatedData['date_time']);
 
-            // Apply the same business logic validation as create booking
+            // Apply same business logic validation as create booking
             $validation = $this->bookingService->validateBusinessHours($newDateTime);
             
             if (!$validation['is_valid']) {
@@ -695,7 +695,7 @@ class BookingController extends Controller
                 throw new \Exception('Layanan akan berakhir setelah jam tutup (22:00). Silakan pilih waktu yang lebih awal.', 422);
             }
 
-            // Check time slot availability for the new time
+            // Check time slot availability for new time
             $slotDetails = $this->bookingService->getSlotAvailabilityDetails($newDateTime, $service->duration);
             
             if (!$slotDetails['is_available']) {

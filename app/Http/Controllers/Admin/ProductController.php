@@ -12,12 +12,12 @@ use Yajra\DataTables\DataTables;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of resource.
      */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Product::query();
+            $data = Product::query()->orderByDesc('id');
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -96,7 +96,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show form for creating a new resource.
      */
     public function create()
     {
@@ -150,7 +150,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show form for editing the specified resource.
      */
     public function edit(Product $product)
     {

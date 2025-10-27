@@ -15,7 +15,7 @@ class LoyaltyController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Loyalty::with('user')->get(); // pastikan relasi 'user' didefinisikan di model
+            $data = Loyalty::with('user')->orderByDesc('id')->get(); // pastikan relasi 'user' didefinisikan di model
 
             return DataTables::of($data)
                 ->addIndexColumn()

@@ -42,7 +42,7 @@ class TransactionController extends Controller
             $query->where('transaction_type', $request->type_filter);
         }
 
-        $data = $query->get();
+        $data = $query->orderByDesc('id')->get();
 
         return DataTables::of($data)
             ->addIndexColumn()

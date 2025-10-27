@@ -15,7 +15,7 @@ class PermissionController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Permission::withCount('users', 'roles')->get();
+            $data = Permission::withCount('users', 'roles')->orderByDesc('id')->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()

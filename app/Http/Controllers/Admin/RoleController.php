@@ -10,12 +10,12 @@ use Yajra\DataTables\DataTables;
 class RoleController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of resource.
      */
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Role::withCount('users')->get();
+            $data = Role::withCount('users')->orderByDesc('id')->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -120,7 +120,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show form for creating a new resource.
      */
     public function create()
     {
@@ -143,7 +143,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display specified resource.
      */
     public function show(Role $role)
     {
@@ -151,7 +151,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show form for editing specified resource.
      */
     public function edit(Role $role)
     {
@@ -159,7 +159,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update specified resource in storage.
      */
     public function update(Request $request, Role $role)
     {
@@ -175,7 +175,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove specified resource from storage.
      */
     public function destroy($id)
     {
