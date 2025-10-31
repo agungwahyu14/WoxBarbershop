@@ -72,24 +72,35 @@
 
 {{-- JavaScript for enhanced functionality --}}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add click event listeners to language links
-        const languageLinks = document.querySelectorAll('a[href*="language/switch"]');
+    // Fix: Remove duplicate event listener and use proper initialization
+    (function() {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLanguageSwitcher);
+        } else {
+            initLanguageSwitcher();
+        }
 
-        languageLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Show loading indicator
-                const loading = document.getElementById('language-loading');
-                if (loading) {
-                    loading.classList.remove('hidden');
-                }
+        function initLanguageSwitcher() {
+            // Add click event listeners to language links
+            const languageLinks = document.querySelectorAll('a[href*="language/switch"]');
 
-                // Optional: Add small delay for better UX
-                setTimeout(() => {
-                    // Allow the link to proceed
-                    window.location.href = this.href;
-                }, 300);
+            languageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default to show loading first
+                    
+                    // Show loading indicator
+                    const loading = document.getElementById('language-loading');
+                    if (loading) {
+                        loading.classList.remove('hidden');
+                    }
+
+                    // Small delay for better UX
+                    setTimeout(() => {
+                        window.location.href = this.href;
+                    }, 300);
+                });
             });
-        });
-    });
+        }
+    })();
 </script>

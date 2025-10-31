@@ -110,7 +110,16 @@
 
 <!-- Language Switcher JavaScript -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+// Fix: Remove duplicate event listener and use proper initialization
+(function() {
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAdminLanguageSwitcher);
+    } else {
+        initAdminLanguageSwitcher();
+    }
+
+    function initAdminLanguageSwitcher() {
         // Add click event listeners to language links for loading indicator
         const languageLinks = document.querySelectorAll('a[href*="language/switch"]');
 
@@ -136,5 +145,6 @@
                 }
             });
         });
-    });
+    }
+})();
 </script>

@@ -399,6 +399,9 @@ class BookingController extends Controller
                 } elseif ($errorCode === 409) {
                     $statusCode = 409;
                     $message = $errorMessage ?: 'Jadwal bentrok dengan booking lain';
+                } elseif ($errorCode === 423) {
+                    $statusCode = 423;
+                    $message = $errorMessage ?: 'Kuota harian telah terpenuhi';
                 } else {
                     $message = 'Terjadi kesalahan saat membuat booking. Silakan coba lagi.';
                 }
@@ -406,7 +409,7 @@ class BookingController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => $message,
-                    'error_type' => $errorCode === 422 ? 'business_hours' : ($errorCode === 409 ? 'time_conflict' : 'general')
+                    'error_type' => $errorCode === 422 ? 'business_hours' : ($errorCode === 409 ? 'time_conflict' : ($errorCode === 423 ? 'quota_exceeded' : 'general'))
                 ], $statusCode);
             }
             
@@ -449,6 +452,12 @@ class BookingController extends Controller
                 return redirect()->back()
                     ->with('warning', $errorMessage)
                     ->with('error_type', 'time_conflict')
+                    ->withInput();
+            } elseif ($errorCode === 423) {
+                // Quota exceeded errors
+                return redirect()->back()
+                    ->with('error', $errorMessage)
+                    ->with('error_type', 'quota_exceeded')
                     ->withInput();
             } else {
                 // General errors

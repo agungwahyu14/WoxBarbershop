@@ -385,6 +385,21 @@ class BookingService
             throw new \Exception($errorMessage, 409); // 409 = Conflict
         }
 
+        // Validasi kuota harian (maksimal 50 booking per hari)
+        $queueService = new QueueService;
+        $quotaInfo = $queueService->isDailyQuotaAvailable($dateTime);
+        
+        if (!$quotaInfo['is_available']) {
+            Log::warning('Daily quota exceeded', [
+                'requested_date' => $dateTime->format('Y-m-d'),
+                'current_bookings' => $quotaInfo['current_bookings'],
+                'max_quota' => $quotaInfo['max_quota'],
+                'remaining_quota' => $quotaInfo['remaining_quota']
+            ]);
+            
+            throw new \Exception($quotaInfo['message'], 423); // 423 = Locked
+        }
+
         // Generate nomor antrian
         $queueService = new QueueService;
         $queueNumber = $queueService->generateQueueNumber($dateTime);

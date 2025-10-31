@@ -55,7 +55,7 @@
                                         </span>
 
                                         {{-- Payment Status --}}
-                                        @if (isset($booking->payment_status))
+                                        {{-- @if (isset($booking->payment_status))
                                             <span
                                                 class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                                     {{ $booking->payment_status === 'paid' || $booking->payment_status === 'settlement'
@@ -66,7 +66,7 @@
                                                 <i class="fas fa-money-bill-wave mr-1 text-xs"></i>
                                                 {{ __('booking.payment_status_' . $booking->payment_status) }}
                                             </span>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </div>
 

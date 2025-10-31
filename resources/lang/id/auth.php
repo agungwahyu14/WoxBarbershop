@@ -20,10 +20,12 @@ return [
     
     // Messages
     'failed' => 'Kredensial ini tidak cocok dengan catatan kami.',
+    'email_password_wrong' => 'Email atau Kata Sandi salah.',
     'wrong_password' => 'Password yang diberikan salah.',
     'throttle' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam :seconds detik.',
     'login_success' => 'Berhasil masuk!',
     'logout_success' => 'Berhasil keluar!',
+    'welcome_back' => 'Selamat datang kembali',
     'register_success' => 'Pendaftaran berhasil! Silakan masuk.',
     'password_reset_sent' => 'Link reset password telah dikirim ke email Anda.',
     'password_reset_success' => 'Password berhasil direset!',

@@ -66,12 +66,12 @@ class AuthenticatedSessionController extends Controller
             if ($user->hasRole('pelanggan')) {
                 $request->session()->forget('url.intended');
                 return redirect()->route('dashboard')
-                    ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+                    ->with('success', __('auth.welcome_back') . ', ' . $user->name . '!');
             }
 
             // For admin/pegawai, allow intended redirect or default to dashboard
             return redirect()->intended(RouteServiceProvider::HOME)
-                ->with('success', 'Selamat datang kembali, ' . $user->name . '!');
+                ->with('success', __('auth.welcome_back') . ', ' . $user->name . '!');
 
         } catch (\Exception $e) {
             Log::error('Login error occurred', [
@@ -81,7 +81,7 @@ class AuthenticatedSessionController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-              return redirect()->route('login')->with('error', 'Email or Password wrong.');
+              return redirect()->route('login')->with('error', __('auth.email_password_wrong'));
         }
     }
 

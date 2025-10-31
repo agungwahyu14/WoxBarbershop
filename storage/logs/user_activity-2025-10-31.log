@@ -1,0 +1,3 @@
+[2025-10-31 12:13:40] local.INFO: Daily queue reset command executed {"timestamp":"2025-10-31 12:13:40","command":"queue:reset-daily"} 
+[2025-10-31 12:13:40] local.INFO: Daily queue reset initiated {"date":"2025-10-31","time":"00:00:00"} 
+[2025-10-31 12:13:40] local.INFO: Daily queue reset completed successfully {"timestamp":"2025-10-31 12:13:40","next_reset":"2025-11-01 00:00:00"} 

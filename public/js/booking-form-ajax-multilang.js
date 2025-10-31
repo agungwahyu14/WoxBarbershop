@@ -12,7 +12,7 @@ let bookingTranslations = {};
 function loadBookingTranslations() {
     const currentLocale = document.documentElement.lang || 'id';
     
-    // Get translations from the window object (passed from blade template)
+    // Get translations from window object (passed from blade template)
     if (window.bookingTranslations) {
         bookingTranslations = window.bookingTranslations;
     }
@@ -316,7 +316,7 @@ $(document).ready(function () {
         $(this).removeClass('border-red-500');
         $(this).closest('div').find('.text-red-600').remove();
 
-        // Check if date is in the past
+        // Check if date is in past
         if (selectedDate < now) {
             $(this).addClass('border-red-500');
             const errorHtml = `<p class="text-red-600 text-sm mt-1">
@@ -361,8 +361,8 @@ function switchBookingLanguage(locale) {
     window.location.href = currentUrl.toString();
 }
 
-// Auto-detect locale from HTML lang attribute
-document.addEventListener('DOMContentLoaded', function() {
+// Auto-detect locale from HTML lang attribute (moved inside document ready)
+$(document).ready(function() {
     const locale = document.documentElement.getAttribute('lang') || 'id';
     console.log('Booking form locale detected:', locale);
 });

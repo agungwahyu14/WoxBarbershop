@@ -18,6 +18,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:cancel-expired-bookings')
                  ->hourly()
                  ->description('Cancel bookings and transactions that have expired');
+        
+        // Reset daily queue counters at midnight (00:00)
+        $schedule->command('queue:reset-daily')
+                 ->daily()
+                 ->at('00:00')
+                 ->description('Reset daily queue counters at midnight');
     }
 
     /**

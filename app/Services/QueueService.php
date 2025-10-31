@@ -22,11 +22,39 @@ class QueueService
     }
 
     /**
+     * Check if daily quota is available (max 50 bookings per day)
+     */
+    public function isDailyQuotaAvailable(Carbon $date): array
+    {
+        $dateString = $date->format('Y-m-d');
+        $maxDailyQuota = 50;
+
+        $currentBookings = Booking::whereDate('date_time', $dateString)
+            ->whereIn('status', ['pending', 'confirmed', 'in_progress', 'completed'])
+            ->count();
+
+        $isAvailable = $currentBookings < $maxDailyQuota;
+        $remainingQuota = $maxDailyQuota - $currentBookings;
+
+        return [
+            'is_available' => $isAvailable,
+            'current_bookings' => $currentBookings,
+            'max_quota' => $maxDailyQuota,
+            'remaining_quota' => $remainingQuota,
+            'quota_exceeded' => $currentBookings >= $maxDailyQuota,
+            'message' => $isAvailable 
+                ? "Kuota tersedia: {$remainingQuota} dari {$maxDailyQuota} booking"
+                : "Kuota harian telah terpenuhi ({$maxDailyQuota} booking). Silakan coba besok."
+        ];
+    }
+
+    /**
      * Get current queue status for a date
      */
     public function getQueueStatus(Carbon $date): array
     {
         $dateString = $date->format('Y-m-d');
+        $maxDailyQuota = 50;
 
         $totalBookings = Booking::whereDate('date_time', $dateString)
             ->whereIn('status', ['pending', 'confirmed', 'in_progress', 'completed'])
@@ -45,14 +73,16 @@ class QueueService
             ->orderBy('queue_number')
             ->get();
 
-        return [
+        $quotaInfo = $this->isDailyQuotaAvailable($date);
+
+        return array_merge([
             'total_bookings' => $totalBookings,
             'completed_bookings' => $completedBookings,
             'current_queue' => $currentQueue?->queue_number,
             'waiting_count' => $waitingBookings->count(),
             'waiting_bookings' => $waitingBookings,
             'estimated_wait_time' => $this->calculateEstimatedWaitTime($waitingBookings),
-        ];
+        ], $quotaInfo);
     }
 
     /**
@@ -138,5 +168,26 @@ class QueueService
             ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
             ->where('queue_number', '<=', $booking->queue_number)
             ->count();
+    }
+
+    /**
+     * Reset daily queue numbers at midnight
+     * This method should be called by a scheduled task
+     */
+    public function resetDailyQueue(): void
+    {
+        $today = Carbon::today();
+        
+        // Log the reset operation
+        \Log::info('Daily queue reset initiated', [
+            'date' => $today->format('Y-m-d'),
+            'time' => $today->format('H:i:s')
+        ]);
+
+        // The queue numbers will automatically reset to 1 for the next day
+        // when generateQueueNumber() is called for the new date
+        // This method is mainly for logging and any additional cleanup needed
+        
+        return;
     }
 }
