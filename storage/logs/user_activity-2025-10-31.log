@@ -1,3 +1,6 @@
 [2025-10-31 12:13:40] local.INFO: Daily queue reset command executed {"timestamp":"2025-10-31 12:13:40","command":"queue:reset-daily"} 
 [2025-10-31 12:13:40] local.INFO: Daily queue reset initiated {"date":"2025-10-31","time":"00:00:00"} 
 [2025-10-31 12:13:40] local.INFO: Daily queue reset completed successfully {"timestamp":"2025-10-31 12:13:40","next_reset":"2025-11-01 00:00:00"} 
+[2025-10-31 12:36:00] local.INFO: User login attempt {"email":"lisa@example.com","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"} 
+[2025-10-31 12:36:01] local.INFO: User last login updated {"user_id":55,"email":"lisa@example.com","previous_login":"2025-10-30 07:23:48","current_login":"2025-10-31 12:36:01"} 
+[2025-10-31 12:36:01] local.INFO: User login successful {"user_id":55,"email":"lisa@example.com","last_login_at":"2025-10-31 12:36:01","ip":"127.0.0.1"} 
