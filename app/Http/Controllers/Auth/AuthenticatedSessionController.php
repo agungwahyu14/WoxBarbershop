@@ -27,7 +27,7 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         try {
-            Log::channel('user_activity')->info('User login attempt', [
+            Log::info('User login attempt', [
                 'email' => $request->email,
                 'ip' => $request->ip(),
                 'user_agent' => $request->userAgent()
@@ -40,25 +40,17 @@ class AuthenticatedSessionController extends Controller
             if (!$user->is_active) {
                 Auth::logout();
                 
-                Log::channel('user_activity')->warning('Login attempt by inactive user', [
+                Log::warning('Login attempt with inactive account', [
+                    'email' => $request->email,
                     'user_id' => $user->id,
-                    'email' => $user->email,
                     'ip' => $request->ip()
                 ]);
 
-               return redirect()->route('login')->with('error', 'Akun Anda dinonaktifkan, hubungi admin.');
-
+                return redirect()->route('login')->with('error', __('auth.account_deactivated'));
             }
 
             // Update last login timestamp
             $user->updateLastLogin();
-            
-            Log::channel('user_activity')->info('User login successful', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'last_login_at' => $user->last_login_at,
-                'ip' => $request->ip()
-            ]);
 
             $request->session()->regenerate();
 
@@ -70,8 +62,49 @@ class AuthenticatedSessionController extends Controller
             }
 
             // For admin/pegawai, allow intended redirect or default to dashboard
+            Log::info('User login successful', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->roles->pluck('name')->implode(','),
+                'ip' => $request->ip()
+            ]);
+
             return redirect()->intended(RouteServiceProvider::HOME)
-                ->with('success');
+                ->with('success', __('auth.welcome_back') . ', ' . $user->name . '!');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('Login validation failed', [
+                'email' => $request->email,
+                'errors' => $e->errors(),
+                'ip' => $request->ip()
+            ]);
+
+            // Ambil error message yang paling relevan
+            $errorMessage = '';
+            $errors = $e->errors();
+            
+            if (isset($errors['email']) && count($errors['email']) > 0) {
+                $errorMessage = $errors['email'][0]; // Ambil error email pertama
+            } elseif (isset($errors['password']) && count($errors['password']) > 0) {
+                $errorMessage = $errors['password'][0]; // Ambil error password pertama
+            } else {
+                // Ambil error pertama dari field manapun
+                $firstFieldErrors = array_values($errors)[0];
+                $errorMessage = $firstFieldErrors[0];
+            }
+
+            return redirect()->route('login')->withInput($request->only('email'))->with('error', $errorMessage);
+
+        } catch (\Illuminate\Auth\AuthenticationException $e) {
+            Log::warning('Authentication failed', [
+                'email' => $request->email ?? 'unknown',
+                'ip' => $request->ip(),
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()->route('login')
+                ->withInput($request->only('email'))
+                ->with('error', __('auth.login_credentials_invalid'));
 
         } catch (\Exception $e) {
             Log::error('Login error occurred', [
@@ -81,7 +114,9 @@ class AuthenticatedSessionController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-              return redirect()->route('login')->with('error', __('auth.email_password_wrong'));
+            return redirect()->route('login')
+                ->withInput($request->only('email'))
+                ->with('error', __('auth.login_failed'));
         }
     }
 
@@ -108,7 +143,7 @@ class AuthenticatedSessionController extends Controller
             // Log successful logout
             \Illuminate\Support\Facades\Log::info('User logout successful');
 
-            return redirect('/')->with('success', 'You have been logged out successfully.');
+            return redirect('/')->with('success', __('auth.logout_success'));
             
         } catch (\Exception $e) {
             // Log the error
@@ -123,7 +158,7 @@ class AuthenticatedSessionController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect('/')->with('warning', 'Logout completed with some issues.');
+            return redirect('/')->with('warning', __('auth.logout_warning'));
         }
     }
 }

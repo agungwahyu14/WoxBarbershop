@@ -64,26 +64,38 @@ class FeedbackController extends Controller
                         <p class="text-sm text-gray-900 dark:text-white">' . $truncated . '</p>
                     </div>';
                 })
-                ->editColumn('is_public', function ($row) {
-                    $status = $row->is_public ? 'Public' : 'Private';
-                    $color = $row->is_public ? 'green' : 'gray';
-                    return '<div class="text-center">
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-' . $color . '-100 text-' . $color . '-800">
-                            <div class="w-1.5 h-1.5 rounded-full bg-' . $color . '-600 mr-1"></div>
-                            ' . $status . '
-                        </span>
-                    </div>';
-                })
+               ->editColumn('is_public', function ($row) {
+    // Gunakan fungsi __() agar bisa diterjemahkan dari file language
+    $status = $row->is_public ? __('admin.public') : __('admin.private');
+    $color = $row->is_public ? 'green' : 'gray';
+    $icon = $row->is_public
+        ? '<i class="fas fa-globe mr-1"></i>'
+        : '<i class="fas fa-lock mr-1"></i>';
+
+    return '
+        <div class="text-center">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-' . $color . '-100 text-' . $color . '-800">
+                ' . $icon . '
+                ' . $status . '
+            </span>
+        </div>
+    ';
+})
+
                 ->editColumn('is_active', function ($row) {
-                    $status = $row->is_active ? 'Active' : 'Inactive';
-                    $color = $row->is_active ? 'green' : 'red';
-                    return '<div class="text-center">
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-' . $color . '-100 text-' . $color . '-800">
-                            <div class="w-1.5 h-1.5 rounded-full bg-' . $color . '-600 mr-1"></div>
-                            ' . $status . '
-                        </span>
-                    </div>';
-                })
+    $status = $row->is_active ? __('admin.active') : __('admin.inactive');
+    $color = $row->is_active ? 'green' : 'red';
+
+    return '
+        <div class="text-center">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-' . $color . '-100 text-' . $color . '-800">
+                <div class="w-1.5 h-1.5 rounded-full bg-' . $color . '-600 mr-1"></div>
+                ' . $status . '
+            </span>
+        </div>
+    ';
+})
+
                 ->editColumn('created_at', function ($row) {
                     return '<div class="text-sm text-gray-900 dark:text-white">
                         ' . $row->created_at->format('d M Y') . '

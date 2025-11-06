@@ -63,11 +63,11 @@
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="{{ route('dashboard') }}#reservasi"
-                    class="rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 shadow-lg uppercase">
+                    class="rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 shadow-lg ">
                     {{ __('welcome.reservation_button') }}
                 </a>
                 <a href="{{ route('dashboard') }}#layanan"
-                    class="rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 uppercase">
+                    class="rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 ">
                     {{ __('welcome.view_services') }}
                 </a>
             </div>
@@ -545,27 +545,16 @@
     </script>
 
 
-    @if (session('booking_error'))
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: @json(__('welcome.booking_failed')),
-                text: '{{ session('booking_error') }}',
-                confirmButtonColor: '#d33',
-            });
-        </script>
-    @endif
-
-    {{-- @if (session('success'))
+    @if (session('success'))
         <script>
             Swal.fire({
                 icon: 'success',
-                title: 'Berhasil!',
+                title: '{{ __('auth.success') }}',
                 text: '{{ session('success') }}',
                 confirmButtonColor: '#10B981',
                 timer: 3000,
                 timerProgressBar: true
             });
         </script>
-    @endif --}}
+    @endif
 @endpush

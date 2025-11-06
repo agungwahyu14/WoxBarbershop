@@ -35,7 +35,7 @@
                         <tr>
                             <th>#</th>
                             <th>{{ __('admin.name_column') }}</th>
-                            <th>{{ __('admin.category_column') }}</th>
+                            {{-- <th>{{ __('admin.category_column') }}</th> --}}
                             <th>{{ __('admin.price_column') }}</th>
                             <th>{{ __('admin.stock_column') }}</th>
                             <th>{{ __('admin.status_column') }}</th>
@@ -95,11 +95,6 @@
                         data: 'name',
                         name: 'name',
                         className: 'px-6 py-4'
-                    },
-                    {
-                        data: 'category',
-                        name: 'category',
-                        className: 'px-6 py-4 text-center'
                     },
                     {
                         data: 'price',
@@ -300,5 +295,3 @@
         });
     </script>
 @endpush
-
-

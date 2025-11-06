@@ -43,6 +43,15 @@ class RegisteredUserController extends Controller
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
                 'no_telepon' => ['required', 'string', 'max:15', 'unique:'.User::class], // Tambahkan validasi untuk no_telepon
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ], [
+                'email.unique' => __('auth.email_already_exists'),
+                'no_telepon.unique' => __('auth.phone_already_exists'),
+                'name.required' => __('auth.name_required'),
+                'email.required' => __('auth.email_required'),
+                'email.email' => __('auth.email_invalid'),
+                'no_telepon.required' => __('auth.phone_required'),
+                'password.required' => __('auth.password_required'),
+                'password.confirmed' => __('auth.password_confirmation_mismatch'),
             ]);
 
             $user = User::create([
@@ -76,23 +85,34 @@ class RegisteredUserController extends Controller
                 ->with('success', __('auth.registration_successful_welcome'));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::warning('User registration validation failed', [
+            Log::warning('Registration validation failed', [
                 'email' => $request->email,
                 'errors' => $e->errors(),
                 'ip' => $request->ip()
             ]);
 
-            $firstError = collect($e->errors())->flatten()->first();
+            // Ambil error message yang paling relevan
+            $errorMessage = '';
+            $errors = $e->errors();
+            
+            if (isset($errors['email']) && count($errors['email']) > 0) {
+                $errorMessage = $errors['email'][0]; // Ambil error email pertama
+            } elseif (isset($errors['no_telepon']) && count($errors['no_telepon']) > 0) {
+                $errorMessage = $errors['no_telepon'][0]; // Ambil error phone pertama
+            } else {
+                // Ambil error pertama dari field manapun
+                $firstFieldErrors = array_values($errors)[0];
+                $errorMessage = $firstFieldErrors[0];
+            }
 
-            return back()->withInput()->with('error', $firstError);
+            return back()->withInput()->with('error', $errorMessage);
 
         } catch (\Exception $e) {
-            Log::error('User registration failed', [
-                'email' => $request->email ?? 'unknown',
-                'name' => $request->name ?? 'unknown',
+            Log::error('Registration failed with exception', [
+                'email' => $request->email,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'ip' => $request->ip()
+                'ip' => $request->ip(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             return back()->withInput()->with('error', __('auth.registration_failed'));

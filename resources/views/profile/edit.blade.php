@@ -52,27 +52,16 @@
 @endsection
 
 @push('scripts')
-    <!-- jQuery untuk AJAX -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- SweetAlert2 untuk notifikasi -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Pass translations to JavaScript -->
-    <script>
-        window.profileTranslations = {
-            'success': '{{ __('auth.success') }}',
-            'error': '{{ __('auth.error') }}',
-            'ok': '{{ __('auth.ok') }}',
-            'profile_updated': '{{ __('auth.profile_updated') }}',
-            'password_updated': '{{ __('auth.password_updated') }}',
-            'update_failed': '{{ __('auth.update_failed') }}',
-            'password_update_failed': '{{ __('auth.password_update_failed') }}',
-            'password_mismatch': '{{ __('auth.password_mismatch') }}',
-            'saving': '{{ __('auth.saving') }}',
-            'updating': '{{ __('auth.updating') }}'
-        };
-    </script>
-
-    <!-- Profile Update AJAX Handler -->
-    <script src="{{ asset('js/profile-update-ajax.js') }}"></script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ __('auth.success') }}',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#10B981',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
 @endpush

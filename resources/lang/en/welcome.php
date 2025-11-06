@@ -105,6 +105,10 @@ return [
     'contact_us' => 'Contact Us',
     'quick_links' => 'Quick Links',
     'about_us' => 'About Us',
-    'footer_description' => 'Providing the best grooming experience with professional services and high-quality products.',
+    'footer_description' => 'Providing best grooming experience with professional services and high-quality products.',
     'footer_copyright' => 'All rights reserved.',
+    
+    // Loyalty Notifications
+    'congratulations' => 'Congratulations!',
+    'loyalty_notification' => 'You have a free reward!',
 ];

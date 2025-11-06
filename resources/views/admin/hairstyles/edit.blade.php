@@ -55,6 +55,28 @@
                             class=" form-control block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ old('description', $hairstyle->description) }}</textarea>
                     </div>
 
+                    <!-- Description Indonesian -->
+                    <div>
+                        <label for="description_in"
+                            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-align-left mr-2 text-green-600"></i>{{ __('admin.description') }} (Indonesian)
+                        </label>
+                        <textarea name="description_in" id="description_in" rows="3"
+                            class="form-control block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                            placeholder="Deskripsi dalam bahasa Indonesia">{{ old('description_in', $hairstyle->description_in) }}</textarea>
+                    </div>
+
+                    <!-- Description English -->
+                    <div>
+                        <label for="description_en"
+                            class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-align-left mr-2 text-purple-600"></i>{{ __('admin.description') }} (English)
+                        </label>
+                        <textarea name="description_en" id="description_en" rows="3"
+                            class="form-control block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                            placeholder="Description in English">{{ old('description_en', $hairstyle->description_en) }}</textarea>
+                    </div>
+
                     <!-- Head Shape -->
                     <div>
                         <label

@@ -78,6 +78,22 @@ return [
     'information' => 'Informasi',
     'warning' => 'Peringatan!',
     'registration_success' => 'Pendaftaran Berhasil!',
+    
+    // Validation Error Messages
+    'email_already_exists' => 'Alamat email ini sudah terdaftar. Silakan gunakan email lain atau masuk ke akun yang sudah ada.',
+    'phone_already_exists' => 'Nomor telepon ini sudah terdaftar. Silakan gunakan nomor telepon lain.',
+    'name_required' => 'Nama lengkap wajib diisi.',
+    'email_required' => 'Alamat email wajib diisi.',
+    'email_invalid' => 'Silakan masukkan alamat email yang valid.',
+    'phone_required' => 'Nomor telepon wajib diisi.',
+    'password_required' => 'Kata sandi wajib diisi.',
+    'password_confirmation_mismatch' => 'Konfirmasi kata sandi tidak cocok.',
+    
+    // Login Error Messages
+    'account_deactivated' => 'Akun Anda dinonaktifkan. Silakan hubungi admin.',
+    'login_credentials_invalid' => 'Email atau kata sandi yang Anda masukkan salah.',
+    'login_failed' => 'Login gagal. Silakan coba lagi.',
+    'logout_warning' => 'Logout selesai dengan beberapa masalah.',
     'forgot_password_description' => 'Lupa password? Masukkan email Anda dan kami akan mengirimkan link reset password.',
     
     // Placeholders

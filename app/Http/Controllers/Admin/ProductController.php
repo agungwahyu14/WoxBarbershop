@@ -34,12 +34,12 @@ class ProductController extends Controller
                         </div>
                     </div>';
                 })
-                ->editColumn('category', function ($row) {
-                    $category = $row->category ?: 'Uncategorized';
-                    return '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                        ' . $category . '
-                    </span>';
-                })
+                // ->editColumn('category', function ($row) {
+                //     $category = $row->category ?: 'Uncategorized';
+                //     return '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                //         ' . $category . '
+                //     </span>';
+                // })
                 ->editColumn('price', function ($row) {
                     return '<div class="font-medium text-green-600 dark:text-green-400">
                         Rp ' . number_format($row->price, 0, ',', '.') . '
@@ -54,15 +54,19 @@ class ProductController extends Controller
                     </div>';
                 })
                 ->editColumn('is_active', function ($row) {
-                    $status = $row->is_active ? 'Active' : 'Inactive';
-                    $color = $row->is_active ? 'green' : 'red';
-                    return '<div class="text-center">
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-' . $color . '-100 text-' . $color . '-800">
-                            <div class="w-1.5 h-1.5 rounded-full bg-' . $color . '-600 mr-1"></div>
-                            ' . $status . '
-                        </span>
-                    </div>';
-                })
+    $status = $row->is_active ? __('admin.active') : __('admin.inactive');
+    $color = $row->is_active ? 'green' : 'red';
+
+    return '
+        <div class="text-center">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-' . $color . '-100 text-' . $color . '-800">
+                <div class="w-1.5 h-1.5 rounded-full bg-' . $color . '-600 mr-1"></div>
+                ' . $status . '
+            </span>
+        </div>
+    ';
+})
+
                ->addColumn('action', function ($row) {
                     $actions = '<div class="flex items-center gap-2 justify-center">';
                     
@@ -88,7 +92,7 @@ class ProductController extends Controller
                     
                     return $actions;
                 })
-                ->rawColumns(['name', 'category', 'price', 'stock', 'is_active', 'action'])
+                ->rawColumns(['name', 'price', 'stock', 'is_active', 'action'])
                 ->make(true);
         }
 
@@ -116,7 +120,7 @@ class ProductController extends Controller
             'description_id' => 'nullable|string',
             'description_en' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'category' => 'nullable|string|max:255',
+            // 'category' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'stock' => 'required|integer|min:0',
             'is_active' => 'boolean',
@@ -170,7 +174,7 @@ class ProductController extends Controller
             'description_id' => 'nullable|string',
             'description_en' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'category' => 'nullable|string|max:255',
+            // 'category' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'stock' => 'required|integer|min:0',
             'is_active' => 'boolean',

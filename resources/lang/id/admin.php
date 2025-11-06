@@ -148,6 +148,7 @@ return [
     'enter_duration' => 'Masukkan durasi layanan dalam menit',
     'is_active' => 'Aktif',
     'multilingual_fields' => 'Field Multilingual',
+    'multilingual_description' => 'Deskripsi Multibahasa',
     'service_name_id' => 'Nama Layanan (Bahasa Indonesia)',
     'service_name_en' => 'Nama Layanan (Bahasa Inggris)',
     'service_name_id_placeholder' => 'Masukkan nama layanan dalam Bahasa Indonesia',

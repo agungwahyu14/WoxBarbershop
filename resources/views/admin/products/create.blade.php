@@ -119,7 +119,7 @@
                             </div>
 
                             <!-- Category -->
-                            <div>
+                            {{-- <div>
                                 <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
                                     <i class="fas fa-folder mr-2 text-blue-600"></i>{{ __('admin.category') }}
                                 </label>
@@ -129,7 +129,7 @@
                                 @error('category')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
-                            </div>
+                            </div> --}}
                         </div>
 
                         <!-- Right Column -->

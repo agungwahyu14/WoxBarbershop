@@ -95,7 +95,7 @@ class ProfileController extends Controller
                     }
 
                     return Redirect::route('profile.edit')
-                        ->with('error', 'Failed to upload profile photo. Please try again.');
+                        ->with('error', '' . __('auth.update_failed'));
                 }
             }
 
@@ -134,7 +134,7 @@ class ProfileController extends Controller
             }
 
             return Redirect::route('profile.edit')
-                ->with('success', 'Profile updated successfully!');
+                ->with('success', __('auth.profile_updated'));
 
         } catch (\Exception $e) {
             Log::error('Profile update failed', [
@@ -153,7 +153,7 @@ class ProfileController extends Controller
             }
 
             return Redirect::route('profile.edit')
-                ->with('error', 'Failed to update profile. Please try again.');
+                ->with('error', __('auth.update_failed'));
         }
     }
 

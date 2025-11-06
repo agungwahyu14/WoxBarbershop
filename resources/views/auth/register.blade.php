@@ -135,16 +135,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Translation variables
-            const translations = {
-                success: @json(__('auth.success')),
-                registration_failed: @json(__('auth.registration_failed')),
-                error_occurred: @json(__('auth.error_occurred')),
-                information: @json(__('auth.information')),
-                warning: @json(__('auth.warning')),
-                registration_success: @json(__('auth.registration_success')),
-                ok: @json(__('auth.ok')),
-                try_again: @json(__('auth.try_again'))
-            };
+            // const translations = {
+            //     success: @json(__('auth.success')),
+            //     registration_failed: @json(__('auth.registration_failed')),
+            //     error_occurred: @json(__('auth.error_occurred')),
+            //     information: @json(__('auth.information')),
+            //     warning: @json(__('auth.warning')),
+            //     registration_success: @json(__('auth.registration_success')),
+            //     ok: @json(__('auth.ok')),
+            //     try_again: @json(__('auth.try_again'))
+            // };
 
             // Toggle password visibility
             const togglePassword = document.getElementById('togglePassword');
@@ -176,74 +176,26 @@
                 });
             }
 
-            // Periksa pesan status sukses
-            @if (session('status'))
-                Swal.fire({
-                    icon: 'success',
-                    title: translations.success,
-                    text: '{{ session('status') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: translations.ok
-                });
-            @endif
-
-            // Periksa error validasi
-            @if ($errors->any())
-                let errorMessage = '';
-                @foreach ($errors->all() as $error)
-                    errorMessage += '• {{ $error }}\n';
-                @endforeach
-
-                Swal.fire({
-                    icon: 'error',
-                    title: translations.registration_failed,
-                    text: errorMessage,
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: translations.try_again
-                });
-            @endif
-
             // Periksa pesan error umum
             @if (session('error'))
                 Swal.fire({
                     icon: 'error',
-                    title: translations.error_occurred,
+                    title: '{{ __('auth.error_occurred') }}',
                     text: '{{ session('error') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: translations.ok
+                    confirmButtonText: 'Oke'
                 });
             @endif
 
-            // Periksa pesan informasi
-            @if (session('info'))
-                Swal.fire({
-                    icon: 'info',
-                    title: translations.information,
-                    text: '{{ session('info') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: translations.ok
-                });
-            @endif
-
-            // Periksa pesan peringatan
-            @if (session('warning'))
-                Swal.fire({
-                    icon: 'warning',
-                    title: translations.warning,
-                    text: '{{ session('warning') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: translations.ok
-                });
-            @endif
 
             // Periksa pesan sukses pendaftaran
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: translations.registration_success,
+                    title: '{{ __('auth.success') }}',
                     text: '{{ session('success') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: translations.ok
+                    confirmButtonText: '{{ __('auth.ok') }}'
                 });
             @endif
         });

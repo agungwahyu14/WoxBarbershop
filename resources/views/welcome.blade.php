@@ -199,9 +199,10 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Testimonials Slider Container -->
+            <div class="relative max-w-4xl mx-auto">
                 @forelse($testimonials as $testimonial)
-                    <div class="bg-white p-8 shadow-md rounded-lg">
+                    <div class="testimonial-slide bg-white p-8 shadow-md rounded-lg" style="display: none;">
                         <div class="flex items-center mb-4">
                             @for ($i = 1; $i <= 5; $i++)
                                 @if ($i <= $testimonial->rating)
@@ -212,18 +213,28 @@
                             @endfor
                             <span class="ml-2 text-sm text-gray-600">({{ $testimonial->rating }}/5)</span>
                         </div>
-                        <p class="text-gray-600 italic mb-6">
+                        <p class="text-gray-600 italic mb-6 text-lg">
                             "{{ $testimonial->comment }}"
                         </p>
-                        <div class="font-bold">{{ $testimonial->user->name }}</div>
+                        <div class="font-bold text-lg">{{ $testimonial->user->name }}</div>
                         <div class="text-gray-500 text-sm">{{ $testimonial->created_at->format('d M Y') }}</div>
                     </div>
                 @empty
                     <!-- Fallback jika tidak ada testimonial -->
-                    <div class="col-span-3 text-center py-8">
+                    <div class="text-center py-8">
                         <p class="text-gray-600">{{ __('welcome.no_testimonials_available') }}</p>
                     </div>
                 @endforelse
+
+
+                <!-- Dots Indicator -->
+                @if($testimonials->count() > 1)
+                    <div class="flex justify-center mt-6 space-x-2" id="testimonial-dots">
+                        @foreach($testimonials as $index => $testimonial)
+                            <button class="testimonial-dot w-3 h-3 rounded-full bg-gray-300 transition-colors duration-300" data-index="{{ $index }}"></button>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
     </section>
@@ -472,6 +483,87 @@
                 if (serviceSelect.value) {
                     const event = new Event('change');
                     serviceSelect.dispatchEvent(event);
+                }
+            }
+
+            // Testimonials Slider functionality
+            const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+            const dots = document.querySelectorAll('.testimonial-dot');
+            
+            let currentSlide = 0;
+            let autoplayInterval;
+
+            function showSlide(index) {
+                // Hide all slides
+                testimonialSlides.forEach(slide => {
+                    slide.style.display = 'none';
+                });
+                
+                // Remove active class from all dots
+                dots.forEach(dot => {
+                    dot.classList.remove('bg-secondary');
+                    dot.classList.add('bg-gray-300');
+                });
+                
+                // Show current slide
+                if (testimonialSlides[index]) {
+                    testimonialSlides[index].style.display = 'block';
+                    
+                    // Update active dot
+                    if (dots[index]) {
+                        dots[index].classList.remove('bg-gray-300');
+                        dots[index].classList.add('bg-secondary');
+                    }
+                }
+                
+                currentSlide = index;
+            }
+
+            function nextSlide() {
+                if (testimonialSlides.length === 0) return;
+                
+                let nextIndex = currentSlide + 1;
+                if (nextIndex >= testimonialSlides.length) {
+                    nextIndex = 0;
+                }
+                showSlide(nextIndex);
+            }
+
+            function startAutoplay() {
+                if (testimonialSlides.length <= 1) return;
+                
+                autoplayInterval = setInterval(() => {
+                    nextSlide();
+                }, 3000); // Change slide every 3 seconds
+            }
+
+            function stopAutoplay() {
+                if (autoplayInterval) {
+                    clearInterval(autoplayInterval);
+                }
+            }
+
+            // Initialize slider
+            if (testimonialSlides.length > 0) {
+                showSlide(0);
+                
+                // Add event listeners for dots
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        stopAutoplay();
+                        showSlide(index);
+                        startAutoplay();
+                    });
+                });
+                
+                // Start autoplay
+                startAutoplay();
+                
+                // Pause autoplay on hover
+                const sliderContainer = document.querySelector('.relative.max-w-4xl');
+                if (sliderContainer) {
+                    sliderContainer.addEventListener('mouseenter', stopAutoplay);
+                    sliderContainer.addEventListener('mouseleave', startAutoplay);
                 }
             }
         });

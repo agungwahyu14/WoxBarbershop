@@ -75,6 +75,9 @@ return [
     'processing' => 'Memproses...',
     'error_occurred' => 'Terjadi kesalahan',
     
+    // Common Actions
+    'close' => 'Tutup',
+    
     // Loyalty Program
     'loyalty' => [
         'title' => 'Program Loyalitas',

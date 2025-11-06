@@ -97,17 +97,7 @@
                     @if ($showNotification)
                         <div class="relative" x-data="{ showTooltip: false }">
                             <button @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"
-                                @click="Swal.fire({
-                title: '',
-                text: '{{ __('welcome.free_haircut_available') }}',
-                background: '#D4AF37',
-                color: '#FFFFFF',
-                confirmButtonColor: '#FFFFFF',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'text-black font-semibold px-4 py-2 rounded bg-white hover:bg-gray-200'
-                }
-            })"
+                                @click="showLoyaltyNotification()"
                                 class="relative flex items-center justify-center w-10 h-10 bg-yellow-500 rounded-full text-white hover:bg-yellow-600 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">
 
                                 <!-- Bell Icon -->
@@ -117,10 +107,22 @@
                                 </svg>
 
                                 <!-- Notification Dot -->
+                                <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
 
                             </button>
 
                             <!-- Tooltip -->
+                            <div x-show="showTooltip" x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90"
+                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded whitespace-nowrap z-50"
+                                x-cloak>
+                                {{ __('welcome.loyalty_notification') }}
+                                <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                                    <div class="border-4 border-transparent border-t-gray-800"></div>
+                                </div>
+                            </div>
 
                         </div>
                     @endif
@@ -305,3 +307,72 @@
         </div>
     </div>
 </header>
+
+<!-- Custom Dialog Modal -->
+<div id="loyalty-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl max-w-md mx-4 transform transition-all duration-300 scale-95"
+        id="loyalty-modal-content">
+        <div class="p-6">
+            <div class="flex items-center justify-center w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-4">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.538 1.118l2.8-2.034a1 1 0 011.175 0l2.8 2.034c.783.193 1.175-.197 1.118-1.538l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.969-1.688-.588-1.81l1.07-3.292z" />
+                </svg>
+            </div>
+
+            <h3 class="text-lg font-semibold text-gray-900 text-center mb-2">{{ __('welcome.congratulations') }}</h3>
+            <p class="text-gray-600 text-center mb-6">{{ __('welcome.free_haircut_available') }}</p>
+
+            <div class="flex justify-center space-x-3">
+                <button onclick="closeLoyaltyNotification()"
+                    class="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium">
+                    {{ __('general.close') }}
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLoyaltyNotification() {
+        const modal = document.getElementById('loyalty-modal');
+        const modalContent = document.getElementById('loyalty-modal-content');
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Trigger animation
+        setTimeout(function() {
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        }, 10);
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeLoyaltyNotification();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLoyaltyNotification();
+            }
+        });
+    }
+
+    function closeLoyaltyNotification() {
+        const modal = document.getElementById('loyalty-modal');
+        const modalContent = document.getElementById('loyalty-modal-content');
+
+        modalContent.classList.remove('scale-100');
+        modalContent.classList.add('scale-95');
+
+        setTimeout(function() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 200);
+    }
+</script>

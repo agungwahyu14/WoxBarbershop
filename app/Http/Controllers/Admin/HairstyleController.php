@@ -45,29 +45,49 @@ class HairstyleController extends Controller
                 </div>';
             })
             ->editColumn('bentuk_kepala', function ($row) {
-                $names = $row->bentuk_kepala->pluck('nama')->implode(', ');
-                \Log::debug('Processing bentuk_kepala', ['hairstyle_id' => $row->id, 'bentuk_kepala' => $names]);
+                $translatedNames = $row->bentuk_kepala->map(function ($item) {
+                    $key = 'recommendations.face_' . str_replace(' ', '_', strtolower($item->nama));
+                    return __($key);
+                })->implode(', ');
+                \Log::debug('Processing bentuk_kepala', ['hairstyle_id' => $row->id, 'bentuk_kepala' => $translatedNames]);
                 return '<div class="flex items-center gap-2">
                     <i class="fas fa-user text-sm text-gray-600"></i>
-                    <span class="capitalize">'.$names.'</span>
+                    <span class="capitalize">'.$translatedNames.'</span>
                 </div>';
             })
             ->editColumn('tipe_rambut', function ($row) {
-                $names = $row->tipe_rambut->pluck('nama')->implode(', ');
-                \Log::debug('Processing tipe_rambut', ['hairstyle_id' => $row->id, 'tipe_rambut' => $names]);
+                $translatedNames = $row->tipe_rambut->map(function ($item) {
+                    $key = 'recommendations.hair_' . strtolower($item->nama);
+                    return __($key);
+                })->implode(', ');
+                \Log::debug('Processing tipe_rambut', ['hairstyle_id' => $row->id, 'tipe_rambut' => $translatedNames]);
                 return '<div class="flex items-center gap-2">
                     <i class="fas fa-cut text-sm text-gray-600"></i>
-                    <span class="capitalize">'.$names.'</span>
+                    <span class="capitalize">'.$translatedNames.'</span>
                 </div>';
             })
             ->editColumn('style_preference', function ($row) {
-                $names = $row->style_preference->pluck('nama')->implode(', ');
-                \Log::debug('Processing style_preference', ['hairstyle_id' => $row->id, 'style_preference' => $names]);
-                return '<span>'.$names.'</span>';
+                $translatedNames = $row->style_preference->map(function ($item) {
+                    $key = 'recommendations.style_' . strtolower($item->nama);
+                    return __($key);
+                })->implode(', ');
+                \Log::debug('Processing style_preference', ['hairstyle_id' => $row->id, 'style_preference' => $translatedNames]);
+                return '<span>'.$translatedNames.'</span>';
             })
             ->editColumn('description', function ($row) {
-                return $row->description 
-                    ? '<span>' . Str::limit($row->description, 20) . '</span>' 
+                $locale = app()->getLocale();
+                $description = '';
+                
+                if ($locale === 'en' && !empty($row->description_en)) {
+                    $description = $row->description_en;
+                } elseif ($locale === 'id' && !empty($row->description_in)) {
+                    $description = $row->description_in;
+                } else {
+                    $description = $row->description;
+                }
+                
+                return $description 
+                    ? '<span>' . Str::limit($description, 50) . '</span>' 
                     : '-';
             })
             ->addColumn('image', function ($row) {
@@ -197,13 +217,15 @@ class HairstyleController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
+        'description_in' => 'nullable|string',
+        'description_en' => 'nullable|string',
         'bentuk_kepala' => 'required|array',
         'tipe_rambut' => 'required|array',
         'style_preference' => 'required|array',
         'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
-    $data = $request->only(['name', 'description']);
+    $data = $request->only(['name', 'description', 'description_in', 'description_en']);
 
     if ($request->hasFile('image')) {
         $data['image'] = $request->file('image')->store('hairstyles', 'public');
@@ -233,13 +255,15 @@ class HairstyleController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
+        'description_in' => 'nullable|string',
+        'description_en' => 'nullable|string',
         'bentuk_kepala' => 'required|array',
         'tipe_rambut' => 'required|array',
         'style_preference' => 'required|array',
         'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
-    $data = $request->only(['name', 'description']);
+    $data = $request->only(['name', 'description', 'description_in', 'description_en']);
 
     if ($request->hasFile('image')) {
         if ($hairstyle->image) {

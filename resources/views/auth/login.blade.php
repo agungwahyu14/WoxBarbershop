@@ -134,72 +134,12 @@
                 });
             }
 
-            // Periksa pesan status sukses
-            @if (session('status'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('status') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
-                });
-            @endif
-
-            // Periksa error validasi
-            @if ($errors->any())
-                let errorMessage = '';
-                @foreach ($errors->all() as $error)
-                    errorMessage += '• {{ $error }}\n';
-                @endforeach
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Pendaftaran Gagal!',
-                    text: errorMessage,
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Coba Lagi'
-                });
-            @endif
-
             // Periksa pesan error umum
             @if (session('error'))
                 Swal.fire({
                     icon: 'error',
-                    title: 'Terjadi Kesalahan!',
+                    title: '{{ __('auth.error_occurred') }}',
                     text: '{{ session('error') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
-                });
-            @endif
-
-            // Periksa pesan informasi
-            @if (session('info'))
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Informasi',
-                    text: '{{ session('info') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
-                });
-            @endif
-
-            // Periksa pesan peringatan
-            @if (session('warning'))
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan!',
-                    text: '{{ session('warning') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
-                });
-            @endif
-
-            // Periksa pesan sukses pendaftaran
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Pendaftaran Berhasil!',
-                    text: '{{ session('success') }}',
                     confirmButtonColor: '#d4af37',
                     confirmButtonText: 'Oke'
                 });

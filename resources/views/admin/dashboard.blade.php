@@ -442,4 +442,17 @@
             }
         });
     </script>
+
+    @if (session('success'))
+        <script script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#10B981',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
 @endsection

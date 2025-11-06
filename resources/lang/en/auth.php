@@ -78,6 +78,22 @@ return [
     'information' => 'Information',
     'warning' => 'Warning!',
     'registration_success' => 'Registration Successful!',
+    
+    // Validation Error Messages
+    'email_already_exists' => 'This email address is already registered. Please use a different email or login to your existing account.',
+    'phone_already_exists' => 'This phone number is already registered. Please use a different phone number.',
+    'name_required' => 'Full name is required.',
+    'email_required' => 'Email address is required.',
+    'email_invalid' => 'Please enter a valid email address.',
+    'phone_required' => 'Phone number is required.',
+    'password_required' => 'Password is required.',
+    'password_confirmation_mismatch' => 'Password confirmation does not match.',
+    
+    // Login Error Messages
+    'account_deactivated' => 'Your account has been deactivated. Please contact admin.',
+    'login_credentials_invalid' => 'The provided credentials are incorrect.',
+    'login_failed' => 'Login failed. Please try again.',
+    'logout_warning' => 'Logout completed with some issues.',
     'forgot_password_description' => 'Forgot your password? Enter your email and we will send you a password reset link.',
     
     // Placeholders

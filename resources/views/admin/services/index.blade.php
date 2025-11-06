@@ -42,7 +42,7 @@
                             <th>{{ __('admin.description_column') }}</th>
                             <th>{{ __('admin.price_column') }}</th>
                             <th>{{ __('admin.duration_column') }}</th>
-                            <th>{{ __('admin.is_active') }}</th>
+                            <th>{{ __('admin.status') }}</th>
                             <th>{{ __('admin.actions_column') }}</th>
                         </tr>
                     </thead>
@@ -132,11 +132,21 @@
                         name: 'is_active',
                         className: 'text-center',
                         render: function(data, type, row) {
-                            return data ?
-                                '<span class="text-green-500">{{ __('admin.active') }}</span>' :
-                                '<span class="text-red-500">{{ __('admin.inactive') }}</span>';
+                            let color = data ? 'green' : 'red';
+                            let status = data ? '{{ __('admin.active') }}' :
+                                '{{ __('admin.inactive') }}';
+
+                            return `
+            <div class="text-center">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-${color}-100 text-${color}-800">
+                    <div class="w-1.5 h-1.5 rounded-full bg-${color}-600 mr-1"></div>
+                    ${status}
+                </span>
+            </div>
+        `;
                         }
                     },
+
                     {
                         data: 'action',
                         name: 'action',
@@ -238,12 +248,12 @@
                             },
                             success: function(response) {
 
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: deletedTitle,
-                                        text: serviceDeletedSuccess,
-                                        timer: 3000,
-                                        showConfirmButton: false
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: deletedTitle,
+                                    text: serviceDeletedSuccess,
+                                    timer: 3000,
+                                    showConfirmButton: false
                                 });
                                 table.ajax.reload();
                             },

@@ -148,6 +148,7 @@ return [
     'enter_duration' => 'Enter service duration in minutes',
     'is_active' => 'Active',
     'multilingual_fields' => 'Multilingual Fields',
+    'multilingual_description' => 'Multilingual Description',
     'service_name_id' => 'Service Name (Indonesian)',
     'service_name_en' => 'Service Name (English)',
     'service_name_id_placeholder' => 'Enter service name in Indonesian',

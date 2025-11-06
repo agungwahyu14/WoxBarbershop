@@ -75,6 +75,9 @@ return [
     'processing' => 'Processing...',
     'error_occurred' => 'An error occurred',
     
+    // Common Actions
+    'close' => 'Close',
+    
     // Loyalty Program
     'loyalty' => [
         'title' => 'Loyalty Program',

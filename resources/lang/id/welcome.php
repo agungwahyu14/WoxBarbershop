@@ -113,4 +113,8 @@ return [
     'about_us' => 'Tentang Kami',
     'footer_description' => 'Memberikan pengalaman grooming terbaik dengan layanan profesional dan produk berkualitas tinggi.',
     'footer_copyright' => 'Hak cipta dilindungi.',
+    
+    // Loyalty Notifications
+    'congratulations' => 'Selamat!',
+    'loyalty_notification' => 'Anda memiliki reward gratis!',
 ];

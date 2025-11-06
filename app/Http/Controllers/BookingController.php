@@ -98,7 +98,7 @@ class BookingController extends Controller
                                 <div class="font-medium text-gray-900">'.$row->user->name.'</div>
                                 <div class="text-sm text-gray-500">'.$row->user->email.'</div>
                             </div>
-                        </div>' : '<span class="text-gray-400">No customer</span>';
+                        </div>' : '<span class="text-gray-400">'.__('booking.no_customer').'</span>';
                     })
                     ->addColumn('name', function ($row) {
                         return $row->name ;
@@ -108,7 +108,7 @@ class BookingController extends Controller
                             '<div class="flex items-center space-x-2">
                         
                             <span class="font-medium">'.$row->user->no_telepon.'</span>
-                        </div>' : '<span class="text-gray-400">No contact</span>';
+                        </div>' : '<span class="text-gray-400">'.__('booking.no_contact').'</span>';
                     })
                     ->addColumn('service_info', function ($row) {
                         if ($row->service) {
@@ -123,20 +123,31 @@ class BookingController extends Controller
                         </div>';
                         }
 
-                        return '<span class="text-gray-400">No service</span>';
+                        return '<span class="text-gray-400">'.__('booking.no_service').'</span>';
                     })
                     ->addColumn('hairstyle_info', function ($row) {
                         if ($row->hairstyle) {
+                            $locale = app()->getLocale();
+                            $description = '';
+                            
+                            if ($locale === 'en' && !empty($row->hairstyle->description_en)) {
+                                $description = $row->hairstyle->description_en;
+                            } elseif ($locale === 'id' && !empty($row->hairstyle->description_in)) {
+                                $description = $row->hairstyle->description_in;
+                            } else {
+                                $description = $row->hairstyle->description;
+                            }
+                            
                             return '<div class="flex items-center space-x-2">
 
                             <div>
                                 <div class="font-medium text-gray-900">'.$row->hairstyle->name.'</div>
-                                <div class="text-sm text-gray-500">'.($row->hairstyle->description ?? 'Classic style').'</div>
+                                <div class="text-sm text-gray-500">'.($description ?: __('booking.classic_style')).'</div>
                             </div>
                         </div>';
                         }
 
-                        return '<span class="text-gray-400">No hairstyle</span>';
+                        return '<span class="text-gray-400">'.__('booking.no_hairstyle').'</span>';
                     })
                     ->addColumn('datetime_formatted', function ($row) {
                         $date = \Carbon\Carbon::parse($row->date_time);
@@ -326,7 +337,7 @@ class BookingController extends Controller
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => "Booking berhasil dibuat! Nomor antrian Anda: {$booking->queue_number}",
+                    'message' => __('booking.booking_created_successfully', ['queue_number' => $booking->queue_number]),
                     'data' => [
                         'booking_id' => $booking->id,
                         'name' => $booking->name,
@@ -340,7 +351,7 @@ class BookingController extends Controller
 
             // Redirect ke halaman booking dengan pesan sukses
             return redirect()->route('bookings.index')
-                ->with('success', "Booking berhasil dibuat! Nomor antrian Anda: {$booking->queue_number}")
+                ->with('success', __('booking.booking_created_successfully', ['queue_number' => $booking->queue_number]))
                 ->with('booking_success', [
                     'name' => $booking->name,
                     'queue_number' => $booking->queue_number,
@@ -362,7 +373,7 @@ class BookingController extends Controller
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Validasi gagal. Mohon periksa input Anda.',
+                    'message' => __('booking.validation_failed'),
                     'errors' => $e->errors()
                 ], 422);
             }
@@ -370,7 +381,7 @@ class BookingController extends Controller
             return back()
                 ->withErrors($e->errors())
                 ->withInput()
-                ->with('error', 'Validasi gagal. Mohon periksa input Anda.');
+                ->with('error', __('booking.validation_failed'));
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -395,15 +406,15 @@ class BookingController extends Controller
                 
                 if ($errorCode === 422) {
                     $statusCode = 422;
-                    $message = $errorMessage ?: 'Validasi jam operasional gagal';
+                    $message = $errorMessage ?: __('booking.business_hours_validation_failed');
                 } elseif ($errorCode === 409) {
                     $statusCode = 409;
-                    $message = $errorMessage ?: 'Jadwal bentrok dengan booking lain';
+                    $message = $errorMessage ?: __('booking.schedule_conflict');
                 } elseif ($errorCode === 423) {
                     $statusCode = 423;
-                    $message = $errorMessage ?: 'Kuota harian telah terpenuhi';
+                    $message = $errorMessage ?: __('booking.daily_quota_exceeded');
                 } else {
-                    $message = 'Terjadi kesalahan saat membuat booking. Silakan coba lagi.';
+                    $message = __('booking.booking_creation_failed');
                 }
                 
                 return response()->json([
@@ -637,7 +648,7 @@ class BookingController extends Controller
 
         if (! in_array($booking->status, ['pending', 'confirmed'])) {
             return redirect()->route('bookings.show', $booking)
-                ->with('error', 'Booking tidak dapat diubah karena sudah '.$booking->status);
+                ->with('error', __('booking.booking_cannot_be_edited_status', ['status' => $booking->status]));
         }
 
         $services = $this->cacheService->getActiveServices();
@@ -662,7 +673,7 @@ class BookingController extends Controller
         $this->authorize('update', $booking);
 
         if (! in_array($booking->status, ['pending', 'confirmed'])) {
-            return back()->with('error', 'Booking tidak dapat diubah karena sudah '.$booking->status);
+            return back()->with('error', __('booking.booking_cannot_be_edited_status', ['status' => $booking->status]));
         }
 
         try {
@@ -773,7 +784,7 @@ class BookingController extends Controller
             ]);
 
             return redirect()->route('bookings.show', $booking)
-                ->with('success', 'Booking berhasil diperbarui');
+                ->with('success', __('booking.booking_updated_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
