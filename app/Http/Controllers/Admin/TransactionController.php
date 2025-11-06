@@ -77,9 +77,9 @@ class TransactionController extends Controller
                 };
 
                 $statusLabel = match ($row->transaction_status) {
-                    'pending' => 'Menunggu',
-                    'settlement' => 'Sukses',
-                    'cancel' => 'Gagal',
+                    'pending' => __('admin.pending'),
+                    'settlement' => __('admin.complete'),
+                    'cancel' => __('admin.cancelled'),
                     default => ucfirst($row->transaction_status)
                 };
 

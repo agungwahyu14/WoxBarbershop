@@ -114,6 +114,15 @@
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
                                     </select>
+                                    <select id="status-filter"
+                                        class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                                        <option value="">{{ __('admin.all_status') }}</option>
+                                        <option value="pending">{{ __('booking.status_pending') }}</option>
+                                        <option value="confirmed">{{ __('booking.status_confirmed') }}</option>
+                                        <option value="in_progress">{{ __('booking.status_in_progress') }}</option>
+                                        <option value="completed">{{ __('booking.status_completed') }}</option>
+                                        <option value="cancelled">{{ __('booking.status_cancelled') }}</option>
+                                    </select>
                                     <div class="flex items-center space-x-2">
                                         <button id="resetFilter"
                                             class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
@@ -348,71 +357,100 @@
                 function updateExportLinks() {
                     const month = $('#monthFilter').val();
                     const year = $('#yearFilter').val();
+                    const status = $('#status-filter').val();
 
                     // Update button text to show filter info
-                    const filterText = getFilterText(month, year);
+                    const filterText = getFilterText(month, year, status);
                     $('#exportCsvBtn').html(`<i class="mdi mdi-file-delimited mr-2"></i>Export CSV${filterText}`);
                     $('#exportPdfBtn').html(`<i class="mdi mdi-file mr-2"></i>Export PDF${filterText}`);
 
                     // Update filter indicator
-                    updateFilterIndicator(month, year);
+                    updateFilterIndicator(month, year, status);
                 }
 
                 // Function to build export URL with current filters
                 function buildExportUrl(baseUrl) {
                     const month = $('#monthFilter').val();
                     const year = $('#yearFilter').val();
+                    const status = $('#status-filter').val();
 
                     let params = new URLSearchParams();
                     if (month) params.append('month', month);
                     if (year) params.append('year', year);
+                    if (status) params.append('status', status);
 
                     const queryString = params.toString();
                     return queryString ? `${baseUrl}?${queryString}` : baseUrl;
                 }
 
                 // Function to get filter text for button labels
-                function getFilterText(month, year) {
-                    if (!month && !year) return '';
+                function getFilterText(month, year, status) {
+                    if (!month && !year && !status) return '';
 
-                    let text = ' (';
+                    let parts = [];
+
                     if (month && year) {
                         const monthName = new Date(year, month - 1).toLocaleDateString('en-US', {
                             month: 'long'
                         });
-                        text += `${monthName} ${year}`;
+                        parts.push(`${monthName} ${year}`);
                     } else if (year) {
-                        text += `${year}`;
+                        parts.push(`${year}`);
                     } else if (month) {
                         const monthName = new Date(2024, month - 1).toLocaleDateString('en-US', {
                             month: 'long'
                         });
-                        text += `${monthName}`;
+                        parts.push(`${monthName}`);
                     }
-                    text += ')';
-                    return text;
+
+                    if (status) {
+                        const statusText = {
+                            'pending': '{{ __('booking.status_pending') }}',
+                            'confirmed': '{{ __('booking.status_confirmed') }}',
+                            'in_progress': '{{ __('booking.status_in_progress') }}',
+                            'completed': '{{ __('booking.status_completed') }}',
+                            'cancelled': '{{ __('booking.status_cancelled') }}'
+                        };
+                        parts.push(statusText[status] || status);
+                    }
+
+                    return parts.length > 0 ? ` (${parts.join(', ')})` : '';
                 }
 
                 // Function to update filter indicator
-                function updateFilterIndicator(month, year) {
+                function updateFilterIndicator(month, year, status) {
                     const $indicator = $('#filterIndicator');
                     const $filterText = $('#filterText');
 
-                    if (month || year) {
-                        let text = 'Filter: ';
+                    if (month || year || status) {
+                        let parts = [];
+
                         if (month && year) {
                             const monthName = new Date(year, month - 1).toLocaleDateString('en-US', {
                                 month: 'long'
                             });
-                            text += `${monthName} ${year}`;
+                            parts.push(`${monthName} ${year}`);
                         } else if (year) {
-                            text += `Year ${year}`;
+                            parts.push(`Year ${year}`);
                         } else if (month) {
                             const monthName = new Date(2024, month - 1).toLocaleDateString('en-US', {
                                 month: 'long'
                             });
-                            text += `Month ${monthName}`;
+                            parts.push(`Month ${monthName}`);
                         }
+
+                        if (status) {
+                            const statusText = {
+                                'pending': '{{ __('booking.status_pending') }}',
+                                'confirmed': '{{ __('booking.status_confirmed') }}',
+                                'in_progress': '{{ __('booking.status_in_progress') }}',
+                                'completed': '{{ __('booking.status_completed') }}',
+                                'cancelled': '{{ __('booking.status_cancelled') }}'
+                            };
+                            parts.push(`Status: ${statusText[status] || status}`);
+                        }
+
+                        const text = `{{ __('admin.filter_active') }}: ${parts.join(', ')}`;
 
                         $filterText.text(text);
                         $indicator.removeClass('hidden');

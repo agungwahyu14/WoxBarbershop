@@ -52,7 +52,7 @@
                             <i class="fas fa-align-left mr-2 text-blue-600"></i>{{ __('admin.description') }}
                         </label>
                         <textarea name="description" id="description" rows="3"
-                            class="block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ old('description', $hairstyle->description) }}</textarea>
+                            class=" form-control block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ old('description', $hairstyle->description) }}</textarea>
                     </div>
 
                     <!-- Head Shape -->
@@ -105,33 +105,44 @@
 
                     <!-- Image Upload -->
                     <div>
-                        <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">
                             <i class="fas fa-image mr-2 text-blue-600"></i>{{ __('admin.image') }}
                         </label>
-                        <div class="relative">
-                            <input type="file" name="image" id="image" class="hidden" accept="image/*"
-                                onchange="updateFileName()">
-                            <label for="image"
-                                class="inline-flex items-center px-6 py-3 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
-                                <i class="fas fa-upload mr-2 text-blue-600"></i> {{ __('admin.choose_file') }}
-                            </label>
-                            <div id="file-name-container" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                {{ $hairstyle->image ? $hairstyle->image : __('admin.no_file_chosen') }}
+
+                        @if ($hairstyle->image)
+                            <div class="mb-3">
+                                <img id="preview" src="{{ asset('storage/' . $hairstyle->image) }}" alt="Current Image"
+                                    class="w-40 h-40 object-cover rounded-lg border">
+                            </div>
+                        @else
+                            <img id="preview" class="w-40 h-40 object-cover rounded-lg border hidden">
+                        @endif
+
+                        <div
+                            class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-400 transition-colors">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none"
+                                    viewBox="0 0 48 48">
+                                    <path
+                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <label for="image"
+                                        class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                        <span>{{ __('admin.upload_file') }}</span>
+                                        <input id="image" name="image" type="file" class="sr-only"
+                                            accept="image/*">
+                                    </label>
+                                    <p class="pl-1">{{ __('admin.drag_and_drop') }}</p>
+                                </div>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
                             </div>
                         </div>
-                        @if ($hairstyle->image)
-                            <img src="{{ asset('storage/hairstyles/' . $hairstyle->image) }}" class="mt-2 rounded"
-                                width="100" />
-                        @endif
+                        @error('image')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-
-                    <script>
-                        function updateFileName() {
-                            const fileInput = document.getElementById('image');
-                            const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : '{{ __('admin.no_file_chosen') }}';
-                            document.getElementById('file-name-container').textContent = fileName;
-                        }
-                    </script>
 
                     <!-- Action Buttons -->
                     <div class="flex justify-end space-x-4">
@@ -149,3 +160,21 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        // Preview selected image
+        document.getElementById('image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('preview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+@endpush

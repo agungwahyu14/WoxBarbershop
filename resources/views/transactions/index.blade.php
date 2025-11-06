@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
 
-                                {{-- Payment Method --}} 
+                                {{-- Payment Method --}}
                                 <div class="mb-4">
                                     <div class="flex items-center justify-between">
                                         <span class="text-sm text-gray-600">{{ __('transactions.payment_method') }}:</span>
@@ -136,6 +136,104 @@
                         </div>
                     @endforeach
                 </div>
+
+                {{-- Pagination Links --}}
+                @if ($transactions->hasPages())
+                    <div class="flex justify-center mt-8">
+                        <nav class="bg-white rounded-lg shadow-md px-6 py-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-sm text-gray-700 mr-4">
+                                    <span>{{ __('pagination.showing') }}</span>
+                                    <span class="font-medium mx-1">{{ $transactions->firstItem() }}</span>
+                                    <span>{{ __('pagination.to') }}</span>
+                                    <span class="font-medium mx-1">{{ $transactions->lastItem() }}</span>
+                                    <span>{{ __('pagination.of') }}</span>
+                                    <span class="font-medium mx-1">{{ $transactions->total() }}</span>
+                                    <span>{{ __('pagination.results') }}</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    {{-- Previous Page Link --}}
+                                    @if ($transactions->onFirstPage())
+                                        <span
+                                            class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </span>
+                                    @else
+                                        <a href="{{ $transactions->previousPageUrl() }}"
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    @endif
+
+                                    {{-- Page Numbers with Sliding Window (max 3 pages) --}}
+                                    @php
+                                        $currentPage = $transactions->currentPage();
+                                        $lastPage = $transactions->lastPage();
+                                        $window = 3;
+
+                                        // Calculate start and end of sliding window
+                                        $start = max(1, $currentPage - floor($window / 2));
+                                        $end = min($lastPage, $start + $window - 1);
+
+                                        // Adjust start if we're near the end
+                                        if ($end - $start + 1 < $window) {
+                                            $start = max(1, $end - $window + 1);
+                                        }
+                                    @endphp
+
+                                    {{-- First Page + Ellipsis --}}
+                                    @if ($start > 1)
+                                        <a href="{{ $transactions->url(1) }}"
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            1
+                                        </a>
+                                        @if ($start > 2)
+                                            <span class="px-3 py-2 text-sm font-medium text-gray-500">...</span>
+                                        @endif
+                                    @endif
+
+                                    {{-- Sliding Window Pages --}}
+                                    @for ($page = $start; $page <= $end; $page++)
+                                        @if ($page == $currentPage)
+                                            <span class="px-3 py-2 text-sm font-medium text-white bg-[#d4af37] rounded-lg">
+                                                {{ $page }}
+                                            </span>
+                                        @else
+                                            <a href="{{ $transactions->url($page) }}"
+                                                class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                                {{ $page }}
+                                            </a>
+                                        @endif
+                                    @endfor
+
+                                    {{-- Ellipsis + Last Page --}}
+                                    @if ($end < $lastPage)
+                                        @if ($end < $lastPage - 1)
+                                            <span class="px-3 py-2 text-sm font-medium text-gray-500">...</span>
+                                        @endif
+                                        <a href="{{ $transactions->url($lastPage) }}"
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            {{ $lastPage }}
+                                        </a>
+                                    @endif
+
+                                    {{-- Next Page Link --}}
+                                    @if ($transactions->hasMorePages())
+                                        <a href="{{ $transactions->nextPageUrl() }}"
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    @else
+                                        <span
+                                            class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                @endif
             @else
                 {{-- Empty State --}}
                 <div class="text-center py-12">

@@ -63,11 +63,61 @@
             opacity: 0;
             transform: translateY(-10px);
         }
+
+        /* Confetti Animation */
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(30px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            animation: confetti-fall 1.5s ease-in-out forwards;
+        }
+
+        /* Enhanced Button Styles */
+        .reward-button {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .reward-button:hover {
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Glow Effect */
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            }
+        }
+
+        .glow-effect {
+            animation: glow 2s infinite;
+        }
     </style>
 </head>
 
 <body class="font-roboto text-gray-800 bg-light">
+    
     @include('layouts.navigation')
+    
 
     <!-- Page Content -->
     <main>

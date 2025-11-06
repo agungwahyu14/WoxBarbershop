@@ -59,9 +59,38 @@ return [
     'total' => 'Total',
     'subtotal' => 'Subtotal',
     
+    // Time Units
+    'minute' => 'menit',
+    'minutes' => 'menit',
+    'hour' => 'jam',
+    'hours' => 'jam',
+    
     // Language
     'language' => 'Bahasa',
     'change_language' => 'Ubah Bahasa',
     'indonesian' => 'Indonesia',
     'english' => 'English',
+    
+    // Processing
+    'processing' => 'Memproses...',
+    'error_occurred' => 'Terjadi kesalahan',
+    
+    // Loyalty Program
+    'loyalty' => [
+        'title' => 'Program Loyalitas',
+        'current_points' => 'Poin Saat Ini',
+        'progress' => 'Progress :progress%',
+        'congratulations' => 'Selamat!',
+        'keep_going' => 'Terus Belanja!',
+        'available' => 'Tersedia',
+        'redeem_now' => 'Tukar Sekarang',
+        'learn_more' => 'Pelajari Lebih Lanjut',
+        'login_to_view' => 'Masuk untuk Lihat',
+        'reward_ready' => 'Hadiah Anda Siap!',
+        'redeem_message' => 'Anda bisa menukar layanan gratis sekarang!',
+        'points_needed' => 'Butuh :needed poin lagi untuk hadiah gratis',
+        'confirm_redeem' => 'Apakah Anda yakin ingin menukar hadiah gratis ini?',
+        'redeem_success' => 'Hadiah berhasil ditukar!',
+        'redeem_error' => 'Gagal menukar hadiah. Silakan coba lagi.',
+    ],
 ];

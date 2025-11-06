@@ -49,6 +49,14 @@
                                 @endfor
                             </select>
 
+                            <select id="statusFilter"
+                                class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                                <option value="">{{ __('admin.all_status') }}</option>
+                                <option value="pending">{{ __('admin.pending') }}</option>
+                                <option value="settlement">{{ __('admin.complete') }}</option>
+                                <option value="cancel">{{ __('admin.cancelled') }}</option>
+                            </select>
+
                             <button id="resetFilter"
                                 class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
                                 <i class="mdi mdi-refresh mr-1"></i>{{ __('admin.reset') }}
@@ -172,6 +180,7 @@
         const dec = '{{ __('admin.dec') }}';
         const pending = '{{ __('admin.pending') }}';
         const paid = '{{ __('admin.paid') }}';
+        const complete = '{{ __('admin.complete') }}';
         const cancelled = '{{ __('admin.cancelled') }}';
         const filterActive = '{{ __('admin.filter_active') }}';
 
@@ -239,6 +248,14 @@
                 ],
                 dom: "<'hidden'B><'flex flex-col md:flex-row justify-between items-center gap-4 mb-4'lf><'overflow-x-auto't><'flex flex-col md:flex-row justify-between items-center gap-4 mt-4'ip>",
 
+                // Custom pagination with sliding window
+                pagingType: "full_numbers",
+                lengthMenu: [
+                    [6, 10, 25, 50],
+                    [6, 10, 25, 50]
+                ],
+                pageLength: 6,
+
                 initComplete: function() {
                     $('.dt-buttons').appendTo('#export-buttons');
                 },
@@ -263,6 +280,11 @@
                     }
                 },
 
+            });
+
+            // Custom pagination handler untuk sliding window
+            table.on('draw', function() {
+                customizePagination();
             });
 
             // Filter event listeners
@@ -393,8 +415,8 @@
             if (status) {
                 const statusText = {
                     'pending': pending,
-                    'paid': paid,
-                    'cancelled': cancelled
+                    'settlement': complete,
+                    'cancel': cancelled
                 };
                 parts.push(statusText[status] || status);
             }
@@ -436,6 +458,57 @@
             updateFilterIndicator();
         });
 
+        // Function to customize pagination for sliding window
+        function customizePagination() {
+            const paginationContainer = $('.dataTables_paginate .pagination');
+            if (paginationContainer.length === 0) return;
+
+            const pageButtons = paginationContainer.find('li:not(.previous):not(.next)');
+            const currentPage = parseInt($('.dataTables_paginate .pagination .active span').text()) || 1;
+            const totalPages = pageButtons.length;
+
+            if (totalPages <= 3) return; // No need to customize if 3 or fewer pages
+
+            // Hide all page buttons first
+            pageButtons.hide();
+
+            // Calculate sliding window
+            const window = 3;
+            let start = Math.max(1, currentPage - Math.floor(window / 2));
+            let end = Math.min(totalPages, start + window - 1);
+
+            if (end - start + 1 < window) {
+                start = Math.max(1, end - window + 1);
+            }
+
+            // Show first page if not in window
+            if (start > 1) {
+                pageButtons.eq(0).show();
+                if (start > 2) {
+                    // Add ellipsis after first page
+                    if (!pageButtons.eq(1).hasClass('ellipsis')) {
+                        pageButtons.eq(1).html('<span>...</span>').addClass('ellipsis').show();
+                    }
+                }
+            }
+
+            // Show pages in window
+            for (let i = start; i <= end; i++) {
+                pageButtons.eq(i - 1).show();
+            }
+
+            // Show last page if not in window
+            if (end < totalPages) {
+                if (end < totalPages - 1) {
+                    // Add ellipsis before last page
+                    if (!pageButtons.eq(totalPages - 2).hasClass('ellipsis')) {
+                        pageButtons.eq(totalPages - 2).html('<span>...</span>').addClass('ellipsis').show();
+                    }
+                }
+                pageButtons.eq(totalPages - 1).show();
+            }
+        }
+
         // Initialize export links and filter indicator
         $(document).ready(function() {
             updateExportLinks();
@@ -448,7 +521,8 @@
     <style>
         /* Filter styling */
         #monthFilter,
-        #yearFilter {
+        #yearFilter,
+        #statusFilter {
             min-width: 120px;
         }
 
@@ -465,6 +539,7 @@
 
             #monthFilter,
             #yearFilter,
+            #statusFilter,
             #resetFilter {
                 width: 100%;
             }
@@ -549,6 +624,58 @@
             align-items: center !important;
             gap: 0.5rem !important;
             transition: background-color 0.2s ease-in-out !important;
+        }
+
+        /* Custom DataTables Pagination Styling */
+        .dataTables_paginate .pagination {
+            display: flex !important;
+            justify-content: center !important;
+            gap: 0.5rem !important;
+        }
+
+        .dataTables_paginate .pagination li {
+            display: inline-block !important;
+        }
+
+        .dataTables_paginate .pagination li a,
+        .dataTables_paginate .pagination li span {
+            padding: 0.5rem 0.75rem !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.5rem !important;
+            color: #374151 !important;
+            text-decoration: none !important;
+            transition: all 0.2s ease !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+        }
+
+        .dataTables_paginate .pagination li a:hover {
+            background-color: #f3f4f6 !important;
+            border-color: #9ca3af !important;
+        }
+
+        .dataTables_paginate .pagination li.active span {
+            background-color: #d4af37 !important;
+            border-color: #d4af37 !important;
+            color: white !important;
+        }
+
+        .dataTables_paginate .pagination li.disabled span,
+        .dataTables_paginate .pagination li.disabled a {
+            color: #9ca3af !important;
+            background-color: #f9fafb !important;
+            cursor: not-allowed !important;
+        }
+
+        .dataTables_paginate .pagination li.ellipsis span {
+            border: none !important;
+            background: none !important;
+            color: #6b7280 !important;
+            cursor: default !important;
+        }
+
+        .dataTables_paginate .pagination li.ellipsis:hover span {
+            background: none !important;
         }
 
         /* Styling untuk tabel */

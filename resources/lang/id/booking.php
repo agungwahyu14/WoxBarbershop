@@ -98,6 +98,8 @@ return [
     'business_hours' => 'Pemesanan hanya dapat dilakukan antara jam 11:00 - 22:00',
     'advance_booking' => 'Pemesanan harus dilakukan minimal 24 jam sebelumnya',
     'slot_not_available' => 'Slot waktu tidak tersedia',
+    'invalid_date' => 'Tanggal Tidak Valid',
+    'future_date_required' => 'Silakan pilih tanggal dan waktu di masa mendatang.',
     'slot_conflict' => 'Jadwal bertabrakan dengan booking lain',
 
     // Important Information

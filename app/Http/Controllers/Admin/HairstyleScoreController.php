@@ -137,8 +137,18 @@ class HairstyleScoreController extends Controller
 
     public function destroy(HairstyleScore $hairstyle_score)
     {
-        $hairstyle_score->delete();
-        return redirect()->route('admin.hairstyles.score.index')
-                         ->with('success', 'Score berhasil dihapus.');
+        try {
+            $hairstyle_score->delete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('admin.delete_success')
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('admin.error_occurred')
+            ], 500);
+        }
     }
 }

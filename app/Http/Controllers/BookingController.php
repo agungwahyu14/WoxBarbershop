@@ -46,7 +46,7 @@ class BookingController extends Controller
             $bookings = Booking::with(['service', 'hairstyle'])
                 ->where('user_id', $user->id)
                 ->orderByDesc('id')
-                ->get();
+                ->paginate(6); // ✅ Ubah dari get() ke paginate(6)
 
             return view('bookings.index', compact('bookings'));
         }

@@ -1,6 +1,54 @@
 @extends('layouts.app')
 
 @section('content')
+    <!-- Success Alert for Registration -->
+    @if (session('success'))
+        <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-green-700">
+                        {{ session('success') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Email Verification Alert (hanya muncul jika user belum verified dan bukan dari registrasi) -->
+    @auth
+        @if (!auth()->user()->hasVerifiedEmail() && !session('success'))
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            {{ __('auth.verify_email_notification') }}
+                        <form method="POST" action="{{ route('verification.send') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="font-medium text-yellow-700 underline hover:text-yellow-600">
+                                {{ __('auth.resend_verification') }}
+                            </button>
+                        </form>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
+
     <section id="beranda" class="h-screen flex items-center justify-center text-center text-white parallax relative"
         style="background-image: url('{{ asset('images/hero2.jpeg') }}');">
         <div class="absolute inset-0 bg-black opacity-60"></div>
@@ -59,11 +107,11 @@
                     <p class="text-gray-600 mb-4">
                         {{ __('welcome.haircut_description') }}
                     </p>
-                    <a href="{{ route('dashboard') }}#reservasi"
+                    {{-- <a href="{{ route('dashboard') }}#reservasi"
                         class="text-secondary font-medium flex items-center group">
                         {{ __('welcome.book_now') }}
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
-                    </a>
+                    </a> --}}
                 </div>
 
                 <!-- Service 2 -->
@@ -76,10 +124,10 @@
                     <p class="text-gray-600 mb-4">
                         {{ __('welcome.products_description') }}
                     </p>
-                    <a href="{{ route('dashboard') }}#produk" class="text-secondary font-medium flex items-center group">
+                    {{-- <a href="{{ route('dashboard') }}#produk" class="text-secondary font-medium flex items-center group">
                         {{ __('welcome.book_now') }}
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
-                    </a>
+                    </a> --}}
                 </div>
 
                 <!-- Service 3 -->
@@ -92,10 +140,10 @@
                     <p class="text-gray-600 mb-4">
                         {{ __('welcome.recommendations_description') }}
                     </p>
-                    <a href="{{ route('rekomendasi.index') }}" class="text-secondary font-medium flex items-center group">
+                    {{-- <a href="{{ route('rekomendasi.index') }}" class="text-secondary font-medium flex items-center group">
                         {{ __('welcome.book_now') }}
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
-                    </a>
+                    </a> --}}
                 </div>
 
                 <!-- Service 4 -->
@@ -108,11 +156,11 @@
                     <p class="text-gray-600 mb-4">
                         {{ __('welcome.loyalty_description') }}
                     </p>
-                    <a href="{{ route('dashboard') }}#reservasi"
+                    {{-- <a href="{{ route('dashboard') }}#reservasi"
                         class="text-secondary font-medium flex items-center group">
                         {{ __('welcome.book_now') }}
                         <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </div>
@@ -157,19 +205,22 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse($products as $product)
-                    <div class="bg-white overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg">
-                        <div class="relative h-64 overflow-hidden">
+                    <div
+                        class="bg-white overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg flex flex-col h-full">
+                        <div class="relative overflow-hidden bg-gray-50">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
-                                class="w-full h-full object-cover">
+                                class="w-full h-80 object-cover hover:scale-105 transition-transform duration-300">
                         </div>
-                        <div class="p-6">
-                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2">{{ $product->name }}</h3>
-                            <p class="text-sm sm:text-base md:text-lg text-gray-600 mb-4">
-                                {{ Str::limit($product->description, 100) }}
+                        <div class="p-6 flex-1 flex flex-col">
+                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-3">{{ $product->name }}</h3>
+                            <p class="text-sm sm:text-base text-gray-600 mb-4 flex-1 line-clamp-4">
+                                {{ $product->description }}
                             </p>
                             @if ($product->price)
-                                <span class="font-bold text-lg font-playfair text-secondary">Rp
-                                    {{ number_format($product->price, 0, ',', '.') }}</span>
+                                <div class="mt-auto">
+                                    <span class="font-bold text-lg font-playfair text-secondary">Rp
+                                        {{ number_format($product->price, 0, ',', '.') }}</span>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -307,12 +358,16 @@
                                     class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">{{ __('welcome.choose_service') }}</option>
                                     @foreach ($services as $service)
-                                        <option value="{{ $service->id }}"
+                                        <option value="{{ $service->id }}" data-duration="{{ $service->duration }}"
                                             {{ old('service_id') == $service->id ? 'selected' : '' }}>
                                             {{ $service->name }} - Rp {{ number_format($service->price, 0, ',', '.') }}
                                         </option>
                                     @endforeach
                                 </select>
+
+                                {{-- Tempat menampilkan durasi --}}
+                                <p id="service-duration" class="text-gray-600 text-sm mt-2"></p>
+
                                 @error('service_id')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -336,6 +391,12 @@
                                 @enderror
                             </div>
                         </div>
+
+                        {{-- Duration will be handled by the enhanced script in @push section --}}
+
+
+
+
 
                         <!-- Pembayaran & Tanggal -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -399,6 +460,7 @@
                 </div>
             </div>
         </div>
+        </div>
     </section>
 
     <!-- Gallery Section -->
@@ -438,14 +500,50 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- SweetAlert2 untuk notifikasi -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <!-- Pass translations to JavaScript -->
     <script>
         window.bookingTranslations = @json(__('booking'));
     </script>
-    
+
     <!-- Multi-Language Booking Form AJAX Handler -->
     <script src="{{ asset('js/booking-form-ajax-multilang.js') }}"></script>
+
+    <!-- Duration display functionality -->
+    <script>
+        // Simple duration display - page refreshes on language change
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceSelect = document.getElementById('service_id');
+            const durationDisplay = document.getElementById('service-duration');
+
+            if (serviceSelect && durationDisplay) {
+                serviceSelect.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const duration = selectedOption.getAttribute('data-duration');
+
+                    if (duration && duration.trim() !== '') {
+                        // Use server-side translation since page refreshes on language change
+                        const durationNumber = duration.replace(/[^0-9]/g, '');
+                        const formattedDuration = @json(__('welcome.duration_minutes', ['duration' => '__DURATION__'])).replace('__DURATION__',
+                            durationNumber);
+
+                        durationDisplay.textContent = formattedDuration;
+                        durationDisplay.style.display = 'block';
+                    } else {
+                        durationDisplay.textContent = '';
+                        durationDisplay.style.display = 'none';
+                    }
+                });
+
+                // Update on page load if there's a selected value
+                if (serviceSelect.value) {
+                    const event = new Event('change');
+                    serviceSelect.dispatchEvent(event);
+                }
+            }
+        });
+    </script>
+
 
     @if (session('booking_error'))
         <script>

@@ -66,10 +66,12 @@ return [
     'bank' => 'Transfer Bank',
     'date_time' => 'Tanggal & Waktu',
     'description' => 'Deskripsi',
+    'service_duration' => 'Durasi Layanan',
+    'duration_minutes' => 'Durasi layanan: :duration menit',
     
     // Buttons
-    'reservation_submit' => 'PEMESANAN',
-    'login_to_reserve' => 'MASUK UNTUK PEMESANAN',
+    'reservation_submit' => 'Pemesanan',
+    'login_to_reserve' => 'Masuk untuk Pemesanan',
     'processing' => 'Memproses',
     
     // Gallery
@@ -77,6 +79,14 @@ return [
     
     // Messages
     'booking_failed' => 'Pemesanan Gagal',
+    
+    // Form Labels and Placeholders
+    'reservation_form' => 'Form Pemesanan',
+    'fill_form_below' => 'Isi formulir di bawah untuk membuat pemesanan',
+    'enter_name' => 'Masukkan nama lengkap Anda',
+    'optional' => 'Opsional',
+    'description_placeholder' => 'Tambahkan catatan khusus untuk pemesanan Anda (opsional)',
+    'choose_from_services_below' => 'Pilih dari layanan yang tersedia di bawah',
     
     // Navigation Menu
     'home' => 'Beranda',

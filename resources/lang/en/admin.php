@@ -310,6 +310,8 @@ return [
     'style_preference' => 'Style Preference',
     'choose_file' => 'Choose a file',
     'no_file_chosen' => 'No file chosen',
+    'upload_file' => 'Upload a file',
+    'drag_and_drop' => 'or drag and drop',
     'create_hairstyle_btn' => 'Create Hairstyle',
     'update_hairstyle' => 'Update Hairstyle',
     'manage_hairstyle_recommendations' => 'Manage hairstyle recommendations for WOX Barbershop',
@@ -479,6 +481,7 @@ return [
     
     // Transaction Index
     'all_months' => 'All Months',
+    'all_status' => 'All Status',
     'january' => 'January',
     'february' => 'February',
     'march' => 'March',
@@ -644,6 +647,7 @@ return [
     'pending' => 'Pending',
     'confirmed' => 'Confirmed',
     'completed' => 'Completed',
+    'complete' => 'Complete',
     'cancelled' => 'Cancelled',
 
 
@@ -895,6 +899,15 @@ return [
     'backup_full_desc' => 'full backup (database + file)',
     'backup_partial_desc' => 'data only backup',
     
+    // Additional restore messages
+    'invalid_file_format' => 'Invalid file format. Only .sql files are allowed.',
+    'empty_sql_file' => 'SQL file is empty or invalid.',
+    'invalid_sql_file' => 'SQL file does not contain valid database commands.',
+    'database_config_missing' => 'Database configuration is incomplete.',
+    'mysql_client_not_found' => 'MySQL client not found on system.',
+    'database_connection_failed' => 'Failed to connect to database.',
+    'zip_files_not_supported' => 'ZIP files are not yet supported.',
+    
     // Basic status messages
     'success' => 'Success',
     'deleted' => 'Deleted',
@@ -935,6 +948,8 @@ return [
     'no_matching_products' => 'No matching products',
     'no_products_available' => 'No products available',
     'delete_product_warning' => 'You will not be able to restore it!',
+    'delete_score_warning' => 'This data will be permanently deleted!',
+    'confirm_delete_score' => 'Yes, Delete!',
     
     // Hairstyles specific
     'loading_hairstyles' => 'Loading hairstyles...',

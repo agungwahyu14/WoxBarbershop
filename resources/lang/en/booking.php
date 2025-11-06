@@ -95,6 +95,8 @@ return [
     'advance_booking' => 'Booking must be made at least 24 hours in advance',
     'slot_not_available' => 'Time slot is not available',
     'slot_conflict' => 'Schedule conflicts with another booking',
+    'invalid_date' => 'Invalid Date',
+    'future_date_required' => 'Please select a future date and time.',
 
     // Important Information
     'important_info' => 'Important Information',

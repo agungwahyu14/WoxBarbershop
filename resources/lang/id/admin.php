@@ -310,6 +310,8 @@ return [
     'style_preference' => 'Preferensi Gaya',
     'choose_file' => 'Pilih file',
     'no_file_chosen' => 'Tidak ada file yang dipilih',
+    'upload_file' => 'Unggah file',
+    'drag_and_drop' => 'atau seret dan lepas',
     'create_hairstyle_btn' => 'Buat Gaya Rambut',
     'update_hairstyle' => 'Perbarui Gaya Rambut',
     'manage_hairstyle_recommendations' => 'Kelola rekomendasi gaya rambut untuk WOX Barbershop',
@@ -479,6 +481,7 @@ return [
     
     // Transaction Index
     'all_months' => 'Semua Bulan',
+    'all_status' => 'Semua Status',
     'january' => 'Januari',
     'february' => 'Februari',
     'march' => 'Maret',
@@ -644,6 +647,7 @@ return [
     'pending' => 'Menunggu',
     'confirmed' => 'Dikonfirmasi',
     'completed' => 'Selesai',
+    'complete' => 'Selesai',
     'cancelled' => 'Dibatalkan',
 
 
@@ -895,6 +899,15 @@ return [
     'backup_full_desc' => 'backup lengkap (database + file)',
     'backup_partial_desc' => 'backup data saja',
     
+    // Additional restore messages
+    'invalid_file_format' => 'Format file tidak valid. Hanya file .sql yang diizinkan.',
+    'empty_sql_file' => 'File SQL kosong atau tidak valid.',
+    'invalid_sql_file' => 'File SQL tidak mengandung perintah database yang valid.',
+    'database_config_missing' => 'Konfigurasi database tidak lengkap.',
+    'mysql_client_not_found' => 'MySQL client tidak ditemukan di sistem.',
+    'database_connection_failed' => 'Gagal terhubung ke database.',
+    'zip_files_not_supported' => 'File ZIP belum didukung untuk saat ini.',
+    
     // Pesan status dasar
     'success' => 'Berhasil',
     'deleted' => 'Dihapus',
@@ -935,6 +948,8 @@ return [
     'no_matching_products' => 'Tidak ada produk yang cocok',
     'no_products_available' => 'Tidak ada produk tersedia',
     'delete_product_warning' => 'Anda tidak akan bisa mengembalikannya!',
+    'delete_score_warning' => 'Data ini akan dihapus secara permanen!',
+    'confirm_delete_score' => 'Ya, Hapus!',
     
     // Hairstyles specific
     'loading_hairstyles' => 'Memuat gaya rambut...',

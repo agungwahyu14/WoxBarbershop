@@ -42,7 +42,8 @@
                     </a>
                 </li>
 
-                <li class="{{ request()->routeIs('admin.hairstyles.*') ? 'active' : '' }}">
+                <li
+                    class="{{ request()->routeIs('admin.hairstyles.index', 'admin.hairstyles.create', 'admin.hairstyles.edit', 'admin.hairstyles.show') ? 'active' : '' }}">
                     <a href="{{ route('admin.hairstyles.index') }}">
                         <span class="icon"><i class="mdi mdi-hair-dryer"></i></span>
                         <span class="menu-item-label">{{ __('menu.hairstyles') }}</span>
@@ -70,12 +71,12 @@
                     </a>
                 </li>
 
-                <li class="{{ request()->routeIs('admin.system.*') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->routeIs('admin.system.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.system.index') }}">
                         <span class="icon"><i class="mdi mdi-backup-restore"></i></span>
                         <span class="menu-item-label">{{ __('menu.backup_restore') }}</span>
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="{{ request()->routeIs('admin.feedbacks.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.feedbacks.index') }}">

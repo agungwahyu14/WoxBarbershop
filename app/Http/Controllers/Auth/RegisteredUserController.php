@@ -51,6 +51,7 @@ class RegisteredUserController extends Controller
                 'no_telepon' => $request->no_telepon,
                 'password' => Hash::make($request->password),
                 'is_active' => true, // Set user aktif secara default saat registrasi
+                'email_verified_at' => now(), // Auto verify email
             ]);
 
             $user->assignRole('pelanggan');
@@ -61,16 +62,18 @@ class RegisteredUserController extends Controller
                 'name' => $user->name,
                 'role' => 'pelanggan',
                 'is_active' => true,
+                'email_verified_at' => $user->email_verified_at,
+                'auto_verified' => true,
                 'ip' => $request->ip()
             ]);
 
-            event(new Registered($user));
+            // Skip email verification event since we auto-verify
+            // event(new Registered($user));
 
             Auth::login($user);
 
-            // $request->session()->regenerate();
-            return redirect()->route('verification.notice')
-                ->with('success', 'Registration successful! Please verify your email address.');
+            return redirect()->route('dashboard')
+                ->with('success', __('auth.registration_successful_welcome'));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::warning('User registration validation failed', [
@@ -92,7 +95,7 @@ class RegisteredUserController extends Controller
                 'ip' => $request->ip()
             ]);
 
-            return back()->withInput()->with('error', 'Registration failed. Please try again.');
+            return back()->withInput()->with('error', __('auth.registration_failed'));
         }
     }
 }

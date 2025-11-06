@@ -59,9 +59,38 @@ return [
     'total' => 'Total',
     'subtotal' => 'Subtotal',
     
+    // Time Units
+    'minute' => 'minute',
+    'minutes' => 'minutes',
+    'hour' => 'hour',
+    'hours' => 'hours',
+    
     // Language
     'language' => 'Language',
     'change_language' => 'Change Language',
     'indonesian' => 'Indonesia',
     'english' => 'English',
+    
+    // Processing
+    'processing' => 'Processing...',
+    'error_occurred' => 'An error occurred',
+    
+    // Loyalty Program
+    'loyalty' => [
+        'title' => 'Loyalty Program',
+        'current_points' => 'Current Points',
+        'progress' => 'Progress :progress%',
+        'congratulations' => 'Congratulations!',
+        'keep_going' => 'Keep Going!',
+        'available' => 'Available',
+        'redeem_now' => 'Redeem Now',
+        'learn_more' => 'Learn More',
+        'login_to_view' => 'Login to View',
+        'reward_ready' => 'Your Reward is Ready!',
+        'redeem_message' => 'You can redeem a free service now!',
+        'points_needed' => 'Need :needed more points for a free reward',
+        'confirm_redeem' => 'Are you sure you want to redeem this free reward?',
+        'redeem_success' => 'Reward redeemed successfully!',
+        'redeem_error' => 'Failed to redeem reward. Please try again.',
+    ],
 ];

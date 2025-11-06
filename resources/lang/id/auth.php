@@ -26,7 +26,8 @@ return [
     'login_success' => 'Berhasil masuk!',
     'logout_success' => 'Berhasil keluar!',
     'welcome_back' => 'Selamat datang kembali',
-    'register_success' => 'Pendaftaran berhasil! Silakan masuk.',
+    'register_success' => 'Pendaftaran berhasil! Selamat datang di WOX Barbershop.',
+    'registration_successful_welcome' => 'Pendaftaran berhasil! Selamat datang di WOX Barbershop.',
     'password_reset_sent' => 'Link reset password telah dikirim ke email Anda.',
     'password_reset_success' => 'Password berhasil direset!',
     
@@ -65,6 +66,7 @@ return [
     'verify_email_message' => 'Terima kasih telah mendaftar! Silakan verifikasi alamat email Anda dengan mengklik link yang baru saja kami kirimkan. Jika Anda tidak menerima email tersebut, kami akan dengan senang hati mengirimkan yang lain.',
     'verification_link_sent' => 'Link verifikasi baru telah dikirim ke alamat email yang Anda berikan saat pendaftaran.',
     'resend_verification' => 'Kirim Ulang Email Verifikasi',
+    'verify_email_notification' => 'Silakan verifikasi alamat email Anda untuk mengakses semua fitur.',
     
     // JavaScript Messages
     'email_sent' => 'Email Terkirim!',
@@ -95,4 +97,16 @@ return [
     'no_account' => 'Belum punya akun?',
     'login_here' => 'Masuk di sini',
     'register_here' => 'Daftar di sini',
+    
+    // Profile Update Messages
+    'profile_updated' => 'Profil berhasil diperbarui!',
+    'password_updated' => 'Kata sandi berhasil diperbarui!',
+    'update_failed' => 'Pembaruan profil gagal. Silakan coba lagi.',
+    'password_update_failed' => 'Pembaruan kata sandi gagal. Silakan coba lagi.',
+    'password_mismatch' => 'Kata sandi tidak cocok.',
+    'saving' => 'Menyimpan...',
+    'updating' => 'Memperbarui...',
+    'success' => 'Berhasil!',
+    'error' => 'Error!',
+    'ok' => 'OK',
 ];

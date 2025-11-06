@@ -31,7 +31,8 @@
                                 <h4 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.queue_number') }}</h4>
                                 <p class="text-xl font-semibold text-blue-600">#{{ $queuePosition }}</p>
                                 @if (isset($estimatedWaitTime) && $estimatedWaitTime > 0)
-                                    <p class="text-sm text-gray-500 mt-1">{{ __('booking.estimated_wait') }}: {{ $estimatedWaitTime }} {{ __('booking.minutes') }}</p>
+                                    <p class="text-sm text-gray-500 mt-1">{{ __('booking.estimated_wait') }}:
+                                        {{ $estimatedWaitTime }} {{ __('booking.minutes') }}</p>
                                 @endif
                             </div>
                         @endif
@@ -79,6 +80,9 @@
                                     @case('confirmed')
                                         bg-blue-100 text-blue-700
                                         @break
+                                    @case('in_progress')
+                                        bg-purple-100 text-purple-700
+                                        @break
                                     @case('completed')
                                         bg-green-100 text-green-700
                                         @break
@@ -88,26 +92,8 @@
                                     @default
                                         bg-gray-100 text-gray-600
                                 @endswitch">
-                                @switch($booking->status)
-                                    @case('pending')
-                                        Menunggu
-                                    @break
-
-                                    @case('confirmed')
-                                        Dikonfirmasi
-                                    @break
-
-                                    @case('completed')
-                                        Selesai
-                                    @break
-
-                                    @case('cancelled')
-                                        Dibatalkan
-                                    @break
-
-                                    @default
-                                        {{ ucfirst($booking->status) }}
-                                @endswitch
+                                <i class="fas fa-circle mr-2 text-xs"></i>
+                                {{ __('booking.status_' . $booking->status) }}
                             </span>
                         </div>
 

@@ -26,7 +26,8 @@ return [
     'login_success' => 'Login successful!',
     'logout_success' => 'Logout successful!',
     'welcome_back' => 'Welcome back',
-    'register_success' => 'Registration successful! Please login.',
+    'register_success' => 'Registration successful! Welcome to WOX Barbershop.',
+    'registration_successful_welcome' => 'Registration successful! Welcome to WOX Barbershop.',
     'password_reset_sent' => 'Password reset link has been sent to your email.',
     'password_reset_success' => 'Password reset successfully!',
     
@@ -65,6 +66,7 @@ return [
     'verify_email_message' => 'Thanks for signing up! Please verify your email address by clicking on the link we just sent you. If you didn\'t receive the email, we will gladly send you another.',
     'verification_link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
     'resend_verification' => 'Resend Verification Email',
+    'verify_email_notification' => 'Please verify your email address to access all features.',
     
     // JavaScript Messages
     'email_sent' => 'Email Sent!',
@@ -95,4 +97,16 @@ return [
     'no_account' => 'Don\'t have an account?',
     'login_here' => 'Login here',
     'register_here' => 'Register here',
+    
+    // Profile Update Messages
+    'profile_updated' => 'Profile updated successfully!',
+    'password_updated' => 'Password updated successfully!',
+    'update_failed' => 'Profile update failed. Please try again.',
+    'password_update_failed' => 'Password update failed. Please try again.',
+    'password_mismatch' => 'Passwords do not match.',
+    'saving' => 'Saving...',
+    'updating' => 'Updating...',
+    'success' => 'Success!',
+    'error' => 'Error!',
+    'ok' => 'OK',
 ];

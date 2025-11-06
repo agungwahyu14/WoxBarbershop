@@ -61,10 +61,12 @@ return [
     'bank' => 'Bank Transfer',
     'date_time' => 'Date & Time',
     'description' => 'Description',
+    'service_duration' => 'Service Duration',
+    'duration_minutes' => 'Service duration: :duration minutes',
     
     // Buttons
-    'reservation_submit' => 'BOOK',
-    'login_to_reserve' => 'LOGIN TO BOOK',
+    'reservation_submit' => 'Book',
+    'login_to_reserve' => 'Login to Book',
     'processing' => 'Processing',
     
     // Gallery
@@ -72,6 +74,14 @@ return [
     
     // Messages
     'booking_failed' => 'Booking Failed',
+    
+    // Form Labels and Placeholders
+    'reservation_form' => 'Reservation Form',
+    'fill_form_below' => 'Fill the form below to make your booking',
+    'enter_name' => 'Enter your full name',
+    'optional' => 'Optional',
+    'description_placeholder' => 'Add special notes for your booking (optional)',
+    'choose_from_services_below' => 'Choose from our available services below',
     
     // Navigation Menu
     'home' => 'Home',

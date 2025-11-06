@@ -262,11 +262,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
         // System Management - Backup & Restore Only
+
         Route::prefix('system')->name('admin.system.')->group(function () {
             Route::get('/', [SystemController::class, 'index'])->name('index');
             Route::post('/backup', [SystemController::class, 'backup'])->name('backup');
             Route::post('/restore', [SystemController::class, 'restore'])->name('restore');
             Route::get('/backup-history', [SystemController::class, 'getBackupHistory'])->name('backup-history');
+            Route::get('/system-logs', [SystemController::class, 'getSystemLogs'])->name('system-logs');
+            Route::get('/system-stats', [SystemController::class, 'getSystemStats'])->name('system-stats');
         });
 
     });

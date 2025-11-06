@@ -45,12 +45,26 @@
                                     <div class="flex flex-wrap gap-2">
                                         <span
                                             class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-                                    {{ $booking->status === 'pending'
-                                        ? 'bg-yellow-100 text-yellow-700'
-                                        : ($booking->status === 'completed'
-                                            ? 'bg-green-100 text-green-700'
-                                            : 'bg-gray-100 text-gray-600') }}">
-                                            <i class="fas fa-circle mr-2 text-xs "></i>
+                                    @switch($booking->status)
+                                        @case('pending')
+                                            bg-yellow-100 text-yellow-700
+                                            @break
+                                        @case('confirmed')
+                                            bg-blue-100 text-blue-700
+                                            @break
+                                        @case('in_progress')
+                                            bg-purple-100 text-purple-700
+                                            @break
+                                        @case('completed')
+                                            bg-green-100 text-green-700
+                                            @break
+                                        @case('cancelled')
+                                            bg-red-100 text-red-700
+                                            @break
+                                        @default
+                                            bg-gray-100 text-gray-600
+                                    @endswitch">
+                                            <i class="fas fa-circle mr-2 text-xs"></i>
                                             {{ __('booking.status_' . $booking->status) }}
                                         </span>
 
@@ -76,8 +90,7 @@
                                         <div class="flex items-center">
                                             <i class="fas fa-list-ol mr-2 text-[#d4af37]"></i>
                                             <span class="text-sm text-gray-600">{{ __('booking.queue_number') }}:</span>
-                                            <span
-                                                class="ml-2 font-bold text-[#d4af37]">#{{ $booking->queue_number }}</span>
+                                            <span class="ml-2 font-bold text-[#d4af37]">#{{ $booking->queue_number }}</span>
                                         </div>
                                     </div>
                                 @endif
@@ -104,6 +117,104 @@
                         </div>
                     @endforeach
                 </div>
+
+                {{-- Pagination Links --}}
+                @if ($bookings->hasPages())
+                    <div class="flex justify-center mt-8">
+                        <nav class="bg-white rounded-lg shadow-md px-6 py-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-sm text-gray-700 mr-4">
+                                    <span>{{ __('pagination.showing') }}</span>
+                                    <span class="font-medium mx-1">{{ $bookings->firstItem() }}</span>
+                                    <span>{{ __('pagination.to') }}</span>
+                                    <span class="font-medium mx-1">{{ $bookings->lastItem() }}</span>
+                                    <span>{{ __('pagination.of') }}</span>
+                                    <span class="font-medium mx-1">{{ $bookings->total() }}</span>
+                                    <span>{{ __('pagination.results') }}</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    {{-- Previous Page Link --}}
+                                    @if ($bookings->onFirstPage())
+                                        <span
+                                            class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </span>
+                                    @else
+                                        <a href="{{ $bookings->previousPageUrl() }}"
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    @endif
+
+                                    {{-- Page Numbers with Sliding Window (max 3 pages) --}}
+                                    @php
+                                        $currentPage = $bookings->currentPage();
+                                        $lastPage = $bookings->lastPage();
+                                        $window = 3;
+
+                                        // Calculate start and end of sliding window
+                                        $start = max(1, $currentPage - floor($window / 2));
+                                        $end = min($lastPage, $start + $window - 1);
+
+                                        // Adjust start if we're near the end
+                                        if ($end - $start + 1 < $window) {
+                                            $start = max(1, $end - $window + 1);
+                                        }
+                                    @endphp
+
+                                    {{-- First Page + Ellipsis --}}
+                                    @if ($start > 1)
+                                        <a href="{{ $bookings->url(1) }}"
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            1
+                                        </a>
+                                        @if ($start > 2)
+                                            <span class="px-3 py-2 text-sm font-medium text-gray-500">...</span>
+                                        @endif
+                                    @endif
+
+                                    {{-- Sliding Window Pages --}}
+                                    @for ($page = $start; $page <= $end; $page++)
+                                        @if ($page == $currentPage)
+                                            <span class="px-3 py-2 text-sm font-medium text-white bg-[#d4af37] rounded-lg">
+                                                {{ $page }}
+                                            </span>
+                                        @else
+                                            <a href="{{ $bookings->url($page) }}"
+                                                class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                                {{ $page }}
+                                            </a>
+                                        @endif
+                                    @endfor
+
+                                    {{-- Ellipsis + Last Page --}}
+                                    @if ($end < $lastPage)
+                                        @if ($end < $lastPage - 1)
+                                            <span class="px-3 py-2 text-sm font-medium text-gray-500">...</span>
+                                        @endif
+                                        <a href="{{ $bookings->url($lastPage) }}"
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            {{ $lastPage }}
+                                        </a>
+                                    @endif
+
+                                    {{-- Next Page Link --}}
+                                    @if ($bookings->hasMorePages())
+                                        <a href="{{ $bookings->nextPageUrl() }}"
+                                            class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    @else
+                                        <span
+                                            class="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                @endif
             @else
                 {{-- Jika TIDAK ADA booking, tampilkan "Empty State" yang di tengah halaman --}}
                 <div class="flex items-center justify-center ">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" style="color-scheme: light !important;">
 
 <head>
     <meta charset="utf-8">
@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="color-scheme" content="light only">
     <title>@yield('title', 'Admin Dashboard') - WOX Barbershop</title>
     <meta name="description" content="@yield('meta_description', 'Professional barbershop management system')">
 
@@ -27,6 +28,12 @@
 
     <!-- Enhanced CSS Libraries -->
     <link rel="stylesheet" href="{{ asset('css/main.css?v=' . time()) }}">
+
+    <!-- Admin Light Mode Enforcement CSS -->
+    <link rel="stylesheet" href="{{ asset('css/admin-light-mode.css?v=' . time()) }}">
+
+    <!-- Admin Light Mode Enforcement JS - Load immediately -->
+    <script src="{{ asset('js/admin-light-mode.js?v=' . time()) }}"></script>
     <link rel="stylesheet" href="{{ asset('css/admin-enhanced.css?v=' . time()) }}">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/7.4.47/css/materialdesignicons.min.css">
 
@@ -118,6 +125,117 @@
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
             font-weight: 500;
+
+            /* Force Light Mode for Admin Pages - Override ALL Dark Mode Styles */
+            /* Override any dark mode styles */
+            * {
+                color-scheme: light !important;
+            }
+
+            html,
+            body {
+                background-color: #f9fafb !important;
+                /* bg-gray-50 */
+                color: #1f2937 !important;
+                /* text-gray-900 */
+            }
+
+            /* Override Tailwind dark: classes with light equivalents */
+            .dark\:bg-gray-900,
+            .dark\:bg-gray-800,
+            .dark\:bg-gray-700 {
+                background-color: #ffffff !important;
+                /* Keep white backgrounds */
+            }
+
+            .dark\:text-white,
+            .dark\:text-gray-100,
+            .dark\:text-gray-200 {
+                color: #1f2937 !important;
+                /* Keep dark text */
+            }
+
+            .dark\:text-gray-400,
+            .dark\:text-gray-300 {
+                color: #6b7280 !important;
+                /* Keep gray-600 for muted text */
+            }
+
+            .dark\:border-gray-700,
+            .dark\:border-gray-600 {
+                border-color: #e5e7eb !important;
+                /* Keep light borders */
+            }
+
+            .dark\:divide-gray-700 {
+                border-color: #e5e7eb !important;
+            }
+
+            /* Force light backgrounds for all major containers */
+            .container,
+            .main-section,
+            .section,
+            .card,
+            .box,
+            .panel {
+                background-color: #ffffff !important;
+                color: #1f2937 !important;
+            }
+
+            /* Force light sidebar */
+            .sidebar,
+            .navbar,
+            .menu {
+                background-color: #f8fafc !important;
+                color: #374151 !important;
+            }
+
+            /* Force light inputs and form elements */
+            input,
+            textarea,
+            select,
+            .input,
+            .textarea,
+            .select {
+                background-color: #ffffff !important;
+                color: #1f2937 !important;
+                border-color: #e5e7eb !important;
+            }
+
+            /* Force light buttons */
+            .button,
+            .btn {
+                background-color: #f3f4f6 !important;
+                color: #374151 !important;
+            }
+
+            .button.is-primary,
+            .btn-primary {
+                background-color: var(--primary-color) !important;
+                color: #ffffff !important;
+            }
+
+            /* Force light tables */
+            .table,
+            table {
+                background-color: #ffffff !important;
+                color: #1f2937 !important;
+            }
+
+            .table th,
+            table th {
+                background-color: #f9fafb !important;
+                color: #374151 !important;
+            }
+
+            /* Force light modal and dropdown */
+            .modal,
+            .dropdown-menu,
+            .navbar-dropdown {
+                background-color: #ffffff !important;
+                color: #1f2937 !important;
+            }
+
             transition: all 0.2s;
         }
 
@@ -150,7 +268,7 @@
     @stack('styles')
 </head>
 
-<body class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+<body class="min-h-screen bg-gray-50 transition-colors duration-200">
     <div id="app" class="min-h-screen">
         @include('admin.partials.navbar')
         @include('admin.layouts.sidebar')
@@ -161,7 +279,7 @@
                 @yield('content')
             </div>
         </main>
-{{-- 
+        {{-- 
         @include('admin.partials.footer') --}}
     </div>
 
@@ -476,6 +594,104 @@
                 timerProgressBar: true
             });
         @endif
+    </script>
+
+    <!-- Force Light Mode Script for Admin -->
+    <script>
+        // IMMEDIATELY force light mode - before DOM loads
+        (function() {
+            // Prevent any dark class from being applied
+            document.documentElement.classList.remove('dark');
+            document.body.classList.remove('dark', 'dark-mode');
+
+            // Override system dark mode preference with media query override
+            const style = document.createElement('style');
+            style.textContent = `
+                @media (prefers-color-scheme: dark) {
+                    * { color-scheme: light !important; }
+                    html { background-color: #f9fafb !important; }
+                    body { background-color: #f9fafb !important; color: #1f2937 !important; }
+                }
+            `;
+            document.head.appendChild(style);
+        })();
+
+        // Force Light Mode for Admin Pages
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aggressively remove any dark mode classes
+            function removeDarkClasses() {
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark', 'dark-mode');
+
+                // Remove from all elements that might have dark classes
+                document.querySelectorAll('.dark, .dark-mode').forEach(el => {
+                    el.classList.remove('dark', 'dark-mode');
+                });
+            }
+
+            // Run immediately and periodically
+            removeDarkClasses();
+            setInterval(removeDarkClasses, 100); // Check every 100ms
+
+            // Override localStorage dark mode preference for admin pages only
+            if (window.location.pathname.includes('/admin')) {
+                localStorage.removeItem('darkMode');
+                localStorage.removeItem('theme');
+                localStorage.setItem('adminLightMode', 'true');
+
+                // Force light color scheme
+                document.documentElement.style.colorScheme = 'light';
+                document.body.style.colorScheme = 'light';
+
+                // Disable any dark mode toggles if they exist
+                const darkModeToggles = document.querySelectorAll(
+                    '[data-toggle="dark-mode"], .dark-mode-toggle, .theme-toggle, .mode-toggle');
+                darkModeToggles.forEach(toggle => {
+                    toggle.style.display = 'none';
+                    toggle.disabled = true;
+                });
+            }
+
+            // Watch for any attempts to add dark classes
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        const target = mutation.target;
+                        if (target.classList.contains('dark') || target.classList.contains(
+                                'dark-mode')) {
+                            target.classList.remove('dark', 'dark-mode');
+                        }
+                    }
+                });
+            });
+
+            // Start observing entire document
+            observer.observe(document.documentElement, {
+                attributes: true,
+                subtree: true
+            });
+            observer.observe(document.body, {
+                attributes: true,
+                subtree: true
+            });
+
+            // Override any media query dark mode detection for admin
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                mediaQuery.removeEventListener('change', function() {});
+            }
+        });
+
+        // Prevent any dark mode scripts from running
+        window.enableDarkMode = function() {
+            return false;
+        };
+        window.toggleDarkMode = function() {
+            return false;
+        };
+        window.setDarkMode = function() {
+            return false;
+        };
     </script>
 
     @stack('scripts')

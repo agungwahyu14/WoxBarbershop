@@ -87,6 +87,11 @@
         const previousPage = '{{ __('admin.previous') }}';
         const successTitle = '{{ __('admin.success_title') }}';
         const errorTitle = '{{ __('admin.error_title') }}';
+        const deleteConfirmationText = '{{ __('admin.delete_score_warning') }}';
+        const confirmDeleteText = '{{ __('admin.confirm_delete_score') }}';
+        const deleteSuccessTitle = '{{ __('admin.deleted_success_title') }}';
+        const deleteSuccessMessage = '{{ __('admin.delete_success') }}';
+        const errorMessage = '{{ __('admin.error_occurred') }}';
 
         // Success popup
         @if (session('success'))
@@ -167,9 +172,14 @@
             const deleteUrl = '{{ route('admin.hairstyles.score.destroy', ':id') }}'.replace(':id', scoreId);
 
             Swal.fire({
+                title: areYouSure,
                 text: deleteConfirmationText,
                 icon: 'warning',
-                confirmButtonText: confirmDeleteText
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: confirmDeleteText,
+                cancelButtonText: '{{ __('admin.cancel') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({

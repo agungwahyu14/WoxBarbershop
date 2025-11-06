@@ -61,7 +61,7 @@ class LanguageController extends Controller
             ? 'Bahasa berhasil diubah ke Indonesia' 
             : 'Language successfully changed to English';
 
-        return redirect()->back()->with('success', $successMessage);
+        return redirect()->back()->with('success', $successMessage)->with('scroll_to_top', true);
     }
 
     /**
@@ -108,6 +108,7 @@ class LanguageController extends Controller
     public function switchLanguageAjax(Request $request)
     {
         $language = $request->input('language');
+        $currentUrl = $request->input('url', url()->current());
 
         // Validate language code
         if (!array_key_exists($language, $this->availableLanguages)) {
@@ -137,11 +138,86 @@ class LanguageController extends Controller
             ? 'Bahasa berhasil diubah ke Indonesia' 
             : 'Language successfully changed to English';
 
-        return response()->json([
+        $successTitle = $language === 'id' 
+            ? 'Berhasil!' 
+            : 'Success!';
+
+        // Prepare response with content updates
+        $response = [
             'success' => true,
             'message' => $successMessage,
+            'success_title' => $successTitle,
             'current_language' => $this->availableLanguages[$language],
-            'reload_required' => true
-        ]);
+            'reload_required' => false
+        ];
+
+        // Add content updates for specific pages (no reload)
+        try {
+            $path = parse_url($currentUrl, PHP_URL_PATH);
+            
+            // Update content for common pages without reload
+            if (in_array($path, ['/', '/dashboard', '/profile']) || 
+                str_starts_with($path, '/#')) {
+                
+                $response['content'] = $this->getPageContent($language, $path);
+            } else {
+                // For admin pages and complex routes, require reload
+                $response['reload_required'] = true;
+            }
+        } catch (\Exception $e) {
+            \Log::info('Content update failed, requiring reload: ' . $e->getMessage());
+            $response['reload_required'] = true;
+        }
+
+        return response()->json($response);
+    }
+
+    /**
+     * Get page content for language switch
+     *
+     * @param string $language
+     * @param string $path
+     * @return array
+     */
+    private function getPageContent($language, $path)
+    {
+        $content = [];
+
+        try {
+            // Set locale for content generation
+            App::setLocale($language);
+
+            // Get navigation translations
+            $content['nav'] = [
+                'home' => __('menu.home'),
+                'services' => __('menu.services'),
+                'products' => __('menu.products'),
+                'booking' => __('menu.booking'),
+                'about' => __('menu.about'),
+                'dashboard' => __('menu.dashboard'),
+                'profile' => __('menu.profile'),
+                'logout' => __('menu.logout')
+            ];
+
+            // Get page title
+            if ($path === '/') {
+                $content['title'] = __('welcome.title');
+            } elseif ($path === '/dashboard') {
+                $content['title'] = __('dashboard.title');
+            } elseif ($path === '/profile') {
+                $content['title'] = __('profile.title');
+            }
+
+            // For simple pages, we can update main content
+            if ($path === '/') {
+                // Only update static text content, not dynamic data
+                $content['main'] = null; // Keep existing content, just update translations via JS
+            }
+
+        } catch (\Exception $e) {
+            \Log::error('Error generating page content: ' . $e->getMessage());
+        }
+
+        return $content;
     }
 }

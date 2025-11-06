@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,9 +39,9 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Update user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse|JsonResponse
     {
         try {
             $user = $request->user();
@@ -85,6 +86,14 @@ class ProfileController extends Controller
                         'trace' => $e->getTraceAsString()
                     ]);
 
+                    if ($request->expectsJson()) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => __('auth.update_failed'),
+                            'errors' => ['profile_photo' => __('auth.update_failed')]
+                        ], 422);
+                    }
+
                     return Redirect::route('profile.edit')
                         ->with('error', 'Failed to upload profile photo. Please try again.');
                 }
@@ -110,6 +119,20 @@ class ProfileController extends Controller
                 'ip' => $request->ip()
             ]);
 
+            // Return JSON response for AJAX requests
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => __('auth.profile_updated'),
+                    'user' => [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'no_telepon' => $user->no_telepon,
+                        'profile_photo' => $user->profile_photo ? asset('storage/' . $user->profile_photo) : null
+                    ]
+                ]);
+            }
+
             return Redirect::route('profile.edit')
                 ->with('success', 'Profile updated successfully!');
 
@@ -120,6 +143,14 @@ class ProfileController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'ip' => $request->ip()
             ]);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('auth.update_failed'),
+                    'errors' => ['general' => __('auth.update_failed')]
+                ], 500);
+            }
 
             return Redirect::route('profile.edit')
                 ->with('error', 'Failed to update profile. Please try again.');

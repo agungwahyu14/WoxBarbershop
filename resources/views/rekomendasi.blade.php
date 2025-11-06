@@ -85,7 +85,7 @@
                                 <h3 class="text-xl font-semibold text-gray-800 mb-2">
                                     #{{ $index + 1 }} - {{ $style['hairstyle']->name }}
                                 </h3>
-                                <p class="text-sm text-gray-600 truncate">
+                                <p class="text-sm text-gray-600 leading-relaxed">
                                     {{ $style['hairstyle']->description }}
                                 </p>
                                 {{-- <div class="mt-2 text-sm text-yellow-700 font-semibold">

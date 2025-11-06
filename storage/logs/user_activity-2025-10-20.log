@@ -1,3 +1,0 @@
-[2025-10-20 02:47:05] local.INFO: User login attempt {"email":"lisa@example.com","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"} 
-[2025-10-20 02:47:06] local.INFO: User last login updated {"user_id":55,"email":"lisa@example.com","previous_login":"2025-10-18 13:30:26","current_login":"2025-10-20 02:47:06"} 
-[2025-10-20 02:47:06] local.INFO: User login successful {"user_id":55,"email":"lisa@example.com","last_login_at":"2025-10-20 02:47:06","ip":"127.0.0.1"} 

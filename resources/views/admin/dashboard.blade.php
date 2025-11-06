@@ -55,7 +55,7 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3 class="text-sm font-medium mb-2 text-white">{{ __('admin.customers') }}</h3>
-                            <h1 class="text-3xl font-bold" id="total-customers">{{ $todayCustomers }}</h1>
+                            <h1 class="text-3xl font-bold text-white" id="total-customers">{{ $todayCustomers }}</h1>
                         </div>
                         <div class="bg-blue-400 bg-opacity-30 p-3 rounded-full">
                             <i class="mdi mdi-account-multiple text-2xl"></i>
@@ -72,7 +72,7 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3 class="text-green-100 text-sm font-medium mb-2">{{ __('admin.transactions') }}</h3>
-                            <h1 class="text-3xl font-bold" id="today-bookings">
+                            <h1 class="text-3xl font-bold text-white" id="today-bookings">
                                 {{ $todayTransactions }}
                             </h1>
 
@@ -92,7 +92,7 @@
                     <div class="flex items-center justify-between">
                         <div class="widget-label">
                             <h3 class="text-orange-100 text-sm font-medium mb-2">{{ __('admin.bookings') }}</h3>
-                            <h1 class="text-3xl font-bold" id="today-bookings">
+                            <h1 class="text-3xl font-bold text-white" id="today-bookings">
                                 {{ $todayBookings }}
                             </h1>
                             <p class="text-orange-200 text-xs mt-1">
@@ -371,10 +371,10 @@
 
             <!-- Export Filter Modal -->
             <div id="exportModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
-                <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full">
+                <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full shadow-lg">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-medium text-gray-900" id="modalTitle">{{ __('admin.export_report') }}</h3>
-                        <button onclick="closeExportModal()" class="text-gray-400 hover:text-gray-600">
+                        <button onclick="closeExportModal()" class="text-gray-400 hover:text-red-500 transition-colors">
                             <i class="mdi mdi-close text-xl"></i>
                         </button>
                     </div>
@@ -430,12 +430,15 @@
                         </div>
 
                         <div class="flex justify-end space-x-3">
+                            <!-- Tombol Cancel dengan warna abu-abu -->
                             <button type="button" onclick="closeExportModal()"
-                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-gray-900 transition-colors">
                                 {{ __('admin.cancel') }}
                             </button>
+
+                            <!-- Tombol Export dengan warna biru -->
                             <button type="submit"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-300 transition flex items-center">
                                 <i class="mdi mdi-download mr-2"></i>
                                 {{ __('admin.export') }}
                             </button>

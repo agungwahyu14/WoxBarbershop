@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Services\MidtransService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Snap;
@@ -153,11 +154,11 @@ class PaymentController extends Controller
                 return redirect()->route('login');
             }
 
-            // Ambil semua booking milik user dengan transaksi lokal
+            // Ambil semua booking milik user dengan transaksi lokal (dengan pagination)
             $bookings = Booking::with(['user', 'transaction'])
                 ->where('user_id', $user->id)
                 ->orderByDesc('id')
-                ->get();
+                ->get(); // Kita tetap pakai get() dulu karena perlu proses Midtrans API
 
             $serverKey = config('services.midtrans.server_key');
             $baseUrl = config('services.midtrans.is_production') ?
@@ -247,7 +248,20 @@ class PaymentController extends Controller
                 }
             }
 
-            return view('transactions.index', compact('transactions'));
+            // Apply pagination to transactions collection
+            $perPage = 6;
+            $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
+            $transactionsCollection = collect($transactions);
+            
+            $paginatedTransactions = new \Illuminate\Pagination\LengthAwarePaginator(
+                $transactionsCollection->forPage($currentPage, $perPage)->values(),
+                $transactionsCollection->count(),
+                $perPage,
+                $currentPage,
+                ['path' => request()->url(), 'pageName' => 'page']
+            );
+
+            return view('transactions.index', ['transactions' => $paginatedTransactions]);
 
         } catch (\Exception $e) {
             Log::error('Transaction index error: '.$e->getMessage());
