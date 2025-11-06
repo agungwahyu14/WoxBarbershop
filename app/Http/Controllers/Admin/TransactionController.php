@@ -158,7 +158,7 @@ public function update(Request $request, Transaction $transaction)
     ]);
 
     return redirect()->route('admin.transactions.index')
-        ->with('success', 'Transaksi berhasil diperbarui.');
+        ->with('success', __('admin.transaction_updated_successfully'));
 }
 
 
@@ -385,7 +385,7 @@ protected function getPaymentType($paymentType)
 
             return response()->json([
                 'success' => true,
-                'message' => 'Transaksi berhasil dikonfirmasi sebagai settlement dan loyalty points telah ditambahkan.'
+                'message' => __('admin.transaction_settlement_confirmed_successfully')
             ]);
 
         } catch (\Exception $e) {
@@ -398,7 +398,7 @@ protected function getPaymentType($paymentType)
 
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengkonfirmasi settlement: ' . $e->getMessage()
+                'message' => __('admin.failed_to_confirm_settlement') . ': ' . $e->getMessage()
             ], 500);
         }
     }

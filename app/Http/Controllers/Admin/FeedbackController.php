@@ -154,12 +154,12 @@ class FeedbackController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Feedback berhasil diperbarui.'
+                'message' => __('admin.feedback_updated_successfully')
             ]);
         }
 
         return redirect()->route('admin.feedbacks.index')
-            ->with('success', 'Feedback berhasil diperbarui.');
+            ->with('success', __('admin.feedback_updated_successfully'));
     }
 
     /**
@@ -173,22 +173,22 @@ class FeedbackController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Feedback berhasil dihapus.'
+                    'message' => __('admin.feedback_deleted_successfully')
                 ]);
             }
 
             return redirect()->route('admin.feedbacks.index')
-                ->with('success', 'Feedback berhasil dihapus.');
+                ->with('success', __('admin.feedback_deleted_successfully'));
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal menghapus feedback: ' . $e->getMessage()
+                    'message' => __('admin.failed_to_delete_feedback') . ': ' . $e->getMessage()
                 ], 500);
             }
 
             return redirect()->back()
-                ->with('error', 'Gagal menghapus feedback.');
+                ->with('error', __('admin.failed_to_delete_feedback'));
         }
     }
 
@@ -202,12 +202,12 @@ class FeedbackController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Status publikasi feedback berhasil diubah.',
+                'message' => __('admin.feedback_publication_status_updated_successfully'),
                 'new_status' => $feedback->is_public
             ]);
         }
 
         return redirect()->back()
-            ->with('success', 'Status publikasi feedback berhasil diubah.');
+            ->with('success', __('admin.feedback_publication_status_updated_successfully'));
     }
 }

@@ -277,6 +277,38 @@ return [
     'user_deleted_success' => 'The user has been deleted successfully.',
     'deleted_success_title' => 'Deleted!',
     'something_went_wrong' => 'Something went wrong.',
+    'user_created_successfully' => 'User created successfully!',
+    'user_updated_successfully' => 'User updated successfully!',
+    'loyalty_redeem_success' => 'Success! You have used 10 points for a free haircut.',
+    'user_create_failed' => 'Failed to create user. Please try again.',
+    'user_update_failed' => 'Failed to update user. Please try again.',
+    'insufficient_loyalty_points' => 'You do not have enough points to redeem free service (minimum 10 points).',
+    'loyalty_redeem_failed' => 'Failed to redeem: :message',
+    'service_created_successfully' => 'Service created successfully!',
+    'service_updated_successfully' => 'Service updated successfully!',
+    'service_create_failed' => 'Failed to create service. Please try again.',
+    'service_update_failed' => 'Failed to update service. Please try again.',
+    'service_delete_has_bookings' => 'Cannot delete service that has associated bookings.',
+    'service_deleted_successfully' => 'Service deleted successfully.',
+    'service_delete_failed' => 'Failed to delete service. Please try again.',
+    'service_activated_successfully' => 'Service activated successfully.',
+    'service_deactivated_successfully' => 'Service deactivated successfully.',
+    'service_status_update_failed' => 'Failed to update service status.',
+    'product_created_successfully' => 'Product created successfully.',
+    'product_updated_successfully' => 'Product updated successfully.',
+    'product_deleted_successfully' => 'Product deleted successfully.',
+    'product_status_changed_successfully' => 'Product status changed successfully.',
+    'product_delete_failed' => 'Failed to delete product.',
+    'product_delete_failed_with_message' => 'Failed to delete product: :message',
+    'hairstyle_created_successfully' => 'Hairstyle created successfully.',
+    'hairstyle_updated_successfully' => 'Hairstyle updated successfully.',
+    'hairstyle_deleted_successfully' => 'Hairstyle deleted successfully.',
+    'hairstyle_score_created_successfully' => 'Hairstyle score created successfully.',
+    'hairstyle_score_updated_successfully' => 'Hairstyle score updated successfully.',
+    'confirm_booking_message' => 'Are you sure you want to confirm this booking',
+    'start_service_message' => 'Are you sure you want to start this service',
+    'complete_service_message' => 'Are you sure you want to complete this service',
+    'cancel_booking_message' => 'Are you sure you want to cancel this booking',
     
     // Form Validation
     'field_required' => 'This column is required',
@@ -780,10 +812,10 @@ return [
     'status' => 'Status',
     
     // Booking Action Messages
-    'confirm_booking_message' => 'confirm this booking',
-    'start_service_message' => 'start service for this booking',
-    'complete_service_message' => 'mark this booking as completed',
-    'cancel_booking_message' => 'cancel this booking',
+    'confirm_booking_message' => 'Confirm this booking',
+    'start_service_message' => 'Start service for this booking',
+    'complete_service_message' => 'Mark this booking as completed',
+    'cancel_booking_message' => 'Cancel this booking',
     'processing' => 'Processing',
     'error_occurred' => 'An error occurred',
     
@@ -984,9 +1016,9 @@ return [
     'complete_service' => 'Complete Service', 
     'cancel_booking' => 'Cancel Booking',
     'confirm_booking_message' => 'this booking',
-    'start_service_message' => 'start service for this booking', 
-    'complete_service_message' => 'mark this booking as completed',
-    'cancel_booking_message' => 'cancel this booking',
+    'start_service_message' => 'Start service for this booking',
+    'complete_service_message' => 'Mark this booking as completed',
+    'cancel_booking_message' => 'Cancel this booking',
     'booking_cancelled_successfully' => 'Booking successfully cancelled',
     'booking_and_transaction_cancelled' => 'Booking successfully cancelled and payment transaction has been cancelled',
     'transaction_cancelled_for_booking' => 'Payment transaction successfully cancelled for this booking',
@@ -1017,5 +1049,24 @@ return [
     'service_description_id_placeholder' => 'Enter service description in Indonesian',
     'service_description_en_placeholder' => 'Enter service description in English',
 
+    // Booking Status Messages
+    'booking_status_updated_successfully' => 'Booking status has been updated successfully',
+
+    // Transaction Messages
+    'transaction_settlement_confirmed_successfully' => 'Transaction has been confirmed as settlement and loyalty points have been added',
+    'transaction_updated_successfully' => 'Transaction has been updated successfully',
+    'failed_to_confirm_settlement' => 'Failed to confirm settlement',
+
+    // Feedback Messages
+    'feedback_updated_successfully' => 'Feedback has been updated successfully',
+    'feedback_deleted_successfully' => 'Feedback has been deleted successfully',
+    'failed_to_delete_feedback' => 'Failed to delete feedback',
+    'feedback_publication_status_updated_successfully' => 'Feedback publication status has been updated successfully',
+
+    // Role Messages
+    'role_created_successfully' => 'Role has been created successfully',
+    'role_updated_successfully' => 'Role has been updated successfully',
+    'role_deleted_successfully' => 'Role has been deleted successfully',
+    'cannot_delete_system_role' => 'Cannot delete system role',
 
 ];

@@ -226,12 +226,7 @@
                     title: successTitle,
                     text: '{{ session('success') }}',
                     timer: 3000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end',
-                    customClass: {
-                        popup: 'swal2-desktop-toast'
-                    }
+                    showConfirmButton: false
                 });
             @endif
 
@@ -245,15 +240,15 @@
                     text: deleteWarning,
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#6b7280',
                     confirmButtonText: yesDeleteIt,
+                    cancelButtonText: cancel,
+                    buttonsStyling: true,
                     customClass: {
                         popup: 'swal2-desktop-popup',
                         title: 'text-xl',
-                        content: 'text-base',
-                        confirmButton: 'px-6 py-3',
-                        cancelButton: 'px-6 py-3'
+                        content: 'text-base'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -264,19 +259,16 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
+
                                 Swal.fire({
                                     icon: 'success',
                                     title: deletedSuccessTitle,
                                     text: response.message ||
                                         userDeletedSuccessfully,
                                     timer: 3000,
-                                    showConfirmButton: false,
-                                    toast: true,
-                                    position: 'top-end',
-                                    customClass: {
-                                        popup: 'swal2-desktop-toast'
-                                    }
+                                    showConfirmButton: false
                                 });
+
                                 table.ajax.reload();
                             },
                             error: function(xhr) {
@@ -314,12 +306,11 @@
                     cancelButtonColor: '#6b7280',
                     confirmButtonText: yesResetIt,
                     cancelButtonText: cancel,
+                    buttonsStyling: true,
                     customClass: {
-                        popup: 'swal2-desktop-popup',
+                        popup: 'swal2-desktop-popup swal2-loyalty-reset',
                         title: 'text-xl',
-                        content: 'text-base',
-                        confirmButton: 'px-6 py-3',
-                        cancelButton: 'px-6 py-3'
+                        content: 'text-base'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -387,124 +378,4 @@
             });
         });
     </script>
-@endpush
-@push('styles')
-    <style>
-        /* Filter styling */
-        #monthFilter,
-        #yearFilter {
-            min-width: 120px;
-        }
-
-        #resetFilter {
-            min-width: 80px;
-        }
-
-        /* Responsive filter layout */
-        @media (max-width: 640px) {
-            .flex.flex-col.sm\\:flex-row {
-                align-items: stretch;
-            }
-
-            .flex.items-center.space-x-2 {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            #monthFilter,
-            #yearFilter,
-            #resetFilter {
-                width: 100%;
-            }
-        }
-
-        th.text-center {
-            text-align: center !important;
-        }
-
-        th.text-left {
-            text-align: left !important;
-        }
-
-        /* Styling untuk tombol DataTable dengan warna yang lebih modern */
-        .dt-buttons .dt-button.dt-btn-copy {
-            background-color: #e0e7ff !important;
-            /* Indigo soft */
-            color: #312e81 !important;
-            /* Indigo dark untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-copy:hover {
-            background-color: #c7d2fe !important;
-            /* Indigo lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-csv {
-            background-color: #34d399 !important;
-            /* Emerald green */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-csv:hover {
-            background-color: #6ee7b7 !important;
-            /* Emerald lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-excel {
-            background-color: #10b981 !important;
-            /* Green untuk Excel */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-excel:hover {
-            background-color: #34d399 !important;
-            /* Green lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-pdf {
-            background-color: #f87171 !important;
-            /* Red soft untuk PDF */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-pdf:hover {
-            background-color: #fca5a5 !important;
-            /* Red lebih terang saat hover */
-        }
-
-        .dt-buttons .dt-button.dt-btn-print {
-            background-color: #60a5fa !important;
-            /* Blue soft untuk print */
-            color: #ffffff !important;
-            /* Putih untuk kontras */
-        }
-
-        .dt-buttons .dt-button.dt-btn-print:hover {
-            background-color: #93c5fd !important;
-            /* Blue lebih terang saat hover */
-        }
-
-        /* Styling umum untuk tombol */
-        .dt-buttons .dt-button {
-            border-radius: 0.375rem !important;
-            padding: 0.5rem 0.75rem !important;
-            font-size: 0.875rem !important;
-            font-weight: 500 !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 0.5rem !important;
-            transition: background-color 0.2s ease-in-out !important;
-        }
-
-
-
-        /* Styling untuk tabel */
-        #roles-table {
-            width: 100% !important;
-            table-layout: auto !important;
-        }
-    </style>
 @endpush

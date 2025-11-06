@@ -204,15 +204,12 @@
             const cancel = '{{ __('admin.cancel') }}';
             const yes = '{{ __('admin.yes') }}';
             const no = '{{ __('admin.no') }}';
-            const confirmBookingText = '{{ __('admin.confirm_booking') }}';
-            const startServiceText = '{{ __('admin.start_service') }}';
-            const completeServiceText = '{{ __('admin.complete_service') }}';
-            const cancelBookingText = '{{ __('admin.cancel_booking') }}';
             const confirmBookingMessage = '{{ __('admin.confirm_booking_message') }}';
             const startServiceMessage = '{{ __('admin.start_service_message') }}';
             const completeServiceMessage = '{{ __('admin.complete_service_message') }}';
             const cancelBookingMessage = '{{ __('admin.cancel_booking_message') }}';
             const errorOccurred = '{{ __('admin.error_occurred') }}';
+            const successTitle = '{{ __('admin.success_title') }}';
 
             $(document).ready(function() {
                 // Enhanced DataTable configuration
@@ -537,7 +534,13 @@
 
                 // Success notification
                 @if (session('success'))
-                    showNotification('success', success, '{{ session('success') }}');
+                    Swal.fire({
+                        icon: 'success',
+                        title: successTitle,
+                        text: '{{ session('success') }}',
+                        timer: 3000,
+                        showConfirmButton: false
+                    }).then(() => location.reload());
                 @endif
 
                 // Error notification
@@ -607,15 +610,22 @@
                                 console.log('Response data:', data);
                                 Swal.close();
                                 if (data.success) {
-                                    showNotification('success', success, data.message);
-                                    // Reload DataTable instead of whole page for better UX
-                                    if (typeof table !== 'undefined' && table.ajax) {
-                                        table.ajax.reload(null, false); // Keep pagination
-                                    } else {
-                                        location.reload();
-                                    }
-                                    // Update statistics
-                                    updateStatistics();
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: successTitle,
+                                        text: data.message,
+                                        timer: 3000,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        // Reload DataTable instead of whole page for better UX
+                                        if (typeof table !== 'undefined' && table.ajax) {
+                                            table.ajax.reload(null, false); // Keep pagination
+                                        } else {
+                                            location.reload();
+                                        }
+                                        // Update statistics
+                                        updateStatistics();
+                                    });
                                 } else {
                                     showNotification('error', error, data.message || errorOccurred);
                                 }
@@ -655,117 +665,4 @@
                     });
             }
         </script>
-    @endpush
-
-    @push('styles')
-        <style>
-            /* Filter styling */
-            #monthFilter,
-            #yearFilter,
-            #status-filter {
-                min-width: 120px;
-            }
-
-            #resetFilter {
-                min-width: 80px;
-            }
-
-            /* Responsive filter layout */
-            @media (max-width: 640px) {
-                .flex.items-center.space-x-2 {
-                    flex-direction: column;
-                    gap: 0.5rem;
-                }
-
-                #monthFilter,
-                #yearFilter,
-                #status-filter,
-                #resetFilter {
-                    width: 100%;
-                }
-            }
-
-            th.text-center {
-                text-align: center !important;
-            }
-
-            th.text-left {
-                text-align: left !important;
-            }
-
-            /* Styling untuk tombol DataTable dengan warna yang lebih modern */
-            .dt-buttons .dt-button.dt-btn-copy {
-                background-color: #e0e7ff !important;
-                /* Indigo soft */
-                color: #312e81 !important;
-                /* Indigo dark untuk kontras */
-            }
-
-            .dt-buttons .dt-button.dt-btn-copy:hover {
-                background-color: #c7d2fe !important;
-                /* Indigo lebih terang saat hover */
-            }
-
-            .dt-buttons .dt-button.dt-btn-csv {
-                background-color: #34d399 !important;
-                /* Emerald green */
-                color: #ffffff !important;
-                /* Putih untuk kontras */
-            }
-
-            .dt-buttons .dt-button.dt-btn-csv:hover {
-                background-color: #6ee7b7 !important;
-                /* Emerald lebih terang saat hover */
-            }
-
-            .dt-buttons .dt-button.dt-btn-excel {
-                background-color: #10b981 !important;
-                /* Green untuk Excel */
-                color: #ffffff !important;
-                /* Putih untuk kontras */
-            }
-
-            .dt-buttons .dt-button.dt-btn-excel:hover {
-                background-color: #34d399 !important;
-                /* Green lebih terang saat hover */
-            }
-
-            .dt-buttons .dt-button.dt-btn-pdf {
-                background-color: #f87171 !important;
-                /* Red soft untuk PDF */
-                color: #ffffff !important;
-                /* Putih untuk kontras */
-            }
-
-            .dt-buttons .dt-button.dt-btn-pdf:hover {
-                background-color: #fca5a5 !important;
-                /* Red lebih terang saat hover */
-            }
-
-            .dt-buttons .dt-button.dt-btn-print {
-                background-color: #60a5fa !important;
-                /* Blue soft untuk print */
-                color: #ffffff !important;
-                /* Putih untuk kontras */
-            }
-
-            .dt-buttons .dt-button.dt-btn-print:hover {
-                background-color: #93c5fd !important;
-                /* Blue lebih terang saat hover */
-            }
-
-            /* Styling umum untuk tombol */
-            .dt-buttons .dt-button {
-                border-radius: 0.375rem !important;
-                padding: 0.5rem 0.75rem !important;
-                font-size: 0.875rem !important;
-                font-weight: 500 !important;
-                display: inline-flex !important;
-                align-items: center !important;
-                gap: 0.5rem !important;
-                transition: background-color 0.2s ease-in-out !important;
-            }
-
-            /* Styling untuk tabel */
-        </style>
     @endpush

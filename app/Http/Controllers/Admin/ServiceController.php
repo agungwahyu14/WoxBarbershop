@@ -223,14 +223,14 @@ class ServiceController extends Controller
             DB::commit();
 
             return redirect()->route('admin.services.index')
-                ->with('success', 'Service created successfully!');
+                ->with('success', __('admin.service_created_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Service creation failed: '.$e->getMessage());
 
             return back()->withInput()
-                ->with('error', 'Failed to create service. Please try again.');
+                ->with('error', __('admin.service_create_failed'));
         }
     }
 
@@ -275,14 +275,14 @@ class ServiceController extends Controller
             DB::commit();
 
             return redirect()->route('admin.services.index')
-                ->with('success', 'Service updated successfully!');
+                ->with('success', __('admin.service_updated_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Service update failed: '.$e->getMessage());
 
             return back()->withInput()
-                ->with('error', 'Failed to update service. Please try again.');
+                ->with('error', __('admin.service_update_failed'));
         }
     }
 
@@ -295,7 +295,7 @@ class ServiceController extends Controller
             if ($service->bookings && $service->bookings->count() > 0) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Cannot delete service that has associated bookings.',
+                    'message' => __('admin.service_delete_has_bookings'),
                 ], 422);
             }
 
@@ -308,7 +308,7 @@ class ServiceController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Service deleted successfully.',
+                'message' => __('admin.service_deleted_successfully'),
             ]);
 
         } catch (\Exception $e) {
@@ -317,7 +317,7 @@ class ServiceController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to delete service. Please try again.',
+                'message' => __('admin.service_delete_failed'),
             ], 500);
         }
     }
@@ -340,7 +340,7 @@ class ServiceController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Service '.($isActivating ? 'activated' : 'deactivated').' successfully.',
+                'message' => $isActivating ? __('admin.service_activated_successfully') : __('admin.service_deactivated_successfully'),
             ]);
 
         } catch (\Exception $e) {
@@ -348,7 +348,7 @@ class ServiceController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update service status.',
+                'message' => __('admin.service_status_update_failed'),
             ], 500);
         }
     }

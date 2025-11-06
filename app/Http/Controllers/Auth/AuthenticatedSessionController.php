@@ -71,7 +71,7 @@ class AuthenticatedSessionController extends Controller
 
             // For admin/pegawai, allow intended redirect or default to dashboard
             return redirect()->intended(RouteServiceProvider::HOME)
-                ->with('success', __('auth.welcome_back') . ', ' . $user->name . '!');
+                ->with('success');
 
         } catch (\Exception $e) {
             Log::error('Login error occurred', [

@@ -84,6 +84,7 @@
         const errorMessage = '{{ __('admin.error_message') }}';
         const tryAgain = '{{ __('admin.try_again') }}';
         const cancel = '{{ __('admin.cancel') }}';
+        const successTitle = '{{ __('admin.success_title') }}';
 
         $(document).ready(function() {
             // Setup CSRF token for all Ajax requests
@@ -202,6 +203,17 @@
                 }
             });
 
+            // Success popup
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: successTitle,
+                    text: '{{ session('success') }}',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            @endif
+
             // Delete Service
             $(document).on('click', '.deleteBtn', function() {
                 const id = $(this).data('id');
@@ -225,12 +237,13 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(response) {
-                                Swal.fire({
-                                    title: deletedTitle,
-                                    text: serviceDeletedSuccess,
-                                    icon: 'success',
-                                    timer: 3000,
-                                    showConfirmButton: false
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: deletedTitle,
+                                        text: serviceDeletedSuccess,
+                                        timer: 3000,
+                                        showConfirmButton: false
                                 });
                                 table.ajax.reload();
                             },

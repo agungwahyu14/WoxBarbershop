@@ -384,14 +384,14 @@ return $actions;
             DB::commit();
 
             return redirect()->route('admin.users.index')
-                ->with('success', 'User created successfully!');
+                ->with('success', __('admin.user_created_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('User creation failed: '.$e->getMessage());
 
             return back()->withInput()
-                ->with('error', 'Failed to create user. Please try again.');
+                ->with('error', __('admin.user_create_failed'));
         }
     }
 
@@ -487,7 +487,7 @@ return $actions;
             Log::info('User updated successfully', ['user_id' => $user->id]);
 
             return redirect()->route('admin.users.index')
-                ->with('success', 'User updated successfully!');
+                ->with('success', __('admin.user_updated_successfully'));
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -497,7 +497,7 @@ return $actions;
             ]);
 
             return back()->withInput()
-                ->with('error', 'Failed to update user. Please try again.');
+                ->with('error', __('admin.user_update_failed'));
         }
     }
 
@@ -524,7 +524,7 @@ return $actions;
 
             return response()->json([
                 'success' => true,
-                'message' => 'User deleted successfully.',
+                // 'message' => 'User deleted successfully.',
             ]);
 
         } catch (\Exception $e) {
@@ -804,7 +804,7 @@ return $actions;
             $loyalty = $user->loyalty;
 
             if (!$loyalty || !$loyalty->canRedeemFreeService()) {
-                return back()->with('error', 'Anda tidak memiliki poin yang cukup untuk redeem gratis (minimum 10 poin).');
+                return back()->with('error', __('admin.insufficient_loyalty_points'));
             }
 
             $request->validate([
@@ -845,7 +845,7 @@ return $actions;
             ]);
 
             return redirect()->route('bookings.index')
-                ->with('success', "Berhasil! Anda telah menggunakan 10 poin untuk potong rambut gratis. Nomor antrian: {$booking->queue_number}");
+                ->with('success', __('admin.loyalty_redeem_success'));
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -855,7 +855,7 @@ return $actions;
                 'error' => $e->getMessage()
             ]);
 
-            return back()->with('error', 'Gagal melakukan redeem: ' . $e->getMessage());
+            return back()->with('error', __('admin.loyalty_redeem_failed', ['message' => $e->getMessage()]));
         }
     }
 

@@ -133,12 +133,12 @@ class ProductController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Produk berhasil ditambahkan.'
+                'message' => __('admin.product_created_successfully')
             ]);
         }
 
         return redirect()->route('admin.products.index')
-            ->with('success', 'Produk berhasil ditambahkan.');
+            ->with('success', __('admin.product_created_successfully'));
     }
 
     /**
@@ -191,12 +191,12 @@ class ProductController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Produk berhasil diperbarui.'
+                'message' => __('admin.product_updated_successfully')
             ]);
         }
 
         return redirect()->route('admin.products.index')
-            ->with('success', 'Produk berhasil diperbarui.');
+            ->with('success', __('admin.product_updated_successfully'));
     }
 
     /**
@@ -215,22 +215,22 @@ class ProductController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Produk berhasil dihapus.'
+                    'message' => __('admin.product_deleted_successfully')
                 ]);
             }
 
             return redirect()->route('admin.products.index')
-                ->with('success', 'Produk berhasil dihapus.');
+                ->with('success', __('admin.product_deleted_successfully'));
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal menghapus produk: ' . $e->getMessage()
+                    'message' => __('admin.product_delete_failed_with_message', ['message' => $e->getMessage()])
                 ], 500);
             }
 
             return redirect()->back()
-                ->with('error', 'Gagal menghapus produk.');
+                ->with('error', __('admin.product_delete_failed'));
         }
     }
 
@@ -242,6 +242,6 @@ class ProductController extends Controller
         $product->update(['is_active' => !$product->is_active]);
 
         return redirect()->back()
-            ->with('success', 'Status produk berhasil diubah.');
+            ->with('success', __('admin.product_status_changed_successfully'));
     }
 }

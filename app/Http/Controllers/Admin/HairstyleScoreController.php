@@ -111,7 +111,7 @@ class HairstyleScoreController extends Controller
         HairstyleScore::create($request->only(['hairstyle_id', 'criterion_id', 'score']));
 
         return redirect()->route('admin.hairstyles.score.index')
-                         ->with('success', 'Score berhasil ditambahkan.');
+                         ->with('success', __('admin.hairstyle_score_created_successfully'));
     }
 
     public function edit(HairstyleScore $hairstyle_score)
@@ -132,7 +132,7 @@ class HairstyleScoreController extends Controller
         $hairstyle_score->update($request->only(['hairstyle_id', 'criterion_id', 'score']));
 
         return redirect()->route('admin.hairstyles.score.index')
-                         ->with('success', 'Score berhasil diperbarui.');
+                         ->with('success', __('admin.hairstyle_score_updated_successfully'));
     }
 
     public function destroy(HairstyleScore $hairstyle_score)

@@ -216,7 +216,7 @@ class HairstyleController extends Controller
     $hairstyle->tipe_rambut()->sync($request->tipe_rambut);
     $hairstyle->style_preference()->sync($request->style_preference);
 
-    return redirect()->route('admin.hairstyles.index')->with('success', 'Hairstyle created successfully.');
+    return redirect()->route('admin.hairstyles.index')->with('success', __('admin.hairstyle_created_successfully'));
 }
 
     public function edit(Hairstyle $hairstyle)
@@ -255,7 +255,7 @@ class HairstyleController extends Controller
     $hairstyle->tipe_rambut()->sync($request->tipe_rambut);
     $hairstyle->style_preference()->sync($request->style_preference);
 
-    return redirect()->route('admin.hairstyles.index')->with('success', 'Hairstyle updated successfully.');
+    return redirect()->route('admin.hairstyles.index')->with('success', __('admin.hairstyle_updated_successfully'));
 }
 
     public function destroy(Hairstyle $hairstyle)
@@ -266,6 +266,6 @@ class HairstyleController extends Controller
 
         $hairstyle->delete();
 
-        return response()->json(['success' => true, 'message' => 'Hairstyle deleted successfully.']);
+        return response()->json(['success' => true, 'message' => __('admin.hairstyle_deleted_successfully')]);
     }
 }

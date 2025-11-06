@@ -57,11 +57,11 @@ class LanguageController extends Controller
         }
 
         // Success message based on selected language
-        $successMessage = $language === 'id' 
-            ? 'Bahasa berhasil diubah ke Indonesia' 
-            : 'Language successfully changed to English';
+        // $successMessage = $language === 'id' 
+        //     ? 'Bahasa berhasil diubah ke Indonesia' 
+        //     : 'Language successfully changed to English';
 
-        return redirect()->back()->with('success', $successMessage)->with('scroll_to_top', true);
+        return redirect()->back()->with('success')->with('scroll_to_top', true);
     }
 
     /**

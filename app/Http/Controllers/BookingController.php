@@ -891,7 +891,7 @@ class BookingController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Status booking berhasil diperbarui',
+                'message' => __('admin.booking_status_updated_successfully'),
                 'new_status' => $request->status,
             ]);
 

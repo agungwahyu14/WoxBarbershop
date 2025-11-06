@@ -139,7 +139,7 @@ class RoleController extends Controller
 
         $role = Role::create(['name' => $request->name]);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
+        return redirect()->route('admin.roles.index')->with('success', __('admin.role_created_successfully'));
     }
 
     /**
@@ -171,7 +171,7 @@ class RoleController extends Controller
         $role->name = $request->name;
         $role->save();
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
+        return redirect()->route('admin.roles.index')->with('success', __('admin.role_updated_successfully'));
     }
 
     /**
@@ -183,11 +183,11 @@ class RoleController extends Controller
 
         // Prevent deletion of critical system roles
         if (in_array($role->name, ['admin', 'super-admin'])) {
-            return response()->json(['error' => 'Cannot delete system role.'], 403);
+            return response()->json(['error' => __('admin.cannot_delete_system_role')], 403);
         }
 
         $role->delete();
 
-        return response()->json(['success' => 'Role deleted successfully.']);
+        return response()->json(['success' => __('admin.role_deleted_successfully')]);
     }
 }
