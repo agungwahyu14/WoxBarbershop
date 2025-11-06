@@ -6,7 +6,7 @@
                 <p class="text-gray-400 mb-6">
                     {{ __('welcome.footer_description') }}
                 </p>
-                <div class="flex space-x-4">
+                {{-- <div class="flex space-x-4">
                     <a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">
                         <i class="fab fa-facebook-f"></i>
                     </a>
@@ -16,17 +16,15 @@
                     <a href="#" class="text-gray-400 hover:text-secondary transition-colors duration-300">
                         <i class="fab fa-whatsapp"></i>
                     </a>
-                </div>
+                </div> --}}
             </div>
 
             <div>
                 <h4 class="text-lg font-bold mb-6">{{ __('welcome.operating_hours') }}</h4>
                 <ul class="space-y-3 text-gray-400">
                     <li class="flex justify-between">
-                        <span>{{ __('welcome.monday_sunday') }}</span>
-                        <span>11.00 - 20.00</span>
+                        <span>{{ __('welcome.monday_sunday') }} : 11.00 - 20.00</span>
                     </li>
-
                 </ul>
             </div>
 
