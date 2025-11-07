@@ -71,6 +71,7 @@ return [
     'back' => 'Back',
     'cancel' => 'Cancel',
     'save_changes' => 'Save Changes',
+    'saving' => 'Saving...',
     'pay_now' => 'Pay Now',
     'pay_cash' => 'Pay Cash',
     'view_transaction' => 'View Transaction',
@@ -88,7 +89,15 @@ return [
     'no_hairstyles_available' => 'No hairstyles available at the moment.',
     'name_required' => 'Name is required',
     'service_required' => 'Service must be selected',
+    'service_not_found' => 'Selected service not found',
     'hairstyle_required' => 'Hairstyle must be selected',
+    'hairstyle_not_found' => 'Selected hairstyle not found',
+    'payment_method_required' => 'Payment method must be selected',
+    'payment_method_invalid' => 'Invalid payment method',
+    'date_time_required' => 'Date and time must be filled',
+    'date_time_invalid' => 'Invalid date format',
+    'date_time_past' => 'Date and time cannot be in the past',
+    'description_too_long' => 'Description is too long (maximum 1000 characters)',
     'datetime_required' => 'Date and time must be filled',
     'closed_sunday' => 'Sorry, we are closed on Sundays',
     'business_hours' => 'Booking can only be made between 11:00 - 22:00',
@@ -114,6 +123,7 @@ return [
     'oops' => 'Oops',
     'validation_error' => 'Validation Error',
     'update_failed' => 'Update Failed',
+    'booking_updated_successfully' => 'Booking updated successfully!',
     'try_again' => 'Try Again',
     'error_occurred' => 'An Error Occurred',
 
@@ -129,7 +139,9 @@ return [
     'submit_feedback' => 'Submit Feedback',
     'rating_required' => 'Please select a rating',
     'comment_required' => 'Please provide your comment',
-    'booking_created_successfully' => 'Booking successfully created for',
+    'booking_created_successfully' => 'Booking successfully created! Your order number: :queue_number',
+    'validation_failed' => 'Validation failed. Please check your input.',
+    'booking_creation_failed' => 'Failed to create booking. Please try again.',
     
     // Payment Messages
     'payment_success' => 'Payment Successful',
@@ -231,4 +243,35 @@ return [
     'minutes' => 'minutes',
     'layanan' => 'Service',
     'payment_pending' => 'Payment Pending',
+
+    // AJAX Error Messages for JavaScript
+    'booking_creation_error' => 'An error occurred while creating the booking.',
+    'network_error' => 'A network error occurred or the server is not responding. Please check your internet connection.',
+    'success_title' => 'Success!',
+    
+    // Payment & Feedback Messages
+    'payment_cancelled' => 'Payment cancelled.',
+    'thank_you' => 'Thank You!',
+    'feedback_sent_success' => 'Your feedback has been successfully submitted',
+    'feedback_send_error' => 'An error occurred while sending feedback',
+    'feedback_network_error' => 'An error occurred while sending feedback. Please try again.',
+    'service_label' => 'Service',
+    'success_payment' => 'Success',
+    'pending_payment' => 'Pending',
+    'error_payment' => 'Error',
+    
+    // Cancel Booking Messages
+    'confirm_cancel_booking' => 'Cancel Booking?',
+    'cancel_warning_message' => 'Cancellation Warning',
+    'yes_cancel_booking' => 'Yes, Cancel',
+    'no_keep_booking' => 'No, Keep',
+    'cancelling_booking' => 'Cancelling Booking...',
+    'booking_cancelled_successfully' => 'Booking cancelled successfully',
+    'cancel_failed' => 'Cancellation Failed',
+    'are_you_sure_cancel' => 'Are you sure you want to cancel the booking for',
+    'booking_will_be_cancelled' => 'The booking will be permanently cancelled',
+    'transaction_will_be_cancelled' => 'Payment transaction will be automatically cancelled',
+    'action_cannot_be_undone' => 'This action cannot be undone',
+    'please_wait_cancelling' => 'Please wait while processing cancellation',
+    'error' => 'Error',
 ];

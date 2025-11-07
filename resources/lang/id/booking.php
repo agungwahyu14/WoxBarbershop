@@ -75,6 +75,7 @@ return [
     'back' => 'Kembali',
     'cancel' => 'Batalkan',
     'save_changes' => 'Simpan Perubahan',
+    'saving' => 'Menyimpan...',
     'pay_now' => 'Bayar Sekarang',
     'pay_cash' => 'Bayar Tunai',
     'view_transaction' => 'Lihat Transaksi',
@@ -92,7 +93,15 @@ return [
     'no_hairstyles_available' => 'Tidak ada gaya rambut tersedia saat ini.',
     'name_required' => 'Nama wajib diisi',
     'service_required' => 'Layanan wajib dipilih',
+    'service_not_found' => 'Layanan yang dipilih tidak ditemukan',
     'hairstyle_required' => 'Gaya rambut wajib dipilih',
+    'hairstyle_not_found' => 'Gaya rambut yang dipilih tidak ditemukan',
+    'payment_method_required' => 'Metode pembayaran wajib dipilih',
+    'payment_method_invalid' => 'Metode pembayaran tidak valid',
+    'date_time_required' => 'Tanggal dan waktu wajib diisi',
+    'date_time_invalid' => 'Format tanggal tidak valid',
+    'date_time_past' => 'Tanggal dan waktu tidak boleh di masa lalu',
+    'description_too_long' => 'Deskripsi terlalu panjang (maksimal 1000 karakter)',
     'datetime_required' => 'Tanggal dan waktu wajib diisi',
     'closed_sunday' => 'Maaf, kami tutup pada hari Minggu',
     'business_hours' => 'Pemesanan hanya dapat dilakukan antara jam 11:00 - 22:00',
@@ -118,6 +127,7 @@ return [
     'oops' => 'Oops',
     'validation_error' => 'Kesalahan Validasi',
     'update_failed' => 'Update Gagal',
+    'booking_updated_successfully' => 'Booking berhasil diperbarui!',
     'try_again' => 'Coba Lagi',
     'error_occurred' => 'Terjadi Kesalahan',
 
@@ -148,7 +158,9 @@ return [
     'submit_feedback' => 'Kirim Umpan Balik',
     'rating_required' => 'Silakan pilih penilaian',
     'comment_required' => 'Silakan berikan komentar Anda',
-    'booking_created_successfully' => 'Pemesanan berhasil dibuat atas nama',
+    'booking_created_successfully' => 'Booking berhasil dibuat! Nomor pesanan anda: :queue_number',
+    'validation_failed' => 'Validasi gagal. Silakan periksa input Anda.',
+    'booking_creation_failed' => 'Gagal membuat booking. Silakan coba lagi.',
     
     // Payment Messages
     'payment_success' => 'Pembayaran Berhasil',
@@ -250,4 +262,24 @@ return [
     'minutes' => 'menit',
     'layanan' => 'Layanan',
     'payment_pending' => 'Menunggu Pembayaran',
+
+    // AJAX Error Messages for JavaScript
+    'booking_creation_error' => 'Terjadi kesalahan saat membuat booking.',
+    'network_error' => 'Terjadi kesalahan jaringan atau server tidak merespons. Silakan periksa koneksi internet Anda.',
+    'success_title' => 'Berhasil!',
+    
+    // Payment & Feedback Messages
+    'payment_cancelled' => 'Pembayaran dibatalkan.',
+    'thank_you' => 'Terima Kasih!',
+    'feedback_sent_success' => 'Feedback Anda telah berhasil dikirim',
+    'feedback_send_error' => 'Terjadi kesalahan saat mengirim feedback',
+    'feedback_network_error' => 'Terjadi kesalahan saat mengirim feedback. Silakan coba lagi.',
+    'service_label' => 'Layanan',
+    'success_payment' => 'Sukses',
+    'pending_payment' => 'Pending',
+    'error_payment' => 'Error',
+    
+    // Cancel Booking Messages
+    'are_you_sure_cancel' => 'Apakah Anda yakin ingin membatalkan booking untuk',
+    'please_wait_cancelling' => 'Mohon tunggu sedang membatalkan',
 ];

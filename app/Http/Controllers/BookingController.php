@@ -16,6 +16,7 @@ use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\DataTables;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class BookingController extends Controller
 {
@@ -294,42 +295,152 @@ class BookingController extends Controller
         return 'fas fa-scissors'; // Default barber icon
     }
 
-    // public function create()
-    // {
-    //     $services = $this->cacheService->getActiveServices();
-    //     $hairstyles = $this->cacheService->getActiveHairstyles();
-
-    //     return view('bookings.create', compact('services', 'hairstyles'));
-    // }
-
-    public function store(BookingRequest $request)
+    public function store(Request $request)
     {
         try {
             DB::beginTransaction();
 
-            // Simpan booking dari data tervalidasi
-            $validated = $request->validated();
-            
             Log::info('Booking store attempt', [
                 'user_id' => auth()->id(),
-                'validated_data' => $validated,
+                'request_data' => $request->all(),
                 'ip' => $request->ip()
             ]);
-            
-            $booking = $this->bookingService->createBooking($validated);
 
-            // Clear cache terkait booking dan dashboard
-            $this->cacheService->clearBookingCaches($booking->date_time);
-            $this->cacheService->clearDashboardStats();
+            // Validasi input
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'service_id' => 'required|exists:services,id',
+                'hairstyle_id' => 'required|exists:hairstyles,id',
+                'payment_method' => 'required|in:cash,bank',
+                'date_time' => 'required|date|after_or_equal:now',
+                'description' => 'nullable|string|max:1000',
+            ], [
+                'name.required' => __('booking.name_required'),
+                'service_id.required' => __('booking.service_required'),
+                'service_id.exists' => __('booking.service_not_found'),
+                'hairstyle_id.required' => __('booking.hairstyle_required'),
+                'hairstyle_id.exists' => __('booking.hairstyle_not_found'),
+                'payment_method.required' => __('booking.payment_method_required'),
+                'payment_method.in' => __('booking.payment_method_invalid'),
+                'date_time.required' => __('booking.date_time_required'),
+                'date_time.date' => __('booking.date_time_invalid'),
+                'date_time.after_or_equal' => __('booking.date_time_past'),
+                'description.max' => __('booking.description_too_long'),
+            ]);
+
+            // Ambil data service untuk menghitung harga dan durasi
+            $service = Service::findOrFail($validated['service_id']);
+
+            // Validasi jam operasional barber (11:00 - 22:00)
+            $bookingStartTime = Carbon::parse($validated['date_time']);
+            $serviceDurationMinutes = (int) filter_var($service->duration, FILTER_SANITIZE_NUMBER_INT);
+            
+            // Fallback to 60 minutes if no duration specified or invalid duration
+            if ($serviceDurationMinutes <= 0) {
+                $serviceDurationMinutes = 60;
+            }
+            
+            $bookingEndTime = $bookingStartTime->copy()->addMinutes($serviceDurationMinutes);
+
+            // Cek jam operasional (11:00 - 22:00)
+            $businessStart = $bookingStartTime->copy()->setTime(11, 0, 0); // 11:00
+            $businessEnd = $bookingStartTime->copy()->setTime(22, 0, 0);   // 22:00
+
+            // Validasi waktu mulai booking harus dalam jam operasional
+            if ($bookingStartTime->lt($businessStart) || $bookingStartTime->gte($businessEnd)) {
+                Log::warning('Booking attempted outside business hours', [
+                    'user_id' => auth()->id(),
+                    'requested_time' => $validated['date_time'],
+                    'business_start' => $businessStart->format('H:i'),
+                    'business_end' => $businessEnd->format('H:i')
+                ]);
+                
+                throw ValidationException::withMessages([
+                    'date_time' => __('booking.business_hours_error')
+                ]);
+            }
+
+            // Validasi waktu selesai booking tidak boleh melebihi jam tutup (22:00)
+            // Booking harus selesai sebelum jam 22:00
+            if ($bookingEndTime->gt($businessEnd)) {
+                $latestStartTime = $businessEnd->copy()->subMinutes($serviceDurationMinutes);
+                throw ValidationException::withMessages([
+                    'date_time' => __('booking.business_hours_error') . ' ' . 
+                                 __('booking.booking_warning') . ' ' .
+                                 __('booking.select_time_before') . ' ' . $latestStartTime->format('H:i')
+                ]);
+            }
+
+            // Cek konflik dengan booking yang sudah ada (status selain 'cancelled')
+            $conflictingBookings = Booking::with('service')
+                ->where('status', '!=', 'cancelled')
+                ->whereDate('date_time', $bookingStartTime->toDateString())
+                ->get()
+                ->filter(function ($existingBooking) use ($bookingStartTime, $bookingEndTime) {
+                    $existingStart = Carbon::parse($existingBooking->date_time);
+                    $existingDuration = (int) filter_var($existingBooking->service->duration ?? '60', FILTER_SANITIZE_NUMBER_INT);
+                    $existingEnd = $existingStart->copy()->addMinutes($existingDuration);
+                    
+                    // Cek apakah ada overlap waktu
+                    return ($bookingStartTime < $existingEnd) && ($bookingEndTime > $existingStart);
+                });
+
+            if ($conflictingBookings->count() > 0) {
+                Log::warning('Booking time conflict detected', [
+                    'user_id' => auth()->id(),
+                    'requested_time' => $validated['date_time'],
+                    'service_duration' => $serviceDurationMinutes,
+                    'conflicting_bookings_count' => $conflictingBookings->count(),
+                    'conflicting_booking_ids' => $conflictingBookings->pluck('id')->toArray()
+                ]);
+                
+                // Cari slot alternatif pada hari yang sama
+                $alternativeSlots = $this->findAlternativeSlots(
+                    $bookingStartTime->toDateString(),
+                    $serviceDurationMinutes
+                );
+                
+                $errorMessage = __('booking.time_conflict');
+                
+                if (!empty($alternativeSlots)) {
+                    $alternativeSlotsText = collect($alternativeSlots)->map(function ($slot) {
+                        return __('booking.slot_available', ['time' => $slot]);
+                    })->join(', ');
+                    
+                    $errorMessage .= ' ' . __('booking.alternative_slots') . ' ' . $alternativeSlotsText;
+                }
+                
+                throw ValidationException::withMessages([
+                    'date_time' => $errorMessage
+                ]);
+            }
+
+            // Hitung total harga (bisa disesuaikan kalau ada tambahan biaya lain)
+            $totalPrice = $service->price;
+
+            // Hitung nomor antrian (berdasarkan tanggal yang sama)
+            $queueNumber = Booking::whereDate('date_time', date('Y-m-d', strtotime($validated['date_time'])))
+                ->count() + 1;
+
+            // Simpan data booking
+            $booking = Booking::create([
+                'user_id' => auth()->id(),
+                'name' => $validated['name'],
+                'service_id' => $validated['service_id'],
+                'hairstyle_id' => $validated['hairstyle_id'],
+                'date_time' => $validated['date_time'],
+                'queue_number' => $queueNumber,
+                'description' => $validated['description'] ?? null,
+                'payment_method' => $validated['payment_method'],
+                'status' => 'pending', // default status
+                'total_price' => $totalPrice,
+            ]);
 
             DB::commit();
 
-            // Log sukses
             Log::info('Booking created successfully', [
                 'booking_id' => $booking->id,
                 'user_id' => auth()->id(),
-                'date_time' => $booking->date_time,
-                'service_id' => $booking->service_id,
                 'queue_number' => $booking->queue_number
             ]);
 
@@ -349,27 +460,18 @@ class BookingController extends Controller
                 ]);
             }
 
-            // Redirect ke halaman booking dengan pesan sukses
-            return redirect()->route('bookings.index')
-                ->with('success', __('booking.booking_created_successfully', ['queue_number' => $booking->queue_number]))
-                ->with('booking_success', [
-                    'name' => $booking->name,
-                    'queue_number' => $booking->queue_number,
-                    'date_time' => $booking->date_time->format('d/m/Y H:i'),
-                    'service_name' => $booking->service->name ?? 'N/A'
-                ]);
+            // Redirect dengan pesan sukses (untuk non-AJAX requests)
+            return redirect()->back()->with('success', __('booking.booking_created_successfully', ['queue_number' => $booking->queue_number]));
 
-        } catch (ValidationException $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollback();
             
-            // Handle validation exceptions specifically
             Log::warning('Booking validation failed', [
                 'user_id' => auth()->id(),
                 'validation_errors' => $e->errors(),
                 'ip' => $request->ip()
             ]);
 
-            // Check if request is AJAX for validation errors
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -378,107 +480,34 @@ class BookingController extends Controller
                 ], 422);
             }
 
-            return back()
-                ->withErrors($e->errors())
-                ->withInput()
-                ->with('error', __('booking.validation_failed'));
+            return back()->withErrors($e->errors())->withInput();
 
         } catch (\Exception $e) {
             DB::rollback();
 
-            // Log error dengan detail
             Log::error('Error creating booking', [
                 'error_message' => $e->getMessage(),
-                'error_code' => $e->getCode(),
                 'user_id' => auth()->id(),
                 'request_data' => $request->all(),
                 'ip' => $request->ip(),
                 'trace' => $e->getTraceAsString()
             ]);
 
-            // Handle different error types with appropriate messages
-            $errorCode = $e->getCode();
-            $errorMessage = $e->getMessage();
-            
-            // Check if request is AJAX for general errors
             if ($request->wantsJson() || $request->ajax()) {
-                $statusCode = 500; // Default server error
-                
-                if ($errorCode === 422) {
-                    $statusCode = 422;
-                    $message = $errorMessage ?: __('booking.business_hours_validation_failed');
-                } elseif ($errorCode === 409) {
-                    $statusCode = 409;
-                    $message = $errorMessage ?: __('booking.schedule_conflict');
-                } elseif ($errorCode === 423) {
-                    $statusCode = 423;
-                    $message = $errorMessage ?: __('booking.daily_quota_exceeded');
-                } else {
-                    $message = __('booking.booking_creation_failed');
-                }
-                
                 return response()->json([
                     'success' => false,
-                    'message' => $message,
-                    'error_type' => $errorCode === 422 ? 'business_hours' : ($errorCode === 409 ? 'time_conflict' : ($errorCode === 423 ? 'quota_exceeded' : 'general'))
-                ], $statusCode);
+                    'message' => __('booking.booking_creation_failed'),
+                    'error_type' => 'general'
+                ], 500);
             }
-            
-            if ($errorCode === 422) {
-                // Business hours validation errors
-                return redirect()->back()
-                    ->with('error', $errorMessage)
-                    ->with('error_type', 'business_hours')
-                    ->withInput();
-            } elseif ($errorCode === 409) {
-                // Time slot conflict errors - provide alternative slots
-                try {
-                    $requestedTime = Carbon::parse($request->date_time);
-                    $service = \App\Models\Service::find($request->service_id);
-                    $alternativeSlots = $this->bookingService->getAlternativeSlots(
-                        $requestedTime, 
-                        $service ? $service->duration : 60
-                    );
-                    
-                    if ($request->wantsJson() || $request->ajax()) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => $errorMessage,
-                            'error_type' => 'time_conflict',
-                            'alternative_slots' => $alternativeSlots
-                        ], 409);
-                    }
-                    
-                    return redirect()->back()
-                        ->with('warning', $errorMessage)
-                        ->with('error_type', 'time_conflict')
-                        ->with('alternative_slots', $alternativeSlots)
-                        ->withInput();
-                } catch (\Exception $altException) {
-                    Log::warning('Failed to get alternative slots', [
-                        'error' => $altException->getMessage()
-                    ]);
-                }
-                
-                return redirect()->back()
-                    ->with('warning', $errorMessage)
-                    ->with('error_type', 'time_conflict')
-                    ->withInput();
-            } elseif ($errorCode === 423) {
-                // Quota exceeded errors
-                return redirect()->back()
-                    ->with('error', $errorMessage)
-                    ->with('error_type', 'quota_exceeded')
-                    ->withInput();
-            } else {
-                // General errors
-                return redirect()->back()
-                    ->with('error', 'Terjadi kesalahan saat membuat booking. Silakan coba lagi.')
-                    ->with('error_type', 'general')
-                    ->withInput();
-            }
+
+            return back()->withInput()->with('error', __('booking.booking_creation_failed'));
         }
     }
+
+
+    
+
 
     public function show(Booking $booking)
     {
@@ -605,42 +634,8 @@ class BookingController extends Controller
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat memuat detail booking.');
         }
-    }
+    }   
 
-    /**
-     * Get service recommendations based on current booking
-     */
-    // private function getServiceRecommendations(Booking $booking)
-    // {
-    //     // Get services that are commonly booked together
-    //     $relatedServices = Service::where('is_active', true)
-    //         ->where('id', '!=', $booking->service_id)
-    //         ->whereIn('id', function($query) use ($booking) {
-    //             $query->select('service_id')
-    //                   ->from('bookings')
-    //                   ->whereIn('user_id', function($subQuery) use ($booking) {
-    //                       $subQuery->select('user_id')
-    //                                ->from('bookings')
-    //                                ->where('service_id', $booking->service_id);
-    //                   })
-    //                   ->groupBy('service_id')
-    //                   ->havingRaw('COUNT(*) > 1');
-    //         })
-    //         ->limit(3)
-    //         ->get(['id', 'name', 'description', 'price', 'duration']);
-
-    //     // If no related services found, get popular services
-    //     if ($relatedServices->isEmpty()) {
-    //         $relatedServices = Service::where('is_active', true)
-    //             ->where('id', '!=', $booking->service_id)
-    //             ->withCount('bookings')
-    //             ->orderBy('bookings_count', 'desc')
-    //             ->limit(3)
-    //             ->get(['id', 'name', 'description', 'price', 'duration']);
-    //     }
-
-    //     return $relatedServices;
-    // }
 
     public function edit(Booking $booking)
     {
@@ -668,156 +663,208 @@ class BookingController extends Controller
         return view('bookings.edit', compact('booking', 'services', 'hairstyles'));
     }
 
-    public function update(BookingRequest $request, Booking $booking)
+    public function update(Request $request, Booking $booking)
     {
-        $this->authorize('update', $booking);
-
-        if (! in_array($booking->status, ['pending', 'confirmed'])) {
-            return back()->with('error', __('booking.booking_cannot_be_edited_status', ['status' => $booking->status]));
-        }
-
         try {
             DB::beginTransaction();
 
-            $oldDateTime = $booking->date_time;
-            $validatedData = $request->validated();
-            $newDateTime = \Carbon\Carbon::parse($validatedData['date_time']);
+            Log::info('Booking update attempt', [
+                'booking_id' => $booking->id,
+                'user_id' => auth()->id(),
+                'request_data' => $request->all(),
+                'ip' => $request->ip()
+            ]);
 
-            // Apply same business logic validation as create booking
-            $validation = $this->bookingService->validateBusinessHours($newDateTime);
+            // Validasi input dengan pesan error yang sama seperti store
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'service_id' => 'required|exists:services,id',
+                'hairstyle_id' => 'required|exists:hairstyles,id',
+                'payment_method' => 'required|in:cash,bank',
+                'date_time' => 'required|date|after_or_equal:now',
+                'description' => 'nullable|string|max:1000',
+            ], [
+                'name.required' => __('booking.name_required'),
+                'service_id.required' => __('booking.service_required'),
+                'service_id.exists' => __('booking.service_not_found'),
+                'hairstyle_id.required' => __('booking.hairstyle_required'),
+                'hairstyle_id.exists' => __('booking.hairstyle_not_found'),
+                'payment_method.required' => __('booking.payment_method_required'),
+                'payment_method.in' => __('booking.payment_method_invalid'),
+                'date_time.required' => __('booking.date_time_required'),
+                'date_time.date' => __('booking.date_time_invalid'),
+                'date_time.after_or_equal' => __('booking.date_time_past'),
+                'description.max' => __('booking.description_too_long'),
+            ]);
+
+            // Ambil data service untuk menghitung harga dan durasi
+            $service = Service::findOrFail($validated['service_id']);
+
+            // Validasi jam operasional barber (11:00 - 22:00)
+            $bookingStartTime = Carbon::parse($validated['date_time']);
+            $serviceDurationMinutes = (int) filter_var($service->duration, FILTER_SANITIZE_NUMBER_INT);
             
-            if (!$validation['is_valid']) {
-                $errorMessage = implode('. ', $validation['errors']);
-                
-                Log::warning('Booking update validation failed', [
+            // Fallback to 60 minutes if no duration specified or invalid duration
+            if ($serviceDurationMinutes <= 0) {
+                $serviceDurationMinutes = 60;
+            }
+            
+            $bookingEndTime = $bookingStartTime->copy()->addMinutes($serviceDurationMinutes);
+
+            // Cek jam operasional (11:00 - 22:00)
+            $businessStart = $bookingStartTime->copy()->setTime(11, 0, 0); // 11:00
+            $businessEnd = $bookingStartTime->copy()->setTime(22, 0, 0);   // 22:00
+
+            // Validasi waktu mulai booking harus dalam jam operasional
+            if ($bookingStartTime->lt($businessStart) || $bookingStartTime->gte($businessEnd)) {
+                Log::warning('Booking update attempted outside business hours', [
                     'booking_id' => $booking->id,
                     'user_id' => auth()->id(),
-                    'errors' => $validation['errors'],
-                    'suggestions' => $validation['suggestions'],
-                    'old_datetime' => $oldDateTime->format('Y-m-d H:i:s'),
-                    'new_datetime' => $newDateTime->format('Y-m-d H:i:s')
+                    'requested_time' => $validated['date_time'],
+                    'business_start' => $businessStart->format('H:i'),
+                    'business_end' => $businessEnd->format('H:i')
                 ]);
                 
-                throw new \Exception($errorMessage, 422); // 422 = Unprocessable Entity
+                throw ValidationException::withMessages([
+                    'date_time' => __('booking.business_hours_error')
+                ]);
             }
 
-            // Check if service extends beyond business hours
-            $service = Service::findOrFail($validatedData['service_id']);
-            $bookingEndTime = $newDateTime->copy()->addMinutes($service->duration);
-            if (!$this->bookingService->isWithinBusinessHours($bookingEndTime->subMinute())) {
-                Log::warning('Updated service would extend beyond business hours', [
+            // Validasi waktu selesai booking tidak boleh melebihi jam tutup (22:00)
+            // Booking harus selesai sebelum jam 22:00
+            if ($bookingEndTime->gt($businessEnd)) {
+                $latestStartTime = $businessEnd->copy()->subMinutes($serviceDurationMinutes);
+                throw ValidationException::withMessages([
+                    'date_time' => __('booking.business_hours_error') . ' ' . 
+                                 __('booking.booking_warning') . ' ' .
+                                 __('booking.select_time_before') . ' ' . $latestStartTime->format('H:i')
+                ]);
+            }
+
+            // Cek konflik dengan booking yang sudah ada (status selain 'cancelled')
+            // Exclude current booking from conflict check
+            $conflictingBookings = Booking::with('service')
+                ->where('status', '!=', 'cancelled')
+                ->where('id', '!=', $booking->id) // Exclude current booking
+                ->whereDate('date_time', $bookingStartTime->toDateString())
+                ->get()
+                ->filter(function ($existingBooking) use ($bookingStartTime, $bookingEndTime) {
+                    $existingStart = Carbon::parse($existingBooking->date_time);
+                    $existingDuration = (int) filter_var($existingBooking->service->duration ?? '60', FILTER_SANITIZE_NUMBER_INT);
+                    $existingEnd = $existingStart->copy()->addMinutes($existingDuration);
+                    
+                    // Cek apakah ada overlap waktu
+                    return ($bookingStartTime < $existingEnd) && ($bookingEndTime > $existingStart);
+                });
+
+            if ($conflictingBookings->count() > 0) {
+                Log::warning('Booking update time conflict detected', [
                     'booking_id' => $booking->id,
-                    'start_time' => $newDateTime->format('H:i'),
-                    'service_duration' => $service->duration,
-                    'end_time' => $bookingEndTime->format('H:i')
+                    'user_id' => auth()->id(),
+                    'requested_time' => $validated['date_time'],
+                    'service_duration' => $serviceDurationMinutes,
+                    'conflicting_bookings_count' => $conflictingBookings->count(),
+                    'conflicting_booking_ids' => $conflictingBookings->pluck('id')->toArray()
                 ]);
                 
-                throw new \Exception('Layanan akan berakhir setelah jam tutup (22:00). Silakan pilih waktu yang lebih awal.', 422);
-            }
-
-            // Check time slot availability for new time
-            $slotDetails = $this->bookingService->getSlotAvailabilityDetails($newDateTime, $service->duration);
-            
-            if (!$slotDetails['is_available']) {
-                // Exclude current booking from conflict check
-                $conflictingBookings = collect($slotDetails['conflicting_bookings'])
-                    ->filter(function ($conflict) use ($booking) {
-                        return $conflict['id'] !== $booking->id;
-                    });
+                // Cari slot alternatif pada hari yang sama
+                $alternativeSlots = $this->findAlternativeSlots(
+                    $bookingStartTime->toDateString(),
+                    $serviceDurationMinutes
+                );
                 
-                if ($conflictingBookings->isNotEmpty()) {
-                    $conflictInfo = '';
-                    if ($conflictingBookings->isNotEmpty()) {
-                        $conflictInfo = 'Bertabrakan dengan booking: ';
-                        $conflictInfo .= $conflictingBookings->map(function ($booking) {
-                            return "{$booking['service_name']} ({$booking['start_time']}-{$booking['end_time']})";
-                        })->join(', ');
-                    }
+                $errorMessage = __('booking.time_conflict');
+                
+                if (!empty($alternativeSlots)) {
+                    $alternativeSlotsText = collect($alternativeSlots)->map(function ($slot) {
+                        return __('booking.slot_available', ['time' => $slot]);
+                    })->join(', ');
                     
-                    try {
-                        $nextAvailable = $this->bookingService->findNextAvailableSlot($newDateTime, $service->duration);
-                        $nextSlotText = $nextAvailable->format('d/m/Y H:i');
-                    } catch (\Exception $e) {
-                        $nextSlotText = 'tidak ada slot tersedia dalam 2 hari ke depan';
-                    }
-                    
-                    Log::warning('Update time slot not available - detailed', [
-                        'booking_id' => $booking->id,
-                        'requested_time' => $newDateTime->format('Y-m-d H:i:s'),
-                        'conflicting_bookings' => $conflictingBookings->toArray(),
-                        'next_available' => $nextSlotText
-                    ]);
-                    
-                    $errorMessage = "Slot waktu tidak tersedia. {$conflictInfo} Slot terdekat: {$nextSlotText}";
-                    throw new \Exception($errorMessage, 409); // 409 = Conflict
+                    $errorMessage .= ' ' . __('booking.alternative_slots') . ' ' . $alternativeSlotsText;
                 }
+                
+                throw ValidationException::withMessages([
+                    'date_time' => $errorMessage
+                ]);
             }
 
-            // Recalculate price if service changed
-            if ($booking->service_id != $validatedData['service_id']) {
-                $validatedData['total_price'] = $service->price;
-            }
+            // Hitung total harga (bisa disesuaikan kalau ada tambahan biaya lain)
+            $totalPrice = $service->price;
 
-            // Update queue number if date changed
-            if ($oldDateTime->format('Y-m-d') !== $newDateTime->format('Y-m-d')) {
-                // Get the next queue number for the new date
-                $maxQueue = Booking::whereDate('date_time', $newDateTime->format('Y-m-d'))
-                    ->max('queue_number');
-                $validatedData['queue_number'] = $maxQueue ? $maxQueue + 1 : 1;
-            }
-
-            $booking->update($validatedData);
-
-            // Clear caches for both old and new dates
-            $this->cacheService->clearBookingCaches($oldDateTime);
-            $this->cacheService->clearBookingCaches($booking->date_time);
-            $this->cacheService->clearDashboardStats();
+            // Update booking data
+            $booking->update([
+                'name' => $validated['name'],
+                'service_id' => $validated['service_id'],
+                'hairstyle_id' => $validated['hairstyle_id'],
+                'date_time' => $validated['date_time'],
+                'description' => $validated['description'] ?? null,
+                'payment_method' => $validated['payment_method'],
+                'total_price' => $totalPrice,
+            ]);
 
             DB::commit();
 
             Log::info('Booking updated successfully', [
                 'booking_id' => $booking->id,
-                'user_id' => auth()->id(),
-                'changes' => $booking->getChanges(),
-                'old_datetime' => $oldDateTime->format('Y-m-d H:i:s'),
-                'new_datetime' => $newDateTime->format('Y-m-d H:i:s')
+                'user_id' => auth()->id()
             ]);
+
+            // Check if request is AJAX
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => __('booking.booking_updated_successfully'),
+                    'data' => [
+                        'booking_id' => $booking->id,
+                        'name' => $booking->name,
+                        'date_time' => $booking->date_time->format('d/m/Y H:i'),
+                        'service_name' => $booking->service->name ?? 'N/A'
+                    ],
+                    'redirect' => route('bookings.show', $booking)
+                ]);
+            }
 
             return redirect()->route('bookings.show', $booking)
                 ->with('success', __('booking.booking_updated_successfully'));
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollback();
+            
+            Log::warning('Booking update validation failed', [
+                'booking_id' => $booking->id,
+                'user_id' => auth()->id(),
+                'validation_errors' => $e->errors(),
+                'ip' => $request->ip()
+            ]);
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('booking.validation_failed'),
+                    'errors' => $e->errors()
+                ], 422);
+            }
+
+            return back()->withErrors($e->errors())->withInput();
+
         } catch (\Exception $e) {
             DB::rollback();
-
+            
             Log::error('Error updating booking', [
                 'booking_id' => $booking->id,
                 'error' => $e->getMessage(),
-                'error_code' => $e->getCode(),
                 'user_id' => auth()->id(),
+                'trace' => $e->getTraceAsString()
             ]);
 
-            // Handle different error types with appropriate messages
-            $errorCode = $e->getCode();
-            
-            if ($errorCode === 422) {
-                // Business hours validation errors
-                return redirect()->back()
-                    ->with('error', $e->getMessage())
-                    ->with('error_type', 'business_hours')
-                    ->withInput();
-            } elseif ($errorCode === 409) {
-                // Time slot conflict errors
-                return redirect()->back()
-                    ->with('warning', $e->getMessage())
-                    ->with('error_type', 'time_conflict')
-                    ->withInput();
-            } else {
-                // General errors
-                return redirect()->back()
-                    ->with('error', 'Terjadi kesalahan saat memperbarui booking: ' . $e->getMessage())
-                    ->with('error_type', 'general')
-                    ->withInput();
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('booking.update_failed'),
+                ], 500);
             }
+
+            return back()->with('error', __('booking.update_failed') . ': ' . $e->getMessage());
         }
     }
 
@@ -1052,5 +1099,75 @@ class BookingController extends Controller
             ->setPaper('a4', 'landscape');
 
         return $pdf->download('bookings' . $period . '_' . now()->format('Ymd_His') . '.pdf');
+    }
+
+    /**
+     * Find alternative available time slots for the given date and service duration
+     */
+    private function findAlternativeSlots($date, $serviceDurationMinutes, $maxSlots = 3)
+    {
+        $alternativeSlots = [];
+        
+        // Business hours (11:00 AM to 10:00 PM)
+        $businessStart = Carbon::parse($date . ' 11:00');
+        $businessEnd = Carbon::parse($date . ' 22:00');
+        
+        // Get all existing bookings for the date (excluding cancelled)
+        $existingBookings = Booking::with('service')
+            ->where('status', '!=', 'cancelled')
+            ->whereDate('date_time', $date)
+            ->orderBy('date_time')
+            ->get();
+        
+        // Check each 30-minute slot during business hours
+        $currentSlot = $businessStart->copy();
+        $latestStartTime = $businessEnd->copy()->subMinutes($serviceDurationMinutes);
+        
+        while ($currentSlot->lte($latestStartTime) && count($alternativeSlots) < $maxSlots) {
+            $slotEnd = $currentSlot->copy()->addMinutes($serviceDurationMinutes);
+            
+            // Check if this slot conflicts with any existing booking
+            $hasConflict = $existingBookings->contains(function ($existingBooking) use ($currentSlot, $slotEnd) {
+                $existingStart = Carbon::parse($existingBooking->date_time);
+                $existingDuration = (int) filter_var($existingBooking->service->duration ?? '60', FILTER_SANITIZE_NUMBER_INT);
+                $existingEnd = $existingStart->copy()->addMinutes($existingDuration);
+                
+                return ($currentSlot < $existingEnd) && ($slotEnd > $existingStart);
+            });
+            
+            if (!$hasConflict) {
+                $alternativeSlots[] = $currentSlot->format('H:i');
+            }
+            
+            $currentSlot->addMinutes(30);
+        }
+        
+        return $alternativeSlots;
+    }
+
+    /**
+     * API endpoint to check available time slots for a specific date and service
+     */
+    public function checkAvailableSlots(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'service_id' => 'required|exists:services,id'
+        ]);
+
+        $service = Service::findOrFail($request->service_id);
+        $serviceDurationMinutes = (int) filter_var($service->duration, FILTER_SANITIZE_NUMBER_INT);
+        
+        if ($serviceDurationMinutes <= 0) {
+            $serviceDurationMinutes = 60;
+        }
+
+        $availableSlots = $this->findAlternativeSlots($request->date, $serviceDurationMinutes, 10);
+
+        return response()->json([
+            'success' => true,
+            'available_slots' => $availableSlots,
+            'service_duration' => $serviceDurationMinutes
+        ]);
     }
 }

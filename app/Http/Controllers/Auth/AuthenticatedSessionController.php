@@ -58,7 +58,7 @@ class AuthenticatedSessionController extends Controller
             if ($user->hasRole('pelanggan')) {
                 $request->session()->forget('url.intended');
                 return redirect()->route('dashboard')
-                    ->with('success', __('auth.welcome_back') . ', ' . $user->name . '!');
+                    ->with('auth_success', __('auth.welcome_back') . ', ' . $user->name . '!');
             }
 
             // For admin/pegawai, allow intended redirect or default to dashboard
@@ -70,7 +70,7 @@ class AuthenticatedSessionController extends Controller
             ]);
 
             return redirect()->intended(RouteServiceProvider::HOME)
-                ->with('success', __('auth.welcome_back') . ', ' . $user->name . '!');
+                ->with('auth_success', __('auth.welcome_back') . ', ' . $user->name . '!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::warning('Login validation failed', [

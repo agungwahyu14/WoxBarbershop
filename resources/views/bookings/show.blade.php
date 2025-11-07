@@ -145,7 +145,8 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @if (isset($booking->service))
                                     <div>
-                                        <h5 class="text-sm text-gray-500 uppercase mb-1">Layanan</h5>
+                                        <h5 class="text-sm text-gray-500 uppercase mb-1">{{ __('booking.service_label') }}
+                                        </h5>
                                         <p class="text-lg font-medium text-gray-800">{{ $booking->service->name }}</p>
                                         @if (isset($booking->service->price))
                                             <p class="text-sm text-gray-500">Rp
@@ -259,18 +260,18 @@
                                     .then(data => {
                                         snap.pay(data.snapToken, {
                                             onSuccess: function(result) {
-                                                console.log("Sukses", result);
+                                                console.log("{{ __('booking.success_payment') }}", result);
                                                 location.reload();
                                             },
                                             onPending: function(result) {
-                                                console.log("Pending", result);
+                                                console.log("{{ __('booking.pending_payment') }}", result);
                                                 location.reload();
                                             },
                                             onError: function(result) {
-                                                console.error("Error", result);
+                                                console.error("{{ __('booking.error_payment') }}", result);
                                             },
                                             onClose: function() {
-                                                alert('Pembayaran dibatalkan.');
+                                                alert('{{ __('booking.payment_cancelled') }}');
                                             }
                                         });
                                     });
@@ -503,8 +504,8 @@
                         if (data.success) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Terima kasih!',
-                                text: 'Feedback Anda telah berhasil dikirim',
+                                title: '{{ __('booking.thank_you') }}',
+                                text: '{{ __('booking.feedback_sent_success') }}',
                                 confirmButtonColor: '#3b82f6'
                             }).then(() => {
                                 location.reload();
@@ -512,8 +513,8 @@
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Oops!',
-                                text: data.message || 'Terjadi kesalahan saat mengirim feedback',
+                                title: '{{ __('booking.oops') }}!',
+                                text: data.message || '{{ __('booking.feedback_send_error') }}',
                                 confirmButtonColor: '#dc2626'
                             });
                         }
@@ -522,8 +523,8 @@
                         console.error('Error details:', error);
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops!',
-                            text: 'Terjadi kesalahan saat mengirim feedback. Silakan coba lagi.',
+                            title: '{{ __('booking.oops') }}!',
+                            text: '{{ __('booking.feedback_network_error') }}',
                             confirmButtonColor: '#dc2626'
                         });
                     });

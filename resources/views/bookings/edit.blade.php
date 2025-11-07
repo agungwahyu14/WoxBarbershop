@@ -103,6 +103,7 @@
                                 @error('date_time')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
+                                <div id="datetime-error" class="mt-1 text-sm text-red-600 hidden"></div>
                             </div>
 
                             {{-- Service --}}
@@ -243,43 +244,57 @@
         </div>
     </section>
 
-    {{-- JavaScript untuk handling form --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const serviceSelect = document.getElementById('service_id');
-            const currentPriceElement = document.getElementById('current-price');
-            const form = document.getElementById('editBookingForm');
+            const form = document.getElementById('booking-form');
+            const dateTimeInput = document.getElementById('date_time');
 
-            // Service prices data
-            const servicePrices = {
-                @foreach ($services as $service)
-                    {{ $service->id }}: {{ $service->price }},
-                @endforeach
-            };
+            // Real-time validation for date and time
+            if (dateTimeInput) {
+                dateTimeInput.addEventListener('input', function() {
+                    validateDateTime();
+                });
 
-            // Update price display when service changes
-            if (serviceSelect && currentPriceElement) {
-                serviceSelect.addEventListener('change', function() {
-                    const selectedServiceId = this.value;
-                    if (selectedServiceId && servicePrices[selectedServiceId]) {
-                        const newPrice = servicePrices[selectedServiceId];
-                        const currencySymbol = '{{ __('booking.currency_symbol') }}';
-                        const formattedPrice = currencySymbol + ' ' + new Intl.NumberFormat(
-                            '{{ app()->getLocale() === 'id' ? 'id-ID' : 'en-US' }}', {
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0
-                            }).format(newPrice);
-
-                        currentPriceElement.textContent = formattedPrice;
-                        currentPriceElement.classList.add('text-orange-600');
-                        currentPriceElement.classList.remove('text-green-600');
-                    }
+                dateTimeInput.addEventListener('change', function() {
+                    validateDateTime();
                 });
             }
 
-            // Form validation
+            function validateDateTime() {
+                const dateTimeInput = document.getElementById('date_time');
+                const errorDiv = document.getElementById('datetime-error');
+
+                if (!dateTimeInput.value) return;
+
+                const selectedDateTime = new Date(dateTimeInput.value);
+                const hours = selectedDateTime.getHours();
+                const minutes = selectedDateTime.getMinutes();
+
+                let errorMessage = '';
+
+                // Check business hours (11:00 - 22:00)
+                if (hours < 11 || hours >= 22) {
+                    errorMessage = '{{ __('booking.business_hours_error') }}';
+                } else if (hours === 21 && minutes > 0) {
+                    // If it's 21:xx, only allow 21:00 as last booking
+                    errorMessage = '{{ __('booking.business_hours_error') }}';
+                }
+
+                if (errorMessage && errorDiv) {
+                    errorDiv.textContent = errorMessage;
+                    errorDiv.classList.remove('hidden');
+                    dateTimeInput.classList.add('border-red-500');
+                } else if (errorDiv) {
+                    errorDiv.classList.add('hidden');
+                    dateTimeInput.classList.remove('border-red-500');
+                }
+            }
+
+            // AJAX Form Submission
             if (form) {
                 form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
                     const dateTimeInput = document.getElementById('date_time');
                     const serviceInput = document.getElementById('service_id');
                     const hairstyleInput = document.getElementById('hairstyle_id');
@@ -293,8 +308,7 @@
                     const serviceRequired = '{{ __('booking.service_required') }}';
                     const hairstyleRequired = '{{ __('booking.hairstyle_required') }}';
                     const datetimeRequired = '{{ __('booking.datetime_required') }}';
-                    const closedSunday = '{{ __('booking.closed_sunday') }}';
-                    const businessHours = '{{ __('booking.business_hours') }}';
+                    const businessHoursError = '{{ __('booking.business_hours_error') }}';
 
                     // Validate required fields
                     if (!nameInput.value.trim()) {
@@ -319,24 +333,102 @@
                         // Validate business hours
                         const selectedDateTime = new Date(dateTimeInput.value);
                         const hours = selectedDateTime.getHours();
-                        const dayOfWeek = selectedDateTime.getDay();
+                        const minutes = selectedDateTime.getMinutes();
 
-
-                        if (hours < 11 || hours >= 22) {
+                        if (hours < 11 || hours >= 22 || (hours === 21 && minutes > 0)) {
                             hasError = true;
-                            errorMessage += '• ' + businessHours + '\n';
+                            errorMessage += '• ' + businessHoursError + '\n';
                         }
                     }
 
                     if (hasError) {
-                        e.preventDefault();
                         Swal.fire({
                             icon: 'error',
                             title: '{{ __('booking.validation_error') }}',
                             text: errorMessage,
                             confirmButtonColor: '#d4af37'
                         });
+                        return;
                     }
+
+                    // Show loading state
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    const originalText = submitButton.innerHTML;
+                    submitButton.disabled = true;
+                    submitButton.innerHTML =
+                        '<i class="fas fa-spinner fa-spin mr-2"></i>{{ __('booking.saving') }}';
+
+                    // Prepare form data
+                    const formData = new FormData(form);
+
+                    // Submit via AJAX
+                    fetch(form.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = originalText;
+
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '{{ __('booking.success') }}',
+                                    text: data.message ||
+                                        '{{ __('booking.booking_updated_successfully') }}',
+                                    confirmButtonColor: '#d4af37'
+                                }).then(() => {
+                                    // Redirect to booking show page
+                                    window.location.href =
+                                        '{{ route('bookings.show', $booking->id) }}';
+                                });
+                            } else {
+                                let errorMsg = '';
+                                if (data.errors) {
+                                    Object.values(data.errors).forEach(errors => {
+                                        errors.forEach(error => {
+                                            errorMsg += '• ' + error + '\n';
+                                        });
+                                    });
+                                } else {
+                                    errorMsg = data.message || '{{ __('booking.update_failed') }}';
+                                }
+
+                                if (data.alternatives && data.alternatives.length > 0) {
+                                    let alternativesText =
+                                        '\n\n{{ __('booking.alternative_times') }}:\n';
+                                    data.alternatives.forEach(alt => {
+                                        alternativesText += '• ' + alt + '\n';
+                                    });
+                                    errorMsg += alternativesText;
+                                }
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '{{ __('booking.error') }}',
+                                    text: errorMsg,
+                                    confirmButtonColor: '#d4af37'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = originalText;
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: '{{ __('booking.error') }}',
+                                text: '{{ __('booking.network_error') }}',
+                                confirmButtonColor: '#d4af37'
+                            });
+                        });
                 });
             }
 
@@ -349,136 +441,28 @@
 
                 Swal.fire({
                     icon: 'error',
-                    title: '{{ __('booking.update_failed') }}!',
+                    title: '{{ __('booking.validation_error') }}',
                     text: errorMessage,
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: '{{ __('booking.try_again') }}'
+                    confirmButtonColor: '#d4af37'
                 });
             @endif
 
-            // Handle success message
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: '{{ __('booking.success') }}!',
+                    title: '{{ __('booking.success') }}',
                     text: '{{ session('success') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: '{{ __('booking.ok') }}'
+                    confirmButtonColor: '#d4af37'
                 });
             @endif
 
-            // Handle error message with enhanced categorization
             @if (session('error'))
-                @php
-                    $errorType = session('error_type', 'general');
-                    $errorTitle = __('booking.error_occurred');
-                    $icon = 'error';
-                    
-                    // Customize based on error type
-                    if ($errorType === 'business_hours') {
-                        $errorTitle = __('booking.business_hours_error');
-                        $icon = 'warning';
-                    } elseif ($errorType === 'time_conflict') {
-                        $errorTitle = __('booking.time_conflict_error');
-                        $icon = 'warning';
-                    }
-                @endphp
-                
                 Swal.fire({
-                    icon: '{{ $icon }}',
-                    title: '{{ $errorTitle }}!',
+                    icon: 'error',
+                    title: '{{ __('booking.error') }}',
                     text: '{{ session('error') }}',
-                    confirmButtonColor: '#d4af37',
-                    confirmButtonText: '{{ __('booking.ok') }}'
+                    confirmButtonColor: '#d4af37'
                 });
-            @endif
-
-            // Handle warning message (for time conflicts with alternatives)
-            @if (session('warning'))
-                @php
-                    $errorType = session('error_type', 'general');
-                    $warningTitle = __('booking.booking_warning');
-                    $icon = 'warning';
-                    $showCancelButton = false;
-                    $alternativeSlots = session('alternative_slots', []);
-                    
-                    // Customize based on error type
-                    if ($errorType === 'time_conflict' && !empty($alternativeSlots)) {
-                        $warningTitle = __('booking.time_conflict_with_alternatives');
-                        $showCancelButton = true;
-                    }
-                @endphp
-                
-                @if ($showCancelButton && !empty($alternativeSlots))
-                    Swal.fire({
-                        icon: '{{ $icon }}',
-                        title: '{{ $warningTitle }}',
-                        html: `
-                            <div class="text-left">
-                                <p>{{ session('warning') }}</p>
-                                <div class="mt-4">
-                                    <h4 class="font-semibold mb-2">{{ __('booking.alternative_slots_available') }}:</h4>
-                                    <div class="space-y-2 max-h-48 overflow-y-auto">
-                                        @foreach ($alternativeSlots as $slot)
-                                            <div class="flex justify-between items-center p-2 border rounded hover:bg-gray-50 cursor-pointer alternative-slot" 
-                                                 data-datetime="{{ $slot['datetime'] }}">
-                                                <div>
-                                                    <div class="font-medium">{{ $slot['day_name'] }}, {{ $slot['formatted_date'] }}</div>
-                                                    <div class="text-sm text-gray-600">{{ $slot['formatted_time'] }}</div>
-                                                </div>
-                                                <button type="button" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                                    {{ __('booking.choose_this_slot') }}
-                                                </button>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        `,
-                        confirmButtonColor: '#d4af37',
-                        confirmButtonText: '{{ __('booking.keep_current_time') }}',
-                        cancelButtonColor: '#6b7280',
-                        cancelButtonText: '{{ __('booking.close') }}',
-                        showCancelButton: true,
-                        width: '500px'
-                    }).then((result) => {
-                        if (!result.isConfirmed) {
-                            // User closed the dialog, do nothing
-                        }
-                    });
-
-                    // Add event listeners to alternative slot buttons
-                    document.addEventListener('click', function(e) {
-                        if (e.target.closest('.alternative-slot')) {
-                            const slotDiv = e.target.closest('.alternative-slot');
-                            const datetime = slotDiv.dataset.datetime;
-                            const dateTimeInput = document.getElementById('date_time');
-                            
-                            if (dateTimeInput) {
-                                dateTimeInput.value = datetime;
-                                // Trigger validation
-                                dateTimeInput.dispatchEvent(new Event('change'));
-                                
-                                // Show confirmation
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: '{{ __('booking.time_updated') }}!',
-                                    text: '{{ __('booking.new_time_selected') }}',
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                });
-                            }
-                        }
-                    });
-                @else
-                    Swal.fire({
-                        icon: '{{ $icon }}',
-                        title: '{{ $warningTitle }}!',
-                        text: '{{ session('warning') }}',
-                        confirmButtonColor: '#d4af37',
-                        confirmButtonText: '{{ __('booking.ok') }}'
-                    });
-                @endif
             @endif
         });
     </script>

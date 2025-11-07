@@ -348,7 +348,7 @@
                 </div>
                 <!-- Right Column - Booking Form -->
                 <div class="w-full lg:w-1/2 bg-white shadow-xl p-6 rounded-lg">
-                    <form action="{{ route('bookings.store') }}" method="POST" id="booking-form" class="space-y-6">
+                    <form action="{{ route('bookings.store') }}" id="booking-form" method="POST" class="space-y-6">
                         @csrf
 
                         <!-- Nama -->
@@ -435,7 +435,7 @@
                                 <label for="date_time"
                                     class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.date_time') }}</label>
                                 <input type="datetime-local" id="date_time" name="date_time"
-                                    value="{{ old('date_time') }}"
+                                    value="{{ old('date_time') }}" min="{{ now()->format('Y-m-d\TH:i') }}"
                                     class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                 @error('date_time')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -639,13 +639,178 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingForm = document.getElementById('booking-form');
+            const submitButton = document.getElementById('submit-booking');
+            const submitText = document.getElementById('submit-text');
+            const loadingText = document.getElementById('loading-text');
+            const dateTimeInput = document.getElementById('date_time');
 
-    @if (session('success'))
+            // ✅ Real-time validation untuk jam operasional
+            if (dateTimeInput) {
+                dateTimeInput.addEventListener('change', function() {
+                    const selectedDate = new Date(this.value);
+                    const hour = selectedDate.getHours();
+
+                    // Hapus pesan error sebelumnya
+                    const existingError = dateTimeInput.parentNode.querySelector('.business-hours-error');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+
+                    let errorMessage = '';
+
+                    // Cek jam operasional (11:00 - 22:00)
+                    if (hour < 11 || hour >= 22) {
+                        errorMessage = window.bookingTranslations.business_hours_error;
+                    }
+
+                    // Tampilkan pesan error jika ada
+                    if (errorMessage) {
+                        const errorElement = document.createElement('p');
+                        errorElement.className = 'text-red-600 text-sm mt-1 business-hours-error';
+                        errorElement.textContent = errorMessage;
+                        dateTimeInput.parentNode.appendChild(errorElement);
+                        dateTimeInput.classList.add('border-red-500');
+                    } else {
+                        dateTimeInput.classList.remove('border-red-500');
+                    }
+                });
+            }
+
+            bookingForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // ⛔ Mencegah reload halaman
+
+                // ✅ Validasi jam operasional di frontend
+                const dateTimeValue = document.getElementById('date_time').value;
+                if (dateTimeValue) {
+                    const selectedDate = new Date(dateTimeValue);
+                    const hour = selectedDate.getHours();
+
+                    // Cek jam operasional (11:00 - 22:00)
+                    if (hour < 11 || hour >= 22) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: window.bookingTranslations.validation_error,
+                            text: window.bookingTranslations.business_hours_error,
+                            confirmButtonColor: '#F59E0B'
+                        });
+                        return;
+                    }
+                }
+
+                submitButton.disabled = true;
+                submitText.classList.add('hidden');
+                loadingText.classList.remove('hidden');
+
+                const formData = new FormData(bookingForm);
+
+                fetch(bookingForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(async (response) => {
+                        let data;
+                        try {
+                            data = await response.json();
+                        } catch (e) {
+                            throw new Error('Invalid JSON response from server');
+                        }
+
+                        if (response.ok && data.success) {
+                            // ✅ Booking berhasil
+                            Swal.fire({
+                                icon: 'success',
+                                title: window.bookingTranslations.success_title,
+                                html: `
+        <div style="text-align: left; font-size: 15px;">
+            <p><strong>${data.message || window.bookingTranslations.booking_success}</strong></p>
+            <hr style="margin: 10px 0;">
+            <p><strong>${window.bookingTranslations.booking_success_name}:</strong> ${data.data.name}</p>
+            <p><strong>${window.bookingTranslations.booking_success_service}:</strong> ${data.data.service_name}</p>
+            <p><strong>${window.bookingTranslations.date_time}:</strong> ${data.data.date_time}</p>
+            <p><strong>${window.bookingTranslations.queue_number}:</strong> <span style="font-size: 18px; color: #10B981; font-weight: bold;">${data.data.queue_number}</span></p>
+        </div>
+    `,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#10B981',
+                                timer: 3000,
+                                timerProgressBar: true,
+                                allowOutsideClick: false
+                            }).then((result) => {
+                                // Redirect to bookings index after dialog closes
+                                window.location.href = '{{ route('bookings.index') }}';
+                            });
+
+                            // Auto redirect after timer ends
+                            setTimeout(() => {
+                                window.location.href = '{{ route('bookings.index') }}';
+                            }, 3000);
+
+                            // Reset form tanpa refresh
+                            bookingForm.reset();
+
+                            // Jika ingin menampilkan data antrian misalnya:
+                            console.log('Booking Data:', data.data);
+                        } else if (response.status === 422) {
+                            // ⚠️ Validation errors
+                            let errorMessage = data.message || 'Validasi gagal';
+
+                            if (data.errors) {
+                                const firstError = Object.values(data.errors)[0];
+                                if (Array.isArray(firstError) && firstError.length > 0) {
+                                    errorMessage = firstError[0];
+                                }
+                            }
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: window.bookingTranslations.validation_error,
+                                text: errorMessage,
+                                confirmButtonColor: '#F59E0B'
+                            });
+                        } else {
+                            // ⚠️ Other errors
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message ||
+                                    window.bookingTranslations.booking_creation_error,
+                                confirmButtonColor: '#EF4444'
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Booking error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops!',
+                            text: window.bookingTranslations.network_error,
+                            confirmButtonColor: '#EF4444'
+                        });
+                    })
+                    .finally(() => {
+                        // Aktifkan tombol lagi
+                        submitButton.disabled = false;
+                        submitText.classList.remove('hidden');
+                        loadingText.classList.add('hidden');
+                    });
+            });
+        });
+    </script>
+
+
+    @if (session('auth_success'))
         <script>
             Swal.fire({
                 icon: 'success',
                 title: '{{ __('auth.success') }}',
-                text: '{{ session('success') }}',
+                text: '{{ session('auth_success') }}',
                 confirmButtonColor: '#10B981',
                 timer: 3000,
                 timerProgressBar: true

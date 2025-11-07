@@ -79,6 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:pelanggan')->group(function () {
         // Booking
         Route::resource('bookings', BookingController::class);
+        Route::get('/bookings/check-slots', [BookingController::class, 'checkAvailableSlots'])->name('bookings.check-slots');
 
         // Payment & Transactions
         Route::get('/transaction', [PaymentController::class, 'index'])->name('payment.index');

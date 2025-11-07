@@ -443,12 +443,12 @@
         });
     </script>
 
-    @if (session('success'))
+    @if (session('auth_success'))
         <script script>
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: '{{ session('success') }}',
+                text: '{{ session('auth_success') }}',
                 confirmButtonColor: '#10B981',
                 timer: 3000,
                 timerProgressBar: true
