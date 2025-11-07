@@ -83,7 +83,11 @@ class BookingController extends Controller
                     Log::info('Year filter applied', ['year' => $request->year_filter]);
                 }
 
-                $data = $query->orderByDesc('id')->get();
+                $data = $query
+    ->orderByRaw("FIELD(status, 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled')")
+    ->orderBy('create', 'desc')
+    ->get();
+
 
                 Log::info('Bookings data retrieved successfully', [
                     'total_records' => $data->count(),

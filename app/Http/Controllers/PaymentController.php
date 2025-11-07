@@ -347,13 +347,6 @@ class PaymentController extends Controller
             'email' => $booking->user->email ?? null,
         ]);
 
-        // Update booking status jika cash
-        // if ($request->payment_method === 'cash') {
-        //     $booking->update([
-        //         'status' => 'completed',
-        //         'payment_status' => 'paid',
-        //     ]);
-        // }
 
         return redirect()->route('transactions.index')
             ->with('success', 'Transaksi berhasil dibuat.');

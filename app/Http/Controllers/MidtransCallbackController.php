@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\Booking;
+use App\Models\Loyalty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class MidtransCallbackController extends Controller
@@ -18,52 +21,93 @@ class MidtransCallbackController extends Controller
         $grossAmount = $request->input('gross_amount');
         $transactionTime = $request->input('transaction_time');
 
-        // Optional: log VA / bank
         $bank = $request->input('va_numbers.0.bank') ?? $request->input('permata_va_number');
         $vaNumber = $request->input('va_numbers.0.va_number') ?? $request->input('permata_va_number');
 
-        // Get additional customer data from request or find booking
-        $customerName = $request->input('customer_details.first_name') ?? null;
-        $customerEmail = $request->input('customer_details.email') ?? null;
-        
-        // If customer data not in callback, try to get from booking
-        if (!$customerName || !$customerEmail) {
-            try {
-                $booking = \App\Models\Booking::with('user')->findOrFail($orderId);
-                $customerName = $customerName ?? $booking->name;
-                $customerEmail = $customerEmail ?? $booking->user->email;
-            } catch (\Exception $e) {
-                Log::warning('Could not fetch booking data for transaction', [
-                    'order_id' => $orderId,
-                    'error' => $e->getMessage()
-                ]);
+        $customerName = $request->input('customer_details.first_name');
+        $customerEmail = $request->input('customer_details.email');
+
+        try {
+            DB::beginTransaction();
+
+            // 🔹 Dapatkan data booking untuk sinkronisasi
+            $booking = Booking::with('user')->find($orderId);
+
+            if ($booking) {
+                if (!$customerName) $customerName = $booking->name;
+                if (!$customerEmail) $customerEmail = $booking->user->email ?? null;
             }
+
+            // 🔹 Simpan atau perbarui transaksi
+            $transaction = Transaction::updateOrCreate(
+                ['order_id' => $orderId],
+                [
+                    'transaction_status' => $transactionStatus,
+                    'payment_type' => $paymentType,
+                    'gross_amount' => $grossAmount,
+                    'transaction_time' => $transactionTime,
+                    'bank' => $bank,
+                    'va_number' => $vaNumber,
+                    'name' => $customerName,
+                    'email' => $customerEmail,
+                ]
+            );
+
+            Log::info('📤 Transaction updated/created:', [
+                'order_id' => $transaction->order_id,
+                'transaction_status' => $transaction->transaction_status,
+                'payment_type' => $transaction->payment_type,
+            ]);
+
+            // 🔹 Update booking status & tambah loyalty point bila settlement
+            if ($booking) {
+                if (in_array($transactionStatus, ['settlement', 'capture'])) {
+                    $booking->update([
+                        'status' => 'completed',
+                    ]);
+
+                    // ✅ Tambahkan Loyalty Point
+                    $user = $booking->user;
+                    $loyalty = $user->loyalty;
+
+                    if (!$loyalty) {
+                        Log::info('🆕 Membuat record loyalty baru untuk user', ['user_id' => $user->id]);
+
+                        $loyalty = Loyalty::create([
+                            'user_id' => $user->id,
+                            'points' => 0
+                        ]);
+                    }
+
+                    $oldPoints = $loyalty->points;
+                    $loyalty->addPoints(1);
+
+                    Log::info('⭐ Loyalty point ditambahkan', [
+                        'user_id' => $user->id,
+                        'before' => $oldPoints,
+                        'after' => $loyalty->points
+                    ]);
+                } elseif (in_array($transactionStatus, ['expire', 'cancel', 'deny'])) {
+                    $booking->update([
+                        'status' => 'cancelled',
+                        'payment_status' => 'unpaid'
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Callback processed successfully'], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('❌ Failed to handle Midtrans callback', [
+                'error' => $e->getMessage(),
+                'order_id' => $orderId,
+            ]);
+
+            return response()->json(['error' => 'Failed to process callback'], 500);
         }
-
-        // Update atau buat baru record transaksi
-        $transaction = Transaction::updateOrCreate(
-            ['order_id' => $orderId],
-            [
-                'transaction_status' => $transactionStatus,
-                'payment_type' => $paymentType,
-                'gross_amount' => $grossAmount,
-                'transaction_time' => $transactionTime,
-                'bank' => $bank,
-                'va_number' => $vaNumber,
-                'name' => $customerName,
-                'email' => $customerEmail,
-            ]
-        );
-
-        Log::info('📤 Transaction updated/created:', [
-            'order_id' => $transaction->order_id,
-            'transaction_status' => $transaction->transaction_status,
-            'name' => $transaction->name,
-            'email' => $transaction->email,
-            'payment_type' => $transaction->payment_type,
-            'gross_amount' => $transaction->gross_amount
-        ]);
-
-        return response()->json(['message' => 'Callback processed'], 200);
     }
 }

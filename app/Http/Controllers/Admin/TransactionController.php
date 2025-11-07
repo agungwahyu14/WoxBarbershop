@@ -348,7 +348,6 @@ protected function getPaymentType($paymentType)
             if ($booking && $booking->status !== 'completed') {
                 $booking->update([
                     'status' => 'completed',
-                    'payment_status' => 'paid'
                 ]);
 
                 // Add loyalty points when transaction is settled and booking is completed
@@ -370,14 +369,6 @@ protected function getPaymentType($paymentType)
                     $oldPoints = $loyalty->points;
                     $loyalty->addPoints(1);
 
-                    Log::info('Loyalty points added on transaction settlement', [
-                        'user_id' => $user->id,
-                        'booking_id' => $booking->id,
-                        'transaction_id' => $transaction->id,
-                        'old_points' => $oldPoints,
-                        'new_points' => $loyalty->points,
-                        'can_redeem' => $loyalty->canRedeemFreeService()
-                    ]);
                 }
             }
 
