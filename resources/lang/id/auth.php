@@ -25,7 +25,7 @@ return [
     'throttle' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam :seconds detik.',
     'login_success' => 'Berhasil masuk!',
     'logout_success' => 'Berhasil keluar!',
-    'welcome_back' => 'Selamat datang kembali',
+    'welcome_back' => 'Selamat datang',
     'register_success' => 'Pendaftaran berhasil! Selamat datang di WOX Barbershop.',
     'registration_successful_welcome' => 'Pendaftaran berhasil! Selamat datang di WOX Barbershop.',
     'password_reset_sent' => 'Link reset password telah dikirim ke email Anda.',

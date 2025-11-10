@@ -26,7 +26,7 @@
                         <i class="fas fa-edit text-white text-lg"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.update_score_information') }}</h2>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('admin.score_information') }}</h2>
                         <p class="text-gray-600 mt-1">{{ __('admin.modify_score_details') }}</p>
                     </div>
                 </div>

@@ -59,7 +59,20 @@
                 title: '{{ __('auth.success') }}',
                 text: '{{ session('success') }}',
                 confirmButtonColor: '#10B981',
-                timer: 3000,
+                // timer: 3000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: '{{ __('auth.error') }}',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#EF4444',
+                // timer: 3000,
                 timerProgressBar: true
             });
         </script>

@@ -89,7 +89,7 @@
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
 
-                            @if (Auth::user()->hasRole('admin'))
+                     
                                 <div class="flex flex-wrap items-center gap-2">
                                     <select id="monthFilter"
                                         class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
@@ -148,8 +148,41 @@
                                         </button>
                                     </div>
                                 </div>
-                            @endif
 
+
+                        </div>
+                    </div>
+                @endhasrole
+
+
+                @hasrole('pegawai')
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+
+                           
+                                <div class="flex flex-wrap items-center gap-2">
+                                   
+                                    <select id="status-filter"
+                                        class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 text-sm">
+                                        <option value="">{{ __('admin.all_status') }}</option>
+                                        <option value="pending">{{ __('booking.status_pending') }}</option>
+                                        <option value="confirmed">{{ __('booking.status_confirmed') }}</option>
+                                        <option value="in_progress">{{ __('booking.status_in_progress') }}</option>
+                                        <option value="completed">{{ __('booking.status_completed') }}</option>
+                                        <option value="cancelled">{{ __('booking.status_cancelled') }}</option>
+                                    </select>
+                                    <div class="flex items-center space-x-2">
+                                        <button id="resetFilter"
+                                            class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                            <i class="mdi mdi-refresh mr-1"></i> {{ __('admin.reset') }}
+                                        </button>
+                                        <div id="filterIndicator"
+                                            class="hidden px-3 py-2 bg-blue-100 text-blue-800 text-sm rounded-md">
+                                            <i class="mdi mdi-filter mr-1"></i>
+                                            <span id="filterText"></span>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 @endhasrole

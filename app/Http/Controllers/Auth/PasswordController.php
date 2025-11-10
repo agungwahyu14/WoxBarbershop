@@ -34,7 +34,7 @@ class PasswordController extends Controller
                 ]);
             }
 
-            return back()->with('status', 'password-updated');
+            return back()->with('success', __('auth.password_updated'));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors for AJAX
@@ -58,7 +58,7 @@ class PasswordController extends Controller
                 ], 500);
             }
 
-            return back()->with('error', 'Password update failed. Please try again.');
+            return back()->with('error', __('auth.password_update_failed'));
         }
     }
 }

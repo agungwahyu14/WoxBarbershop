@@ -38,6 +38,7 @@ return [
     'new_password' => 'Kata Sandi Baru',
     'confirm_password' => 'Konfirmasi Kata Sandi',
     'password_updated' => 'Kata sandi berhasil diperbarui.',
+    'password_update_failed' => 'Pembaruan kata sandi gagal. Silakan coba lagi.',
     
     // Delete Account
     'delete_account' => 'Hapus Akun',

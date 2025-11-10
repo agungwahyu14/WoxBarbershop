@@ -38,6 +38,7 @@ return [
     'new_password' => 'New Password',
     'confirm_password' => 'Confirm Password',
     'password_updated' => 'Password updated successfully.',
+    'password_update_failed' => 'Password update failed. Please try again.',
     
     // Delete Account
     'delete_account' => 'Delete Account',

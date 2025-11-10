@@ -25,7 +25,7 @@ return [
     'admin' => 'Admin',
     'staff' => 'Pegawai',
     'administrator' => 'Administrator',
-    'welcome_back' => 'Selamat datang kembali',
+    'welcome_back' => 'Selamat datang',
     'dashboard_title' => 'Dashboard WOX Barbershop',
     'dashboard_subtitle' => 'Pantau kinerja bisnis barbershop Anda',
     'customers' => 'Pelanggan',

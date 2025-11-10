@@ -200,7 +200,7 @@
     </script>
 
     <!-- SweetAlert Script -->
-    <script>
+    {{-- <script>
         @if (session('warning') && !session('error_type'))
             Swal.fire({
                 icon: 'warning',
@@ -226,19 +226,19 @@
             });
         @endif
 
-        // SweetAlert for Status Messages (profile updated, etc)
-        @if (session('status'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Updated!',
-                text: 'Profile updated successfully!',
-                timer: 3000,
-                showConfirmButton: false,
-                toast: true,
-                position: 'top-end'
-            });
-        @endif
-    </script>
+        // // SweetAlert for Status Messages (profile updated, etc)
+        // @if (session('status'))
+        //     Swal.fire({
+        //         icon: 'success',
+        //         title: 'Updated!',
+        //         text: 'Profile updated successfully!',
+        //         timer: 3000,
+        //         showConfirmButton: false,
+        //         toast: true,
+        //         position: 'top-end'
+        //     });
+        // @endif
+    </script> --}}
 
     @stack('scripts')
 

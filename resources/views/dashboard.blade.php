@@ -817,4 +817,17 @@
             });
         </script>
     @endif
+
+    @if (session('register_success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ __('auth.success') }}',
+                text: '{{ session('register_success') }}',
+                confirmButtonColor: '#10B981',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
 @endpush

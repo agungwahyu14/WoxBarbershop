@@ -192,7 +192,7 @@
             @if (session('success'))
                 Swal.fire({
                     icon: 'success',
-                    title: '{{ __('auth.success') }}',
+                    title: '{{ __('auth.registration_success') }}',
                     text: '{{ session('success') }}',
                     confirmButtonColor: '#d4af37',
                     confirmButtonText: '{{ __('auth.ok') }}'

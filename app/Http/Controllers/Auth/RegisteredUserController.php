@@ -82,7 +82,7 @@ class RegisteredUserController extends Controller
             Auth::login($user);
 
             return redirect()->route('dashboard')
-                ->with('success', __('auth.registration_successful_welcome'));
+                ->with('register_success', __('auth.registration_successful_welcome'));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::warning('Registration validation failed', [

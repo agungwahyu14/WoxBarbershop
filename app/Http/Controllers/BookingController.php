@@ -84,9 +84,9 @@ class BookingController extends Controller
                 }
 
                 $data = $query
-    ->orderByRaw("FIELD(status, 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled')")
-    ->orderBy('create', 'desc')
-    ->get();
+                    ->orderBy('created_at', 'desc')
+                    ->orderByRaw("FIELD(status, 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled')")
+                    ->get();
 
 
                 Log::info('Bookings data retrieved successfully', [
