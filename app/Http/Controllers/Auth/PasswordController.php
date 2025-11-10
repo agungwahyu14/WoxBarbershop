@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
+
 class PasswordController extends Controller
 {
     /**
@@ -37,6 +38,10 @@ class PasswordController extends Controller
             return back()->with('success', __('auth.password_updated'));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::warning('Password update validation failed', [
+                'user_id' => $request->user()->id ?? 'unknown',
+                'errors' => $e->errors(),
+            ]);
             // Handle validation errors for AJAX
             if ($request->expectsJson()) {
                 return response()->json([
@@ -46,9 +51,14 @@ class PasswordController extends Controller
                 ], 422);
             }
 
-            throw $e;
+            return back()->with('error', __('auth.password_update_failed'));
 
         } catch (\Exception $e) {
+
+            \Log::warning('Password update failed', [
+                'user_id' => $request->user()->id ?? 'unknown',
+                'errors' => $e->getMessage(),
+            ]);
             // Handle general errors for AJAX
             if ($request->expectsJson()) {
                 return response()->json([
