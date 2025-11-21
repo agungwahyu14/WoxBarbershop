@@ -178,16 +178,21 @@ class RoleController extends Controller
      * Remove specified resource from storage.
      */
     public function destroy($id)
-    {
+{
+    try {
         $role = Role::findOrFail($id);
-
-        // Prevent deletion of critical system roles
-        if (in_array($role->name, ['admin', 'super-admin'])) {
-            return response()->json(['error' => __('admin.cannot_delete_system_role')], 403);
-        }
-
         $role->delete();
-
-        return response()->json(['success' => __('admin.role_deleted_successfully')]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Role berhasil dihapus!'  // ← Ini yang dikirim ke frontend
+        ]);
+        
+    } catch (Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus role: ' . $e->getMessage()
+        ], 500);
     }
+}
 }

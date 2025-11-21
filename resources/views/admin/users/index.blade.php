@@ -321,17 +321,13 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
+
                                 Swal.fire({
                                     icon: 'success',
                                     title: loyaltyResetSuccess,
                                     text: response.message,
-                                    timer: 4000,
-                                    showConfirmButton: false,
-                                    toast: true,
-                                    position: 'top-end',
-                                    customClass: {
-                                        popup: 'swal2-desktop-toast'
-                                    }
+                                    timer: 3000,
+                                    showConfirmButton: false
                                 });
                                 table.ajax.reload();
                             },

@@ -429,7 +429,7 @@ return [
     'low_stock_warning' => 'Peringatan Stok Rendah',
     'low_stock_message' => 'Jumlah stok ini tergolong rendah. Pertimbangkan untuk menambah stok segera.',
 
-    // Feedbacks Management
+    // Umpan Baliks Management
     'feedbacks_page_title' => 'Umpan Balik',
     'feedbacks_page_subtitle' => 'Lihat dan kelola umpan balik dari pelanggan',
     'view_feedback_btn' => 'Lihat Umpan Balik',
@@ -820,7 +820,7 @@ return [
     'processing' => 'Memproses',
     'error_occurred' => 'Terjadi kesalahan',
     
-    // Feedback Management
+    // Umpan Balik Management
     'feedbacks_page_title' => 'Umpan Balik',
     'feedbacks_page_subtitle' => 'Kelola dan tinjau umpan balik serta rating pelanggan',
     'feedback_details' => 'Rincian Umpan Balik',
@@ -838,7 +838,7 @@ return [
     'booking_date' => 'Tanggal Pemesanan',
     'not_scheduled' => 'Tidak dijadwalkan',
     'no_booking_info_available' => 'Tidak ada informasi pemesanan tersedia',
-    'feedback_content' => 'Konten Feedback',
+    'feedback_content' => 'Konten Umpan Balik',
     'no_written_feedback' => 'Tidak ada feedback tertulis',
     'rating_only_feedback' => 'Pelanggan hanya memberikan rating',
     'settings_and_actions' => 'Pengaturan & Tindakan',
@@ -851,12 +851,12 @@ return [
     'inactive' => 'Tidak Aktif',
     'make_public' => 'Jadikan Publik',
     'make_private' => 'Jadikan Pribadi',
-    'delete_feedback' => 'Hapus Feedback',
+    'delete_feedback' => 'Hapus Umpan Balik',
     'delete_feedback_confirm' => 'Apakah Anda yakin ingin menghapus feedback ini? Tindakan ini tidak dapat dibatalkan.',
     'delete_feedback_warning' => 'Anda tidak akan bisa mengembalikannya!',
     'back_to_feedbacks' => 'Kembali ke Umpan Balik',
     
-    // Feedback Table Columns
+    // Umpan Balik Table Columns
     'customer_column' => 'Pelanggan',
     'booking_column' => 'Pemesanan',
     'rating_column' => 'Rating',
@@ -866,7 +866,7 @@ return [
     'date_column' => 'Tanggal',
     'actions_column' => 'Tindakan',
     
-    // Feedback DataTable Messages
+    // Umpan Balik DataTable Messages
     'no_matching_feedbacks' => 'Tidak ada feedback yang cocok',
     'no_feedbacks_available' => 'Tidak ada feedback tersedia',
     'loading_feedbacks' => 'Memuat feedback...',
@@ -1088,11 +1088,11 @@ return [
     'transaction_updated_successfully' => 'Transaksi berhasil diperbarui',
     'failed_to_confirm_settlement' => 'Gagal mengkonfirmasi settlement',
 
-    // Feedback Messages
-    'feedback_updated_successfully' => 'Feedback berhasil diperbarui',
-    'feedback_deleted_successfully' => 'Feedback berhasil dihapus',
-    'failed_to_delete_feedback' => 'Gagal menghapus feedback',
-    'feedback_publication_status_updated_successfully' => 'Status publikasi feedback berhasil diubah',
+    // Umpan Balik Messages
+    'feedback_updated_successfully' => 'Umpan Balik berhasil diperbarui',
+    'feedback_deleted_successfully' => 'Umpan Balik berhasil dihapus',
+    'failed_to_delete_feedback' => 'Gagal menghapus umpan balik',
+    'feedback_publication_status_updated_successfully' => 'Status publikasi umpan balik berhasil diubah',
 
     // Role Messages
     'role_created_successfully' => 'Role berhasil dibuat',

@@ -46,17 +46,47 @@
             @endphp
 
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 {{ $cardClass }} p-6">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                    <!-- Left Section -->
                     <div class="flex items-center space-x-4">
                         <div class="p-3 rounded-full {{ $badgeClass }}">
                             <i class="{{ $iconClass }} text-2xl"></i>
                         </div>
                         <div>
                             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $badgeText }}</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Order ID: {{ $transaction->order_id ?? '-' }}</p>
+                            <p class="text-gray-600 dark:text-gray-400">
+                                Order ID: {{ $transaction->order_id ?? '-' }}
+                            </p>
                         </div>
                     </div>
-                    <div class="text-right">
+
+                    <!-- Right Section → Moves to bottom on mobile -->
+                    <div class="transaction-price-section" style="text-align: left;">
+                        <script>
+                            // Dynamic text alignment based on screen size
+                            function updateTextAlignment() {
+                                const element = document.querySelector('.transaction-price-section');
+                                if (element) {
+                                    if (window.innerWidth >= 768) {
+                                        element.style.textAlign = 'right';
+                                    } else {
+                                        element.style.textAlign = 'left';
+                                    }
+                                }
+                            }
+
+                            // Apply on load and resize
+                            window.addEventListener('load', updateTextAlignment);
+                            window.addEventListener('resize', updateTextAlignment);
+
+                            // Apply immediately
+                            if (document.readyState === 'loading') {
+                                document.addEventListener('DOMContentLoaded', updateTextAlignment);
+                            } else {
+                                updateTextAlignment();
+                            }
+                        </script>
                         <p class="text-3xl font-bold text-gray-900 dark:text-white">
                             Rp{{ number_format($transaction->gross_amount ?? $transaction->total_amount, 0, ',', '.') }}
                         </p>
@@ -536,6 +566,17 @@
 
         .timeline-dot:last-child::after {
             display: none;
+        }
+
+        /* Force text alignment for transaction price section */
+        .transaction-price-section {
+            text-align: left !important;
+        }
+
+        @media (min-width: 768px) {
+            .transaction-price-section {
+                text-align: right !important;
+            }
         }
     </style>
 @endpush
