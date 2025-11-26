@@ -8,14 +8,16 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Carbon\Carbon;
 
-class FinancialExport implements FromCollection, WithHeadings, WithMapping, WithTitle, WithStyles, WithColumnWidths, ShouldAutoSize
+class FinancialExport implements FromCollection, WithHeadings, WithMapping, WithTitle, WithStyles, WithColumnWidths, WithEvents
 {
     protected $transactions;
     protected $month;
@@ -37,18 +39,15 @@ class FinancialExport implements FromCollection, WithHeadings, WithMapping, With
     {
         return [
             'No',
-            'Tanggal Transaksi',
-            'Waktu',
+            'Tanggal',
             'Order ID',
             'Nama Pelanggan',
-            'Email Pelanggan',
             'Layanan',
-            'Harga Layanan (Rp)',
-            'Metode Pembayaran',
-            'Status Transaksi',
-            'Total Bayar (Rp)',
-            'Fee Admin (Rp)',
-            'Keterangan'
+            'Harga (Rp)',
+            'Pembayaran',
+            'Status',
+            'Total (Rp)',
+            'Fee (Rp)'
         ];
     }
 
@@ -58,20 +57,20 @@ class FinancialExport implements FromCollection, WithHeadings, WithMapping, With
         
         // Status mapping untuk tampilan yang lebih baik
         $statusLabels = [
-            'pending' => 'Menunggu Pembayaran',
+            'pending' => 'Pending',
             'settlement' => 'Berhasil',
             'capture' => 'Berhasil',
             'deny' => 'Ditolak',
-            'cancel' => 'Dibatalkan',
-            'expire' => 'Kedaluwarsa',
+            'cancel' => 'Batal',
+            'expire' => 'Expired',
             'failure' => 'Gagal'
         ];
         
         // Payment type mapping
         $paymentLabels = [
-            'credit_card' => 'Kartu Kredit',
-            'bank_transfer' => 'Transfer Bank',
-            'echannel' => 'Mandiri Bill',
+            'credit_card' => 'Kredit',
+            'bank_transfer' => 'Transfer',
+            'echannel' => 'Mandiri',
             'gopay' => 'GoPay',
             'shopeepay' => 'ShopeePay',
             'qris' => 'QRIS'
@@ -82,19 +81,21 @@ class FinancialExport implements FromCollection, WithHeadings, WithMapping, With
         
         return [
             $no++,
-            Carbon::parse($transaction->created_at)->format('d/m/Y'),
-            Carbon::parse($transaction->created_at)->format('H:i:s'),
-            $transaction->order_id,
-            $transaction->booking->user->name ?? 'N/A',
-            $transaction->booking->user->email ?? 'N/A',
-            $transaction->booking->service->name ?? 'N/A',
-            'Rp ' . number_format($servicePrice, 0, ',', '.'),
-            $paymentLabels[$transaction->payment_type] ?? ucfirst($transaction->payment_type ?? 'N/A'),
+            Carbon::parse($transaction->created_at)->format('d/m/Y H:i'),
+            $this->truncateText($transaction->order_id, 15),
+            $this->truncateText($transaction->booking->user->name ?? 'N/A', 20),
+            $this->truncateText($transaction->booking->service->name ?? 'N/A', 20),
+            number_format($servicePrice, 0, ',', '.'),
+            $paymentLabels[$transaction->payment_type] ?? $this->truncateText($transaction->payment_type ?? 'N/A', 10),
             $statusLabels[$transaction->transaction_status] ?? ucfirst($transaction->transaction_status),
-            'Rp ' . number_format($transaction->gross_amount, 0, ',', '.'),
-            'Rp ' . number_format($adminFee, 0, ',', '.'),
-            $transaction->fraud_status ? 'Status Fraud: ' . $transaction->fraud_status : '-'
+            number_format($transaction->gross_amount, 0, ',', '.'),
+            number_format($adminFee, 0, ',', '.')
         ];
+    }
+    
+    private function truncateText($text, $length)
+    {
+        return strlen($text) > $length ? substr($text, 0, $length) . '...' : $text;
     }
 
     public function title(): string
@@ -154,17 +155,17 @@ class FinancialExport implements FromCollection, WithHeadings, WithMapping, With
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
             ],
             // Price columns alignment
-            "H2:H{$highestRow}" => [
+            "F2:F{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_RIGHT]
             ],
-            "K2:K{$highestRow}" => [
+            "I2:I{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_RIGHT]
             ],
-            "L2:L{$highestRow}" => [
+            "J2:J{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_RIGHT]
             ],
             // Status column styling
-            "J2:J{$highestRow}" => [
+            "H2:H{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
             ]
         ];
@@ -173,19 +174,44 @@ class FinancialExport implements FromCollection, WithHeadings, WithMapping, With
     public function columnWidths(): array
     {
         return [
-            'A' => 5,   // No
-            'B' => 12,  // Tanggal
-            'C' => 10,  // Waktu
-            'D' => 20,  // Order ID
-            'E' => 20,  // Nama
-            'F' => 25,  // Email
-            'G' => 25,  // Layanan
-            'H' => 18,  // Harga Layanan
-            'I' => 18,  // Metode Bayar
-            'J' => 18,  // Status
-            'K' => 18,  // Total Bayar
-            'L' => 15,  // Fee Admin
-            'M' => 25   // Keterangan
+            'A' => 4,   // No
+            'B' => 14,  // Tanggal
+            'C' => 13,  // Order ID
+            'D' => 18,  // Nama
+            'E' => 18,  // Layanan
+            'F' => 12,  // Harga
+            'G' => 12,  // Pembayaran
+            'H' => 10,  // Status
+            'I' => 12,  // Total
+            'J' => 10   // Fee
+        ];
+    }
+    
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                // Set page orientation to landscape
+                $event->sheet->getPageSetup()
+                    ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
+                    ->setPaperSize(PageSetup::PAPERSIZE_A4)
+                    ->setFitToWidth(1)
+                    ->setFitToHeight(0);
+                
+                // Set margins
+                $event->sheet->getPageMargins()
+                    ->setTop(0.5)
+                    ->setRight(0.5)
+                    ->setBottom(0.5)
+                    ->setLeft(0.5);
+                
+                // Enable text wrapping for all cells
+                $highestRow = $event->sheet->getHighestRow();
+                $highestColumn = $event->sheet->getHighestColumn();
+                $event->sheet->getStyle("A1:{$highestColumn}{$highestRow}")
+                    ->getAlignment()
+                    ->setWrapText(true);
+            }
         ];
     }
 }

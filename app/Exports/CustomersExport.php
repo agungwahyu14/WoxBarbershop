@@ -8,14 +8,16 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Carbon\Carbon;
 
-class CustomersExport implements FromCollection, WithHeadings, WithMapping, WithTitle, WithStyles, WithColumnWidths, ShouldAutoSize
+class CustomersExport implements FromCollection, WithHeadings, WithMapping, WithTitle, WithStyles, WithColumnWidths, WithEvents
 {
     protected $customers;
     protected $month;
@@ -39,15 +41,13 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping, With
             'No',
             'Nama Lengkap',
             'Email',
-            'No. Telepon',
-            'Tanggal Daftar',
-            'Status Akun',
+            'Telepon',
+            'Tgl Daftar',
+            'Status',
             'Total Booking',
-            'Booking Selesai',
-            'Total Pengeluaran (Rp)',
-            'Booking Terakhir',
-            'Status Loyalty',
-            'Poin Loyalty'
+            'Selesai',
+            'Total (Rp)',
+            'Loyalty'
         ];
     }
 
@@ -59,11 +59,10 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping, With
         $totalBookings = $customer->bookings->count();
         $completedBookings = $customer->bookings->where('status', 'completed')->count();
         $totalSpent = $customer->bookings->where('status', 'completed')->sum('total_price');
-        $lastBooking = $customer->bookings->last();
         $loyalty = $customer->loyalty;
         
         // Status akun
-        $accountStatus = $customer->email_verified_at ? 'Aktif' : 'Belum Verifikasi';
+        $accountStatus = $customer->email_verified_at ? 'Aktif' : 'Pending';
         
         // Status loyalty berdasarkan total pengeluaran
         $loyaltyStatus = 'Bronze';
@@ -75,18 +74,21 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping, With
         
         return [
             $no++,
-            $customer->name,
-            $customer->email,
+            $this->truncateText($customer->name, 25),
+            $this->truncateText($customer->email, 25),
             $customer->phone ?? 'N/A',
             Carbon::parse($customer->created_at)->format('d/m/Y'),
             $accountStatus,
             $totalBookings,
             $completedBookings,
-            'Rp ' . number_format($totalSpent, 0, ',', '.'),
-            $lastBooking ? Carbon::parse($lastBooking->date_time)->format('d/m/Y') : 'Belum ada',
-            $loyaltyStatus,
-            $loyalty->points ?? 0
+            number_format($totalSpent, 0, ',', '.'),
+            $loyaltyStatus . ' (' . ($loyalty->points ?? 0) . ')'
         ];
+    }
+    
+    private function truncateText($text, $length)
+    {
+        return strlen($text) > $length ? substr($text, 0, $length) . '...' : $text;
     }
 
     public function title(): string
@@ -155,14 +157,11 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping, With
             "I2:I{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_RIGHT]
             ],
-            "L2:L{$highestRow}" => [
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
-            ],
             // Status columns alignment
             "F2:F{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
             ],
-            "K2:K{$highestRow}" => [
+            "J2:J{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
             ]
         ];
@@ -171,18 +170,44 @@ class CustomersExport implements FromCollection, WithHeadings, WithMapping, With
     public function columnWidths(): array
     {
         return [
-            'A' => 5,   // No
-            'B' => 25,  // Nama
-            'C' => 30,  // Email
-            'D' => 15,  // Telepon
-            'E' => 15,  // Tanggal Daftar
-            'F' => 18,  // Status Akun
-            'G' => 12,  // Total Booking
-            'H' => 15,  // Booking Selesai
-            'I' => 20,  // Total Pengeluaran
-            'J' => 15,  // Booking Terakhir
-            'K' => 15,  // Status Loyalty
-            'L' => 12   // Poin Loyalty
+            'A' => 4,   // No
+            'B' => 20,  // Nama
+            'C' => 25,  // Email
+            'D' => 12,  // Telepon
+            'E' => 11,  // Tanggal Daftar
+            'F' => 8,   // Status Akun
+            'G' => 8,   // Total Booking
+            'H' => 8,   // Booking Selesai
+            'I' => 15,  // Total Pengeluaran
+            'J' => 15   // Loyalty dengan poin
+        ];
+    }
+    
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                // Set page orientation to landscape
+                $event->sheet->getPageSetup()
+                    ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
+                    ->setPaperSize(PageSetup::PAPERSIZE_A4)
+                    ->setFitToWidth(1)
+                    ->setFitToHeight(0);
+                
+                // Set margins
+                $event->sheet->getPageMargins()
+                    ->setTop(0.5)
+                    ->setRight(0.5)
+                    ->setBottom(0.5)
+                    ->setLeft(0.5);
+                
+                // Enable text wrapping for all cells
+                $highestRow = $event->sheet->getHighestRow();
+                $highestColumn = $event->sheet->getHighestColumn();
+                $event->sheet->getStyle("A1:{$highestColumn}{$highestRow}")
+                    ->getAlignment()
+                    ->setWrapText(true);
+            }
         ];
     }
 }

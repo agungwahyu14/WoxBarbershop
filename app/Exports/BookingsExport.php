@@ -8,15 +8,16 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithDrawings;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use Carbon\Carbon;
 
-class BookingsExport implements FromCollection, WithHeadings, WithMapping, WithTitle, WithStyles, WithColumnWidths, ShouldAutoSize
+class BookingsExport implements FromCollection, WithHeadings, WithMapping, WithTitle, WithStyles, WithColumnWidths, WithEvents
 {
     protected $bookings;
     protected $month;
@@ -38,16 +39,15 @@ class BookingsExport implements FromCollection, WithHeadings, WithMapping, WithT
     {
         return [
             'No',
-            'Tanggal Booking',
+            'Tgl Booking',
             'Waktu',
             'Nama Pelanggan',
-            'Email Pelanggan',
-            'No. Telepon',
+            'Email',
+            'Telepon',
             'Layanan',
-            'Durasi (Menit)',
-            'Status Booking',
-            'Total Harga (Rp)',
-            'Metode Pembayaran',
+            'Status',
+            'Total (Rp)',
+            'Pembayaran',
             'Catatan'
         ];
     }
@@ -58,26 +58,30 @@ class BookingsExport implements FromCollection, WithHeadings, WithMapping, WithT
         
         // Status mapping untuk tampilan yang lebih baik
         $statusLabels = [
-            'pending' => 'Menunggu Konfirmasi',
-            'confirmed' => 'Dikonfirmasi',
+            'pending' => 'Pending',
+            'confirmed' => 'Konfirmasi',
             'completed' => 'Selesai',
-            'cancelled' => 'Dibatalkan'
+            'cancelled' => 'Batal'
         ];
         
         return [
             $no++,
             Carbon::parse($booking->date_time)->format('d/m/Y'),
             Carbon::parse($booking->date_time)->format('H:i'),
-            $booking->user->name ?? 'N/A',
-            $booking->user->email ?? 'N/A',
+            $this->truncateText($booking->user->name ?? 'N/A', 20),
+            $this->truncateText($booking->user->email ?? 'N/A', 25),
             $booking->user->phone ?? 'N/A',
-            $booking->service->name ?? 'N/A',
-            $booking->service->duration ?? 'N/A',
+            $this->truncateText($booking->service->name ?? 'N/A', 20),
             $statusLabels[$booking->status] ?? ucfirst($booking->status),
             'Rp ' . number_format($booking->total_price, 0, ',', '.'),
-            $booking->transaction->payment_type ?? 'Belum Dibayar',
-            $booking->notes ?? '-'
+            $this->truncateText($booking->transaction->payment_type ?? 'Belum Bayar', 15),
+            $this->truncateText($booking->notes ?? '-', 25)
         ];
+    }
+    
+    private function truncateText($text, $length)
+    {
+        return strlen($text) > $length ? substr($text, 0, $length) . '...' : $text;
     }
 
     public function title(): string
@@ -137,11 +141,11 @@ class BookingsExport implements FromCollection, WithHeadings, WithMapping, WithT
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
             ],
             // Price column alignment
-            "J2:J{$highestRow}" => [
+            "I2:I{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_RIGHT]
             ],
             // Status column styling
-            "I2:I{$highestRow}" => [
+            "H2:H{$highestRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
             ]
         ];
@@ -150,18 +154,45 @@ class BookingsExport implements FromCollection, WithHeadings, WithMapping, WithT
     public function columnWidths(): array
     {
         return [
-            'A' => 5,   // No
-            'B' => 15,  // Tanggal
-            'C' => 10,  // Waktu
-            'D' => 20,  // Nama
-            'E' => 25,  // Email
-            'F' => 15,  // Telepon
-            'G' => 25,  // Layanan
-            'H' => 10,  // Durasi
-            'I' => 20,  // Status
-            'J' => 18,  // Harga
-            'K' => 18,  // Metode Bayar
-            'L' => 30   // Catatan
+            'A' => 4,   // No
+            'B' => 11,  // Tanggal
+            'C' => 7,   // Waktu
+            'D' => 18,  // Nama
+            'E' => 22,  // Email
+            'F' => 12,  // Telepon
+            'G' => 18,  // Layanan
+            'H' => 12,  // Status
+            'I' => 15,  // Harga
+            'J' => 12,  // Metode Bayar
+            'K' => 20   // Catatan
+        ];
+    }
+    
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                // Set page orientation to landscape
+                $event->sheet->getPageSetup()
+                    ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
+                    ->setPaperSize(PageSetup::PAPERSIZE_A4)
+                    ->setFitToWidth(1)
+                    ->setFitToHeight(0);
+                
+                // Set margins
+                $event->sheet->getPageMargins()
+                    ->setTop(0.5)
+                    ->setRight(0.5)
+                    ->setBottom(0.5)
+                    ->setLeft(0.5);
+                
+                // Enable text wrapping for all cells
+                $highestRow = $event->sheet->getHighestRow();
+                $highestColumn = $event->sheet->getHighestColumn();
+                $event->sheet->getStyle("A1:{$highestColumn}{$highestRow}")
+                    ->getAlignment()
+                    ->setWrapText(true);
+            }
         ];
     }
 }

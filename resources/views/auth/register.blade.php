@@ -3,84 +3,80 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     @vite('resources/css/app.css')
-    <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="relative min-h-screen bg-gray-900">
+<body class="relative min-h-screen bg-gray-900 font-sans antialiased">
 
-    <!-- Background image with overlay -->
-    <div class="absolute inset-0">
+    <div class="absolute inset-0 z-0">
         <img src="{{ asset('images/hero.jpg') }}" alt="Background" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-black opacity-60"></div> {{-- Overlay gelap --}}
+        <div class="absolute inset-0 bg-black opacity-60"></div>
     </div>
 
-    <!-- Form container -->
-    <div class="relative z-10 flex items-center justify-center min-h-screen px-4">
-        <div class="w-full max-w-md">
-            <!-- Logo -->
-            {{-- <div class="text-center mb-8">
-                <img src="{{ asset('images/Logo.jpeg') }}" alt="WOX'S Barbershop Logo"
-                    class="h-40 w-auto object-contain mx-auto">
-            </div> --}}
+    <div class="relative z-10 flex flex-col justify-center min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+        <div class="w-full max-w-md mx-auto">
 
-            <!-- Register Card -->
-            <div class="bg-white bg-opacity-95 p-8  shadow-lg rounded-lg my-8">
+            <div class="bg-white bg-opacity-95 p-6 sm:p-8 shadow-2xl rounded-xl backdrop-blur-sm">
+
                 <div class="text-center mb-6">
                     <img src="{{ asset('images/Logo.png') }}" alt="WOX'S Barbershop Logo"
                         class="h-40 w-auto object-contain mx-auto mb-4">
                 </div>
-                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">{{ __('auth.register_account') }}</h2>
+
+                <h2 class="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-6">
+                    {{ __('auth.register_account') }}</h2>
 
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
 
                     <div class="mb-4">
-                        <label for="name" class="block text-gray-700 font-medium mb-1">{{ __('auth.name') }}</label>
+                        <label for="name"
+                            class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('auth.name') }}</label>
                         <input type="text" name="name" id="name"
-                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
+                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm"
                             value="{{ old('name') }}" required autofocus>
                     </div>
 
                     <div class="mb-4">
                         <label for="email"
-                            class="block text-gray-700 font-medium mb-1">{{ __('auth.email') }}</label>
+                            class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('auth.email') }}</label>
                         <input type="email" name="email" id="email"
-                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
+                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm"
                             value="{{ old('email') }}" required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="no_telepon" class="block text-gray-700 font-medium mb-1">
+                        <label for="no_telepon" class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
                             {{ __('auth.phone') }}
                         </label>
                         <input type="tel" name="no_telepon" id="no_telepon"
-                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
+                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm"
                             value="{{ old('no_telepon') }}" pattern="[0-9]*" inputmode="numeric"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                     </div>
 
-
                     <div class="mb-4">
                         <label for="password"
-                            class="block text-gray-700 font-medium mb-1">{{ __('auth.password') }}</label>
+                            class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('auth.password') }}</label>
                         <div class="relative">
                             <input type="password" name="password" id="password"
-                                class="w-full px-4 py-3 pr-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
+                                class="w-full px-4 py-3 pr-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm"
                                 required>
                             <button type="button" id="togglePassword"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                <svg id="eyeIcon" class="w-5 h-5 text-gray-400 hover:text-gray-600" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer z-20">
+                                <svg id="eyeIcon" class="w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
                                     </path>
                                 </svg>
-                                <svg id="eyeSlashIcon" class="w-5 h-5 text-gray-400 hover:text-gray-600 hidden"
+                                <svg id="eyeSlashIcon"
+                                    class="w-5 h-5 text-gray-400 hover:text-gray-600 hidden transition-colors"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464M9.878 9.878l-1.414-1.414M14.12 14.12l1.415 1.414M14.12 14.12L15.535 15.535M14.12 14.12l1.415-1.414M3 3l18 18">
@@ -92,22 +88,24 @@
 
                     <div class="mb-6">
                         <label for="password_confirmation"
-                            class="block text-gray-700 font-medium mb-1">{{ __('auth.password_confirmation') }}</label>
+                            class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('auth.password_confirmation') }}</label>
                         <div class="relative">
                             <input type="password" name="password_confirmation" id="password_confirmation"
-                                class="w-full px-4 py-3 pr-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg"
+                                class="w-full px-4 py-3 pr-12 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm"
                                 required>
                             <button type="button" id="toggleConfirmPassword"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                <svg id="eyeConfirmIcon" class="w-5 h-5 text-gray-400 hover:text-gray-600"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer z-20">
+                                <svg id="eyeConfirmIcon"
+                                    class="w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
                                     </path>
                                 </svg>
-                                <svg id="eyeSlashConfirmIcon" class="w-5 h-5 text-gray-400 hover:text-gray-600 hidden"
+                                <svg id="eyeSlashConfirmIcon"
+                                    class="w-5 h-5 text-gray-400 hover:text-gray-600 hidden transition-colors"
                                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464M9.878 9.878l-1.414-1.414M14.12 14.12l1.415 1.414M14.12 14.12L15.535 15.535M14.12 14.12l1.415-1.414M3 3l18 18">
@@ -118,14 +116,14 @@
                     </div>
 
                     <button type="submit"
-                        class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-semibold transition rounded-lg duration-300 ">
+                        class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                         {{ __('auth.register') }}
                     </button>
 
-                    <p class="mt-4 text-sm text-center text-gray-600">
+                    <p class="mt-6 text-sm text-center text-gray-600">
                         {{ __('auth.already_have_account') }}
                         <a href="{{ route('login') }}"
-                            class="text-[#d4af37] hover:underline">{{ __('auth.login_here') }}</a>
+                            class="text-[#d4af37] font-bold hover:underline ml-1">{{ __('auth.login_here') }}</a>
                     </p>
                 </form>
             </div>
@@ -134,18 +132,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Translation variables
-            // const translations = {
-            //     success: @json(__('auth.success')),
-            //     registration_failed: @json(__('auth.registration_failed')),
-            //     error_occurred: @json(__('auth.error_occurred')),
-            //     information: @json(__('auth.information')),
-            //     warning: @json(__('auth.warning')),
-            //     registration_success: @json(__('auth.registration_success')),
-            //     ok: @json(__('auth.ok')),
-            //     try_again: @json(__('auth.try_again'))
-            // };
-
             // Toggle password visibility
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
@@ -158,7 +144,8 @@
             const eyeSlashConfirmIcon = document.getElementById('eyeSlashConfirmIcon');
 
             if (togglePassword && passwordInput && eyeIcon && eyeSlashIcon) {
-                togglePassword.addEventListener('click', function() {
+                togglePassword.addEventListener('click', function(e) {
+                    e.preventDefault(); // Mencegah submit form tak sengaja
                     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                     passwordInput.setAttribute('type', type);
                     eyeIcon.classList.toggle('hidden');
@@ -167,7 +154,8 @@
             }
 
             if (toggleConfirmPassword && confirmPasswordInput && eyeConfirmIcon && eyeSlashConfirmIcon) {
-                toggleConfirmPassword.addEventListener('click', function() {
+                toggleConfirmPassword.addEventListener('click', function(e) {
+                    e.preventDefault(); // Mencegah submit form tak sengaja
                     const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' :
                         'password';
                     confirmPasswordInput.setAttribute('type', type);
@@ -183,10 +171,12 @@
                     title: '{{ __('auth.error_occurred') }}',
                     text: '{{ session('error') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke'
+                    confirmButtonText: 'Oke',
+                    customClass: {
+                        popup: 'rounded-xl'
+                    }
                 });
             @endif
-
 
             // Periksa pesan sukses pendaftaran
             @if (session('success'))
@@ -195,7 +185,10 @@
                     title: '{{ __('auth.registration_success') }}',
                     text: '{{ session('success') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: '{{ __('auth.ok') }}'
+                    confirmButtonText: '{{ __('auth.ok') }}',
+                    customClass: {
+                        popup: 'rounded-xl'
+                    }
                 });
             @endif
         });
