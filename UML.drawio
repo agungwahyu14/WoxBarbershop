@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.1.1">
   <diagram id="5LpdhVqXA3NhH27AXzgY" name="Page-1">
-    <mxGraphModel dx="1786" dy="1648" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3190" dy="2470" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -28,11 +28,14 @@
         <mxCell id="jd6_JNQgg1B7MNbVTJGR-55" edge="1" parent="1" source="Q4hrafH8fvHZKLklpJmi-180" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;fontSize=12;" target="jd6_JNQgg1B7MNbVTJGR-13">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="vUWxBPKq2jisz8D26rWR-2" edge="1" parent="1" source="Q4hrafH8fvHZKLklpJmi-180" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="vUWxBPKq2jisz8D26rWR-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="Q4hrafH8fvHZKLklpJmi-180" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontSize=12;" value="Pelanggan" vertex="1">
           <mxGeometry height="60" width="30" x="-190" y="1060" as="geometry" />
         </mxCell>
         <mxCell id="Q4hrafH8fvHZKLklpJmi-186" parent="1" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;" value="Wox&#39;s Barbershop" vertex="1">
-          <mxGeometry height="1220" width="850" x="-70" y="60" as="geometry" />
+          <mxGeometry height="1350" width="850" x="-70" y="60" as="geometry" />
         </mxCell>
         <mxCell id="jd6_JNQgg1B7MNbVTJGR-7" parent="Q4hrafH8fvHZKLklpJmi-186" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" value="Login" vertex="1">
           <mxGeometry height="80" width="120" x="690" y="560" as="geometry" />
@@ -158,8 +161,8 @@
         <mxCell id="jd6_JNQgg1B7MNbVTJGR-11" parent="Q4hrafH8fvHZKLklpJmi-186" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" value="Rekomendasi Gaya" vertex="1">
           <mxGeometry height="80" width="120" x="270" y="670" as="geometry" />
         </mxCell>
-        <mxCell id="hU6ivLtPB_1mbr3hU8wh-1" parent="Q4hrafH8fvHZKLklpJmi-186" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" value="Register" vertex="1">
-          <mxGeometry height="80" width="120" x="690" y="730" as="geometry" />
+        <mxCell id="vUWxBPKq2jisz8D26rWR-1" parent="Q4hrafH8fvHZKLklpJmi-186" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" value="Register" vertex="1">
+          <mxGeometry height="80" width="120" x="270" y="1230" as="geometry" />
         </mxCell>
         <mxCell id="jd6_JNQgg1B7MNbVTJGR-32" edge="1" parent="1" source="jd6_JNQgg1B7MNbVTJGR-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;fontSize=12;" target="jd6_JNQgg1B7MNbVTJGR-8">
           <mxGeometry relative="1" as="geometry" />
