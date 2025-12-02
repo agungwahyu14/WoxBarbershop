@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - WOX Barbershop</title>
-    
+
     <!-- Favicons -->
     <link rel="icon" type="image/png" href="{{ asset('images/Logo.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/Logo.png') }}">
     <link rel="shortcut icon" href="{{ asset('images/Logo.png') }}">
-    
+
     @vite('resources/css/app.css')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
