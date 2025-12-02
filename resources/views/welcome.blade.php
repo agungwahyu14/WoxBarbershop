@@ -7,10 +7,12 @@
 
         <div class="container mx-auto px-4 relative z-10">
             <!-- Contoh pada Hero Section -->
-            <h1 class="font-playfair font-bold text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight animate-fade-in-up">
+            <h1
+                class="font-playfair font-bold text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight animate-fade-in-up">
                 {{ __('general.welcome_message') }} <br> {{ __('general.tagline') }}
             </h1>
-            <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto opacity-90 animate-fade-in-up stagger-1">
+            <p
+                class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto opacity-90 animate-fade-in-up stagger-1">
                 {{ __('general.welcome_message_detail') }} <br> {{ __('general.tagline_detail') }}.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up stagger-2">
@@ -50,8 +52,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Service 1 -->
-                <div
-                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-1">
+                <div class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-1">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         01</div>
@@ -67,8 +68,7 @@
                 </div>
 
                 <!-- Service 2 -->
-                <div
-                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-2">
+                <div class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-2">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         02</div>
@@ -83,8 +83,7 @@
                 </div>
 
                 <!-- Service 3 -->
-                <div
-                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-3">
+                <div class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-3">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         03</div>
@@ -99,8 +98,7 @@
                 </div>
 
                 <!-- Service 4 -->
-                <div
-                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-4">
+                <div class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-4">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         04</div>
@@ -158,8 +156,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse($products as $index => $product)
-                    <div
-                        class="product-card bg-white overflow-hidden shadow-md rounded-lg flex flex-col h-full reveal" style="animation-delay: {{ $index * 100 }}ms;">
+                    <div class="product-card bg-white overflow-hidden shadow-md rounded-lg flex flex-col h-full reveal"
+                        style="animation-delay: {{ $index * 100 }}ms;">
                         <div class="relative overflow-hidden bg-gray-50">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
                                 class="w-full h-80 object-cover hover:scale-105 transition-transform duration-300">
@@ -228,10 +226,11 @@
 
 
                 <!-- Dots Indicator -->
-                @if($testimonials->count() > 1)
+                @if ($testimonials->count() > 1)
                     <div class="flex justify-center mt-6 space-x-2" id="testimonial-dots">
-                        @foreach($testimonials as $index => $testimonial)
-                            <button class="testimonial-dot w-3 h-3 rounded-full bg-gray-300 transition-colors duration-300" data-index="{{ $index }}"></button>
+                        @foreach ($testimonials as $index => $testimonial)
+                            <button class="testimonial-dot w-3 h-3 rounded-full bg-gray-300 transition-colors duration-300"
+                                data-index="{{ $index }}"></button>
                         @endforeach
                     </div>
                 @endif
@@ -423,7 +422,8 @@
     <!-- Gallery Section -->
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center reveal">{{ __('welcome.our_gallery') }}
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center reveal">
+                {{ __('welcome.our_gallery') }}
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <a href="#"
@@ -489,7 +489,7 @@
             // Testimonials Slider functionality
             const testimonialSlides = document.querySelectorAll('.testimonial-slide');
             const dots = document.querySelectorAll('.testimonial-dot');
-            
+
             let currentSlide = 0;
             let autoplayInterval;
 
@@ -498,30 +498,30 @@
                 testimonialSlides.forEach(slide => {
                     slide.style.display = 'none';
                 });
-                
+
                 // Remove active class from all dots
                 dots.forEach(dot => {
                     dot.classList.remove('bg-secondary');
                     dot.classList.add('bg-gray-300');
                 });
-                
+
                 // Show current slide
                 if (testimonialSlides[index]) {
                     testimonialSlides[index].style.display = 'block';
-                    
+
                     // Update active dot
                     if (dots[index]) {
                         dots[index].classList.remove('bg-gray-300');
                         dots[index].classList.add('bg-secondary');
                     }
                 }
-                
+
                 currentSlide = index;
             }
 
             function nextSlide() {
                 if (testimonialSlides.length === 0) return;
-                
+
                 let nextIndex = currentSlide + 1;
                 if (nextIndex >= testimonialSlides.length) {
                     nextIndex = 0;
@@ -531,7 +531,7 @@
 
             function startAutoplay() {
                 if (testimonialSlides.length <= 1) return;
-                
+
                 autoplayInterval = setInterval(() => {
                     nextSlide();
                 }, 3000); // Change slide every 3 seconds
@@ -546,7 +546,7 @@
             // Initialize slider
             if (testimonialSlides.length > 0) {
                 showSlide(0);
-                
+
                 // Add event listeners for dots
                 dots.forEach((dot, index) => {
                     dot.addEventListener('click', () => {
@@ -555,10 +555,10 @@
                         startAutoplay();
                     });
                 });
-                
+
                 // Start autoplay
                 startAutoplay();
-                
+
                 // Pause autoplay on hover
                 const sliderContainer = document.querySelector('.relative.max-w-4xl');
                 if (sliderContainer) {

@@ -25,24 +25,48 @@
         /* ============================================
            GLOBAL ANIMATION UTILITIES
            ============================================ */
-        
+
         /* Page Transition Wrapper */
         .page-transition {
             animation: pageEnter 0.5s ease-out forwards;
         }
-        
+
         @keyframes pageEnter {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Staggered Animation Delays */
-        .stagger-1 { animation-delay: 0.1s; }
-        .stagger-2 { animation-delay: 0.2s; }
-        .stagger-3 { animation-delay: 0.3s; }
-        .stagger-4 { animation-delay: 0.4s; }
-        .stagger-5 { animation-delay: 0.5s; }
-        .stagger-6 { animation-delay: 0.6s; }
+        .stagger-1 {
+            animation-delay: 0.1s;
+        }
+
+        .stagger-2 {
+            animation-delay: 0.2s;
+        }
+
+        .stagger-3 {
+            animation-delay: 0.3s;
+        }
+
+        .stagger-4 {
+            animation-delay: 0.4s;
+        }
+
+        .stagger-5 {
+            animation-delay: 0.5s;
+        }
+
+        .stagger-6 {
+            animation-delay: 0.6s;
+        }
 
         /* Initial state for animated elements */
         .animate-on-scroll {
@@ -50,7 +74,7 @@
             transform: translateY(30px);
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .animate-on-scroll.is-visible {
             opacity: 1;
             transform: translateY(0);
@@ -59,14 +83,14 @@
         /* ============================================
            BUTTON ANIMATIONS
            ============================================ */
-        
+
         /* Primary Button Style */
         .btn-primary {
             position: relative;
             overflow: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .btn-primary::before {
             content: '';
             position: absolute;
@@ -79,17 +103,17 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s ease, height 0.6s ease;
         }
-        
+
         .btn-primary:hover::before {
             width: 300px;
             height: 300px;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
         }
-        
+
         .btn-primary:active {
             transform: translateY(-1px);
             box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
@@ -101,7 +125,7 @@
             overflow: hidden;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline::after {
             content: '';
             position: absolute;
@@ -113,11 +137,11 @@
             transition: height 0.3s ease;
             z-index: -1;
         }
-        
+
         .btn-outline:hover::after {
             height: 100%;
         }
-        
+
         .btn-outline:hover {
             color: #1a1a1a;
             border-color: #d4af37;
@@ -126,12 +150,12 @@
         /* ============================================
            CARD ANIMATIONS
            ============================================ */
-        
+
         /* Card Lift Effect */
         .card-lift {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .card-lift:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
@@ -141,7 +165,7 @@
         .card-glow {
             transition: all 0.4s ease;
         }
-        
+
         .card-glow:hover {
             box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
         }
@@ -150,17 +174,17 @@
         .feature-card {
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .feature-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
-        
+
         .feature-card:hover .feature-number {
             opacity: 0.8;
             transform: scale(1.1);
         }
-        
+
         .feature-number {
             transition: all 0.4s ease;
         }
@@ -169,16 +193,16 @@
         .product-card {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .product-card:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
         }
-        
+
         .product-card img {
             transition: transform 0.5s ease;
         }
-        
+
         .product-card:hover img {
             transform: scale(1.08);
         }
@@ -186,12 +210,12 @@
         /* ============================================
            NAVIGATION ANIMATIONS
            ============================================ */
-        
+
         .nav-link {
             position: relative;
             transition: color 0.3s ease;
         }
-        
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -206,7 +230,7 @@
         .nav-link:hover::after {
             width: 100%;
         }
-        
+
         .nav-link:hover {
             color: #d4af37;
         }
@@ -214,24 +238,24 @@
         /* ============================================
            IMAGE & GALLERY ANIMATIONS
            ============================================ */
-        
+
         .menu-item:hover .menu-img {
             transform: scale(1.05);
         }
-        
+
         .gallery-item {
             overflow: hidden;
             transition: all 0.4s ease;
         }
-        
+
         .gallery-item img {
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .gallery-item:hover img {
             transform: scale(1.1);
         }
-        
+
         .gallery-item:hover {
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
@@ -239,12 +263,12 @@
         /* ============================================
            FORM INPUT ANIMATIONS
            ============================================ */
-        
+
         .input-animated {
             transition: all 0.3s ease;
             border: 2px solid transparent;
         }
-        
+
         .input-animated:focus {
             border-color: #d4af37;
             box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
@@ -254,52 +278,79 @@
         /* ============================================
            ALERT & MODAL ANIMATIONS
            ============================================ */
-        
+
         .alert-enter {
             animation: alertSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
-        
+
         @keyframes alertSlideIn {
-            0% { opacity: 0; transform: translateY(-20px) scale(0.95); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            0% {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
-        
+
         .modal-enter {
             animation: modalFadeIn 0.4s ease-out forwards;
         }
-        
+
         @keyframes modalFadeIn {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
-        
+
         .modal-backdrop {
             animation: backdropFadeIn 0.3s ease-out forwards;
         }
-        
+
         @keyframes backdropFadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         /* ============================================
            SUCCESS/NOTIFICATION ANIMATIONS
            ============================================ */
-        
+
         .success-checkmark {
             animation: checkmarkBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
-        
+
         @keyframes checkmarkBounce {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         /* ============================================
            PARALLAX & BACKGROUND
            ============================================ */
-        
+
         .parallax {
             background-attachment: fixed;
             background-position: center;
@@ -310,7 +361,7 @@
         /* ============================================
            DROPDOWN ANIMATIONS
            ============================================ */
-        
+
         [x-cloak] {
             display: none !important;
         }
@@ -332,12 +383,13 @@
         /* ============================================
            CONFETTI & SPECIAL EFFECTS
            ============================================ */
-        
+
         @keyframes confetti-fall {
             0% {
                 transform: translateY(-20px) rotate(0deg);
                 opacity: 1;
             }
+
             100% {
                 transform: translateY(30px) rotate(360deg);
                 opacity: 0;
@@ -351,7 +403,7 @@
         /* ============================================
            REWARD BUTTON (LOYALTY)
            ============================================ */
-        
+
         .reward-button {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
@@ -366,11 +418,19 @@
         /* ============================================
            GLOW EFFECTS
            ============================================ */
-        
+
         @keyframes glow {
-            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
-            100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+            0% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            }
         }
 
         .glow-effect {
@@ -380,41 +440,53 @@
         /* ============================================
            LOADING SKELETON
            ============================================ */
-        
+
         .skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
             animation: shimmer 1.5s infinite;
         }
-        
+
         @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
         }
 
         /* ============================================
            TESTIMONIAL SLIDE ANIMATION
            ============================================ */
-        
+
         .testimonial-slide {
             animation: fadeInUp 0.5s ease-out forwards;
         }
-        
+
         @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ============================================
            SCROLL REVEAL (JavaScript Enhanced)
            ============================================ */
-        
+
         .reveal {
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
@@ -423,19 +495,19 @@
         /* ============================================
            HOVER SCALE UTILITIES
            ============================================ */
-        
+
         .hover-scale {
             transition: transform 0.3s ease;
         }
-        
+
         .hover-scale:hover {
             transform: scale(1.05);
         }
-        
+
         .hover-scale-sm:hover {
             transform: scale(1.02);
         }
-        
+
         .hover-scale-lg:hover {
             transform: scale(1.1);
         }
@@ -443,21 +515,21 @@
         /* ============================================
            SERVICE ITEM ANIMATIONS
            ============================================ */
-        
+
         .service-item {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 12px;
         }
-        
+
         .service-item:hover {
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.1));
             transform: translateX(10px);
         }
-        
+
         .service-item img {
             transition: transform 0.4s ease;
         }
-        
+
         .service-item:hover img {
             transform: scale(1.1);
         }
@@ -465,12 +537,12 @@
         /* ============================================
            ENHANCED FEATURE NUMBER
            ============================================ */
-        
+
         .card-lift .feature-number,
         .feature-card .feature-number {
             transition: all 0.4s ease;
         }
-        
+
         .card-lift:hover .feature-number,
         .feature-card:hover .feature-number {
             opacity: 0.6;
@@ -481,11 +553,11 @@
         /* ============================================
            SMOOTH PAGE SCROLLING
            ============================================ */
-        
+
         html {
             scroll-behavior: smooth;
         }
-        
+
         /* Focus states for accessibility */
         .btn-primary:focus,
         .btn-outline:focus,
@@ -586,12 +658,12 @@
         // Scroll Reveal for elements with 'reveal' class
         document.addEventListener('DOMContentLoaded', function() {
             const revealElements = document.querySelectorAll('.reveal, .animate-on-scroll');
-            
+
             const revealOnScroll = () => {
                 revealElements.forEach((el, index) => {
                     const elementTop = el.getBoundingClientRect().top;
                     const elementVisible = 150;
-                    
+
                     if (elementTop < window.innerHeight - elementVisible) {
                         // Add stagger delay based on index within viewport
                         setTimeout(() => {
@@ -600,10 +672,10 @@
                     }
                 });
             };
-            
+
             // Initial check
             revealOnScroll();
-            
+
             // Throttled scroll listener
             let ticking = false;
             window.addEventListener('scroll', () => {
@@ -625,7 +697,7 @@
                 const size = Math.max(rect.width, rect.height);
                 const x = e.clientX - rect.left - size / 2;
                 const y = e.clientY - rect.top - size / 2;
-                
+
                 ripple.style.cssText = `
                     position: absolute;
                     width: ${size}px;
@@ -638,11 +710,11 @@
                     animation: rippleEffect 0.6s ease-out;
                     pointer-events: none;
                 `;
-                
+
                 this.style.position = 'relative';
                 this.style.overflow = 'hidden';
                 this.appendChild(ripple);
-                
+
                 setTimeout(() => ripple.remove(), 600);
             });
         });

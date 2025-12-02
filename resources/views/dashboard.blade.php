@@ -55,10 +55,12 @@
 
         <div class="container mx-auto px-4 relative z-10">
             <!-- Contoh pada Hero Section -->
-            <h1 class="font-playfair font-bold text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight animate-fade-in-up">
+            <h1
+                class="font-playfair font-bold text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight animate-fade-in-up">
                 {{ __('general.welcome_message') }} <br> {{ __('general.tagline') }}
             </h1>
-            <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto opacity-90 animate-fade-in-up stagger-1">
+            <p
+                class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto opacity-90 animate-fade-in-up stagger-1">
                 {{ __('general.welcome_message_detail') }} <br> {{ __('general.tagline_detail') }}.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up stagger-2">
@@ -98,8 +100,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Service 1 -->
-                <div
-                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-1">
+                <div class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-1">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         01</div>
@@ -115,8 +116,7 @@
                 </div>
 
                 <!-- Service 2 -->
-                <div
-                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-2">
+                <div class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-2">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         02</div>
@@ -131,8 +131,7 @@
                 </div>
 
                 <!-- Service 3 -->
-                <div
-                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-3">
+                <div class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-3">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         03</div>
@@ -147,8 +146,7 @@
                 </div>
 
                 <!-- Service 4 -->
-                <div
-                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-4">
+                <div class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-4">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         04</div>
@@ -205,8 +203,8 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse($products as $index => $product)
-                    <div
-                        class="product-card bg-white overflow-hidden shadow-md rounded-lg flex flex-col h-full reveal" style="animation-delay: {{ $index * 100 }}ms;">
+                    <div class="product-card bg-white overflow-hidden shadow-md rounded-lg flex flex-col h-full reveal"
+                        style="animation-delay: {{ $index * 100 }}ms;">
                         <div class="relative overflow-hidden bg-gray-50">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
                                 class="w-full h-80 object-cover hover:scale-105 transition-transform duration-300">
@@ -479,7 +477,8 @@
     <!-- Gallery Section -->
     <section class="py-12 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center reveal">{{ __('welcome.our_gallery') }}
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center reveal">
+                {{ __('welcome.our_gallery') }}
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <a href="#"
