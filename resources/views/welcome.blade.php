@@ -5,21 +5,21 @@
         style="background-image: url('{{ asset('images/hero2.jpeg') }}');">
         <div class="absolute inset-0 bg-black opacity-60"></div>
 
-        <div class="container mx-auto px-4 animate-fade-in relative z-10">
+        <div class="container mx-auto px-4 relative z-10">
             <!-- Contoh pada Hero Section -->
-            <h1 class="font-playfair font-bold text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight">
+            <h1 class="font-playfair font-bold text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight animate-fade-in-up">
                 {{ __('general.welcome_message') }} <br> {{ __('general.tagline') }}
             </h1>
-            <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto opacity-90">
+            <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl mx-auto opacity-90 animate-fade-in-up stagger-1">
                 {{ __('general.welcome_message_detail') }} <br> {{ __('general.tagline_detail') }}.
             </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up stagger-2">
                 <a href="#reservasi"
-                    class="rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 shadow-lg ">
+                    class="btn-primary rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3 font-medium shadow-lg">
                     {{ __('welcome.reservation_button') }}
                 </a>
                 <a href="#layanan"
-                    class="rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3  font-medium transition-all duration-300 transform hover:-translate-y-1 ">
+                    class="btn-outline rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3 font-medium">
                     {{ __('welcome.view_services') }}
                 </a>
             </div>
@@ -38,7 +38,7 @@
     <!-- Services Section -->
     <section id="layanan" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16 animate-slide-up mt-8">
+            <div class="text-center mb-16 mt-8 reveal">
                 <!-- Contoh pada Section Judul -->
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">
                     {{ __('welcome.our_services') }}
@@ -51,7 +51,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Service 1 -->
                 <div
-                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 rounded-lg ">
+                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-1">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         01</div>
@@ -68,7 +68,7 @@
 
                 <!-- Service 2 -->
                 <div
-                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 rounded-lg">
+                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-2">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         02</div>
@@ -84,7 +84,7 @@
 
                 <!-- Service 3 -->
                 <div
-                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 rounded-lg">
+                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-3">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         03</div>
@@ -100,7 +100,7 @@
 
                 <!-- Service 4 -->
                 <div
-                    class="feature-card bg-white p-8  shadow-md hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 rounded-lg">
+                    class="card-lift bg-white p-8 shadow-md rounded-lg reveal stagger-4">
                     <div
                         class="feature-number text-6xl font-playfair font-bold text-secondary opacity-20 mb-6 transition-all duration-300">
                         04</div>
@@ -123,7 +123,7 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col lg:flex-row items-center gap-12">
                 <!-- Left Column - Text Content -->
-                <div class="lg:w-1/2 animate-slide-up">
+                <div class="lg:w-1/2 reveal">
                     <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-6">{{ __('welcome.about_wox') }}</h2>
                     <p class="text-gray-600 mb-6 text-justify">
                         {{ __('welcome.about_paragraph_1') }}
@@ -132,13 +132,13 @@
                         {{ __('welcome.about_paragraph_2') }}
                     </p>
                     <a href="{{ route('dashboard') }}#reservasi"
-                        class="rounded-lg bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3 font-medium transition-all duration-300 inline-block transform hover:-translate-y-1 shadow-lg">
+                        class="btn-primary rounded-lg bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3 font-medium inline-block shadow-lg">
                         {{ __('welcome.reservation_button') }}
                     </a>
                 </div>
 
                 <!-- Right Column - Image -->
-                <div class="lg:w-1/2 relative animate-fade-in">
+                <div class="lg:w-1/2 relative reveal stagger-1">
                     <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1474&q=80"
                         alt="Barbershop interior" class="shadow-xl w-full h-auto rounded-lg">
                 </div>
@@ -149,7 +149,7 @@
     <!-- Menu Section -->
     <section id="produk" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16 mt-8">
+            <div class="text-center mb-16 mt-8 reveal">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">{{ __('welcome.our_products') }}</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
                     {{ __('welcome.premium_products_description') }}
@@ -157,9 +157,9 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @forelse($products as $product)
+                @forelse($products as $index => $product)
                     <div
-                        class="bg-white overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 rounded-lg flex flex-col h-full">
+                        class="product-card bg-white overflow-hidden shadow-md rounded-lg flex flex-col h-full reveal" style="animation-delay: {{ $index * 100 }}ms;">
                         <div class="relative overflow-hidden bg-gray-50">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
                                 class="w-full h-80 object-cover hover:scale-105 transition-transform duration-300">
@@ -191,7 +191,7 @@
     <!-- Testimonials Section -->
     <section class="py-20 bg-light">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16 mt-8">
+            <div class="text-center mb-16 mt-8 reveal">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">{{ __('welcome.customer_testimonials') }}
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -200,9 +200,9 @@
             </div>
 
             <!-- Testimonials Slider Container -->
-            <div class="relative max-w-4xl mx-auto">
+            <div class="relative max-w-4xl mx-auto reveal stagger-1">
                 @forelse($testimonials as $testimonial)
-                    <div class="testimonial-slide bg-white p-8 shadow-md rounded-lg" style="display: none;">
+                    <div class="testimonial-slide bg-white p-8 shadow-md rounded-lg card-lift" style="display: none;">
                         <div class="flex items-center mb-4">
                             @for ($i = 1; $i <= 5; $i++)
                                 @if ($i <= $testimonial->rating)
@@ -243,7 +243,7 @@
 
     <section id="reservasi" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-16 animate-slide-up">
+            <div class="text-center mb-16 reveal">
                 <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">{{ __('welcome.reservation') }}</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     {{ __('welcome.reservation_description') }}
@@ -252,9 +252,9 @@
 
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Left Column - Services -->
-                <div class="w-full lg:w-1/2">
-                    @forelse($services->take(4) as $service)
-                        <div class="p-6">
+                <div class="w-full lg:w-1/2 reveal">
+                    @forelse($services->take(4) as $index => $service)
+                        <div class="p-6 service-item hover-scale" style="animation-delay: {{ $index * 100 }}ms;">
                             <div class="flex items-center gap-6">
                                 <!-- Gambar Layanan -->
                                 <div class="flex-shrink-0 w-24 h-24">
@@ -299,7 +299,7 @@
                 </div>
 
                 <!-- Right Column - Booking Form -->
-                <div class="w-full lg:w-1/2 bg-white shadow-xl p-6 rounded-lg">
+                <div class="w-full lg:w-1/2 bg-white shadow-xl p-6 rounded-lg card-glow reveal stagger-2">
                     <form action="{{ route('bookings.store') }}" method="POST" id="booking-form" class="space-y-6">
                         @csrf
 
@@ -308,7 +308,7 @@
                             <label for="name"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.name') }}</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
-                                class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                             @error('name')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -320,7 +320,7 @@
                                 <label for="service_id"
                                     class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.service') }}</label>
                                 <select id="service_id" name="service_id"
-                                    class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">{{ __('welcome.choose_service') }}</option>
                                     @foreach ($services as $service)
                                         <option value="{{ $service->id }}" data-duration="{{ $service->duration }}"
@@ -342,7 +342,7 @@
                                 <label for="hairstyle_id"
                                     class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.choose_hairstyle') }}</label>
                                 <select id="hairstyle_id" name="hairstyle_id"
-                                    class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">{{ __('welcome.choose_style') }}</option>
                                     @foreach ($hairstyles as $hairstyle)
                                         <option value="{{ $hairstyle->id }}"
@@ -365,7 +365,7 @@
                                 <label for="payment_method"
                                     class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.payment') }}</label>
                                 <select id="payment_method" name="payment_method"
-                                    class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">{{ __('welcome.choose_payment_method') }}</option>
                                     <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>
                                         {{ __('welcome.cash') }}
@@ -384,7 +384,7 @@
                                     class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.date_time') }}</label>
                                 <input type="datetime-local" id="date_time" name="date_time"
                                     value="{{ old('date_time') }}"
-                                    class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                 @error('date_time')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -396,7 +396,7 @@
                             <label for="description"
                                 class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.description') }}</label>
                             <textarea id="description" name="description" rows="3"
-                                class="w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">{{ old('description') }}</textarea>
+                                class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -405,12 +405,12 @@
                         <!-- Submit Button -->
                         @auth
                             <button type="submit"
-                                class="rounded-lg w-full bg-secondary hover:bg-primary text-black hover:text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1 capitalize">
+                                class="btn-primary rounded-lg w-full bg-secondary hover:bg-primary text-black hover:text-white px-6 py-4 font-bold text-lg mt-6 capitalize">
                                 {{ __('welcome.reservation_submit') }}
                             </button>
                         @else
                             <a href="{{ route('login') }}"
-                                class="text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 transition-all duration-300 inline-block transform hover:-translate-y-1 rounded-lg capitalize">
+                                class="btn-primary text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 inline-block rounded-lg capitalize">
                                 {{ __('welcome.login_to_reserve') }}
                             </a>
                         @endauth
@@ -421,28 +421,28 @@
     </section>
 
     <!-- Gallery Section -->
-    <section class="py-12 bg-white ">
+    <section class="py-12 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center">{{ __('welcome.our_gallery') }}
+            <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center reveal">{{ __('welcome.our_gallery') }}
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <a href="#"
-                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 reveal stagger-1">
                     <img src="{{ asset('images/galeri1.jpeg') }}" alt="Wox's Barbershop Gallery 1"
-                        class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl ">
+                        class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl">
                 </a>
                 <a href="#"
-                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 reveal stagger-2">
                     <img src="{{ asset('images/galeri2.jpeg') }}" alt="Wox's Barbershop Gallery 2"
                         class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl">
                 </a>
                 <a href="#"
-                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 reveal stagger-3">
                     <img src="{{ asset('images/hero.jpeg') }}" alt="Wox's Barbershop Gallery 3"
                         class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl">
                 </a>
                 <a href="#"
-                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+                    class="gallery-item overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 reveal stagger-4">
                     <img src="{{ asset('images/galeri4.jpeg') }}" alt="Wox's Barbershop Gallery 4"
                         class="w-full h-60 object-cover transform hover:scale-110 transition-all duration-500 rounded-xl">
                 </a>

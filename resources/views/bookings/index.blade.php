@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <section id="bookings" class="py-20 bg-gray-50">
+    <section id="bookings" class="py-20 bg-gray-50 min-h-screen">
         <div class="container mx-auto px-4">
             {{-- Header --}}
             <div class="text-center mb-10 mt-8">
@@ -217,7 +217,7 @@
                 @endif
             @else
                 {{-- Jika TIDAK ADA booking, tampilkan "Empty State" yang di tengah halaman --}}
-                <div class="flex items-center justify-center ">
+                <div class="flex items-center justify-center min-h-[60vh]">
                     <div class="text-center max-w-md">
                         <div class="mb-4">
                             <i class="fas fa-calendar-times text-6xl text-gray-300"></i>

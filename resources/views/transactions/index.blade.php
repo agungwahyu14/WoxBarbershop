@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <section id="transactions" class="py-20 bg-gray-50">
+    <section id="transactions" class="py-20 bg-gray-50 min-h-screen">
         <div class="container mx-auto px-4">
             {{-- Header --}}
             <div class="text-center mb-10 mt-8">
@@ -236,8 +236,8 @@
                 @endif
             @else
                 {{-- Empty State --}}
-                <div class="text-center py-12">
-                    <div class="max-w-md mx-auto">
+                <div class="flex items-center justify-center min-h-[60vh]">
+                    <div class="text-center max-w-md">
                         <div class="mb-4">
                             <i class="fas fa-receipt text-6xl text-gray-300"></i>
                         </div>
