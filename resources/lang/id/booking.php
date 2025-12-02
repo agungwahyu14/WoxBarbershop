@@ -38,6 +38,7 @@ return [
     'status_in_progress' => 'Sedang Diproses',
     'status_completed' => 'Selesai',
     'status_cancelled' => 'Dibatalkan',
+    'status_expired' => 'Kedaluwarsa',
 
     // Payment Status
     'payment_status' => 'Status Pembayaran',

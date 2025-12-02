@@ -38,6 +38,7 @@ return [
     'status_in_progress' => 'In Progress',
     'status_completed' => 'Completed',
     'status_cancelled' => 'Cancelled',
+    'status_expired' => 'Expired',
 
     // Payment Status
     'payment_status' => 'Payment Status',

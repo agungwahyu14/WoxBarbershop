@@ -14,10 +14,14 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         
-        // Cancel expired bookings every hour
+        // Auto-cancel and expire bookings every hour
+        // Rule 1: Bookings older than 24 hours → EXPIRED
+        // Rule 2: Bookings passed but < 24 hours with pending status → CANCELLED
         $schedule->command('app:cancel-expired-bookings')
                  ->hourly()
-                 ->description('Cancel bookings and transactions that have expired');
+                 ->description('Auto-cancel and expire bookings based on time constraints')
+                 ->withoutOverlapping()
+                 ->runInBackground();
         
         // Reset daily queue counters at midnight (00:00)
         $schedule->command('queue:reset-daily')

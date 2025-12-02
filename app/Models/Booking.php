@@ -9,6 +9,16 @@ class Booking extends Model
 {
     use HasFactory;
 
+    /**
+     * Booking status constants
+     */
+    const STATUS_PENDING = 'pending';
+    const STATUS_CONFIRMED = 'confirmed';
+    const STATUS_IN_PROGRESS = 'in_progress';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_EXPIRED = 'expired';
+
     protected $fillable = [
         'user_id',
         'name',
@@ -126,12 +136,22 @@ class Booking extends Model
     }
 
     /**
-     * Scope to get expired bookings
+     * Scope to get expired bookings (older than 24 hours)
      */
     public function scopeExpired($query)
     {
-        return $query->where('status', 'pending')
-                    ->where('date_time', '<', now());
+        return $query->whereIn('status', [self::STATUS_PENDING, self::STATUS_CANCELLED])
+                    ->where('date_time', '<', now()->subHours(24));
+    }
+
+    /**
+     * Scope to get bookings ready to cancel (passed but < 24 hours)
+     */
+    public function scopeReadyToCancel($query)
+    {
+        return $query->where('status', self::STATUS_PENDING)
+                    ->where('date_time', '<', now())
+                    ->where('date_time', '>=', now()->subHours(24));
     }
 
     /**
@@ -153,6 +173,7 @@ class Booking extends Model
             'in_progress' => '<span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">In Progress</span>',
             'completed' => '<span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Completed</span>',
             'cancelled' => '<span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Cancelled</span>',
+            'expired' => '<span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Expired</span>',
         ];
 
         return $badges[$this->status] ?? '<span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">Unknown</span>';
