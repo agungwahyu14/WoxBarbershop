@@ -67,6 +67,7 @@ return [
     'verification_link_sent' => 'Link verifikasi baru telah dikirim ke alamat email yang Anda berikan saat pendaftaran.',
     'resend_verification' => 'Kirim Ulang Email Verifikasi',
     'verify_email_notification' => 'Silakan verifikasi alamat email Anda untuk mengakses semua fitur.',
+    'verification_email_sent' => 'Registrasi berhasil! Link verifikasi telah dikirim ke email Anda. Silakan cek inbox Anda untuk memverifikasi akun.',
     
     // JavaScript Messages
     'email_sent' => 'Email Terkirim!',
@@ -74,6 +75,10 @@ return [
     'ok' => 'Oke',
     'try_again' => 'Coba Lagi',
     'success' => 'Berhasil!',
+    'logout_confirmation_title' => 'Konfirmasi Logout',
+    'logout_confirmation_text' => 'Apakah Anda yakin ingin keluar?',
+    'yes_logout' => 'Ya, Keluar',
+    'cancel' => 'Batal',
     'registration_failed' => 'Pendaftaran Gagal!',
     'information' => 'Informasi',
     'warning' => 'Peringatan!',

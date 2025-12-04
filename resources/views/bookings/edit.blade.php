@@ -90,20 +90,51 @@
                                 @enderror
                             </div>
 
-                            {{-- Date & Time --}}
+                            {{-- Booking Date --}}
                             <div>
-                                <label for="date_time" class="block text-sm font-medium text-gray-700 mb-2">
-                                    <i class="fas fa-calendar-alt mr-1 text-[#d4af37]   "></i>
-                                    {{ __('booking.date_time') }}
+                                <label for="booking_date" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-calendar-alt mr-1 text-[#d4af37]"></i>
+                                    {{ __('welcome.booking_date') }}
                                 </label>
-                                <input type="datetime-local" name="date_time" id="date_time"
-                                    value="{{ old('date_time', \Carbon\Carbon::parse($booking->date_time)->format('Y-m-d\TH:i')) }}"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('date_time') border-red-500 @enderror"
+                                <input type="date" name="booking_date" id="booking_date"
+                                    value="{{ old('booking_date', $booking->date_time->format('Y-m-d')) }}"
+                                    min="{{ now()->format('Y-m-d') }}"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('booking_date') border-red-500 @enderror"
                                     required>
-                                @error('date_time')
+                                @error('booking_date')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
-                                <div id="datetime-error" class="mt-1 text-sm text-red-600 hidden"></div>
+                            </div>
+
+                            {{-- Shift Selection --}}
+                            <div>
+                                <label for="shift" class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-clock mr-1 text-[#d4af37]"></i>
+                                    {{ __('booking.choose_shift') }}
+                                </label>
+                                <select name="shift" id="shift" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('shift') border-red-500 @enderror">
+                                    <option value="">{{ __('booking.choose_shift') }}</option>
+                                    <option value="morning"
+                                        {{ old('shift', $booking->shift) == 'morning' ? 'selected' : '' }}>
+                                        {{ __('booking.shift_morning') }}
+                                    </option>
+                                    <option value="afternoon"
+                                        {{ old('shift', $booking->shift) == 'afternoon' ? 'selected' : '' }}>
+                                        {{ __('booking.shift_afternoon') }}
+                                    </option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500">{{ __('booking.shift_selection_info') }}</p>
+                                @error('shift')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                                <div id="shift-capacity-info"
+                                    class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg hidden">
+                                    <p class="text-sm text-blue-800">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        <span id="capacity-text"></span>
+                                    </p>
+                                </div>
                             </div>
 
                             {{-- Service --}}

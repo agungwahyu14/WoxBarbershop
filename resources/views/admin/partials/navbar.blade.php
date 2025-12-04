@@ -30,9 +30,9 @@
                     </a> --}}
                     <hr class="navbar-divider">
                     <!-- Form Logout Breeze -->
-                    <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                    <form method="POST" action="{{ route('logout') }}" id="logout-form-admin">
                         @csrf
-                        <button type="submit" class="navbar-item"
+                        <button type="button" onclick="confirmLogout('logout-form-admin')" class="navbar-item"
                             style="background: none; border: none; cursor: pointer;">
                             <span class="icon"><i class="mdi mdi-logout"></i></span>
                             <span>{{ __('auth.logout') }}</span>

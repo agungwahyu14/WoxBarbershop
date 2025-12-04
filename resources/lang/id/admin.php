@@ -809,7 +809,7 @@ return [
     'contact' => 'Kontak',
     'hairstyle' => 'Gaya Rambut',
     'date_time' => 'Tanggal & Waktu',
-    'queue' => 'Pemesanan',
+    'queue' => 'Antrean',
     'status' => 'Status',
     
     // Booking Action Messages

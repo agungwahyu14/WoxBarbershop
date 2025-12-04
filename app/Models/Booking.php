@@ -19,6 +19,26 @@ class Booking extends Model
     const STATUS_CANCELLED = 'cancelled';
     const STATUS_EXPIRED = 'expired';
 
+    /**
+     * Shift constants
+     */
+    const SHIFT_MORNING = 'morning';
+    const SHIFT_AFTERNOON = 'afternoon';
+
+    /**
+     * Shift capacity in minutes
+     */
+    const SHIFT_MORNING_CAPACITY = 240; // 11:00 - 15:00 (4 hours)
+    const SHIFT_AFTERNOON_CAPACITY = 360; // 16:00 - 22:00 (6 hours)
+
+    /**
+     * Shift time boundaries
+     */
+    const SHIFT_MORNING_START = '11:00';
+    const SHIFT_MORNING_END = '15:00';
+    const SHIFT_AFTERNOON_START = '16:00';
+    const SHIFT_AFTERNOON_END = '22:00';
+
     protected $fillable = [
         'user_id',
         'name',
@@ -30,7 +50,7 @@ class Booking extends Model
         'payment_method',
         'status',
         'total_price',
-
+        'shift',
     ];
 
     protected $casts = [
@@ -142,6 +162,106 @@ class Booking extends Model
     {
         return $query->whereIn('status', [self::STATUS_PENDING, self::STATUS_CANCELLED])
                     ->where('date_time', '<', now()->subHours(24));
+    }
+
+    /**
+     * Scope to get bookings by shift
+     */
+    public function scopeByShift($query, $shift)
+    {
+        return $query->where('shift', $shift);
+    }
+
+    /**
+     * Scope to get bookings by date
+     */
+    public function scopeByDate($query, $date)
+    {
+        return $query->whereDate('date_time', $date);
+    }
+
+    /**
+     * Scope to get active bookings (exclude cancelled and expired)
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereNotIn('status', [self::STATUS_CANCELLED, self::STATUS_EXPIRED]);
+    }
+
+    /**
+     * Calculate total booked duration for a specific date and shift
+     */
+    public static function getTotalBookedDuration($date, $shift)
+    {
+        return self::with('service')
+            ->byDate($date)
+            ->byShift($shift)
+            ->active()
+            ->get()
+            ->sum(function ($booking) {
+                $duration = $booking->service ? $booking->service->duration : '60';
+                return (int) filter_var($duration, FILTER_SANITIZE_NUMBER_INT);
+            });
+    }
+
+    /**
+     * Get available capacity for a specific date and shift
+     */
+    public static function getAvailableCapacity($date, $shift)
+    {
+        $capacity = $shift === self::SHIFT_MORNING 
+            ? self::SHIFT_MORNING_CAPACITY 
+            : self::SHIFT_AFTERNOON_CAPACITY;
+        
+        $bookedDuration = self::getTotalBookedDuration($date, $shift);
+        
+        return max(0, $capacity - $bookedDuration);
+    }
+
+    /**
+     * Check if a shift has capacity for a new booking
+     */
+    public static function hasCapacity($date, $shift, $requiredDuration)
+    {
+        $availableCapacity = self::getAvailableCapacity($date, $shift);
+        return $availableCapacity >= $requiredDuration;
+    }
+
+    /**
+     * Determine the shift based on time or auto-assign based on capacity
+     */
+    public static function determineShift($date, $serviceDuration)
+    {
+        // Check morning shift first
+        if (self::hasCapacity($date, self::SHIFT_MORNING, $serviceDuration)) {
+            return self::SHIFT_MORNING;
+        }
+        
+        // Check afternoon shift
+        if (self::hasCapacity($date, self::SHIFT_AFTERNOON, $serviceDuration)) {
+            return self::SHIFT_AFTERNOON;
+        }
+        
+        // No capacity available
+        return null;
+    }
+
+    /**
+     * Get shift time range
+     */
+    public static function getShiftTimeRange($shift)
+    {
+        if ($shift === self::SHIFT_MORNING) {
+            return [
+                'start' => self::SHIFT_MORNING_START,
+                'end' => self::SHIFT_MORNING_END,
+            ];
+        }
+        
+        return [
+            'start' => self::SHIFT_AFTERNOON_START,
+            'end' => self::SHIFT_AFTERNOON_END,
+        ];
     }
 
     /**

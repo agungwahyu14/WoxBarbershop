@@ -157,11 +157,40 @@ class BookingController extends Controller
                     ->addColumn('datetime_formatted', function ($row) {
                         $date = \Carbon\Carbon::parse($row->date_time);
 
-                        return '<div class="text-center">
-                        <div class="font-medium text-gray-900">'.$date->format('M d, Y').'</div>
-                        <div class="text-sm text-gray-500">'.$date->format('H:i A').'</div>
-                        <div class="text-xs text-gray-400">'.$date->diffForHumans().'</div>
+                        return '<div class="text-left">
+                        <div class="font-medium text-gray-900">'.$date->format('d M Y').'</div>
+                  
                     </div>';
+                    })
+                    ->addColumn('shift_display', function ($row) {
+                        if ($row->shift) {
+                            $shiftColors = [
+                                'morning' => 'bg-amber-100 text-amber-800 border-amber-200',
+                                'afternoon' => 'bg-indigo-100 text-indigo-800 border-indigo-200',
+                            ];
+                            $shiftIcons = [
+                                'morning' => 'fas fa-sun',
+                                'afternoon' => 'fas fa-moon',
+                            ];
+                            $shiftTimes = [
+                                'morning' => '11:00 - 15:00',
+                                'afternoon' => '16:00 - 22:00',
+                            ];
+                            
+                            $color = $shiftColors[$row->shift] ?? 'bg-gray-100 text-gray-800 border-gray-200';
+                            $icon = $shiftIcons[$row->shift] ?? 'fas fa-clock';
+                            $time = $shiftTimes[$row->shift] ?? '';
+                            
+                            return '<div class="text-center">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border '.$color.'">
+                                    <i class="'.$icon.' mr-1"></i>
+                                    '.__('booking.shift_'.$row->shift).'
+                                </span>
+                                <div class="text-xs text-gray-500 mt-1">'.$time.'</div>
+                            </div>';
+                        }
+                        
+                        return '<span class="text-gray-400 text-xs">-</span>';
                     })
                     ->addColumn('queue_display', function ($row) {
                         return '<div class="text-center">
@@ -243,7 +272,7 @@ class BookingController extends Controller
 
                         return $actions;
                     })
-                    ->rawColumns(['customer_info', 'contact_info', 'service_info', 'hairstyle_info', 'datetime_formatted', 'queue_display', 'status_badge', 'actions'])
+                    ->rawColumns(['customer_info', 'contact_info', 'service_info', 'hairstyle_info', 'datetime_formatted', 'shift_display', 'queue_display', 'status_badge', 'actions'])
                     ->make(true);
 
             } catch (\Exception $e) {
@@ -310,13 +339,14 @@ class BookingController extends Controller
                 'ip' => $request->ip()
             ]);
 
-            // Validasi input
+            // Validasi input - Add shift selection
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'service_id' => 'required|exists:services,id',
                 'hairstyle_id' => 'required|exists:hairstyles,id',
                 'payment_method' => 'required|in:cash,bank',
-                'date_time' => 'required|date|after_or_equal:now',
+                'booking_date' => 'required|date|after_or_equal:today',
+                'shift' => 'required|in:morning,afternoon',
                 'description' => 'nullable|string|max:1000',
             ], [
                 'name.required' => __('booking.name_required'),
@@ -326,117 +356,71 @@ class BookingController extends Controller
                 'hairstyle_id.exists' => __('booking.hairstyle_not_found'),
                 'payment_method.required' => __('booking.payment_method_required'),
                 'payment_method.in' => __('booking.payment_method_invalid'),
-                'date_time.required' => __('booking.date_time_required'),
-                'date_time.date' => __('booking.date_time_invalid'),
-                'date_time.after_or_equal' => __('booking.date_time_past'),
+                'booking_date.required' => __('booking.date_required'),
+                'booking_date.date' => __('booking.date_invalid'),
+                'booking_date.after_or_equal' => __('booking.date_past'),
+                'shift.required' => __('booking.shift_required'),
+                'shift.in' => __('booking.shift_invalid'),
                 'description.max' => __('booking.description_too_long'),
             ]);
 
-            // Ambil data service untuk menghitung harga dan durasi
+            // Get service data for duration and price calculation
             $service = Service::findOrFail($validated['service_id']);
-
-            // Validasi jam operasional barber (11:00 - 22:00)
-            $bookingStartTime = Carbon::parse($validated['date_time']);
             $serviceDurationMinutes = (int) filter_var($service->duration, FILTER_SANITIZE_NUMBER_INT);
             
             // Fallback to 60 minutes if no duration specified or invalid duration
             if ($serviceDurationMinutes <= 0) {
                 $serviceDurationMinutes = 60;
             }
-            
-            $bookingEndTime = $bookingStartTime->copy()->addMinutes($serviceDurationMinutes);
 
-            // Cek jam operasional (11:00 - 22:00)
-            $businessStart = $bookingStartTime->copy()->setTime(11, 0, 0); // 11:00
-            $businessEnd = $bookingStartTime->copy()->setTime(22, 0, 0);   // 22:00
+            // Validate selected shift has capacity
+            $bookingDate = $validated['booking_date'];
+            $selectedShift = $validated['shift'];
 
-            // Validasi waktu mulai booking harus dalam jam operasional
-            if ($bookingStartTime->lt($businessStart) || $bookingStartTime->gte($businessEnd)) {
-                Log::warning('Booking attempted outside business hours', [
-                    'user_id' => auth()->id(),
-                    'requested_time' => $validated['date_time'],
-                    'business_start' => $businessStart->format('H:i'),
-                    'business_end' => $businessEnd->format('H:i')
-                ]);
+            if (!Booking::hasCapacity($bookingDate, $selectedShift, $serviceDurationMinutes)) {
+                $availableCapacity = Booking::getAvailableCapacity($bookingDate, $selectedShift);
+                $shiftName = $selectedShift === Booking::SHIFT_MORNING ? __('booking.shift_morning') : __('booking.shift_afternoon');
                 
-                throw ValidationException::withMessages([
-                    'date_time' => __('booking.business_hours_error')
-                ]);
-            }
-
-            // Validasi waktu selesai booking tidak boleh melebihi jam tutup (22:00)
-            // Booking harus selesai sebelum jam 22:00
-            if ($bookingEndTime->gt($businessEnd)) {
-                $latestStartTime = $businessEnd->copy()->subMinutes($serviceDurationMinutes);
-                throw ValidationException::withMessages([
-                    'date_time' => __('booking.business_hours_error') . ' ' . 
-                                 __('booking.booking_warning') . ' ' .
-                                 __('booking.select_time_before') . ' ' . $latestStartTime->format('H:i')
-                ]);
-            }
-
-            // Cek konflik dengan booking yang sudah ada (status selain 'cancelled')
-            $conflictingBookings = Booking::with('service')
-                ->where('status', '!=', 'cancelled')
-                ->whereDate('date_time', $bookingStartTime->toDateString())
-                ->get()
-                ->filter(function ($existingBooking) use ($bookingStartTime, $bookingEndTime) {
-                    $existingStart = Carbon::parse($existingBooking->date_time);
-                    $existingDuration = (int) filter_var($existingBooking->service->duration ?? '60', FILTER_SANITIZE_NUMBER_INT);
-                    $existingEnd = $existingStart->copy()->addMinutes($existingDuration);
-                    
-                    // Cek apakah ada overlap waktu
-                    return ($bookingStartTime < $existingEnd) && ($bookingEndTime > $existingStart);
-                });
-
-            if ($conflictingBookings->count() > 0) {
-                Log::warning('Booking time conflict detected', [
+                Log::warning('Selected shift has no capacity', [
                     'user_id' => auth()->id(),
-                    'requested_time' => $validated['date_time'],
+                    'booking_date' => $bookingDate,
+                    'selected_shift' => $selectedShift,
                     'service_duration' => $serviceDurationMinutes,
-                    'conflicting_bookings_count' => $conflictingBookings->count(),
-                    'conflicting_booking_ids' => $conflictingBookings->pluck('id')->toArray()
+                    'available_capacity' => $availableCapacity
                 ]);
                 
-                // Cari slot alternatif pada hari yang sama
-                $alternativeSlots = $this->findAlternativeSlots(
-                    $bookingStartTime->toDateString(),
-                    $serviceDurationMinutes
-                );
-                
-                $errorMessage = __('booking.time_conflict');
-                
-                if (!empty($alternativeSlots)) {
-                    $alternativeSlotsText = collect($alternativeSlots)->map(function ($slot) {
-                        return __('booking.slot_available', ['time' => $slot]);
-                    })->join(', ');
-                    
-                    $errorMessage .= ' ' . __('booking.alternative_slots') . ' ' . $alternativeSlotsText;
-                }
-                
                 throw ValidationException::withMessages([
-                    'date_time' => $errorMessage
+                    'shift' => __('booking.shift_no_capacity', [
+                        'shift' => $shiftName,
+                        'available' => $availableCapacity,
+                        'required' => $serviceDurationMinutes
+                    ])
                 ]);
             }
 
-            // Hitung total harga (bisa disesuaikan kalau ada tambahan biaya lain)
+            // Calculate booking time based on selected shift
+            $shiftTimeRange = Booking::getShiftTimeRange($selectedShift);
+            $bookingDateTime = Carbon::parse($bookingDate . ' ' . $shiftTimeRange['start']);
+
+            // Calculate total price
             $totalPrice = $service->price;
 
-            // Hitung nomor antrian (berdasarkan tanggal yang sama)
-            $queueNumber = Booking::whereDate('date_time', date('Y-m-d', strtotime($validated['date_time'])))
+            // Calculate queue number (based on same date)
+            $queueNumber = Booking::whereDate('date_time', $bookingDate)
                 ->count() + 1;
 
-            // Simpan data booking
+            // Create booking
             $booking = Booking::create([
                 'user_id' => auth()->id(),
                 'name' => $validated['name'],
                 'service_id' => $validated['service_id'],
                 'hairstyle_id' => $validated['hairstyle_id'],
-                'date_time' => $validated['date_time'],
+                'date_time' => $bookingDateTime,
+                'shift' => $selectedShift,
                 'queue_number' => $queueNumber,
                 'description' => $validated['description'] ?? null,
                 'payment_method' => $validated['payment_method'],
-                'status' => 'pending', // default status
+                'status' => 'pending',
                 'total_price' => $totalPrice,
             ]);
 
@@ -445,7 +429,9 @@ class BookingController extends Controller
             Log::info('Booking created successfully', [
                 'booking_id' => $booking->id,
                 'user_id' => auth()->id(),
-                'queue_number' => $booking->queue_number
+                'queue_number' => $booking->queue_number,
+                'selected_shift' => $selectedShift,
+                'service_duration' => $serviceDurationMinutes
             ]);
 
             // Check if request is AJAX
@@ -458,13 +444,14 @@ class BookingController extends Controller
                         'name' => $booking->name,
                         'queue_number' => $booking->queue_number,
                         'date_time' => $booking->date_time->format('d/m/Y H:i'),
+                        'shift' => ucfirst($booking->shift),
                         'service_name' => $booking->service->name ?? 'N/A'
                     ],
                     'redirect' => route('bookings.index')
                 ]);
             }
 
-            // Redirect dengan pesan sukses (untuk non-AJAX requests)
+            // Redirect with success message (for non-AJAX requests)
             return redirect()->back()->with('success', __('booking.booking_created_successfully', ['queue_number' => $booking->queue_number]));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -679,13 +666,14 @@ class BookingController extends Controller
                 'ip' => $request->ip()
             ]);
 
-            // Validasi input dengan pesan error yang sama seperti store
+            // Validasi input
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'service_id' => 'required|exists:services,id',
                 'hairstyle_id' => 'required|exists:hairstyles,id',
                 'payment_method' => 'required|in:cash,bank',
-                'date_time' => 'required|date|after_or_equal:now',
+                'booking_date' => 'required|date|after_or_equal:today',
+                'shift' => 'required|in:morning,afternoon',
                 'description' => 'nullable|string|max:1000',
             ], [
                 'name.required' => __('booking.name_required'),
@@ -695,104 +683,73 @@ class BookingController extends Controller
                 'hairstyle_id.exists' => __('booking.hairstyle_not_found'),
                 'payment_method.required' => __('booking.payment_method_required'),
                 'payment_method.in' => __('booking.payment_method_invalid'),
-                'date_time.required' => __('booking.date_time_required'),
-                'date_time.date' => __('booking.date_time_invalid'),
-                'date_time.after_or_equal' => __('booking.date_time_past'),
+                'booking_date.required' => __('booking.date_required'),
+                'booking_date.date' => __('booking.date_invalid'),
+                'booking_date.after_or_equal' => __('booking.date_past'),
+                'shift.required' => __('booking.shift_required'),
+                'shift.in' => __('booking.shift_invalid'),
                 'description.max' => __('booking.description_too_long'),
             ]);
 
-            // Ambil data service untuk menghitung harga dan durasi
+            // Get service data for duration and price calculation
             $service = Service::findOrFail($validated['service_id']);
-
-            // Validasi jam operasional barber (11:00 - 22:00)
-            $bookingStartTime = Carbon::parse($validated['date_time']);
             $serviceDurationMinutes = (int) filter_var($service->duration, FILTER_SANITIZE_NUMBER_INT);
             
             // Fallback to 60 minutes if no duration specified or invalid duration
             if ($serviceDurationMinutes <= 0) {
                 $serviceDurationMinutes = 60;
             }
+
+            // Check shift capacity (excluding current booking)
+            $bookingDate = $validated['booking_date'];
+            $selectedShift = $validated['shift'];
             
-            $bookingEndTime = $bookingStartTime->copy()->addMinutes($serviceDurationMinutes);
-
-            // Cek jam operasional (11:00 - 22:00)
-            $businessStart = $bookingStartTime->copy()->setTime(11, 0, 0); // 11:00
-            $businessEnd = $bookingStartTime->copy()->setTime(22, 0, 0);   // 22:00
-
-            // Validasi waktu mulai booking harus dalam jam operasional
-            if ($bookingStartTime->lt($businessStart) || $bookingStartTime->gte($businessEnd)) {
-                Log::warning('Booking update attempted outside business hours', [
-                    'booking_id' => $booking->id,
-                    'user_id' => auth()->id(),
-                    'requested_time' => $validated['date_time'],
-                    'business_start' => $businessStart->format('H:i'),
-                    'business_end' => $businessEnd->format('H:i')
-                ]);
-                
-                throw ValidationException::withMessages([
-                    'date_time' => __('booking.business_hours_error')
-                ]);
-            }
-
-            // Validasi waktu selesai booking tidak boleh melebihi jam tutup (22:00)
-            // Booking harus selesai sebelum jam 22:00
-            if ($bookingEndTime->gt($businessEnd)) {
-                $latestStartTime = $businessEnd->copy()->subMinutes($serviceDurationMinutes);
-                throw ValidationException::withMessages([
-                    'date_time' => __('booking.business_hours_error') . ' ' . 
-                                 __('booking.booking_warning') . ' ' .
-                                 __('booking.select_time_before') . ' ' . $latestStartTime->format('H:i')
-                ]);
-            }
-
-            // Cek konflik dengan booking yang sudah ada (status selain 'cancelled')
-            // Exclude current booking from conflict check
-            $conflictingBookings = Booking::with('service')
-                ->where('status', '!=', 'cancelled')
+            // Calculate booked duration for the shift, excluding current booking
+            $bookedDuration = Booking::with('service')
+                ->byDate($bookingDate)
+                ->byShift($selectedShift)
+                ->active()
                 ->where('id', '!=', $booking->id) // Exclude current booking
-                ->whereDate('date_time', $bookingStartTime->toDateString())
                 ->get()
-                ->filter(function ($existingBooking) use ($bookingStartTime, $bookingEndTime) {
-                    $existingStart = Carbon::parse($existingBooking->date_time);
-                    $existingDuration = (int) filter_var($existingBooking->service->duration ?? '60', FILTER_SANITIZE_NUMBER_INT);
-                    $existingEnd = $existingStart->copy()->addMinutes($existingDuration);
-                    
-                    // Cek apakah ada overlap waktu
-                    return ($bookingStartTime < $existingEnd) && ($bookingEndTime > $existingStart);
+                ->sum(function ($existingBooking) {
+                    $duration = $existingBooking->service ? $existingBooking->service->duration : '60';
+                    return (int) filter_var($duration, FILTER_SANITIZE_NUMBER_INT);
                 });
-
-            if ($conflictingBookings->count() > 0) {
-                Log::warning('Booking update time conflict detected', [
+            
+            $shiftCapacity = $selectedShift === Booking::SHIFT_MORNING 
+                ? Booking::SHIFT_MORNING_CAPACITY 
+                : Booking::SHIFT_AFTERNOON_CAPACITY;
+            
+            $availableCapacity = $shiftCapacity - $bookedDuration;
+            
+            if ($availableCapacity < $serviceDurationMinutes) {
+                Log::warning('Booking update insufficient capacity', [
                     'booking_id' => $booking->id,
                     'user_id' => auth()->id(),
-                    'requested_time' => $validated['date_time'],
-                    'service_duration' => $serviceDurationMinutes,
-                    'conflicting_bookings_count' => $conflictingBookings->count(),
-                    'conflicting_booking_ids' => $conflictingBookings->pluck('id')->toArray()
+                    'booking_date' => $bookingDate,
+                    'selected_shift' => $selectedShift,
+                    'required_duration' => $serviceDurationMinutes,
+                    'available_capacity' => $availableCapacity
                 ]);
                 
-                // Cari slot alternatif pada hari yang sama
-                $alternativeSlots = $this->findAlternativeSlots(
-                    $bookingStartTime->toDateString(),
-                    $serviceDurationMinutes
-                );
-                
-                $errorMessage = __('booking.time_conflict');
-                
-                if (!empty($alternativeSlots)) {
-                    $alternativeSlotsText = collect($alternativeSlots)->map(function ($slot) {
-                        return __('booking.slot_available', ['time' => $slot]);
-                    })->join(', ');
-                    
-                    $errorMessage .= ' ' . __('booking.alternative_slots') . ' ' . $alternativeSlotsText;
-                }
+                $shiftName = $selectedShift === 'morning' 
+                    ? __('booking.shift_morning') 
+                    : __('booking.shift_afternoon');
                 
                 throw ValidationException::withMessages([
-                    'date_time' => $errorMessage
+                    'shift' => __('booking.shift_no_capacity', [
+                        'shift' => $shiftName,
+                        'available' => $availableCapacity,
+                        'required' => $serviceDurationMinutes
+                    ])
                 ]);
             }
 
-            // Hitung total harga (bisa disesuaikan kalau ada tambahan biaya lain)
+            // Calculate booking time based on selected shift
+            $shiftTimeRange = Booking::getShiftTimeRange($selectedShift);
+            $bookingDateTime = Carbon::parse($bookingDate . ' ' . $shiftTimeRange['start']);
+
+            // Calculate total price
             $totalPrice = $service->price;
 
             // Update booking data
@@ -800,7 +757,8 @@ class BookingController extends Controller
                 'name' => $validated['name'],
                 'service_id' => $validated['service_id'],
                 'hairstyle_id' => $validated['hairstyle_id'],
-                'date_time' => $validated['date_time'],
+                'date_time' => $bookingDateTime,
+                'shift' => $selectedShift,
                 'description' => $validated['description'] ?? null,
                 'payment_method' => $validated['payment_method'],
                 'total_price' => $totalPrice,

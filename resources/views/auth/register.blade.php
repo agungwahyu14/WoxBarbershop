@@ -121,9 +121,19 @@
                         </div>
                     </div>
 
-                    <button type="submit"
-                        class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                        {{ __('auth.register') }}
+                    <button type="submit" id="registerButton"
+                        class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center">
+                        <span id="registerButtonText">{{ __('auth.register') }}</span>
+                        <span id="registerSpinner" class="hidden">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                        </span>
                     </button>
 
                     <p class="mt-6 text-sm text-center text-gray-600">
@@ -138,6 +148,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.querySelector('form');
+            const registerButton = document.getElementById('registerButton');
+            const registerButtonText = document.getElementById('registerButtonText');
+            const registerSpinner = document.getElementById('registerSpinner');
+
+            if (registerForm && registerButton) {
+                registerForm.addEventListener('submit', function(e) {
+                    registerButton.disabled = true;
+                    registerButtonText.classList.add('hidden');
+                    registerSpinner.classList.remove('hidden');
+                });
+            }
+
             // Toggle password visibility
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');

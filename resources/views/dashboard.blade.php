@@ -346,15 +346,19 @@
                 </div>
                 <!-- Right Column - Booking Form -->
                 <div class="w-full lg:w-1/2 bg-white shadow-xl p-6 rounded-lg card-glow reveal stagger-2">
+                    <div class="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-sm">
+                        <p class="text-blue-800 font-semibold">{{ __('booking.shift_selection') }}</p>
+                        <p class="text-blue-600 text-xs mt-1">{{ __('booking.shift_selection_info') }}</p>
+                    </div>
                     <form action="{{ route('bookings.store') }}" id="booking-form" method="POST" class="space-y-6">
                         @csrf
 
                         <!-- Nama -->
                         <div>
                             <label for="name"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.name') }}</label>
+                                class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.name') }}</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
-                                class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
                             @error('name')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -364,9 +368,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="service_id"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.service') }}</label>
+                                    class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.service') }}</label>
                                 <select id="service_id" name="service_id"
-                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
                                     <option value="">{{ __('welcome.choose_service') }}</option>
                                     @foreach ($services as $service)
                                         <option value="{{ $service->id }}" data-duration="{{ $service->duration }}"
@@ -386,9 +390,9 @@
 
                             <div>
                                 <label for="hairstyle_id"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.choose_hairstyle') }}</label>
+                                    class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.choose_hairstyle') }}</label>
                                 <select id="hairstyle_id" name="hairstyle_id"
-                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
                                     <option value="">{{ __('welcome.choose_style') }}</option>
                                     @foreach ($hairstyles as $hairstyle)
                                         <option value="{{ $hairstyle->id }}"
@@ -409,13 +413,13 @@
 
 
 
-                        <!-- Pembayaran & Tanggal -->
+                        <!-- Pembayaran, Tanggal & Shift -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="payment_method"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.payment') }}</label>
+                                    class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.payment') }}</label>
                                 <select id="payment_method" name="payment_method"
-                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
                                     <option value="">{{ __('welcome.choose_payment_method') }}</option>
                                     <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>
                                         {{ __('welcome.cash') }}
@@ -430,23 +434,43 @@
                             </div>
 
                             <div>
-                                <label for="date_time"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.date_time') }}</label>
-                                <input type="datetime-local" id="date_time" name="date_time"
-                                    value="{{ old('date_time') }}" min="{{ now()->format('Y-m-d\TH:i') }}"
-                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
-                                @error('date_time')
+                                <label for="booking_date"
+                                    class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.booking_date') }}</label>
+                                <input type="date" id="booking_date" name="booking_date"
+                                    value="{{ old('booking_date') }}" min="{{ now()->format('Y-m-d') }}"
+                                    class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
+                                @error('booking_date')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
+                        <!-- Shift Selection -->
+                        <div>
+                            <label for="shift"
+                                class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('booking.shift') }}</label>
+                            <select id="shift" name="shift"
+                                class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
+                                <option value="">{{ __('booking.choose_shift') }}</option>
+                                <option value="morning" {{ old('shift') == 'morning' ? 'selected' : '' }}>
+                                    {{ __('booking.shift_morning') }} (11:00 - 15:00)
+                                </option>
+                                <option value="afternoon" {{ old('shift') == 'afternoon' ? 'selected' : '' }}>
+                                    {{ __('booking.shift_afternoon') }} (16:00 - 22:00)
+                                </option>
+                            </select>
+                            <p class="text-gray-500 text-xs mt-1" id="shift-capacity-info"></p>
+                            @error('shift')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Deskripsi -->
                         <div>
                             <label for="description"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.description') }}</label>
+                                class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.description') }}</label>
                             <textarea id="description" name="description" rows="3"
-                                class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">{{ old('description') }}</textarea>
+                                class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -455,7 +479,7 @@
                         <!-- Submit Button -->
                         @auth
                             <button type="submit" id="submit-booking"
-                                class="btn-primary rounded-lg w-full bg-secondary hover:bg-primary text-black hover:text-white px-6 py-4 font-bold text-lg mt-6">
+                                class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                                 <span id="submit-text">{{ __('welcome.reservation_submit') }}</span>
                                 <span id="loading-text" class="hidden">
                                     <i class="fas fa-spinner fa-spin mr-2"></i>{{ __('welcome.processing') }}...
@@ -463,7 +487,7 @@
                             </button>
                         @else
                             <a href="{{ route('login') }}"
-                                class="btn-primary text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 inline-block rounded-lg">
+                                class="block text-center w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                                 {{ __('welcome.login_to_reserve') }}
                             </a>
                         @endauth
@@ -528,6 +552,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             const serviceSelect = document.getElementById('service_id');
             const durationDisplay = document.getElementById('service-duration');
+            const bookingDateInput = document.getElementById('booking_date');
+            const shiftSelect = document.getElementById('shift');
+            const shiftCapacityInfo = document.getElementById('shift-capacity-info');
 
             if (serviceSelect && durationDisplay) {
                 serviceSelect.addEventListener('change', function() {
@@ -546,6 +573,9 @@
                         durationDisplay.textContent = '';
                         durationDisplay.style.display = 'none';
                     }
+
+                    // Check shift capacity when service changes
+                    checkShiftCapacity();
                 });
 
                 // Update on page load if there's a selected value
@@ -553,6 +583,64 @@
                     const event = new Event('change');
                     serviceSelect.dispatchEvent(event);
                 }
+            }
+
+            // Real-time shift capacity checker
+            function checkShiftCapacity() {
+                const bookingDate = bookingDateInput?.value;
+                const shift = shiftSelect?.value;
+                const serviceId = serviceSelect?.value;
+
+                if (!bookingDate || !shift || !serviceId || !shiftCapacityInfo) {
+                    return;
+                }
+
+                // Get service duration
+                const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+                const duration = selectedOption.getAttribute('data-duration');
+                const durationNumber = duration ? parseInt(duration.replace(/[^0-9]/g, '')) : 60;
+
+                // Show loading state
+                shiftCapacityInfo.textContent = '⏳ Checking availability...';
+                shiftCapacityInfo.className = 'text-gray-500 text-xs mt-1';
+
+                // Fetch capacity from server
+                fetch(`/api/bookings/check-shift-capacity?date=${bookingDate}&shift=${shift}&duration=${durationNumber}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const available = data.available_capacity;
+                            const capacity = data.total_capacity;
+                            const hasCapacity = data.has_capacity;
+
+                            if (hasCapacity) {
+                                shiftCapacityInfo.textContent = `✓ Available: ${available}/${capacity} minutes`;
+                                shiftCapacityInfo.className = 'text-green-600 text-xs mt-1 font-semibold';
+                            } else {
+                                shiftCapacityInfo.textContent =
+                                    `✗ Full (Need: ${durationNumber} min, Available: ${available} min)`;
+                                shiftCapacityInfo.className = 'text-red-600 text-xs mt-1 font-semibold';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking capacity:', error);
+                        shiftCapacityInfo.textContent = '';
+                    });
+            }
+
+            // Add event listeners for real-time capacity check
+            if (bookingDateInput) {
+                bookingDateInput.addEventListener('change', checkShiftCapacity);
+            }
+            if (shiftSelect) {
+                shiftSelect.addEventListener('change', checkShiftCapacity);
             }
 
             // Testimonials Slider functionality
@@ -644,60 +732,9 @@
             const submitButton = document.getElementById('submit-booking');
             const submitText = document.getElementById('submit-text');
             const loadingText = document.getElementById('loading-text');
-            const dateTimeInput = document.getElementById('date_time');
-
-            // ✅ Real-time validation untuk jam operasional
-            if (dateTimeInput) {
-                dateTimeInput.addEventListener('change', function() {
-                    const selectedDate = new Date(this.value);
-                    const hour = selectedDate.getHours();
-
-                    // Hapus pesan error sebelumnya
-                    const existingError = dateTimeInput.parentNode.querySelector('.business-hours-error');
-                    if (existingError) {
-                        existingError.remove();
-                    }
-
-                    let errorMessage = '';
-
-                    // Cek jam operasional (11:00 - 22:00)
-                    if (hour < 11 || hour >= 22) {
-                        errorMessage = window.bookingTranslations.business_hours_error;
-                    }
-
-                    // Tampilkan pesan error jika ada
-                    if (errorMessage) {
-                        const errorElement = document.createElement('p');
-                        errorElement.className = 'text-red-600 text-sm mt-1 business-hours-error';
-                        errorElement.textContent = errorMessage;
-                        dateTimeInput.parentNode.appendChild(errorElement);
-                        dateTimeInput.classList.add('border-red-500');
-                    } else {
-                        dateTimeInput.classList.remove('border-red-500');
-                    }
-                });
-            }
 
             bookingForm.addEventListener('submit', function(e) {
-                e.preventDefault(); // ⛔ Mencegah reload halaman
-
-                // ✅ Validasi jam operasional di frontend
-                const dateTimeValue = document.getElementById('date_time').value;
-                if (dateTimeValue) {
-                    const selectedDate = new Date(dateTimeValue);
-                    const hour = selectedDate.getHours();
-
-                    // Cek jam operasional (11:00 - 22:00)
-                    if (hour < 11 || hour >= 22) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: window.bookingTranslations.validation_error,
-                            text: window.bookingTranslations.business_hours_error,
-                            confirmButtonColor: '#F59E0B'
-                        });
-                        return;
-                    }
-                }
+                e.preventDefault();
 
                 submitButton.disabled = true;
                 submitText.classList.add('hidden');

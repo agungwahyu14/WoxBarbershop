@@ -31,6 +31,21 @@ return [
     'hairstyle' => 'Hairstyle',
     'service' => 'Service',
     'service_details' => 'Service Details',
+    
+    // Time Scheduling
+    'shift' => 'Time',
+    'shift_selection' => 'Select Your Time',
+    'shift_selection_info' => 'Choose between Morning (11:00-15:00) or Afternoon (16:00-22:00) time based on your preference',
+    'choose_shift' => 'Choose Time',
+    'shift_morning' => 'Morning Time',
+    'shift_afternoon' => 'Afternoon Time',
+    'shift_required' => 'Please select a time',
+    'shift_invalid' => 'Invalid time selection',
+    'shift_no_capacity' => 'The :shift time is fully booked. Available capacity: :available minutes (Required: :required minutes)',
+    'no_capacity_available' => 'Both time slots are fully booked for this date. Please select another date.',
+    'date_required' => 'Booking date is required',
+    'date_invalid' => 'Invalid date format',
+    'date_past' => 'Booking date cannot be in the past',
 
     // Status Labels
     'status_pending' => 'Pending',

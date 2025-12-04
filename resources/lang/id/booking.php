@@ -25,12 +25,27 @@ return [
     'date_time' => 'Tanggal & Waktu',
     'status' => 'Status',
     'payment' => 'Pembayaran',
-    'queue_number' => 'Nomor Pesanan',
+    'queue_number' => 'Nomor Antrean',
     'total' => 'Total',
     'notes' => 'Catatan',
     'hairstyle' => 'Gaya Rambut',
     'service' => 'Layanan',
     'service_details' => 'Rincian Layanan',
+    
+    // Time Scheduling
+    'shift' => 'Waktu',
+    'shift_selection' => 'Pilih Waktu Anda',
+    'shift_selection_info' => 'Pilih antara waktu Pagi (11:00-15:00) atau Sore (16:00-22:00) sesuai preferensi Anda',
+    'choose_shift' => 'Pilih Waktu',
+    'shift_morning' => 'Waktu Pagi',
+    'shift_afternoon' => 'Waktu Sore',
+    'shift_required' => 'Silakan pilih waktu',
+    'shift_invalid' => 'Pilihan waktu tidak valid',
+    'shift_no_capacity' => ':shift sudah penuh. Kapasitas tersedia: :available menit (Dibutuhkan: :required menit)',
+    'no_capacity_available' => 'Kedua waktu sudah penuh untuk tanggal ini. Silakan pilih tanggal lain.',
+    'date_required' => 'Tanggal pemesanan wajib diisi',
+    'date_invalid' => 'Format tanggal tidak valid',
+    'date_past' => 'Tanggal pemesanan tidak boleh di masa lalu',
 
     // Status Labels
     'status_pending' => 'Menunggu',
@@ -121,7 +136,7 @@ return [
     // JavaScript Messages
     'booking_success' => 'Pemesanan Berhasil!',
     'booking_created_for' => 'Pemesanan berhasil dibuat atas nama',
-    'queue_number_label' => 'Nomor Pesanan Anda',
+    'queue_number_label' => 'Nomor Antrean Anda',
     'please_arrive_on_time' => 'Silakan datang sesuai jadwal yang telah ditentukan',
     'ok' => 'Oke',
     'success' => 'Berhasil',
@@ -159,7 +174,7 @@ return [
     'submit_feedback' => 'Kirim Umpan Balik',
     'rating_required' => 'Silakan pilih penilaian',
     'comment_required' => 'Silakan berikan komentar Anda',
-    'booking_created_successfully' => 'Booking berhasil dibuat! Nomor pesanan anda: :queue_number',
+    'booking_created_successfully' => 'Booking berhasil dibuat! Nomor antrean anda: :queue_number',
     'validation_failed' => 'Validasi gagal. Silakan periksa input Anda.',
     'booking_creation_failed' => 'Gagal membuat booking. Silakan coba lagi.',
     
@@ -182,8 +197,8 @@ return [
     'complete_booking' => 'Selesaikan Pemesanan',
     
     // Queue System
-    'queue_number' => 'Nomor Pesanan',
-    'current_queue' => 'Pesanan Saat Ini',
+    'queue_number' => 'Nomor Antrean',
+    'current_queue' => 'Antrean Saat Ini',
     'your_turn' => 'Giliran Anda',
     'please_wait' => 'Mohon Tunggu',
     

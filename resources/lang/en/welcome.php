@@ -60,6 +60,7 @@ return [
     'cash' => 'Cash',
     'bank' => 'Bank Transfer',
     'date_time' => 'Date & Time',
+    'booking_date' => 'Booking Date',
     'description' => 'Description',
     'service_duration' => 'Service Duration',
     'duration_minutes' => 'Service duration: :duration minutes',

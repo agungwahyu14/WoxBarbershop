@@ -35,7 +35,13 @@
                                         </div>
                                         <div class="flex items-center text-gray-600">
                                             <i class="fas fa-clock mr-2 text-[#d4af37]"></i>
-                                            <span class="font-medium">{{ $booking->date_time->format('H:i') }}</span>
+                                            <span class="font-medium">
+                                                @if ($booking->shift === 'morning')
+                                                    {{ __('booking.shift_morning') }} (11:00 - 15:00)
+                                                @else
+                                                    {{ __('booking.shift_afternoon') }} (16:00 - 22:00)
+                                                @endif
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -90,7 +96,8 @@
                                         <div class="flex items-center">
                                             <i class="fas fa-list-ol mr-2 text-[#d4af37]"></i>
                                             <span class="text-sm text-gray-600">{{ __('booking.queue_number') }}:</span>
-                                            <span class="ml-2 font-bold text-[#d4af37]">#{{ $booking->queue_number }}</span>
+                                            <span
+                                                class="ml-2 font-bold text-[#d4af37]">#{{ $booking->queue_number }}</span>
                                         </div>
                                     </div>
                                 @endif

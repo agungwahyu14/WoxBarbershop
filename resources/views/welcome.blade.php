@@ -299,15 +299,19 @@
 
                 <!-- Right Column - Booking Form -->
                 <div class="w-full lg:w-1/2 bg-white shadow-xl p-6 rounded-lg card-glow reveal stagger-2">
+                    <div class="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-sm">
+                        <p class="text-blue-800 font-semibold">{{ __('booking.shift_selection') }}</p>
+                        <p class="text-blue-600 text-xs mt-1">{{ __('booking.shift_selection_info') }}</p>
+                    </div>
                     <form action="{{ route('bookings.store') }}" method="POST" id="booking-form" class="space-y-6">
                         @csrf
 
                         <!-- Nama -->
                         <div>
                             <label for="name"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.name') }}</label>
+                                class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.name') }}</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
-                                class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
                             @error('name')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -317,9 +321,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="service_id"
-                                    class="block  text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.service') }}</label>
+                                    class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.service') }}</label>
                                 <select id="service_id" name="service_id"
-                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
                                     <option value="">{{ __('welcome.choose_service') }}</option>
                                     @foreach ($services as $service)
                                         <option value="{{ $service->id }}" data-duration="{{ $service->duration }}"
@@ -339,9 +343,9 @@
 
                             <div>
                                 <label for="hairstyle_id"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.choose_hairstyle') }}</label>
+                                    class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.choose_hairstyle') }}</label>
                                 <select id="hairstyle_id" name="hairstyle_id"
-                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
                                     <option value="">{{ __('welcome.choose_style') }}</option>
                                     @foreach ($hairstyles as $hairstyle)
                                         <option value="{{ $hairstyle->id }}"
@@ -358,13 +362,13 @@
 
                         {{-- Duration will be handled by the enhanced script in @push section --}}
 
-                        <!-- Pembayaran & Tanggal -->
+                        <!-- Pembayaran, Tanggal & Shift -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="payment_method"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.payment') }}</label>
+                                    class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.payment') }}</label>
                                 <select id="payment_method" name="payment_method"
-                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
+                                    class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
                                     <option value="">{{ __('welcome.choose_payment_method') }}</option>
                                     <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>
                                         {{ __('welcome.cash') }}
@@ -379,23 +383,43 @@
                             </div>
 
                             <div>
-                                <label for="date_time"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.date_time') }}</label>
-                                <input type="datetime-local" id="date_time" name="date_time"
-                                    value="{{ old('date_time') }}"
-                                    class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
-                                @error('date_time')
+                                <label for="booking_date"
+                                    class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.booking_date') }}</label>
+                                <input type="date" id="booking_date" name="booking_date"
+                                    value="{{ old('booking_date') }}" min="{{ now()->format('Y-m-d') }}"
+                                    class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
+                                @error('booking_date')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
+                        <!-- Shift Selection -->
+                        <div>
+                            <label for="shift"
+                                class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('booking.shift') }}</label>
+                            <select id="shift" name="shift"
+                                class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">
+                                <option value="">{{ __('booking.choose_shift') }}</option>
+                                <option value="morning" {{ old('shift') == 'morning' ? 'selected' : '' }}>
+                                    {{ __('booking.shift_morning') }} (11:00 - 15:00)
+                                </option>
+                                <option value="afternoon" {{ old('shift') == 'afternoon' ? 'selected' : '' }}>
+                                    {{ __('booking.shift_afternoon') }} (16:00 - 22:00)
+                                </option>
+                            </select>
+                            <p class="text-gray-500 text-xs mt-1" id="shift-capacity-info"></p>
+                            @error('shift')
+                                <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Deskripsi -->
                         <div>
                             <label for="description"
-                                class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.description') }}</label>
+                                class="block text-gray-700 font-medium mb-1 text-sm sm:text-base">{{ __('welcome.description') }}</label>
                             <textarea id="description" name="description" rows="3"
-                                class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">{{ old('description') }}</textarea>
+                                class="w-full px-4 py-3 border border-gray-300 focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] focus:outline-none transition rounded-lg text-sm sm:text-base shadow-sm">{{ old('description') }}</textarea>
                             @error('description')
                                 <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -403,13 +427,16 @@
 
                         <!-- Submit Button -->
                         @auth
-                            <button type="submit"
-                                class="btn-primary rounded-lg w-full bg-secondary hover:bg-primary text-black hover:text-white px-6 py-4 font-bold text-lg mt-6 capitalize">
-                                {{ __('welcome.reservation_submit') }}
+                            <button type="submit" id="submit-booking"
+                                class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                <span id="submit-text">{{ __('welcome.reservation_submit') }}</span>
+                                <span id="loading-text" class="hidden">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i>{{ __('welcome.processing') }}...
+                                </span>
                             </button>
                         @else
                             <a href="{{ route('login') }}"
-                                class="btn-primary text-center w-full bg-secondary hover:bg-primary text-white px-6 py-4 font-bold text-lg mt-6 inline-block rounded-lg capitalize">
+                                class="block text-center w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                                 {{ __('welcome.login_to_reserve') }}
                             </a>
                         @endauth
@@ -453,12 +480,29 @@
 
 
 @push('scripts')
+    <!-- jQuery untuk AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SweetAlert2 untuk notifikasi -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Pass translations to JavaScript -->
+    <script>
+        window.bookingTranslations = @json(__('booking'));
+    </script>
+
+    <!-- Multi-Language Booking Form AJAX Handler -->
+    <script src="{{ asset('js/booking-form-ajax-multilang.js') }}"></script>
+
+    <!-- Duration display functionality -->
     <script>
         // Simple duration display - page refreshes on language change
 
         document.addEventListener('DOMContentLoaded', function() {
             const serviceSelect = document.getElementById('service_id');
             const durationDisplay = document.getElementById('service-duration');
+            const bookingDateInput = document.getElementById('booking_date');
+            const shiftSelect = document.getElementById('shift');
+            const shiftCapacityInfo = document.getElementById('shift-capacity-info');
 
             if (serviceSelect && durationDisplay) {
                 serviceSelect.addEventListener('change', function() {
@@ -477,6 +521,9 @@
                         durationDisplay.textContent = '';
                         durationDisplay.style.display = 'none';
                     }
+
+                    // Check shift capacity when service changes
+                    checkShiftCapacity();
                 });
 
                 // Update on page load if there's a selected value
@@ -484,6 +531,64 @@
                     const event = new Event('change');
                     serviceSelect.dispatchEvent(event);
                 }
+            }
+
+            // Real-time shift capacity checker
+            function checkShiftCapacity() {
+                const bookingDate = bookingDateInput?.value;
+                const shift = shiftSelect?.value;
+                const serviceId = serviceSelect?.value;
+
+                if (!bookingDate || !shift || !serviceId || !shiftCapacityInfo) {
+                    return;
+                }
+
+                // Get service duration
+                const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+                const duration = selectedOption.getAttribute('data-duration');
+                const durationNumber = duration ? parseInt(duration.replace(/[^0-9]/g, '')) : 60;
+
+                // Show loading state
+                shiftCapacityInfo.textContent = '⏳ Checking availability...';
+                shiftCapacityInfo.className = 'text-gray-500 text-xs mt-1';
+
+                // Fetch capacity from server
+                fetch(`/api/bookings/check-shift-capacity?date=${bookingDate}&shift=${shift}&duration=${durationNumber}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const available = data.available_capacity;
+                            const capacity = data.total_capacity;
+                            const hasCapacity = data.has_capacity;
+
+                            if (hasCapacity) {
+                                shiftCapacityInfo.textContent = `✓ Available: ${available}/${capacity} minutes`;
+                                shiftCapacityInfo.className = 'text-green-600 text-xs mt-1 font-semibold';
+                            } else {
+                                shiftCapacityInfo.textContent =
+                                    `✗ Full (Need: ${durationNumber} min, Available: ${available} min)`;
+                                shiftCapacityInfo.className = 'text-red-600 text-xs mt-1 font-semibold';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking capacity:', error);
+                        shiftCapacityInfo.textContent = '';
+                    });
+            }
+
+            // Add event listeners for real-time capacity check
+            if (bookingDateInput) {
+                bookingDateInput.addEventListener('change', checkShiftCapacity);
+            }
+            if (shiftSelect) {
+                shiftSelect.addEventListener('change', checkShiftCapacity);
             }
 
             // Testimonials Slider functionality
@@ -569,14 +674,143 @@
         });
     </script>
 
-    @if (session('booking_error'))
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingForm = document.getElementById('booking-form');
+            const submitButton = document.getElementById('submit-booking');
+            const submitText = document.getElementById('submit-text');
+            const loadingText = document.getElementById('loading-text');
+
+            bookingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                submitButton.disabled = true;
+                submitText.classList.add('hidden');
+                loadingText.classList.remove('hidden');
+
+                const formData = new FormData(bookingForm);
+
+                fetch(bookingForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(async (response) => {
+                        let data;
+                        try {
+                            data = await response.json();
+                        } catch (e) {
+                            throw new Error('Invalid JSON response from server');
+                        }
+
+                        if (response.ok && data.success) {
+                            // ✅ Booking berhasil
+                            Swal.fire({
+                                icon: 'success',
+                                title: window.bookingTranslations.success_title,
+                                html: `
+        <div style="text-align: left; font-size: 15px;">
+            <p><strong>${data.message || window.bookingTranslations.booking_success}</strong></p>
+            <hr style="margin: 10px 0;">
+            <p><strong>${window.bookingTranslations.booking_success_name}:</strong> ${data.data.name}</p>
+            <p><strong>${window.bookingTranslations.booking_success_service}:</strong> ${data.data.service_name}</p>
+            <p><strong>${window.bookingTranslations.date_time}:</strong> ${data.data.date_time}</p>
+            <p><strong>${window.bookingTranslations.queue_number}:</strong> <span style="font-size: 18px; color: #10B981; font-weight: bold;">${data.data.queue_number}</span></p>
+        </div>
+    `,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#10B981',
+                                timer: 3000,
+                                timerProgressBar: true,
+                                allowOutsideClick: false
+                            }).then((result) => {
+                                // Redirect to bookings index after dialog closes
+                                window.location.href = '{{ route('bookings.index') }}';
+                            });
+
+                            // Auto redirect after timer ends
+                            setTimeout(() => {
+                                window.location.href = '{{ route('bookings.index') }}';
+                            }, 3000);
+
+                            // Reset form tanpa refresh
+                            bookingForm.reset();
+
+                            // Jika ingin menampilkan data antrian misalnya:
+                            console.log('Booking Data:', data.data);
+                        } else if (response.status === 422) {
+                            // ⚠️ Validation errors
+                            let errorMessage = data.message || 'Validasi gagal';
+
+                            if (data.errors) {
+                                const firstError = Object.values(data.errors)[0];
+                                if (Array.isArray(firstError) && firstError.length > 0) {
+                                    errorMessage = firstError[0];
+                                }
+                            }
+
+                            Swal.fire({
+                                icon: 'warning',
+                                title: window.bookingTranslations.validation_error,
+                                text: errorMessage,
+                                confirmButtonColor: '#F59E0B'
+                            });
+                        } else {
+                            // ⚠️ Other errors
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message ||
+                                    window.bookingTranslations.booking_creation_error,
+                                confirmButtonColor: '#EF4444'
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Booking error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops!',
+                            text: window.bookingTranslations.network_error,
+                            confirmButtonColor: '#EF4444'
+                        });
+                    })
+                    .finally(() => {
+                        // Aktifkan tombol lagi
+                        submitButton.disabled = false;
+                        submitText.classList.remove('hidden');
+                        loadingText.classList.add('hidden');
+                    });
+            });
+        });
+    </script>
+
+
+    @if (session('auth_success'))
         <script>
             Swal.fire({
-                icon: 'error',
-                title: @json(__('welcome.booking_failed')),
-                text: '{{ session('booking_error') }}',
-                confirmButtonColor: '#d33',
+                icon: 'success',
+                title: '{{ __('auth.success') }}',
+                text: '{{ session('auth_success') }}',
+                confirmButtonColor: '#10B981',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
+
+    @if (session('register_success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ __('auth.success') }}',
+                text: '{{ session('register_success') }}',
+                confirmButtonColor: '#10B981',
+                timer: 3000,
+                timerProgressBar: true
             });
         </script>
     @endif

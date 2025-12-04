@@ -67,6 +67,7 @@ return [
     'verification_link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
     'resend_verification' => 'Resend Verification Email',
     'verify_email_notification' => 'Please verify your email address to access all features.',
+    'verification_email_sent' => 'Registration successful! A verification link has been sent to your email. Please check your inbox to verify your account.',
     
     // JavaScript Messages
     'email_sent' => 'Email Sent!',
@@ -74,6 +75,10 @@ return [
     'ok' => 'OK',
     'try_again' => 'Try Again',
     'success' => 'Success!',
+    'logout_confirmation_title' => 'Logout Confirmation',
+    'logout_confirmation_text' => 'Are you sure you want to logout?',
+    'yes_logout' => 'Yes, Logout',
+    'cancel' => 'Cancel',
     'registration_failed' => 'Registration Failed!',
     'information' => 'Information',
     'warning' => 'Warning!',

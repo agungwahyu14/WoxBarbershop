@@ -65,6 +65,7 @@ return [
     'cash' => 'Tunai',
     'bank' => 'Transfer Bank',
     'date_time' => 'Tanggal & Waktu',
+    'booking_date' => 'Tanggal Pemesanan',
     'description' => 'Deskripsi',
     'service_duration' => 'Durasi Layanan',
     'duration_minutes' => 'Durasi layanan: :duration menit',

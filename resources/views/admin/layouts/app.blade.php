@@ -324,6 +324,28 @@
 
     <!-- Enhanced Global Scripts -->
     @stack('scripts')
+
+    <script>
+        function confirmLogout(formId) {
+            Swal.fire({
+                title: '{{ __('auth.logout_confirmation_title') }}',
+                text: '{{ __('auth.logout_confirmation_text') }}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EF4444',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: '{{ __('auth.yes_logout') }}',
+                cancelButtonText: '{{ __('auth.cancel') }}',
+                customClass: {
+                    popup: 'rounded-xl'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -96,4 +96,42 @@ Route::middleware('auth')->group(function () {
             ], 400);
         }
     });
+
+    // Check shift capacity
+    Route::get('/bookings/check-shift-capacity', function (Request $request) {
+        try {
+            $request->validate([
+                'date' => 'required|date',
+                'shift' => 'required|in:morning,afternoon',
+                'duration' => 'required|integer|min:1'
+            ]);
+
+            $date = $request->date;
+            $shift = $request->shift;
+            $duration = (int) $request->duration;
+
+            $availableCapacity = \App\Models\Booking::getAvailableCapacity($date, $shift);
+            $totalCapacity = $shift === \App\Models\Booking::SHIFT_MORNING 
+                ? \App\Models\Booking::SHIFT_MORNING_CAPACITY 
+                : \App\Models\Booking::SHIFT_AFTERNOON_CAPACITY;
+            
+            $hasCapacity = \App\Models\Booking::hasCapacity($date, $shift, $duration);
+
+            return response()->json([
+                'success' => true,
+                'available_capacity' => $availableCapacity,
+                'total_capacity' => $totalCapacity,
+                'required_duration' => $duration,
+                'has_capacity' => $hasCapacity,
+                'shift' => $shift,
+                'date' => $date
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 400);
+        }
+    });
 });

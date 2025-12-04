@@ -199,9 +199,9 @@
                             <div class="border-t border-gray-100 my-2"></div>
 
                             <!-- Logout form -->
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form-customer">
                                 @csrf
-                                <button type="submit"
+                                <button type="button" onclick="confirmLogout('logout-form-customer')"
                                     class="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -374,5 +374,25 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }, 200);
+    }
+
+    function confirmLogout(formId) {
+        Swal.fire({
+            title: '{{ __('auth.logout_confirmation_title') }}',
+            text: '{{ __('auth.logout_confirmation_text') }}',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#EF4444',
+            cancelButtonColor: '#6B7280',
+            confirmButtonText: '{{ __('auth.yes_logout') }}',
+            cancelButtonText: '{{ __('auth.cancel') }}',
+            customClass: {
+                popup: 'rounded-xl'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(formId).submit();
+            }
+        });
     }
 </script>

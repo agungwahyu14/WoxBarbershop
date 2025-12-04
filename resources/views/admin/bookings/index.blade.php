@@ -227,6 +227,7 @@
                                     <th>{{ __('admin.service') }}</th>
                                     <th>{{ __('admin.hairstyle') }}</th>
                                     <th>{{ __('admin.date_time') }}</th>
+                                    <th>{{ __('booking.shift') }}</th>
                                     <th>{{ __('admin.queue') }}</th>
                                     <th>{{ __('admin.status') }}</th>
                                     <th>{{ __('admin.actions') }}</th>
@@ -323,6 +324,11 @@
                                 data: 'datetime_formatted',
                                 name: 'date_time',
                                 className: 'text-left'
+                            },
+                            {
+                                data: 'shift_display',
+                                name: 'shift',
+                                className: 'text-center'
                             },
                             {
                                 data: 'queue_display',

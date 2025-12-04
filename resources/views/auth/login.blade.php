@@ -82,9 +82,19 @@
                         @endif
                     </div>
 
-                    <button type="submit"
-                        class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                        {{ __('auth.login_button') }}
+                    <button type="submit" id="loginButton"
+                        class="w-full bg-[#d4af37] hover:bg-[#111111] text-white py-3 px-4 font-bold uppercase tracking-wide transition duration-300 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center">
+                        <span id="loginButtonText">{{ __('auth.login_button') }}</span>
+                        <span id="loginSpinner" class="hidden">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                        </span>
                     </button>
 
                     <p class="mt-6 text-sm text-center text-gray-600">
@@ -99,6 +109,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.querySelector('form');
+            const loginButton = document.getElementById('loginButton');
+            const loginButtonText = document.getElementById('loginButtonText');
+            const loginSpinner = document.getElementById('loginSpinner');
+
+            if (loginForm && loginButton) {
+                loginForm.addEventListener('submit', function(e) {
+                    loginButton.disabled = true;
+                    loginButtonText.classList.add('hidden');
+                    loginSpinner.classList.remove('hidden');
+                });
+            }
+
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eyeIcon');
@@ -114,13 +137,28 @@
                 });
             }
 
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: '{{ __('auth.success') }}',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#10B981',
+                    confirmButtonText: '{{ __('auth.ok') }}',
+                    timer: 5000,
+                    timerProgressBar: true,
+                    customClass: {
+                        popup: 'rounded-xl'
+                    }
+                });
+            @endif
+
             @if (session('error'))
                 Swal.fire({
                     icon: 'error',
                     title: '{{ __('auth.error_occurred') }}',
                     text: '{{ session('error') }}',
                     confirmButtonColor: '#d4af37',
-                    confirmButtonText: 'Oke',
+                    confirmButtonText: '{{ __('auth.ok') }}',
                     customClass: {
                         popup: 'rounded-xl'
                     }
