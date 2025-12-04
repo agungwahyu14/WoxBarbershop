@@ -317,7 +317,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="service_id"
-                                    class="block text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.service') }}</label>
+                                    class="block  text-primary mb-2 font-bold font-playfair text-xl">{{ __('welcome.service') }}</label>
                                 <select id="service_id" name="service_id"
                                     class="input-animated w-full px-4 py-3 border-primary focus:outline-none focus:border-secondary bg-transparent rounded-lg">
                                     <option value="">{{ __('welcome.choose_service') }}</option>
