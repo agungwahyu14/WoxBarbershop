@@ -68,6 +68,10 @@ return [
     'resend_verification' => 'Resend Verification Email',
     'verify_email_notification' => 'Please verify your email address to access all features.',
     'verification_email_sent' => 'Registration successful! A verification link has been sent to your email. Please check your inbox to verify your account.',
+    'email_verified_success' => 'Email verified successfully! You can now login to your account.',
+    'email_already_verified' => 'Your email has already been verified. Please login to continue.',
+    'verification_link_invalid' => 'This verification link is invalid or has expired. Please request a new verification link.',
+    'verification_link_invalid' => 'The verification link is invalid or has expired. Please request a new one.',
     
     // JavaScript Messages
     'email_sent' => 'Email Sent!',

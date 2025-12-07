@@ -68,6 +68,10 @@ return [
     'resend_verification' => 'Kirim Ulang Email Verifikasi',
     'verify_email_notification' => 'Silakan verifikasi alamat email Anda untuk mengakses semua fitur.',
     'verification_email_sent' => 'Registrasi berhasil! Link verifikasi telah dikirim ke email Anda. Silakan cek inbox Anda untuk memverifikasi akun.',
+    'email_verified_success' => 'Email berhasil diverifikasi! Anda sekarang dapat login ke akun Anda.',
+    'email_already_verified' => 'Email Anda sudah diverifikasi. Silakan login untuk melanjutkan.',
+    'verification_link_invalid' => 'Link verifikasi tidak valid atau sudah kadaluarsa. Silakan minta link verifikasi baru.',
+    'verification_link_invalid' => 'Link verifikasi tidak valid atau sudah kedaluwarsa. Silakan minta yang baru.',
     
     // JavaScript Messages
     'email_sent' => 'Email Terkirim!',
