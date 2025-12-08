@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
-use App\Http\Controllers\Admin\SystemController;
+// use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BookingController;
@@ -263,7 +263,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
         // System Management - Backup & Restore Only
-
+        // TODO: Create SystemController if needed
+        /*
         Route::prefix('system')->name('admin.system.')->group(function () {
             Route::get('/', [SystemController::class, 'index'])->name('index');
             Route::post('/backup', [SystemController::class, 'backup'])->name('backup');
@@ -272,6 +273,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/system-logs', [SystemController::class, 'getSystemLogs'])->name('system-logs');
             Route::get('/system-stats', [SystemController::class, 'getSystemStats'])->name('system-stats');
         });
+        */
 
     });
 
