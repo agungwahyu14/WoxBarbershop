@@ -10,114 +10,60 @@ class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * 
+     * Seeder ini membuat 3 user utama untuk sistem:
+     * 1. adminwoxbarbershop (Role: admin)
+     * 2. pegawaibarbershop (Role: pegawai)
+     * 3. pelangganbarbershop (Role: customer)
      */
     public function run(): void
     {
-        // Create admin user
-        if (! User::where('email', 'admin@woxbarbershop.com')->exists()) {
-            $admin = User::create([
-                'name' => 'Super Admin',
-                'email' => 'admin@woxbarbershop.com',
-                'no_telepon' => '081234567890',
-                'password' => Hash::make('admin123'),
-                'email_verified_at' => now(),
-            ]);
-            $admin->assignRole('admin');
-        }
+        // Hapus semua user yang ada (fresh start)
+        $this->command->info('Cleaning existing users...');
+        User::query()->delete();
 
-        // Create staff/pegawai users
-        if (! User::where('email', 'ahmad@woxbarbershop.com')->exists()) {
-            $staff1 = User::create([
-                'name' => 'Barber Ahmad',
-                'email' => 'ahmad@woxbarbershop.com',
-                'no_telepon' => '081234567891',
-                'password' => Hash::make('barber123'),
-                'email_verified_at' => now(),
-            ]);
-            $staff1->assignRole('pegawai');
-        }
+        // 1. Create Admin User
+        $this->command->info('Creating admin user: adminwoxbarbershop');
+        $admin = User::create([
+            'name' => 'Admin WOX Barbershop',
+            'email' => 'adminwoxbarbershop@gmail.com',
+            'no_telepon' => '081234567890',
+            'password' => Hash::make('adminwox123'),
+            'email_verified_at' => now(),
+        ]);
+        $admin->assignRole('admin');
+        $this->command->info('✓ Admin created: adminwoxbarbershop@gmail.com (Password: adminwox123)');
 
-        if (! User::where('email', 'budi@woxbarbershop.com')->exists()) {
-            $staff2 = User::create([
-                'name' => 'Barber Budi',
-                'email' => 'budi@woxbarbershop.com',
-                'no_telepon' => '081234567892',
-                'password' => Hash::make('barber123'),
-                'email_verified_at' => now(),
-            ]);
-            $staff2->assignRole('pegawai');
-        }
+        // 2. Create Pegawai/Staff User
+        $this->command->info('Creating pegawai user: pegawaibarbershop');
+        $pegawai = User::create([
+            'name' => 'Pegawai Barbershop',
+            'email' => 'pegawaibarbershop@gmail.com',
+            'no_telepon' => '081234567891',
+            'password' => Hash::make('pegawai123'),
+            'email_verified_at' => now(),
+        ]);
+        $pegawai->assignRole('pegawai');
+        $this->command->info('✓ Pegawai created: pegawaibarbershop@gmail.com (Password: pegawai123)');
 
-        // Create customer users
-        $customers = [
-            [
-                'name' => 'John Doe',
-                'email' => 'john@example.com',
-                'no_telepon' => '089876543210',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'Jane Smith',
-                'email' => 'jane@example.com',
-                'no_telepon' => '089876543211',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'Michael Johnson',
-                'email' => 'michael@example.com',
-                'no_telepon' => '089876543212',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'Sarah Wilson',
-                'email' => 'sarah@example.com',
-                'no_telepon' => '089876543213',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'David Brown',
-                'email' => 'david@example.com',
-                'no_telepon' => '089876543214',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'Emily Davis',
-                'email' => 'emily@example.com',
-                'no_telepon' => '089876543215',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'Chris Miller',
-                'email' => 'chris@example.com',
-                'no_telepon' => '089876543216',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'Lisa Garcia',
-                'email' => 'lisa@example.com',
-                'no_telepon' => '089876543217',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'Robert Martinez',
-                'email' => 'robert@example.com',
-                'no_telepon' => '089876543218',
-                'password' => Hash::make('customer123'),
-            ],
-            [
-                'name' => 'Jennifer Rodriguez',
-                'email' => 'jennifer@example.com',
-                'no_telepon' => '089876543219',
-                'password' => Hash::make('customer123'),
-            ],
-        ];
+        // 3. Create Customer/Pelanggan User
+        $this->command->info('Creating customer user: pelangganbarbershop');
+        $customer = User::create([
+            'name' => 'Pelanggan Barbershop',
+            'email' => 'pelangganbarbershop@gmail.com',
+            'no_telepon' => '081234567892',
+            'password' => Hash::make('pelanggan123'),
+            'email_verified_at' => now(),
+        ]);
+        $customer->assignRole('customer');
+        $this->command->info('✓ Customer created: pelangganbarbershop@gmail.com (Password: pelanggan123)');
 
-        foreach ($customers as $customerData) {
-            if (! User::where('email', $customerData['email'])->exists()) {
-                $customerData['email_verified_at'] = now();
-                $customer = User::create($customerData);
-                $customer->assignRole('customer');
-            }
-        }
+        $this->command->info('');
+        $this->command->info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->command->info('✓ Successfully created 3 users:');
+        $this->command->info('  1. adminwoxbarbershop@gmail.com (admin)');
+        $this->command->info('  2. pegawaibarbershop@gmail.com (pegawai)');
+        $this->command->info('  3. pelangganbarbershop@gmail.com (customer)');
+        $this->command->info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     }
 }

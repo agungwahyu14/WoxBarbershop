@@ -22,6 +22,7 @@
 -   [Tentang Proyek](#-tentang-proyek)
 -   [Fitur Utama](#-fitur-utama)
 -   [Teknologi yang Digunakan](#-teknologi-yang-digunakan)
+-   [Sistem Rekomendasi AHP](#-sistem-rekomendasi-ahp)
 -   [Persyaratan Sistem](#-persyaratan-sistem)
 -   [Instalasi](#-instalasi)
 -   [Konfigurasi](#-konfigurasi)
@@ -106,6 +107,55 @@ Proyek ini dikembangkan sebagai Tugas Akhir untuk mendemonstrasikan implementasi
 | MySQL 8.0        | Relational database        |
 | Yajra DataTables | Server-side processing     |
 | Laravel Breeze   | Authentication scaffolding |
+
+---
+
+## 🧮 Sistem Rekomendasi AHP
+
+Sistem ini menggunakan **Analytical Hierarchy Process (AHP)** untuk memberikan rekomendasi hairstyle yang personal berdasarkan karakteristik customer.
+
+### 📊 **Kriteria Penilaian**
+
+| Kriteria            | Weight | Prioritas    | Deskripsi                                        |
+| ------------------- | ------ | ------------ | ------------------------------------------------ |
+| **Bentuk Kepala**   | 50.03% | 🥇 Tertinggi | Faktor paling penting dalam menentukan hairstyle |
+| **Tipe Rambut**     | 29.98% | 🥈 Sedang    | Tekstur rambut mempengaruhi hasil styling        |
+| **Preferensi Gaya** | 19.99% | 🥉 Terendah  | Gaya personal customer                           |
+
+### 🎯 **Cara Kerja**
+
+1. **Input Customer:** Bentuk kepala, tipe rambut, preferensi gaya
+2. **Perhitungan AHP:** Sistem menghitung bobot kriteria berdasarkan pairwise comparison
+3. **Scoring:** Setiap hairstyle dinilai untuk setiap sub-kriteria (skala 1-10)
+4. **Recommendation:**
+    ```
+    Total Score = (0.5003 × Score_BentukKepala) +
+                  (0.2998 × Score_TipeRambut) +
+                  (0.2000 × Score_PreferensiGaya)
+    ```
+5. **Ranking:** Hairstyle diurutkan dari score tertinggi
+
+### 📖 **Dokumentasi Lengkap**
+
+Untuk penjelasan detail tentang perhitungan AHP, contoh kasus, dan formula matematis, lihat:
+
+**📄 [DOKUMENTASI_AHP.md](DOKUMENTASI_AHP.md)**
+
+Dokumentasi mencakup:
+
+-   ✅ Penjelasan metode AHP step-by-step
+-   ✅ Contoh perhitungan dengan data aktual
+-   ✅ Matriks perbandingan berpasangan
+-   ✅ Validasi Consistency Ratio (CR)
+-   ✅ Multiple contoh kasus
+-   ✅ Analisis sensitivitas
+-   ✅ Implementasi kode
+
+### 🔍 **Validasi Konsistensi**
+
+**Consistency Ratio (CR):** 0.00086 < 0.1 ✅
+
+Nilai CR yang sangat rendah menunjukkan bahwa penilaian pairwise comparison sangat konsisten dan dapat diandalkan.
 
 ---
 

@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Log;
  * 
  * Controller untuk sistem rekomendasi hairstyle menggunakan metode AHP (Analytical Hierarchy Process).
  * 
- * Flow Perhitungan AHP:
+ * ═══════════════════════════════════════════════════════════════════════════════════
+ * FLOW PERHITUNGAN AHP
+ * ═══════════════════════════════════════════════════════════════════════════════════
+ * 
  * 1. Mengambil semua kriteria dari database (bentuk kepala, tipe rambut, preferensi gaya)
  * 2. Membangun matriks perbandingan berpasangan (pairwise comparison) antar kriteria
  * 3. Menormalisasi matriks dan menghitung bobot (weight) untuk setiap kriteria
@@ -21,8 +24,63 @@ use Illuminate\Support\Facades\Log;
  * 5. Mengalikan bobot kriteria dengan skor hairstyle untuk mendapatkan skor akhir
  * 6. Mengurutkan hairstyle berdasarkan skor tertinggi sebagai rekomendasi
  * 
- * Metode AHP digunakan untuk menentukan prioritas dan bobot dari setiap kriteria
- * secara objektif berdasarkan perbandingan berpasangan.
+ * ═══════════════════════════════════════════════════════════════════════════════════
+ * CONTOH PERHITUNGAN (Berdasarkan Data Aktual)
+ * ═══════════════════════════════════════════════════════════════════════════════════
+ * 
+ * DATA KRITERIA:
+ * - ID 8:  Bentuk Kepala     (Weight: 0.500266 = 50.03%)
+ * - ID 9:  Tipe Rambut       (Weight: 0.299760 = 29.98%)
+ * - ID 10: Preferensi Gaya   (Weight: 0.199973 = 19.99%)
+ * 
+ * PAIRWISE COMPARISON:
+ * - Bentuk Kepala vs Tipe Rambut       = 1.67  (Bentuk Kepala 1.67x lebih penting)
+ * - Bentuk Kepala vs Preferensi Gaya   = 2.5   (Bentuk Kepala 2.5x lebih penting)
+ * - Tipe Rambut vs Preferensi Gaya     = 1.5   (Tipe Rambut 1.5x lebih penting)
+ * 
+ * MATRIKS PERBANDINGAN (3×3):
+ *                   Bentuk   Tipe   Preferensi   |  Normalized  |  Weight
+ * Bentuk Kepala      1.00    1.67      2.50      |    0.500     | 0.500266
+ * Tipe Rambut        0.60    1.00      1.50      |    0.300     | 0.299760
+ * Preferensi Gaya    0.40    0.67      1.00      |    0.200     | 0.199973
+ * ─────────────────────────────────────────────────────────────────────────
+ * Column Sum:        2.00    3.34      5.00      |  Total: 1.000
+ * 
+ * CONSISTENCY RATIO: CR = 0.00086 < 0.1 ✅ (KONSISTEN)
+ * 
+ * ─────────────────────────────────────────────────────────────────────────
+ * CONTOH PERHITUNGAN SCORE:
+ * ─────────────────────────────────────────────────────────────────────────
+ * 
+ * User Input:
+ *   - Bentuk Kepala: "Persegi Panjang" (Sub-Criterion ID: 3)
+ *   - Tipe Rambut: "Lurus" (Sub-Criterion ID: 1)
+ *   - Preferensi: "Modern" (Sub-Criterion ID: 2)
+ * 
+ * Hairstyle: "French Crop" (ID: 34)
+ * Scores dari database:
+ *   - Bentuk Kepala (Persegi Panjang): 9
+ *   - Tipe Rambut (Lurus): 8
+ *   - Preferensi Gaya (Modern): 9
+ * 
+ * Perhitungan Total Score:
+ *   = (0.500266 × 9) + (0.299760 × 8) + (0.199973 × 9)
+ *   = 4.502394 + 2.398080 + 1.799757
+ *   = 8.700231
+ * 
+ * Breakdown Kontribusi:
+ *   - Bentuk Kepala:    4.502394  (51.76%)
+ *   - Tipe Rambut:      2.398080  (27.56%)
+ *   - Preferensi Gaya:  1.799757  (20.68%)
+ * 
+ * Hasil: French Crop mendapat score 8.70/10 (HIGHLY RECOMMENDED)
+ * 
+ * ═══════════════════════════════════════════════════════════════════════════════════
+ * 
+ * Metode AHP memastikan bobot kriteria dihitung secara objektif dan terukur
+ * berdasarkan tingkat kepentingan relatif antar kriteria.
+ * 
+ * Untuk dokumentasi lengkap, lihat file: DOKUMENTASI_AHP.md
  */
 class RecommendationController extends Controller
 {
@@ -150,6 +208,9 @@ class RecommendationController extends Controller
      * Fungsi ini mengkonversi input user (nama bentuk kepala, tipe rambut, preferensi gaya)
      * menjadi sub_criterion_id yang sesuai untuk digunakan dalam perhitungan score.
      * 
+     * DINAMIS: Criterion ID diambil dari database berdasarkan nama kriteria,
+     * sehingga tidak perlu hardcode ID dan lebih fleksibel terhadap perubahan data.
+     * 
      * @param string|null $bentukKepala - Nama bentuk kepala (contoh: "Oval", "Bulat")
      * @param string|null $tipeRambut - Nama tipe rambut (contoh: "Lurus", "Keriting")
      * @param string|null $preferensiGaya - Nama preferensi gaya (contoh: "Formal", "Casual")
@@ -159,32 +220,35 @@ class RecommendationController extends Controller
     {
         $result = [];
 
-        // Criterion ID untuk masing-masing kriteria (sesuai dengan database Anda)
-        $criterionIdBentukKepala = 8;
-        $criterionIdTipeRambut = 9;
-        $criterionIdPreferensiGaya = 10;
+        // Ambil Criterion ID secara dinamis dari database berdasarkan nama
+        $criterionBentukKepala = Criteria::where('name', 'Bentuk Kepala')->first();
+        $criterionTipeRambut = Criteria::where('name', 'Tipe Rambut')->first();
+        $criterionPreferensiGaya = Criteria::where('name', 'Preferensi Gaya')->first();
 
         // Mapping Bentuk Kepala
-        if ($bentukKepala) {
+        if ($bentukKepala && $criterionBentukKepala) {
             $bentuk = \App\Models\BentukKepala::where('nama', $bentukKepala)->first();
             if ($bentuk) {
-                $result[$criterionIdBentukKepala] = $bentuk->id;
+                $result[$criterionBentukKepala->id] = $bentuk->id;
+                Log::info("Mapped Bentuk Kepala: {$bentukKepala} → Criterion ID: {$criterionBentukKepala->id}, Sub-Criterion ID: {$bentuk->id}");
             }
         }
 
         // Mapping Tipe Rambut
-        if ($tipeRambut) {
+        if ($tipeRambut && $criterionTipeRambut) {
             $tipe = \App\Models\TipeRambut::where('nama', $tipeRambut)->first();
             if ($tipe) {
-                $result[$criterionIdTipeRambut] = $tipe->id;
+                $result[$criterionTipeRambut->id] = $tipe->id;
+                Log::info("Mapped Tipe Rambut: {$tipeRambut} → Criterion ID: {$criterionTipeRambut->id}, Sub-Criterion ID: {$tipe->id}");
             }
         }
 
         // Mapping Preferensi Gaya
-        if ($preferensiGaya) {
+        if ($preferensiGaya && $criterionPreferensiGaya) {
             $preferensi = \App\Models\StylePreference::where('nama', $preferensiGaya)->first();
             if ($preferensi) {
-                $result[$criterionIdPreferensiGaya] = $preferensi->id;
+                $result[$criterionPreferensiGaya->id] = $preferensi->id;
+                Log::info("Mapped Preferensi Gaya: {$preferensiGaya} → Criterion ID: {$criterionPreferensiGaya->id}, Sub-Criterion ID: {$preferensi->id}");
             }
         }
 
@@ -194,7 +258,9 @@ class RecommendationController extends Controller
     /**
      * Menghitung bobot kriteria menggunakan metode AHP (Analytical Hierarchy Process)
      * 
-     * Flow Perhitungan AHP:
+     * ═════════════════════════════════════════════════════════════════════════════
+     * FLOW PERHITUNGAN AHP
+     * ═════════════════════════════════════════════════════════════════════════════
      * 
      * 1. INISIALISASI
      *    - Mengambil semua kriteria dari database
@@ -204,7 +270,6 @@ class RecommendationController extends Controller
      *    - Diagonal matriks = 1 (kriteria dibandingkan dengan dirinya sendiri)
      *    - Elemen (i,j) = nilai perbandingan kriteria i terhadap j
      *    - Elemen (j,i) = 1/nilai(i,j) (reciprocal/kebalikan)
-     *    Contoh: Jika kriteria A 3x lebih penting dari B, maka matrix[A][B]=3 dan matrix[B][A]=1/3
      * 
      * 3. NORMALISASI MATRIKS
      *    a. Hitung jumlah setiap kolom (column sum)
@@ -220,8 +285,51 @@ class RecommendationController extends Controller
      *    - CR < 0.1 dianggap konsisten dan dapat diterima
      *    - CR ≥ 0.1 menandakan inkonsistensi dalam penilaian pairwise comparison
      * 
-     * Metode AHP memastikan bobot kriteria dihitung secara objektif dan terukur
-     * berdasarkan tingkat kepentingan relatif antar kriteria.
+     * ═════════════════════════════════════════════════════════════════════════════
+     * CONTOH PERHITUNGAN DENGAN DATA AKTUAL
+     * ═════════════════════════════════════════════════════════════════════════════
+     * 
+     * Input Pairwise Comparison:
+     *   Bentuk Kepala (8) vs Tipe Rambut (9)       = 1.67
+     *   Bentuk Kepala (8) vs Preferensi Gaya (10)  = 2.5
+     *   Tipe Rambut (9) vs Preferensi Gaya (10)    = 1.5
+     * 
+     * STEP 1: Build Matrix (3×3)
+     * ┌─────────────────────────────────────────────────────┐
+     * │          │  C8 (Bentuk) │  C9 (Tipe) │ C10 (Pref) │
+     * ├─────────────────────────────────────────────────────┤
+     * │ C8       │     1.00     │    1.67    │    2.50    │
+     * │ C9       │     0.60     │    1.00    │    1.50    │
+     * │ C10      │     0.40     │    0.67    │    1.00    │
+     * ├─────────────────────────────────────────────────────┤
+     * │ Col Sum  │     2.00     │    3.34    │    5.00    │
+     * └─────────────────────────────────────────────────────┘
+     * 
+     * Note: C9 vs C8 = 1/1.67 = 0.60 (reciprocal)
+     * 
+     * STEP 2: Normalize Matrix
+     * ┌─────────────────────────────────────────────────────────────┐
+     * │          │     C8      │     C9      │     C10     │  Avg   │
+     * ├─────────────────────────────────────────────────────────────┤
+     * │ C8       │  1.00/2.00  │  1.67/3.34  │  2.50/5.00  │ 0.5003 │
+     * │          │  = 0.500    │  = 0.500    │  = 0.500    │        │
+     * │ C9       │  0.60/2.00  │  1.00/3.34  │  1.50/5.00  │ 0.2998 │
+     * │          │  = 0.300    │  = 0.299    │  = 0.300    │        │
+     * │ C10      │  0.40/2.00  │  0.67/3.34  │  1.00/5.00  │ 0.2000 │
+     * │          │  = 0.200    │  = 0.201    │  = 0.200    │        │
+     * └─────────────────────────────────────────────────────────────┘
+     * 
+     * STEP 3: Calculate Weights
+     *   W(C8)  = (0.500 + 0.500 + 0.500) / 3 = 0.500266 (50.03%)
+     *   W(C9)  = (0.300 + 0.299 + 0.300) / 3 = 0.299760 (29.98%)
+     *   W(C10) = (0.200 + 0.201 + 0.200) / 3 = 0.199973 (19.99%)
+     *   Total  = 1.000 ✅
+     * 
+     * STEP 4: Consistency Check
+     *   CR = 0.00086 < 0.1 ✅ (KONSISTEN)
+     * 
+     * Hasil: Bentuk Kepala adalah kriteria TERPENTING (50.03%)
+     * ═════════════════════════════════════════════════════════════════════════════
      * 
      * @return array [$weights, $CR] - Array berisi bobot setiap kriteria dan Consistency Ratio
      */
