@@ -79,14 +79,28 @@
                         @enderror
                     </div>
 
+                    <!-- Sub Criterion Dropdown (Dynamic based on Criterion) -->
+                    <div class="space-y-2" id="sub-criterion-wrapper">
+                        <label for="sub_criterion_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <i class="fas fa-tag mr-2 text-green-600"></i>{{ __('admin.sub_criteria') }}
+                        </label>
+                        <select name="sub_criterion_id" id="sub_criterion_id"
+                            class="block w-full h-12 px-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm transition">
+                            <option value="">{{ __('admin.select_sub_criteria') }}</option>
+                        </select>
+                        @error('sub_criterion_id')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Score Input -->
                     <div class="space-y-2">
                         <label for="score" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            <i class="fas fa-star mr-2 text-blue-600"></i>Score
+                            <i class="fas fa-star mr-2 text-blue-600"></i>{{ __('admin.score') }} (1-10)
                         </label>
-                        <input type="number" name="score" id="score" step="0.01" min="0"
+                        <input type="number" name="score" id="score" step="1" min="1" max="10"
                             class="block w-full h-12 px-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm transition"
-                            value="{{ old('score', $hairstyle_score->score) }}">
+                            value="{{ old('score', $hairstyle_score->score) }}" placeholder="Masukkan skor 1-10">
                         @error('score')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -108,3 +122,63 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            // Data sub-kriteria dari controller
+            const subCriteriaData = {
+                8: @json($bentukKepala),
+                9: @json($tipeRambut),
+                10: @json($stylePreference)
+            };
+
+            const currentCriterionId = {{ $hairstyle_score->criterion_id ?? 'null' }};
+            const currentSubCriterionId = {{ $hairstyle_score->sub_criterion_id ?? 'null' }};
+
+            // Load sub-criteria on page load if criterion is already selected
+            if (currentCriterionId) {
+                loadSubCriteria(currentCriterionId, currentSubCriterionId);
+            }
+
+            // When criterion is changed, reload sub-criteria
+            $('#criterion_id').on('change', function() {
+                const criterionId = $(this).val();
+                loadSubCriteria(criterionId);
+            });
+
+            /**
+             * Load sub-criteria based on criterion selection
+             * @param {number} criterionId - The criterion ID (8, 9, or 10)
+             * @param {number|null} selectedId - The currently selected sub-criterion ID (for pre-selection)
+             */
+            function loadSubCriteria(criterionId, selectedId = null) {
+                const subCriterionWrapper = $('#sub-criterion-wrapper');
+                const subCriterionSelect = $('#sub_criterion_id');
+
+                if (criterionId && subCriteriaData[criterionId]) {
+                    // Clear existing options
+                    subCriterionSelect.html('<option value="">{{ __('admin.select_sub_criteria') }}</option>');
+
+                    // Populate options from pre-loaded data
+                    const data = subCriteriaData[criterionId];
+                    $.each(data, function(index, item) {
+                        const isSelected = selectedId && item.id == selectedId ? 'selected' : '';
+                        subCriterionSelect.append(
+                            $('<option></option>')
+                            .val(item.id)
+                            .text(item.name)
+                            .prop('selected', isSelected)
+                        );
+                    });
+
+                    subCriterionWrapper.show();
+                } else {
+                    // Hide wrapper and clear options if no valid criterion
+                    subCriterionWrapper.hide();
+                    subCriterionSelect.html('<option value="">{{ __('admin.select_sub_criteria') }}</option>');
+                }
+            }
+        });
+    </script>
+@endpush

@@ -164,6 +164,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ]);
 
     // CRUD Hairstyle Score
+    Route::get('hairstyle-scores/sub-criteria', [HairstyleScoreController::class, 'getSubCriteria'])->name('admin.hairstyles.score.sub-criteria');
     Route::resource('hairstyle-scores', HairstyleScoreController::class)->names([
         'index' => 'admin.hairstyles.score.index',
         'create' => 'admin.hairstyles.score.create',

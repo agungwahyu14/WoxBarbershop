@@ -46,6 +46,9 @@
                                 {{ __('admin.criteria') }}
                             </th>
                             <th>
+                                {{ __('admin.sub_criteria') }}
+                            </th>
+                            <th>
                                 {{ __('admin.score') }}
                             </th>
                             <th class="flex justify-center items-center">
@@ -120,12 +123,16 @@
                         searchable: false
                     },
                     {
-                        data: 'hairstyle', // bukan hairstyle_id
+                        data: 'hairstyle',
                         name: 'hairstyle'
                     },
                     {
-                        data: 'criterion', // bukan criterion_id
+                        data: 'criterion',
                         name: 'criterion'
+                    },
+                    {
+                        data: 'sub_criterion',
+                        name: 'sub_criterion'
                     },
                     {
                         data: 'score',

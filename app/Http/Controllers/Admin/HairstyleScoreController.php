@@ -6,67 +6,77 @@ use App\Http\Controllers\Controller;
 use App\Models\Hairstyle;
 use App\Models\HairstyleScore;
 use App\Models\Criteria;
+use App\Models\BentukKepala;
+use App\Models\TipeRambut;
+use App\Models\StylePreference;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class HairstyleScoreController extends Controller
 {
     public function index(Request $request)
-{
-    if ($request->ajax()) {
-        \Log::info('Fetching hairstyle scores for DataTable');
-        
-        $data = HairstyleScore::with(['hairstyle', 'criterion'])->latest()->get();
+    {
+        if ($request->ajax()) {
+            $data = HairstyleScore::with(['hairstyle', 'criterion'])->latest()->get();
 
-        \Log::info('Hairstyle scores fetched for DataTable', [
-            'total' => $data->count(),
-            'first_item' => $data->first()?->id,
-        ]);
-
-        return DataTables::of($data)
-    ->addIndexColumn()
-    ->editColumn('hairstyle', function ($row) {
-        // Akses relasi hairstyle_id ke model Hairstyle
-        $hairstyleName = $row->hairstyle ? $row->hairstyle->name : 'N/A';
-        \Log::debug('Processing hairstyle column', [
-            'score_id' => $row->id, 
-            'hairstyle_id' => $row->hairstyle_id,
-            'hairstyle_name' => $hairstyleName
-        ]);
-        
-        return '<div class="flex items-center gap-2">
-            <i class="fas fa-cut text-lg text-purple-600"></i>
-            <span>'.$hairstyleName.'</span>
-        </div>';
-    })
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('hairstyle', function ($row) {
+                    $hairstyleName = $row->hairstyle ? $row->hairstyle->name : 'N/A';
+                    
+                    return '<div class="flex items-center gap-2">
+                        <i class="fas fa-cut text-lg text-purple-600"></i>
+                        <span class="font-medium">'.$hairstyleName.'</span>
+                    </div>';
+                })
     ->editColumn('criterion', function ($row) {
-        // Akses relasi criterion_id ke model Criteria
         $criterionName = $row->criterion ? $row->criterion->name : 'N/A';
-        \Log::debug('Processing criterion column', [
-            'score_id' => $row->id, 
-            'criterion_id' => $row->criterion_id,
-            'criterion_name' => $criterionName
-        ]);
-        
         return '<div class="flex items-center gap-2">
             <i class="fas fa-star text-sm text-yellow-500"></i>
-            <span>'.$criterionName.'</span>
+            <span class="font-medium">'.$criterionName.'</span>
+        </div>';
+    })
+    ->addColumn('sub_criterion', function ($row) {
+        $subCriterionName = 'N/A';
+        $icon = 'fa-tag';
+        $color = 'text-gray-500';
+        
+        // Ambil sub-criterion berdasarkan criterion_id
+        if ($row->criterion_id == 8) {
+            // Bentuk Kepala
+            $subCriterion = BentukKepala::find($row->sub_criterion_id);
+            $subCriterionName = $subCriterion ? $subCriterion->nama : 'N/A';
+            $icon = 'fa-head-side-virus';
+            $color = 'text-blue-500';
+        } elseif ($row->criterion_id == 9) {
+            // Tipe Rambut
+            $subCriterion = TipeRambut::find($row->sub_criterion_id);
+            $subCriterionName = $subCriterion ? $subCriterion->nama : 'N/A';
+            $icon = 'fa-hands-wash';
+            $color = 'text-green-500';
+        } elseif ($row->criterion_id == 10) {
+            // Preferensi Gaya
+            $subCriterion = StylePreference::find($row->sub_criterion_id);
+            $subCriterionName = $subCriterion ? $subCriterion->nama : 'N/A';
+            $icon = 'fa-palette';
+            $color = 'text-purple-500';
+        }
+        
+        return '<div class="flex items-center gap-2">
+            <i class="fas '.$icon.' text-sm '.$color.'"></i>
+            <span class="font-medium">'.$subCriterionName.'</span>
         </div>';
     })
     ->editColumn('score', function ($row) {
-        \Log::debug('Processing score column', [
-            'score_id' => $row->id, 
-            'score_value' => $row->score
-        ]);
-        
-        // Normalisasi score ke persentase (asumsi score 0-100)
-        $percentage = min(max($row->score, 0), 100);
+        // Score 1-10, convert to percentage for visual
+        $percentage = ($row->score / 10) * 100;
+        $color = $row->score >= 7 ? 'green' : ($row->score >= 5 ? 'yellow' : 'red');
         
         return '<div class="flex items-center gap-2">
-            <div class="w-16 bg-gray-200 rounded-full h-2.5">
-                <div class="bg-blue-600 h-2.5 rounded-full" style="width: '.$percentage.'%"></div>
+            <div class="w-20 bg-gray-200 rounded-full h-2.5">
+                <div class="bg-'.$color.'-600 h-2.5 rounded-full" style="width: '.$percentage.'%"></div>
             </div>
-            <span>'.$row->score.'</span>
+            <span class="font-semibold text-'.$color.'-600">'.$row->score.'/10</span>
         </div>';
     })
     ->addColumn('action', function ($row) {
@@ -86,18 +96,30 @@ class HairstyleScoreController extends Controller
                 </button>
             </div>';
     })
-    ->rawColumns(['hairstyle', 'criterion', 'score', 'action'])
-    ->make(true);
-    }
+                ->rawColumns(['hairstyle', 'criterion', 'sub_criterion', 'score', 'action'])
+                ->make(true);
+        }
 
-    return view('admin.hairstyles.scores.index');
-}
+        return view('admin.hairstyles.scores.index');
+    }
 
     public function create()
     {
         $hairstyles = Hairstyle::all();
         $criteria   = Criteria::all();
-        return view('admin.hairstyles.scores.create', compact('hairstyles', 'criteria'));
+        
+        // Prepare all sub-criteria for dynamic loading
+        $bentukKepala = BentukKepala::all(['id', 'nama as name']);
+        $tipeRambut = TipeRambut::all(['id', 'nama as name']);
+        $stylePreference = StylePreference::all(['id', 'nama as name']);
+        
+        return view('admin.hairstyles.scores.create', compact(
+            'hairstyles', 
+            'criteria',
+            'bentukKepala',
+            'tipeRambut',
+            'stylePreference'
+        ));
     }
 
     public function store(Request $request)
@@ -105,10 +127,11 @@ class HairstyleScoreController extends Controller
         $request->validate([
             'hairstyle_id' => 'required|exists:hairstyles,id',
             'criterion_id' => 'required|exists:criteria,id',
-            'score'        => 'required|numeric|min:0',
+            'sub_criterion_id' => 'required|numeric|min:1',
+            'score'        => 'required|numeric|min:0|max:10',
         ]);
 
-        HairstyleScore::create($request->only(['hairstyle_id', 'criterion_id', 'score']));
+        HairstyleScore::create($request->only(['hairstyle_id', 'criterion_id', 'sub_criterion_id', 'score']));
 
         return redirect()->route('admin.hairstyles.score.index')
                          ->with('success', __('admin.hairstyle_score_created_successfully'));
@@ -118,7 +141,31 @@ class HairstyleScoreController extends Controller
     {
         $hairstyles = Hairstyle::all();
         $criteria   = Criteria::all();
-        return view('admin.hairstyles.scores.edit', compact('hairstyle_score', 'hairstyles', 'criteria'));
+        
+        // Prepare all sub-criteria for dynamic loading
+        $bentukKepala = BentukKepala::all(['id', 'nama as name']);
+        $tipeRambut = TipeRambut::all(['id', 'nama as name']);
+        $stylePreference = StylePreference::all(['id', 'nama as name']);
+        
+        // Get current sub-criterion details
+        $currentSubCriterion = null;
+        if ($hairstyle_score->criterion_id == 8) {
+            $currentSubCriterion = BentukKepala::find($hairstyle_score->sub_criterion_id);
+        } elseif ($hairstyle_score->criterion_id == 9) {
+            $currentSubCriterion = TipeRambut::find($hairstyle_score->sub_criterion_id);
+        } elseif ($hairstyle_score->criterion_id == 10) {
+            $currentSubCriterion = StylePreference::find($hairstyle_score->sub_criterion_id);
+        }
+        
+        return view('admin.hairstyles.scores.edit', compact(
+            'hairstyle_score', 
+            'hairstyles', 
+            'criteria',
+            'bentukKepala',
+            'tipeRambut',
+            'stylePreference',
+            'currentSubCriterion'
+        ));
     }
 
     public function update(Request $request, HairstyleScore $hairstyle_score)
@@ -126,10 +173,11 @@ class HairstyleScoreController extends Controller
         $request->validate([
             'hairstyle_id' => 'required|exists:hairstyles,id',
             'criterion_id' => 'required|exists:criteria,id',
-            'score'        => 'required|numeric|min:0',
+            'sub_criterion_id' => 'required|numeric|min:1',
+            'score'        => 'required|numeric|min:0|max:10',
         ]);
 
-        $hairstyle_score->update($request->only(['hairstyle_id', 'criterion_id', 'score']));
+        $hairstyle_score->update($request->only(['hairstyle_id', 'criterion_id', 'sub_criterion_id', 'score']));
 
         return redirect()->route('admin.hairstyles.score.index')
                          ->with('success', __('admin.hairstyle_score_updated_successfully'));
@@ -150,5 +198,27 @@ class HairstyleScoreController extends Controller
                 'message' => __('admin.error_occurred')
             ], 500);
         }
+    }
+
+    /**
+     * Get sub-criteria based on criterion_id (AJAX)
+     */
+    public function getSubCriteria(Request $request)
+    {
+        $criterionId = $request->criterion_id;
+        $subCriteria = [];
+
+        if ($criterionId == 8) {
+            // Bentuk Kepala
+            $subCriteria = BentukKepala::all(['id', 'nama as name']);
+        } elseif ($criterionId == 9) {
+            // Tipe Rambut
+            $subCriteria = TipeRambut::all(['id', 'nama as name']);
+        } elseif ($criterionId == 10) {
+            // Preferensi Gaya
+            $subCriteria = StylePreference::all(['id', 'nama as name']);
+        }
+
+        return response()->json($subCriteria);
     }
 }

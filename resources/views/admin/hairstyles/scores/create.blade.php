@@ -70,14 +70,28 @@
                         @enderror
                     </div>
 
+                    <!-- Sub Criterion Dropdown (Dynamic based on Criterion) -->
+                    <div class="space-y-2" id="sub-criterion-wrapper" style="display: none;">
+                        <label for="sub_criterion_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <i class="fas fa-tag mr-2 text-green-600"></i>{{ __('admin.sub_criteria') }}
+                        </label>
+                        <select name="sub_criterion_id" id="sub_criterion_id"
+                            class="block w-full h-12 px-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm transition">
+                            <option value="">{{ __('admin.select_sub_criteria') }}</option>
+                        </select>
+                        @error('sub_criterion_id')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Score Input -->
                     <div class="space-y-2">
                         <label for="score" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            <i class="fas fa-star mr-2 text-blue-600"></i>{{ __('admin.score') }}
+                            <i class="fas fa-star mr-2 text-blue-600"></i>{{ __('admin.score') }} (1-10)
                         </label>
-                        <input type="number" name="score" id="score" step="0.01" min="0"
+                        <input type="number" name="score" id="score" step="1" min="1" max="10"
                             class="block w-full h-12 px-4 rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-blue-500 focus:border-blue-500 shadow-sm transition"
-                            value="{{ old('score') }}">
+                            value="{{ old('score') }}" placeholder="Masukkan skor 1-10">
                         @error('score')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -99,3 +113,53 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            // Data sub-criteria dari controller
+            const subCriteriaData = {
+                8: @json($bentukKepala), // Bentuk Kepala
+                9: @json($tipeRambut), // Tipe Rambut
+                10: @json($stylePreference) // Preferensi Gaya
+            };
+
+            // When criterion is selected, load sub-criteria
+            $('#criterion_id').on('change', function() {
+                const criterionId = $(this).val();
+                const subCriterionWrapper = $('#sub-criterion-wrapper');
+                const subCriterionSelect = $('#sub_criterion_id');
+
+                if (criterionId && subCriteriaData[criterionId]) {
+                    // Clear and show wrapper
+                    subCriterionSelect.html(
+                        '<option value="">{{ __('admin.select_sub_criteria') }}</option>');
+                    subCriterionWrapper.show();
+
+                    // Populate sub-criteria from pre-loaded data
+                    const data = subCriteriaData[criterionId];
+                    $.each(data, function(index, item) {
+                        subCriterionSelect.append(
+                            $('<option></option>').val(item.id).text(item.name)
+                        );
+                    });
+                } else {
+                    subCriterionWrapper.hide();
+                    subCriterionSelect.html(
+                        '<option value="">{{ __('admin.select_sub_criteria') }}</option>');
+                }
+            });
+
+            // If there's old input after validation error, restore the selection
+            @if (old('criterion_id'))
+                $('#criterion_id').val('{{ old('criterion_id') }}').trigger('change');
+
+                @if (old('sub_criterion_id'))
+                    setTimeout(function() {
+                        $('#sub_criterion_id').val('{{ old('sub_criterion_id') }}');
+                    }, 100);
+                @endif
+            @endif
+        });
+    </script>
+@endpush

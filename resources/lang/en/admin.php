@@ -364,6 +364,8 @@ return [
     'select_hairstyle' => 'Select Hairstyle',
     'criteria' => 'Criteria',
     'select_criteria' => 'Select Criteria',
+    'sub_criteria' => 'Sub Criteria',
+    'select_sub_criteria' => 'Select Sub Criteria',
     'score' => 'Score',
     'save_score' => 'Save Score',
     'add_score' => 'Add Score',

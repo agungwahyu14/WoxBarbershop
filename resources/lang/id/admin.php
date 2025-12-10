@@ -364,6 +364,8 @@ return [
     'select_hairstyle' => 'Pilih Gaya Rambut',
     'criteria' => 'Kriteria',
     'select_criteria' => 'Pilih Kriteria',
+    'sub_criteria' => 'Sub Kriteria',
+    'select_sub_criteria' => 'Pilih Sub Kriteria',
     'score' => 'Skor',
     'save_score' => 'Buat Skor',
     'add_score' => 'Buat Skor',
