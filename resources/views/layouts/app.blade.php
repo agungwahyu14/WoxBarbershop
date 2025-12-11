@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     <title>Wox's Barbershop</title>
 
@@ -18,7 +17,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+    {{--
+    <script src="https://cdn.tailwindcss.com"></script> --}}
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap');
 
@@ -638,7 +638,7 @@
 
         // Smooth scrolling for all anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
@@ -656,7 +656,7 @@
     <!-- Scroll Reveal Animation Script -->
     <script>
         // Scroll Reveal for elements with 'reveal' class
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const revealElements = document.querySelectorAll('.reveal, .animate-on-scroll');
 
             const revealOnScroll = () => {
@@ -691,7 +691,7 @@
 
         // Add ripple effect to buttons
         document.querySelectorAll('.btn-primary, .btn-ripple').forEach(button => {
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', function (e) {
                 const ripple = document.createElement('span');
                 const rect = this.getBoundingClientRect();
                 const size = Math.max(rect.width, rect.height);
@@ -733,7 +733,8 @@
     </script>
 
     <!-- SweetAlert Script -->
-    {{-- <script>
+    {{--
+    <script>
         @if (session('warning') && !session('error_type'))
             Swal.fire({
                 icon: 'warning',
