@@ -25,55 +25,87 @@ use Illuminate\Support\Facades\Log;
  * 6. Mengurutkan hairstyle berdasarkan skor tertinggi sebagai rekomendasi
  * 
  * ═══════════════════════════════════════════════════════════════════════════════════
- * CONTOH PERHITUNGAN (Berdasarkan Data Aktual)
+ * CONTOH PERHITUNGAN (Berdasarkan Data Aktual dari Database)
  * ═══════════════════════════════════════════════════════════════════════════════════
  * 
- * DATA KRITERIA:
- * - ID 8:  Bentuk Kepala     (Weight: 0.500266 = 50.03%)
- * - ID 9:  Tipe Rambut       (Weight: 0.299760 = 29.98%)
- * - ID 10: Preferensi Gaya   (Weight: 0.199973 = 19.99%)
+ * DATA KRITERIA (dari CriteriasTableSeeder.php):
+ * - Bentuk Kepala (ID akan auto-increment, misal ID 1)
+ * - Tipe Rambut (misal ID 2)
+ * - Preferensi Gaya (misal ID 3)
  * 
- * PAIRWISE COMPARISON:
+ * PAIRWISE COMPARISON (dari PairwiseComparisonSeeder.php):
  * - Bentuk Kepala vs Tipe Rambut       = 1.67  (Bentuk Kepala 1.67x lebih penting)
- * - Bentuk Kepala vs Preferensi Gaya   = 2.5   (Bentuk Kepala 2.5x lebih penting)
- * - Tipe Rambut vs Preferensi Gaya     = 1.5   (Tipe Rambut 1.5x lebih penting)
+ * - Bentuk Kepala vs Preferensi Gaya   = 2.50  (Bentuk Kepala 2.50x lebih penting)
+ * - Tipe Rambut vs Preferensi Gaya     = 1.50  (Tipe Rambut 1.50x lebih penting)
  * 
  * MATRIKS PERBANDINGAN (3×3):
- *                   Bentuk   Tipe   Preferensi   |  Normalized  |  Weight
- * Bentuk Kepala      1.00    1.67      2.50      |    0.500     | 0.500266
- * Tipe Rambut        0.60    1.00      1.50      |    0.300     | 0.299760
- * Preferensi Gaya    0.40    0.67      1.00      |    0.200     | 0.199973
- * ─────────────────────────────────────────────────────────────────────────
- * Column Sum:        2.00    3.34      5.00      |  Total: 1.000
+ * ┌────────────────────────────────────────────────────────────────────────┐
+ * │                │  Bentuk   │   Tipe    │ Preferensi │  Normalized │  Weight │
+ * │                │  Kepala   │  Rambut   │    Gaya    │   Average   │         │
+ * ├────────────────────────────────────────────────────────────────────────┤
+ * │ Bentuk Kepala  │   1.00    │   1.67    │    2.50    │   0.5003    │ 0.5003  │
+ * │ Tipe Rambut    │   0.60    │   1.00    │    1.50    │   0.2998    │ 0.2998  │
+ * │ Preferensi Gaya│   0.40    │   0.67    │    1.00    │   0.1999    │ 0.1999  │
+ * ├────────────────────────────────────────────────────────────────────────┤
+ * │ Column Sum     │   2.00    │   3.34    │    5.00    │   1.0000    │         │
+ * └────────────────────────────────────────────────────────────────────────┘
  * 
- * CONSISTENCY RATIO: CR = 0.00086 < 0.1 ✅ (KONSISTEN)
+ * PERHITUNGAN NORMALISASI:
+ * Bentuk Kepala:
+ *   = (1.00/2.00 + 1.67/3.34 + 2.50/5.00) / 3
+ *   = (0.5000 + 0.5000 + 0.5000) / 3
+ *   = 1.5000 / 3 = 0.5000 ≈ 50.00%
+ * 
+ * Tipe Rambut:
+ *   = (0.60/2.00 + 1.00/3.34 + 1.50/5.00) / 3
+ *   = (0.3000 + 0.2994 + 0.3000) / 3
+ *   = 0.8994 / 3 = 0.2998 ≈ 29.98%
+ * 
+ * Preferensi Gaya:
+ *   = (0.40/2.00 + 0.67/3.34 + 1.00/5.00) / 3
+ *   = (0.2000 + 0.2006 + 0.2000) / 3
+ *   = 0.6006 / 3 = 0.2002 ≈ 20.02%
+ * 
+ * CONSISTENCY RATIO: CR ≈ 0.0009 < 0.1 ✅ (KONSISTEN)
  * 
  * ─────────────────────────────────────────────────────────────────────────
- * CONTOH PERHITUNGAN SCORE:
+ * CONTOH PERHITUNGAN SCORE HAIRSTYLE:
  * ─────────────────────────────────────────────────────────────────────────
  * 
  * User Input:
- *   - Bentuk Kepala: "Persegi Panjang" (Sub-Criterion ID: 3)
- *   - Tipe Rambut: "Lurus" (Sub-Criterion ID: 1)
- *   - Preferensi: "Modern" (Sub-Criterion ID: 2)
+ *   - Bentuk Kepala: "Square" (Persegi)
+ *   - Tipe Rambut: "Lurus"
+ *   - Preferensi: "Modern"
  * 
- * Hairstyle: "French Crop" (ID: 34)
- * Scores dari database:
- *   - Bentuk Kepala (Persegi Panjang): 9
- *   - Tipe Rambut (Lurus): 8
- *   - Preferensi Gaya (Modern): 9
+ * Hairstyle: "French Crop" (dari HairstyleSeeder.php)
+ * Deskripsi: Potongan pendek dengan bagian depan yang dipotong lurus dan texture alami
  * 
- * Perhitungan Total Score:
- *   = (0.500266 × 9) + (0.299760 × 8) + (0.199973 × 9)
- *   = 4.502394 + 2.398080 + 1.799757
- *   = 8.700231
+ * Asumsi Scores dari database (hairstyle_scores table):
+ *   - Bentuk Kepala (Square): 9/10 (cocok untuk bentuk persegi)
+ *   - Tipe Rambut (Lurus): 9/10 (sangat cocok untuk rambut lurus)
+ *   - Preferensi Gaya (Modern): 10/10 (style modern minimalis)
  * 
- * Breakdown Kontribusi:
- *   - Bentuk Kepala:    4.502394  (51.76%)
- *   - Tipe Rambut:      2.398080  (27.56%)
- *   - Preferensi Gaya:  1.799757  (20.68%)
+ * Perhitungan Total Score dengan Bobot AHP:
+ *   Total Score = (W_BentukKepala × Score_BentukKepala) + 
+ *                 (W_TipeRambut × Score_TipeRambut) + 
+ *                 (W_PreferensiGaya × Score_PreferensiGaya)
  * 
- * Hasil: French Crop mendapat score 8.70/10 (HIGHLY RECOMMENDED)
+ *   = (0.5000 × 9) + (0.2998 × 9) + (0.2002 × 10)
+ *   = 4.5000 + 2.6982 + 2.0020
+ *   = 9.2002
+ * 
+ * Breakdown Kontribusi per Kriteria:
+ *   - Bentuk Kepala:    4.5000  (48.91% dari total score)
+ *   - Tipe Rambut:      2.6982  (29.33% dari total score)
+ *   - Preferensi Gaya:  2.0020  (21.76% dari total score)
+ * 
+ * Hasil: French Crop mendapat score 9.20/10 ⭐ (HIGHLY RECOMMENDED!)
+ * 
+ * INTERPRETASI:
+ * - Bentuk Kepala memberikan kontribusi terbesar (50%) sesuai dengan bobot AHP
+ * - Distribusi bobot lebih seimbang dibanding pairwise comparison yang lebih ekstrem
+ * - French Crop sangat direkomendasikan untuk user dengan kriteria ini
+ * - Score tinggi menandakan kesesuaian yang sangat baik dengan preferensi user
  * 
  * ═══════════════════════════════════════════════════════════════════════════════════
  * 

@@ -13,9 +13,9 @@ class PairwiseComparisonSeeder extends Seeder
         $criterias = Criteria::all()->keyBy('name');
 
         $data = [
-            ['Bentuk Kepala', 'Tipe Rambut', 3],
-            ['Bentuk Kepala', 'Preferensi Gaya', 5],
-            ['Tipe Rambut', 'Preferensi Gaya', 2],
+            ['Bentuk Kepala', 'Tipe Rambut', 1.67],
+            ['Bentuk Kepala', 'Preferensi Gaya', 2.50],
+            ['Tipe Rambut', 'Preferensi Gaya', 1.50],
         ];
 
         foreach ($data as [$c1, $c2, $value]) {
