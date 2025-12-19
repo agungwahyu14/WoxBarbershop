@@ -34,7 +34,7 @@ return [
     'bookings' => 'Bookings',
     'pending' => 'Pending',
     'popular_service' => 'Most Popular Service',
-    'today_bookings' => 'Today\'s Bookings',
+    'today_bookings' => 'Today\'s & Upcoming Bookings',
     'last_updated' => 'Last updated',
     'no' => 'No',
     'service' => 'Service',

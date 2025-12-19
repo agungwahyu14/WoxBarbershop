@@ -90,7 +90,7 @@ class DashboardController extends Controller
 
         // Today's bookings with details (max 20 data)
         $todayBookingsData = Booking::with(['user', 'service'])
-            ->whereDate('date_time', today())
+            ->whereDate('date_time', '>=', today())
             ->orderBy('date_time', 'asc')
             ->take(20)
             ->get();
@@ -183,7 +183,7 @@ class DashboardController extends Controller
 
         // Today's bookings with details (max 20 data)
         $todayBookingsData = Booking::with(['user', 'service'])
-            ->whereDate('date_time', today())
+            ->whereDate('date_time', '>=', today())
             ->orderBy('date_time', 'asc')
             ->take(20)
             ->get()

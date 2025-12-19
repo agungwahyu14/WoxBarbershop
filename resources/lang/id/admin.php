@@ -34,7 +34,7 @@ return [
     'bookings' => 'Pemesanan',
     'pending' => 'tertunda',
     'popular_service' => 'Layanan Terpopuler',
-    'today_bookings' => 'Pemesanan Hari Ini',
+    'today_bookings' => 'Pemesanan Hari Ini & Mendatang',
     'last_updated' => 'Terakhir diperbarui',
     'no' => 'No',
     'service' => 'Layanan',
