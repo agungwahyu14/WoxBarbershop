@@ -23,18 +23,46 @@ class PaymentController extends Controller
 
     public function pay(Request $request, $bookingId)
     {
+        Log::info('Payment initiation attempt', [
+            'booking_id' => $bookingId,
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()?->name ?? 'Guest',
+            'user_email' => auth()->user()?->email ?? 'N/A',
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        ]);
+
         $booking = Booking::with('user')->findOrFail($bookingId);
 
         // Hanya izinkan jika status belum dibayar
         if (! in_array($booking->status, ['pending', 'confirmed']) || $booking->payment_status === 'paid') {
+            Log::warning('Payment not allowed', [
+                'booking_id' => $bookingId,
+                'user_id' => auth()->id(),
+                'booking_status' => $booking->status,
+                'payment_status' => $booking->payment_status,
+                'ip' => $request->ip()
+            ]);
             return response()->json(['message' => 'Pembayaran tidak diperbolehkan.'], 403);
         }
 
         $snapToken = $this->midtransService->createTransaction($booking);
 
         if (! $snapToken) {
+            Log::error('Failed to create Midtrans transaction', [
+                'booking_id' => $bookingId,
+                'user_id' => auth()->id(),
+                'ip' => $request->ip()
+            ]);
             return response()->json(['message' => 'Gagal membuat transaksi.'], 500);
         }
+
+        Log::info('Payment snap token created successfully', [
+            'booking_id' => $bookingId,
+            'user_id' => auth()->id(),
+            'total_price' => $booking->total_price,
+            'ip' => $request->ip()
+        ]);
 
         // Simpan data transaksi awal ke database
         return response()->json([
@@ -68,6 +96,14 @@ class PaymentController extends Controller
 
     public function downloadReceipt($orderId)
     {
+        Log::info('Receipt download initiated', [
+            'order_id' => $orderId,
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()?->name ?? 'Guest',
+            'ip' => request()->ip(),
+            'user_agent' => request()->userAgent()
+        ]);
+
         try {
             // Get local transaction data first
             $localTransaction = \App\Models\Transaction::where('order_id', $orderId)->first();
@@ -137,20 +173,44 @@ class PaymentController extends Controller
             
             $fileName = 'Invoice_WOX_' . $orderId . '_' . date('Ymd') . '.pdf';
 
+            Log::info('Receipt downloaded successfully', [
+                'order_id' => $orderId,
+                'user_id' => auth()->id(),
+                'file_name' => $fileName,
+                'ip' => request()->ip()
+            ]);
+
             return $pdf->download($fileName);
             
         } catch (\Exception $e) {
-            Log::error('Download receipt error: ' . $e->getMessage());
+            Log::error('Download receipt error', [
+                'order_id' => $orderId,
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'ip' => request()->ip()
+            ]);
             return back()->with('error', 'Gagal mengunduh bukti pembayaran: ' . $e->getMessage());
         }
     }
 
     public function index()
     {
+        Log::info('Transaction index page accessed', [
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()?->name ?? 'Guest',
+            'user_email' => auth()->user()?->email ?? 'N/A',
+            'ip' => request()->ip(),
+            'user_agent' => request()->userAgent()
+        ]);
+
         try {
             $user = auth()->user();
 
             if (! $user) {
+                Log::warning('Unauthenticated user trying to access transactions', [
+                    'ip' => request()->ip()
+                ]);
                 return redirect()->route('login');
             }
 
@@ -261,6 +321,13 @@ class PaymentController extends Controller
                 ['path' => request()->url(), 'pageName' => 'page']
             );
 
+            Log::info('Transaction index loaded successfully', [
+                'user_id' => auth()->id(),
+                'total_transactions' => $transactionsCollection->count(),
+                'current_page' => $currentPage,
+                'ip' => request()->ip()
+            ]);
+
             return view('transactions.index', ['transactions' => $paginatedTransactions]);
 
         } catch (\Exception $e) {
@@ -327,6 +394,15 @@ class PaymentController extends Controller
 
     public function cashPayment(Request $request)
     {
+        Log::info('Cash/Bank payment initiated', [
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()?->name ?? 'Guest',
+            'booking_id' => $request->booking_id,
+            'payment_method' => $request->payment_method,
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        ]);
+
         $request->validate([
             'booking_id' => 'required|exists:bookings,id',
             'payment_method' => 'required|in:cash,bank',
@@ -347,6 +423,14 @@ class PaymentController extends Controller
             'email' => $booking->user->email ?? null,
         ]);
 
+        Log::info('Cash/Bank transaction created successfully', [
+            'transaction_id' => $transaction->id,
+            'order_id' => $transaction->order_id,
+            'user_id' => auth()->id(),
+            'payment_method' => $request->payment_method,
+            'amount' => $booking->total_price,
+            'ip' => $request->ip()
+        ]);
 
         return redirect()->route('transactions.index')
             ->with('success', 'Transaksi berhasil dibuat.');
@@ -359,6 +443,14 @@ class PaymentController extends Controller
 
     public function show($orderId)
     {
+        Log::info('Transaction detail page accessed', [
+            'order_id' => $orderId,
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()?->name ?? 'Guest',
+            'ip' => request()->ip(),
+            'user_agent' => request()->userAgent()
+        ]);
+
         try {
             // Ambil data booking terkait
             $booking = Booking::with('user')->findOrFail($orderId);
@@ -392,8 +484,24 @@ class PaymentController extends Controller
                 'customer_email' => $localTransaction?->email ?? $booking->user->email,
             ];
 
+            Log::info('Transaction details loaded successfully', [
+                'order_id' => $orderId,
+                'user_id' => auth()->id(),
+                'transaction_status' => $status->transaction_status,
+                'payment_type' => $status->payment_type,
+                'amount' => $status->gross_amount,
+                'ip' => request()->ip()
+            ]);
+
             return view('transactions.show', compact('data'));
         } catch (\Exception $e) {
+            Log::error('Error loading transaction details', [
+                'order_id' => $orderId,
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'ip' => request()->ip()
+            ]);
             return redirect()->back()->with('error', 'Gagal mengambil detail transaksi: '.$e->getMessage());
         }
     }
@@ -403,6 +511,13 @@ class PaymentController extends Controller
      */
     public function cancelTransaction(Booking $booking)
 {
+    Log::info('Transaction cancellation initiated', [
+        'booking_id' => $booking->id,
+        'user_id' => auth()->id() ?? 'system',
+        'booking_status' => $booking->status,
+        'ip' => request()->ip()
+    ]);
+
     // Cek apakah transaksi sudah ada
     $transaction = Transaction::where('order_id', $booking->id)->first();
 
@@ -410,9 +525,16 @@ class PaymentController extends Controller
         $transaction->update([
             'transaction_status' => 'cancel',
         ]);
+        
+        Log::info('Existing transaction cancelled', [
+            'transaction_id' => $transaction->id,
+            'order_id' => $booking->id,
+            'user_id' => auth()->id() ?? 'system',
+            'ip' => request()->ip()
+        ]);
     } else {
         // Jika tidak ada transaksi, buat transaksi baru dengan status cancel
-        Transaction::create([
+        $newTransaction = Transaction::create([
             'order_id' => $booking->id,
             'transaction_status' => 'cancel',
             'payment_type' => $booking->payment_method,
@@ -420,6 +542,14 @@ class PaymentController extends Controller
             'transaction_time' => now(),
             'name' => $booking->name,
             'email' => $booking->user->email ?? null,
+        ]);
+        
+        Log::info('New cancelled transaction created', [
+            'transaction_id' => $newTransaction->id,
+            'order_id' => $booking->id,
+            'user_id' => auth()->id() ?? 'system',
+            'amount' => $booking->total_price,
+            'ip' => request()->ip()
         ]);
     }
 
