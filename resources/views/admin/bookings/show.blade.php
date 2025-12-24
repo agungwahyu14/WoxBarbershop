@@ -230,6 +230,121 @@
 
                 </div>
 
+                <!-- Payment Information -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-credit-card mr-3 text-blue-600"></i>
+                            {{ __('admin.payment_information') }}
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <!-- Payment Method -->
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600 dark:text-gray-400">{{ __('admin.payment_method') }}:</span>
+                                <div class="flex items-center space-x-2">
+                                    @if($booking->payment_method === 'cash')
+                                        <i class="fas fa-money-bill-wave text-green-500"></i>
+                                        <span class="font-semibold text-gray-900 dark:text-white">{{ __('admin.payment_cash') }}</span>
+                                    @else
+                                        <i class="fas fa-university text-blue-500"></i>
+                                        <span class="font-semibold text-gray-900 dark:text-white">{{ __('admin.payment_bank_transfer') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Transaction Status -->
+                            @if($booking->transaction)
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">{{ __('admin.transaction_status') }}:</span>
+                                    @php
+                                        $transactionColors = [
+                                            'pending' => 'bg-yellow-100 text-yellow-800',
+                                            'settlement' => 'bg-green-100 text-green-800',
+                                            'capture' => 'bg-green-100 text-green-800',
+                                            'cancel' => 'bg-red-100 text-red-800',
+                                            'expire' => 'bg-gray-100 text-gray-800',
+                                        ];
+                                        $statusColor = $transactionColors[$booking->transaction->transaction_status] ?? 'bg-gray-100 text-gray-800';
+                                    @endphp
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium {{ $statusColor }}">
+                                        {{ ucfirst($booking->transaction->transaction_status) }}
+                                    </span>
+                                </div>
+
+                                <!-- VA Number for Bank Transfer -->
+                                @if($booking->payment_method === 'bank')
+                                    @if($booking->transaction->va_number)
+                                        {{-- VA Number tersedia --}}
+                                        <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                            <div class="flex items-start space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-info-circle text-blue-600 text-xl"></i>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">
+                                                        {{ __('admin.va_number_title') }}
+                                                    </h4>
+                                                    <div class="space-y-2">
+                                                        <div>
+                                                            <span class="text-xs text-gray-600 dark:text-gray-400">{{ __('admin.va_bank') }}:</span>
+                                                            <p class="font-semibold text-gray-900 dark:text-white">
+                                                                {{ strtoupper($booking->transaction->bank ?? 'N/A') }}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <span class="text-xs text-gray-600 dark:text-gray-400">{{ __('admin.va_number_label') }}:</span>
+                                                            <div class="flex items-center space-x-2 mt-1">
+                                                                <code class="px-3 py-2 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600 font-mono text-lg font-bold text-blue-600">
+                                                                    {{ $booking->transaction->va_number }}
+                                                                </code>
+                                                                <button onclick="copyVA('{{ $booking->transaction->va_number }}')" 
+                                                                    class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors">
+                                                                    <i class="fas fa-copy"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        {{-- VA Number belum tersedia --}}
+                                        <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                                            <div class="flex items-start space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">
+                                                        {{ __('admin.va_processing_title') }}
+                                                    </h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                                        {{ __('admin.va_processing_message') }}
+                                                    </p>
+                                                    <div class="flex items-center space-x-2">
+                                                        <button onclick="window.location.reload()" 
+                                                            class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded transition-colors text-sm">
+                                                            <i class="fas fa-sync mr-2"></i>
+                                                            {{ __('admin.refresh_page') }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
+                            @else
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600 dark:text-gray-400">Status Transaksi:</span>
+                                    <span class="text-gray-500">{{ __('admin.no_transaction') }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Transaction History -->
 
             </div>
@@ -403,6 +518,27 @@
                             showNotification('error', error, errorOccurred);
                         });
                 }
+            });
+        }
+
+        // Copy VA Number to clipboard
+        function copyVA(vaNumber) {
+            navigator.clipboard.writeText(vaNumber).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{{ __('admin.va_copied_success') }}',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: '{{ __('admin.va_copy_failed') }}',
+                    confirmButtonColor: '#d4af37'
+                });
             });
         }
     </script>

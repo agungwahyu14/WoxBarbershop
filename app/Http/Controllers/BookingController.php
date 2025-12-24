@@ -96,24 +96,30 @@ class BookingController extends Controller
                 return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('customer_info', function ($row) {
-                        return $row->user ?
-                            '<div class="flex items-center space-x-3">
-                         
-                            <div>
-                                <div class="font-medium text-gray-900">'.$row->user->name.'</div>
-                                <div class="text-sm text-gray-500">'.$row->user->email.'</div>
-                            </div>
-                        </div>' : '<span class="text-gray-400">'.__('booking.no_customer').'</span>';
+                        if ($row->user) {
+                            return '<div class="flex items-center space-x-3">
+                                <div>
+                                    <div class="font-medium text-gray-900">'.$row->user->name.'</div>
+                                    <div class="text-sm text-gray-500">'.$row->user->email.'</div>
+                                </div>
+                            </div>';
+                        } else {
+                            // Guest booking - show dash
+                            return '<span class="text-gray-500">-</span>';
+                        }
                     })
                     ->addColumn('name', function ($row) {
-                        return $row->name ;
+                        return $row->name;
                     })
                     ->addColumn('contact_info', function ($row) {
-                        return $row->user && $row->user->no_telepon ?
-                            '<div class="flex items-center space-x-2">
-                        
-                            <span class="font-medium">'.$row->user->no_telepon.'</span>
-                        </div>' : '<span class="text-gray-400">'.__('booking.no_contact').'</span>';
+                        if ($row->user && $row->user->no_telepon) {
+                            return '<div class="flex items-center space-x-2">
+                                <span class="font-medium">'.$row->user->no_telepon.'</span>
+                            </div>';
+                        } else {
+                            // Guest booking or no phone - show dash
+                            return '<span class="text-gray-500">-</span>';
+                        }
                     })
                     ->addColumn('service_info', function ($row) {
                         if ($row->service) {
@@ -328,6 +334,30 @@ class BookingController extends Controller
         return 'fas fa-scissors'; // Default barber icon
     }
 
+    /**
+     * Show the form for creating a new booking (Admin/Staff only)
+     */
+    public function create()
+    {
+        // Only admin and pegawai can access this
+        if (!auth()->user()->hasAnyRole(['admin', 'pegawai'])) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Load necessary data for the form
+        $services = Service::where('is_active', true)->get();
+        $hairstyles = \App\Models\Hairstyle::all();
+        $users = User::role('pelanggan')->get(); // Only get users with pelanggan role
+
+        Log::info('Admin booking create form accessed', [
+            'user_id' => auth()->id(),
+            'user_role' => auth()->user()->roles->pluck('name')->implode(','),
+            'ip' => request()->ip()
+        ]);
+
+        return view('admin.bookings.create', compact('services', 'hairstyles', 'users'));
+    }
+
     public function store(Request $request)
     {
         try {
@@ -339,17 +369,20 @@ class BookingController extends Controller
                 'ip' => $request->ip()
             ]);
 
-            // Validasi input - Add shift selection
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
+            // Check if this is an admin/staff creating booking
+            $isAdminBooking = auth()->user()->hasAnyRole(['admin', 'pegawai']);
+
+            // Validation rules depend on booking type
+            $validationRules = [
                 'service_id' => 'required|exists:services,id',
                 'hairstyle_id' => 'required|exists:hairstyles,id',
                 'payment_method' => 'required|in:cash,bank',
                 'booking_date' => 'required|date|after_or_equal:today',
                 'shift' => 'required|in:morning,afternoon',
                 'description' => 'nullable|string|max:1000',
-            ], [
-                'name.required' => __('booking.name_required'),
+            ];
+
+            $validationMessages = [
                 'service_id.required' => __('booking.service_required'),
                 'service_id.exists' => __('booking.service_not_found'),
                 'hairstyle_id.required' => __('booking.hairstyle_required'),
@@ -362,7 +395,28 @@ class BookingController extends Controller
                 'shift.required' => __('booking.shift_required'),
                 'shift.in' => __('booking.shift_invalid'),
                 'description.max' => __('booking.description_too_long'),
-            ]);
+            ];
+
+            // Admin bookings have different validation
+            if ($isAdminBooking) {
+                $validationRules['booking_type'] = 'required|in:registered,guest';
+                $validationRules['user_id'] = 'required_if:booking_type,registered|nullable|exists:users,id';
+                $validationRules['guest_name'] = 'required_if:booking_type,guest|nullable|string|max:255';
+                $validationRules['guest_phone'] = 'required_if:booking_type,guest|nullable|string|max:20';
+                $validationRules['name'] = 'nullable|string|max:255';
+
+                $validationMessages['booking_type.required'] = 'Tipe booking harus dipilih';
+                $validationMessages['user_id.required_if'] = 'Pelanggan harus dipilih untuk tipe pelanggan terdaftar';
+                $validationMessages['guest_name.required_if'] = 'Nama pelanggan wajib diisi untuk tipe pelanggan tamu';
+                $validationMessages['guest_phone.required_if'] = 'Nomor telepon wajib diisi untuk tipe pelanggan tamu';
+            } else {
+                // Regular customer booking
+                $validationRules['name'] = 'required|string|max:255';
+                $validationMessages['name.required'] = __('booking.name_required');
+            }
+
+            // Validasi input
+            $validated = $request->validate($validationRules, $validationMessages);
 
             // Get service data for duration and price calculation
             $service = Service::findOrFail($validated['service_id']);
@@ -409,10 +463,42 @@ class BookingController extends Controller
             $queueNumber = Booking::whereDate('date_time', $bookingDate)
                 ->count() + 1;
 
+            // Determine user_id and name based on booking type
+            $bookingUserId = null;
+            $bookingName = '';
+
+            if ($isAdminBooking) {
+                // Admin creating booking
+                if ($request->booking_type === 'registered') {
+                    // Registered customer
+                    $bookingUserId = $validated['user_id'];
+                    $selectedUser = User::find($bookingUserId);
+                    $bookingName = $validated['name'] ?: $selectedUser->name;
+                } else {
+                    // Guest customer (walk-in)
+                    $bookingUserId = null; // No user_id for guests
+                    $bookingName = $validated['guest_name'];
+                }
+            } else {
+                // Regular customer booking themselves
+                $bookingUserId = auth()->id();
+                $bookingName = $validated['name'];
+            }
+
+            // Determine booking status
+            // Admin cash bookings are completed (walk-in customers get service done immediately)
+            // Admin bank bookings are pending (waiting for payment)
+            // Customer bookings are always pending initially
+            if ($isAdminBooking && $validated['payment_method'] === 'cash') {
+                $bookingStatus = 'completed'; // Layanan sudah selesai untuk walk-in dengan cash
+            } else {
+                $bookingStatus = 'pending'; // Menunggu pembayaran atau konfirmasi
+            }
+
             // Create booking
             $booking = Booking::create([
-                'user_id' => auth()->id(),
-                'name' => $validated['name'],
+                'user_id' => $bookingUserId,
+                'name' => $bookingName,
                 'service_id' => $validated['service_id'],
                 'hairstyle_id' => $validated['hairstyle_id'],
                 'date_time' => $bookingDateTime,
@@ -420,21 +506,86 @@ class BookingController extends Controller
                 'queue_number' => $queueNumber,
                 'description' => $validated['description'] ?? null,
                 'payment_method' => $validated['payment_method'],
-                'status' => 'pending',
+                'status' => $bookingStatus,
                 'total_price' => $totalPrice,
             ]);
-
-            DB::commit();
 
             Log::info('Booking created successfully', [
                 'booking_id' => $booking->id,
                 'user_id' => auth()->id(),
                 'queue_number' => $booking->queue_number,
                 'selected_shift' => $selectedShift,
-                'service_duration' => $serviceDurationMinutes
+                'service_duration' => $serviceDurationMinutes,
+                'is_admin_booking' => $isAdminBooking,
+                'payment_method' => $validated['payment_method']
             ]);
 
-            // Check if request is AJAX
+            // Create transaction automatically for admin bookings
+            $snapToken = null;
+            if ($isAdminBooking) {
+                // Get customer email - for registered users, use their email; for guests, use null
+                $customerEmail = null;
+                if ($bookingUserId) {
+                    $customerUser = User::find($bookingUserId);
+                    $customerEmail = $customerUser ? $customerUser->email : null;
+                }
+
+                if ($validated['payment_method'] === 'cash') {
+                    // Cash payment - create transaction with settlement status
+                    \App\Models\Transaction::create([
+                        'order_id' => $booking->id,
+                        'transaction_status' => 'settlement',
+                        'payment_type' => 'cash',
+                        'gross_amount' => $booking->total_price,
+                        'transaction_time' => now(),
+                        'bank' => null,
+                        'va_number' => null,
+                        'name' => $booking->name,
+                        'email' => $customerEmail,
+                    ]);
+
+                    Log::info('Cash transaction created automatically for admin booking', [
+                        'booking_id' => $booking->id,
+                        'admin_id' => auth()->id(),
+                        'amount' => $booking->total_price
+                    ]);
+                } else {
+                    // Bank transfer - create Midtrans transaction and get snap token
+                    try {
+                        $midtransService = app(\App\Services\MidtransService::class);
+                        $snapToken = $midtransService->createTransaction($booking);
+
+                        Log::info('Bank transfer transaction initiated for admin booking', [
+                            'booking_id' => $booking->id,
+                            'admin_id' => auth()->id(),
+                            'snap_token_created' => !empty($snapToken)
+                        ]);
+                    } catch (\Exception $e) {
+                        Log::error('Failed to create Midtrans transaction for admin booking', [
+                            'booking_id' => $booking->id,
+                            'error' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString()
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            // For admin bookings, return different response based on payment method
+            if ($isAdminBooking) {
+                // Return JSON response for AJAX handling in create page
+                return response()->json([
+                    'success' => true,
+                    'message' => __('booking.booking_created_successfully', ['queue_number' => $booking->queue_number]),
+                    'payment_method' => $validated['payment_method'],
+                    'snap_token' => $snapToken, // For bank transfer
+                    'booking_id' => $booking->id,
+                    'redirect' => route('admin.bookings.index')
+                ]);
+            }
+
+            // Check if request is AJAX (for regular customer bookings)
             if ($request->wantsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
@@ -451,8 +602,8 @@ class BookingController extends Controller
                 ]);
             }
 
-            // Redirect with success message (for non-AJAX requests)
-            return redirect()->back()->with('success', __('booking.booking_created_successfully', ['queue_number' => $booking->queue_number]));
+            // Redirect with success message (for non-AJAX customer requests)
+            return redirect()->route('bookings.index')->with('success', __('booking.booking_created_successfully', ['queue_number' => $booking->queue_number]));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollback();

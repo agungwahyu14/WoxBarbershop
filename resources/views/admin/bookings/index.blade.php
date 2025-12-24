@@ -167,6 +167,10 @@
 
                                 <div class="flex flex-wrap items-center gap-2">
                                     <div class="flex flex-wrap gap-2">
+                                        <a href="{{ route('admin.bookings.create') }}"
+                                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                            <i class="mdi mdi-plus-circle mr-2"></i> {{ __('admin.create_booking') }}
+                                        </a>
                                         <button id="exportCsvBtn" type="button"
                                             class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
                                             <i class="mdi mdi-file-delimited mr-2"></i> {{ __('admin.export_csv') }}
@@ -201,6 +205,10 @@
                                         <option value="cancelled">{{ __('booking.status_cancelled') }}</option>
                                     </select>
                                     <div class="flex items-center space-x-2">
+                                        <a href="{{ route('admin.bookings.create') }}"
+                                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-colors duration-200 text-sm">
+                                            <i class="mdi mdi-plus-circle mr-2"></i> {{ __('admin.create_booking') }}
+                                        </a>
                                         <button id="resetFilter"
                                             class="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-md shadow-sm transition-colors duration-200 text-sm">
                                             <i class="mdi mdi-refresh mr-1"></i> {{ __('admin.reset') }}
