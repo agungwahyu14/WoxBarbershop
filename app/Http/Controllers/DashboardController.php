@@ -133,19 +133,22 @@ class DashboardController extends Controller
         ));
     }
 
-    // Jika bukan admin atau pegawai, tampilkan dashboard user biasa
-    $services = Service::all();
-    $hairstyles = Hairstyle::all();
-    $users = User::all();
-    $products = Product::active()->take(6)->get();
-    $testimonials = Feedback::active()
-        ->public()
-        ->with(['user', 'booking'])
-        ->orderBy('created_at', 'desc')
-        ->take(6)
-        ->get();
+    // Jika bukan admin atau pegawai, tampilkan dashboard user biasa (dinonaktifkan karena login hanya untuk admin/pegawai)
+    // $services = Service::all();
+    // $hairstyles = Hairstyle::all();
+    // $users = User::all();
+    // $products = Product::active()->take(6)->get();
+    // $testimonials = Feedback::active()
+    //     ->public()
+    //     ->with(['user', 'booking'])
+    //     ->orderBy('created_at', 'desc')
+    //     ->take(6)
+    //     ->get();
 
-    return view('dashboard', compact('services', 'hairstyles', 'users', 'products', 'testimonials'));
+    // return view('dashboard', compact('services', 'hairstyles', 'users', 'products', 'testimonials'));
+    
+    // Fallback jika terjadi error
+    return abort(403, 'Akses tidak diizinkan. Login hanya untuk Admin dan Pegawai.');
 }
 
 

@@ -141,97 +141,100 @@ class RecommendationController extends Controller
      */
     public function index(Request $request)
     {
-        // Tangkap input dari user
-        $bentukKepala   = $request->bentuk_kepala;
-        $tipeRambut     = $request->tipe_rambut;
-        $preferensiGaya = $request->preferensi_gaya;
+        // Fungsi Rekomendasi dinonaktifkan sementara karena fitur user login sudah dimatikan
+        // // Tangkap input dari user
+        // $bentukKepala   = $request->bentuk_kepala;
+        // $tipeRambut     = $request->tipe_rambut;
+        // $preferensiGaya = $request->preferensi_gaya;
 
-        Log::info('Input filter rekomendasi:', [
-            'bentuk_kepala'   => $bentukKepala,
-            'tipe_rambut'     => $tipeRambut,
-            'preferensi_gaya' => $preferensiGaya,
-        ]);
+        // Log::info('Input filter rekomendasi:', [
+        //     'bentuk_kepala'   => $bentukKepala,
+        //     'tipe_rambut'     => $tipeRambut,
+        //     'preferensi_gaya' => $preferensiGaya,
+        // ]);
 
-        // Step 1: Hitung bobot AHP (dan simpan di DB)
-        [$weights, $CR] = $this->calculateAHPWeights();
+        // // Step 1: Hitung bobot AHP (dan simpan di DB)
+        // [$weights, $CR] = $this->calculateAHPWeights();
 
-        // Step 2: Ambil semua hairstyle yang sesuai filter
-        $query = Hairstyle::with(['scores', 'bentuk_kepala', 'tipe_rambut', 'style_preference']);
-        Log::info('Initial hairstyle query built: '.$query->toSql());
+        // // Step 2: Ambil semua hairstyle yang sesuai filter
+        // $query = Hairstyle::with(['scores', 'bentuk_kepala', 'tipe_rambut', 'style_preference']);
+        // Log::info('Initial hairstyle query built: '.$query->toSql());
 
-        if ($bentukKepala) {
-            $query->whereHas('bentuk_kepala', fn ($q) => $q->where('nama', $bentukKepala));
-        }
-        if ($tipeRambut) {
-            $query->whereHas('tipe_rambut', fn ($q) => $q->where('nama', $tipeRambut));
-        }
-        if ($preferensiGaya) {
-            $query->whereHas('style_preference', fn ($q) => $q->where('nama', $preferensiGaya));
-        }
+        // if ($bentukKepala) {
+        //     $query->whereHas('bentuk_kepala', fn ($q) => $q->where('nama', $bentukKepala));
+        // }
+        // if ($tipeRambut) {
+        //     $query->whereHas('tipe_rambut', fn ($q) => $q->where('nama', $tipeRambut));
+        // }
+        // if ($preferensiGaya) {
+        //     $query->whereHas('style_preference', fn ($q) => $q->where('nama', $preferensiGaya));
+        // }
 
-        $hairstyles = $query->get();
-        Log::info('Total hairstyles fetched for recommendation: '.$hairstyles->count());
+        // $hairstyles = $query->get();
+        // Log::info('Total hairstyles fetched for recommendation: '.$hairstyles->count());
 
-        // Step 3: Mapping input user ke sub_criterion_id
-        $subCriterionIds = $this->mapUserInputToSubCriterionIds($bentukKepala, $tipeRambut, $preferensiGaya);
-        Log::info('Sub-criterion IDs based on user input:', $subCriterionIds);
+        // // Step 3: Mapping input user ke sub_criterion_id
+        // $subCriterionIds = $this->mapUserInputToSubCriterionIds($bentukKepala, $tipeRambut, $preferensiGaya);
+        // Log::info('Sub-criterion IDs based on user input:', $subCriterionIds);
 
-        // Step 4: Hitung skor rekomendasi
-        $results = [];
-        foreach ($hairstyles as $hairstyle) {
-            $totalScore = 0;
-            $logDetail  = [];
+        // // Step 4: Hitung skor rekomendasi
+        // $results = [];
+        // foreach ($hairstyles as $hairstyle) {
+        //     $totalScore = 0;
+        //     $logDetail  = [];
 
-            // Loop untuk setiap criterion (bukan setiap score!)
-            foreach ($weights as $criterionId => $weight) {
-                // Ambil sub_criterion_id yang sesuai dengan input user
-                $subCriterionId = $subCriterionIds[$criterionId] ?? null;
+        //     // Loop untuk setiap criterion (bukan setiap score!)
+        //     foreach ($weights as $criterionId => $weight) {
+        //         // Ambil sub_criterion_id yang sesuai dengan input user
+        //         $subCriterionId = $subCriterionIds[$criterionId] ?? null;
 
-                if (!$subCriterionId) {
-                    // Jika user tidak input kriteria ini, skip atau gunakan default
-                    Log::warning("No sub-criterion ID for criterion $criterionId, skipping for hairstyle {$hairstyle->id}");
-                    continue;
-                }
+        //         if (!$subCriterionId) {
+        //             // Jika user tidak input kriteria ini, skip atau gunakan default
+        //             Log::warning("No sub-criterion ID for criterion $criterionId, skipping for hairstyle {$hairstyle->id}");
+        //             continue;
+        //         }
 
-                // Ambil score yang spesifik untuk criterion dan sub_criterion ini
-                $score = $hairstyle->scores()
-                    ->where('criterion_id', $criterionId)
-                    ->where('sub_criterion_id', $subCriterionId)
-                    ->first();
+        //         // Ambil score yang spesifik untuk criterion dan sub_criterion ini
+        //         $score = $hairstyle->scores()
+        //             ->where('criterion_id', $criterionId)
+        //             ->where('sub_criterion_id', $subCriterionId)
+        //             ->first();
 
-                if (!$score) {
-                    Log::warning("No score found for hairstyle {$hairstyle->id}, criterion $criterionId, sub_criterion $subCriterionId");
-                    continue;
-                }
+        //         if (!$score) {
+        //             Log::warning("No score found for hairstyle {$hairstyle->id}, criterion $criterionId, sub_criterion $subCriterionId");
+        //             continue;
+        //         }
 
-                $contribution = $weight * $score->score;
-                $totalScore += $contribution;
+        //         $contribution = $weight * $score->score;
+        //         $totalScore += $contribution;
 
-                $logDetail[] = [
-                    'criterion_id'     => $criterionId,
-                    'sub_criterion_id' => $subCriterionId,
-                    'weight'           => $weight,
-                    'score'            => $score->score,
-                    'contribution'     => round($contribution, 4),
-                ];
-            }
+        //         $logDetail[] = [
+        //             'criterion_id'     => $criterionId,
+        //             'sub_criterion_id' => $subCriterionId,
+        //             'weight'           => $weight,
+        //             'score'            => $score->score,
+        //             'contribution'     => round($contribution, 4),
+        //         ];
+        //     }
 
-            $roundedScore = round($totalScore, 4);
+        //     $roundedScore = round($totalScore, 4);
 
-            Log::info("Hairstyle ID {$hairstyle->id} ({$hairstyle->name}) => Total Score: $roundedScore", $logDetail);
+        //     Log::info("Hairstyle ID {$hairstyle->id} ({$hairstyle->name}) => Total Score: $roundedScore", $logDetail);
 
-            $results[] = [
-                'hairstyle' => $hairstyle,
-                'score'     => $roundedScore,
-            ];
-        }
+        //     $results[] = [
+        //         'hairstyle' => $hairstyle,
+        //         'score'     => $roundedScore,
+        //     ];
+        // }
 
-        // Step 4: Urutkan berdasarkan skor tertinggi
-        usort($results, fn ($a, $b) => $b['score'] <=> $a['score']);
+        // // Step 4: Urutkan berdasarkan skor tertinggi
+        // usort($results, fn ($a, $b) => $b['score'] <=> $a['score']);
 
-        Log::info('Total hasil rekomendasi: '.count($results));
+        // Log::info('Total hasil rekomendasi: '.count($results));
 
-        return view('rekomendasi', compact('results', 'CR'));
+        // return view('rekomendasi', compact('results', 'CR'));
+        
+        return abort(403, 'Akses ke halaman rekomendasi telah dinonaktifkan.');
     }
 
     /**

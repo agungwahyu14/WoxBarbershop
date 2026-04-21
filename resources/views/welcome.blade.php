@@ -16,10 +16,10 @@
                 {{ __('general.welcome_message_detail') }} <br> {{ __('general.tagline_detail') }}.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up stagger-2">
-                <a href="#reservasi"
+                <!-- <a href="#reservasi"
                     class="btn-primary rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3 font-medium shadow-lg">
                     {{ __('welcome.reservation_button') }}
-                </a>
+                </a> -->
                 <a href="#layanan"
                     class="btn-outline rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3 font-medium">
                     {{ __('welcome.view_services') }}
@@ -129,10 +129,10 @@
                     <p class="text-gray-600 mb-8 text-justify">
                         {{ __('welcome.about_paragraph_2') }}
                     </p>
-                    <a href="{{ route('dashboard') }}#reservasi"
+                    <!-- <a href="{{ route('dashboard') }}#reservasi"
                         class="btn-primary rounded-lg bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3 font-medium inline-block shadow-lg">
                         {{ __('welcome.reservation_button') }}
-                    </a>
+                    </a> -->
                 </div>
 
                 <!-- Right Column - Image -->
@@ -240,6 +240,7 @@
 
 
 
+    @if(false)
     <section id="reservasi" class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 reveal">
@@ -445,9 +446,137 @@
             </div>
         </div>
     </section>
+    @endif
+
+    <!-- Services & Hairstyles Slider Section -->
+    <section class="py-20 bg-light" id="layanan-gaya">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-4">Layanan & Gaya Rambut</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Temukan layanan terbaik dan gaya rambut pilihan kami</p>
+            </div>
+
+            <!-- Slider Wrapper -->
+            <div class="relative overflow-hidden" id="service-hairstyle-slider">
+
+                <!-- Slide 1: Layanan -->
+                <div class="slider-panel" id="slider-services">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-playfair font-bold text-primary flex items-center gap-2">
+                            <i class="fas fa-cut text-secondary"></i> Layanan Kami
+                        </h3>
+                        <span class="text-sm text-gray-400 uppercase tracking-widest">1 / 2</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        @forelse($services as $index => $service)
+                            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-lift">
+                                <div class="relative h-48 bg-gray-100 overflow-hidden">
+                                    @if($service->image)
+                                        <img src="{{ asset('storage/' . $service->image) }}"
+                                             alt="{{ $service->name }}"
+                                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                                    @else
+                                        @if(str_contains(strtolower($service->name), 'dewasa') || str_contains(strtolower($service->name), 'adult'))
+                                            <img src="{{ asset('images/dewasa.png') }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
+                                        @elseif(str_contains(strtolower($service->name), 'anak') || str_contains(strtolower($service->name), 'kid'))
+                                            <img src="{{ asset('images/anak.png') }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
+                                        @elseif(str_contains(strtolower($service->name), 'jenggot') || str_contains(strtolower($service->name), 'kumis') || str_contains(strtolower($service->name), 'beard'))
+                                            <img src="{{ asset('images/kumis.png') }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary to-primary">
+                                                <i class="fas fa-cut text-white text-4xl opacity-60"></i>
+                                            </div>
+                                        @endif
+                                    @endif
+                                    <div class="absolute top-3 right-3 bg-secondary text-primary text-xs font-bold px-2 py-1 rounded-full">
+                                        {{ $service->duration ?? '30' }} min
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <h4 class="font-bold text-lg font-playfair mb-1 truncate">{{ $service->name }}</h4>
+                                    <p class="text-gray-500 text-sm mb-3 line-clamp-2">{{ $service->description }}</p>
+                                    <div class="font-bold text-secondary text-lg font-playfair">
+                                        Rp {{ number_format($service->price, 0, ',', '.') }}
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-4 text-center py-12 text-gray-400">
+                                <i class="fas fa-cut text-4xl mb-3"></i>
+                                <p>Belum ada layanan tersedia.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Slide 2: Gaya Rambut -->
+                <div class="slider-panel hidden" id="slider-hairstyles">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-playfair font-bold text-primary flex items-center gap-2">
+                            <i class="fas fa-star text-secondary"></i> Gaya Rambut
+                        </h3>
+                        <span class="text-sm text-gray-400 uppercase tracking-widest">2 / 2</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        @forelse($hairstyles as $index => $hairstyle)
+                            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 card-lift">
+                                <div class="relative h-48 bg-gray-100 overflow-hidden">
+                                    @if($hairstyle->image)
+                                        <img src="{{ asset('storage/' . $hairstyle->image) }}"
+                                             alt="{{ $hairstyle->name }}"
+                                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-700 to-gray-900">
+                                            <i class="fas fa-user-alt text-white text-4xl opacity-40"></i>
+                                        </div>
+                                    @endif
+                                    @if($hairstyle->style_preference_id ?? false)
+                                        <div class="absolute top-3 left-3 bg-white text-primary text-xs font-bold px-2 py-1 rounded-full shadow">
+                                            {{ $hairstyle->style_preference->nama ?? '' }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="p-4">
+                                    <h4 class="font-bold text-lg font-playfair mb-1 truncate">{{ $hairstyle->name }}</h4>
+                                    <p class="text-gray-500 text-sm mb-2 line-clamp-2">{{ $hairstyle->description ?? '' }}</p>
+                                    @if($hairstyle->bentuk_kepala_count ?? false)
+                                        <div class="flex flex-wrap gap-1 mt-2">
+                                            <span class="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">{{ $hairstyle->bentuk_kepala->nama ?? '' }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-4 text-center py-12 text-gray-400">
+                                <i class="fas fa-user-alt text-4xl mb-3"></i>
+                                <p>Belum ada gaya rambut tersedia.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Slider Controls -->
+            <div class="flex items-center justify-center mt-10 gap-6">
+                <button type="button" id="slider-prev"
+                    class="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-primary hover:bg-secondary hover:text-white transition-all duration-300">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="flex gap-3" id="slider-dots">
+                    <button type="button" class="slider-dot w-4 h-4 rounded-full bg-secondary transition-all duration-300 scale-125" data-slide="0"></button>
+                    <button type="button" class="slider-dot w-4 h-4 rounded-full bg-gray-300 transition-all duration-300" data-slide="1"></button>
+                </div>
+                <button type="button" id="slider-next"
+                    class="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-primary hover:bg-secondary hover:text-white transition-all duration-300">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
 
     <!-- Gallery Section -->
-    <section class="py-12 bg-white">
+    <section id="galeri" class="py-12 bg-white">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center reveal">
                 {{ __('welcome.our_gallery') }}
@@ -589,6 +718,72 @@
             }
             if (shiftSelect) {
                 shiftSelect.addEventListener('change', checkShiftCapacity);
+            }
+
+            // ============================================================
+            // Services & Hairstyles Slider
+            // ============================================================
+            const sliderPanels = document.querySelectorAll('.slider-panel');
+            const sliderDots   = document.querySelectorAll('.slider-dot');
+            const prevBtn      = document.getElementById('slider-prev');
+            const nextBtn      = document.getElementById('slider-next');
+            let currentPanel   = 0;
+            let sliderAutoplay;
+
+            function showPanel(index) {
+                sliderPanels.forEach((panel, i) => {
+                    if (i === index) {
+                        panel.classList.remove('hidden');
+                    } else {
+                        panel.classList.add('hidden');
+                    }
+                });
+                sliderDots.forEach((dot, i) => {
+                    if (i === index) {
+                        dot.classList.add('bg-secondary', 'scale-125');
+                        dot.classList.remove('bg-gray-300');
+                    } else {
+                        dot.classList.remove('bg-secondary', 'scale-125');
+                        dot.classList.add('bg-gray-300');
+                    }
+                });
+                currentPanel = index;
+            }
+
+            function nextPanel() {
+                let next = (currentPanel + 1) % sliderPanels.length;
+                showPanel(next);
+            }
+
+            function prevPanel() {
+                let prev = (currentPanel - 1 + sliderPanels.length) % sliderPanels.length;
+                showPanel(prev);
+            }
+
+            function startSliderAutoplay() {
+                sliderAutoplay = setInterval(nextPanel, 5000);
+            }
+
+            function stopSliderAutoplay() {
+                clearInterval(sliderAutoplay);
+            }
+
+            if (sliderPanels.length > 0) {
+                showPanel(0);
+                startSliderAutoplay();
+
+                if (nextBtn) nextBtn.addEventListener('click', (e) => { e.preventDefault(); stopSliderAutoplay(); nextPanel(); startSliderAutoplay(); });
+                if (prevBtn) prevBtn.addEventListener('click', (e) => { e.preventDefault(); stopSliderAutoplay(); prevPanel(); startSliderAutoplay(); });
+
+                sliderDots.forEach((dot, i) => {
+                    dot.addEventListener('click', (e) => { e.preventDefault(); stopSliderAutoplay(); showPanel(i); startSliderAutoplay(); });
+                });
+
+                const sliderWrapper = document.getElementById('service-hairstyle-slider');
+                if (sliderWrapper) {
+                    sliderWrapper.addEventListener('mouseenter', stopSliderAutoplay);
+                    sliderWrapper.addEventListener('mouseleave', startSliderAutoplay);
+                }
             }
 
             // Testimonials Slider functionality

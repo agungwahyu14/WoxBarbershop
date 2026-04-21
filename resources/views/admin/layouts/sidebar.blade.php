@@ -50,26 +50,26 @@
                     </a>
                 </li>
 
-                <li class="{{ request()->routeIs('admin.hairstyles.score.*') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->routeIs('admin.hairstyles.score.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.hairstyles.score.index') }}">
                         <span class="icon"><i class="mdi mdi-chart-bar"></i></span>
                         <span class="menu-item-label">{{ __('menu.hairstyle_score') }}</span>
                     </a>
-                </li>
+                </li> --}}
 
-                <li class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.bookings.index') }}">
                         <span class="icon"><i class="mdi mdi-calendar-check"></i></span>
                         <span class="menu-item-label">{{ __('menu.bookings') }}</span>
                     </a>
-                </li>
+                </li> --}}
 
-                <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.transactions.index') }}">
                         <span class="icon"><i class="mdi mdi-cash-register"></i></span>
                         <span class="menu-item-label">{{ __('menu.transactions') }}</span>
                     </a>
-                </li>
+                </li> --}}
 
                 {{-- <li class="{{ request()->routeIs('admin.system.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.system.index') }}">
@@ -115,19 +115,19 @@
                     </a>
                 </li>
 
-                <li class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.bookings.index') }}">
                         <span class="icon"><i class="mdi mdi-calendar-check"></i></span>
                         <span class="menu-item-label">{{ __('menu.bookings') }}</span>
                     </a>
-                </li>
+                </li> --}}
 
-                <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
+                {{-- <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.transactions.index') }}">
                         <span class="icon"><i class="mdi mdi-cash-register"></i></span>
                         <span class="menu-item-label">{{ __('menu.transactions') }}</span>
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="{{ request()->routeIs('admin.feedbacks.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.feedbacks.index') }}">

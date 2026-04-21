@@ -62,7 +62,7 @@
                 @endauth
 
                 <!-- Reservasi -->
-                @auth
+                <!-- @auth
                     <a href="{{ route('dashboard') }}#reservasi"
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
                         {{ __('welcome.reservation') }}
@@ -72,13 +72,26 @@
                         class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
                         {{ __('welcome.reservation') }}
                     </a>
+                @endauth -->
+
+                <!-- Galeri -->
+                @auth
+                    <a href="{{ route('dashboard') }}#galeri"
+                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
+                        Galeri
+                    </a>
+                @else
+                    <a href="#galeri"
+                        class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
+                        Galeri
+                    </a>
                 @endauth
 
                 <!-- Rekomendasi Gaya -->
-                <a href="{{ route('rekomendasi.index') }}"
+                <!-- <a href="{{ route('rekomendasi.index') }}"
                     class="nav-link relative text-gray-800 hover:text-secondary transition-colors duration-300 font-medium">
                     {{ __('welcome.style_recommendations') }}
-                </a>
+                </a> -->
             </div>
 
             <!-- Right Section: Language Switcher & User Profile -->
@@ -185,7 +198,7 @@
                             </a>
 
                             <!-- Riwayat Booking -->
-                            <a href="{{ route('bookings.index') }}"
+                            <!-- <a href="{{ route('bookings.index') }}"
                                 class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors">
                                 <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
@@ -193,7 +206,7 @@
                                         d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z" />
                                 </svg>
                                 <span>{{ __('welcome.booking_history') }}</span>
-                            </a>
+                            </a> -->
 
                             <!-- Divider -->
                             <div class="border-t border-gray-100 my-2"></div>
@@ -214,7 +227,7 @@
                     </div>
                 @else
                     <!-- Login/Register buttons for guests -->
-                    <div class="flex items-center space-x-3">
+                    <!-- <div class="flex items-center space-x-3">
                         <a href="{{ route('login') }}"
                             class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
                             {{ __('auth.login') }}
@@ -223,7 +236,7 @@
                             class="px-4 py-2 text-sm font-medium bg-[#d4af37] text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200">
                             {{ __('auth.register') }}
                         </a>
-                    </div>
+                    </div> -->
                 @endauth
 
                 <!-- Mobile Menu Button -->
@@ -286,7 +299,7 @@
             @endauth
 
             <!-- Reservasi -->
-            @auth
+            <!-- @auth
                 <a href="{{ route('dashboard') }}#reservasi"
                     class="text-gray-800 hover:text-secondary transition-colors py-2">
                     {{ __('welcome.reservation') }}
@@ -295,13 +308,25 @@
                 <a href="#reservasi" class="text-gray-800 hover:text-secondary transition-colors py-2">
                     {{ __('welcome.reservation') }}
                 </a>
+            @endauth -->
+
+            <!-- Galeri -->
+            @auth
+                <a href="{{ route('dashboard') }}#galeri"
+                    class="text-gray-800 hover:text-secondary transition-colors py-2">
+                    Galeri
+                </a>
+            @else
+                <a href="#galeri" class="text-gray-800 hover:text-secondary transition-colors py-2">
+                    Galeri
+                </a>
             @endauth
 
             <!-- Rekomendasi Gaya -->
-            <a href="{{ route('rekomendasi.index') }}"
+            <!-- <a href="{{ route('rekomendasi.index') }}"
                 class="text-gray-800 hover:text-secondary transition-colors py-2">
                 {{ __('welcome.style_recommendations') }}
-            </a>
+            </a> -->
 
 
         </div>

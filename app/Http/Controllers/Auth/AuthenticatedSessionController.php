@@ -49,17 +49,23 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('login')->with('error', __('auth.account_deactivated'));
             }
 
+            // Check if user is admin or pegawai
+            if (!$user->hasRole('admin') && !$user->hasRole('pegawai')) {
+                Auth::logout();
+                
+                Log::warning('Unauthorized login attempt (not admin/pegawai)', [
+                    'email' => $request->email,
+                    'user_id' => $user->id,
+                    'ip' => $request->ip()
+                ]);
+
+                return redirect()->route('login')->with('error', 'Akses login hanya diperbolehkan untuk Admin dan Pegawai.');
+            }
+
             // Update last login timestamp
             $user->updateLastLogin();
 
             $request->session()->regenerate();
-
-            // Clear any admin-related intended URL for regular users
-            if ($user->hasRole('pelanggan')) {
-                $request->session()->forget('url.intended');
-                return redirect()->route('dashboard')
-                    ->with('auth_success', __('auth.welcome_back') . ', ' . $user->name . '!');
-            }
 
             // For admin/pegawai, allow intended redirect or default to dashboard
             Log::info('User login successful', [

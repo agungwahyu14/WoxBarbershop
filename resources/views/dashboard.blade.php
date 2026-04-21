@@ -64,10 +64,10 @@
                 {{ __('general.welcome_message_detail') }} <br> {{ __('general.tagline_detail') }}.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up stagger-2">
-                <a href="{{ route('dashboard') }}#reservasi"
+                <!-- <a href="{{ route('dashboard') }}#reservasi"
                     class="btn-primary rounded-lg bg-secondary hover:bg-white text-primary hover:text-primary px-8 py-3 font-medium shadow-lg">
                     {{ __('welcome.reservation_button') }}
-                </a>
+                </a> -->
                 <a href="{{ route('dashboard') }}#layanan"
                     class="btn-outline rounded-lg border-2 border-white hover:border-secondary text-white hover:text-secondary px-8 py-3 font-medium">
                     {{ __('welcome.view_services') }}
@@ -178,10 +178,10 @@
                     <p class="text-gray-600 mb-8 text-justify">
                         {{ __('welcome.about_paragraph_2') }}
                     </p>
-                    <a href="{{ route('dashboard') }}#reservasi"
+                    <!-- <a href="{{ route('dashboard') }}#reservasi"
                         class="btn-primary rounded-lg bg-secondary hover:bg-primary text-primary hover:text-white px-8 py-3 font-medium inline-block shadow-lg">
                         {{ __('welcome.reservation_button') }}
-                    </a>
+                    </a> -->
                 </div>
 
                 <!-- Right Column - Image -->
@@ -288,6 +288,7 @@
 
 
 
+    @if(false)
     <section id="reservasi" class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16 reveal">
@@ -497,9 +498,10 @@
         </div>
         </div>
     </section>
+    @endif
 
     <!-- Gallery Section -->
-    <section class="py-12 bg-white">
+    <section id="galeri" class="py-12 bg-white">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl md:text-4xl font-playfair font-bold mb-12 text-center reveal">
                 {{ __('welcome.our_gallery') }}
